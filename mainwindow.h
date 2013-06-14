@@ -1,0 +1,59 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+#include "qstring.h"
+#include "Setup.h"
+#include "RemoteForm.h"
+#include "ui_mainwindow.h"
+#include "ParentSettings.h"
+#include "utilities.h"
+#include "qhash.h"
+
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+    
+public:
+    QHash<QString,QString> *CONFIG;
+    QHash<QString,QString> *PARAMS;
+
+    void checkParams();
+    bool checkConfig();
+
+    void loadParams(QString TEMPLATE_PARAM);
+    void loadConfig(QString TEMPLATE_CONFIG);
+
+    explicit MainWindow(QWidget *parent = 0);
+
+    ~MainWindow();
+
+public slots:
+    void openSetup();
+    void openSettings();
+    void openRemoteJob();
+
+private:
+    static const QString TEMPLATE_PARAM;
+    static const QString DEFAULT_TEMPLATE_PARAM;
+
+    static const QString TEMPLATE_CONFIG;
+    static const QString DEFAULT_TEMPLATE_CONFIG;
+
+    QPushButton *setupButton;
+    QPushButton *startButton;
+    QPushButton *remoteButton;
+    QLabel *warningLabel;
+    QGraphicsView *logo;
+
+    Ui::MainWindow *ui;
+    Setup *setupWindow;
+    ParentSettings *settingsWindow;
+    RemoteForm *remoteWindow;
+};
+
+#endif // MAINWINDOW_H

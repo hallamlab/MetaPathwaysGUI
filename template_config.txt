@@ -1,0 +1,38 @@
+# MetaPathways v1.0
+# Kishori M. Konwar, Niels W. Hanson
+# Configuration File
+# Please run: source MetaPathwaysrc before continuing
+
+# Paths for the Python, Perl and Pathway Tools
+PYTHON_EXECUTABLE   /path/to/python 
+PERL_EXECUTABLE   /path/to/perl
+METAPATHWAYS_PATH /path/to/MetaPathways
+
+# Replace with your current
+PATHOLOGIC_EXECUTABLE   /path/to/pathway_tools
+
+REFDBS   blastDB
+
+# Executables: replace SYSTEM to your platform linux, mac, win
+FORMATDB_EXECUTABLE     executables/SYSTEM/bit64/makeblastdb
+BLASTP_EXECUTABLE       executables/SYSTEM/bit64/blastp
+BLASTN_EXECUTABLE       executables/SYSTEM/bit64/blastn
+EXECUTABLES_DIR         executables/SYSTEM/bit64/
+LASTDB_EXECUTABLE       executables/SYSTEM/bit64/lastdb
+LAST_EXECUTABLE         executables/SYSTEM/bit64/lastal
+ORF_PREDICTION          executables/SYSTEM/bit64/prodigal 
+SCAN_tRNA               executables/SYSTEM/bit64/trnascan-1.4 
+
+# Paths to python scripts and ML-TreeMap
+GBK_TO_FNA_FAA_GFF     libs/python_scripts/MetaPathways_parse_genbank.py
+GFF_TO_FNA_FAA_GFF     libs/python_scripts/MetaPathways_input_gff.py
+PREPROCESS_FASTA       libs/python_scripts/MetaPathways_filter_input.py
+GFF_TO_FASTA           libs/python_scripts/MetaPathways_create_amino_sequences.py
+COMPUTE_REFSCORE       libs/python_scripts/MetaPathways_refscore.py 
+PARSE_BLAST            libs/python_scripts/MetaPathways_parse_blast.py
+ANNOTATE               libs/python_scripts/MetaPathways_annotate.py
+GENBANK_FILE           libs/python_scripts/MetaPathways_create_genbank_ptinput_sequin.py  
+CREATE_REPORT_FILES    libs/python_scripts/MetaPathways_create_reports.py 
+STATS_rRNA             libs/python_scripts/MetaPathways_rRNA_stats_calculator.py
+MLTREEMAP_IMAGEMAKER   mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl 
+MLTREEMAP_CALCULATION  mltreemap/mltreemap_calculation/mltreemap.pl
