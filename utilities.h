@@ -1,6 +1,6 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
-#include "QHash.h"
+#include "QHash"
 #include "qstring.h"
 
 class Utilities

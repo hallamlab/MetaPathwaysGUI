@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "fstream.h"
 #include "qstring.h"
-#include "iostream.h"
 #include "qdebug.h"
+#include <fstream>
+#include <iostream>
 
 const QString MainWindow::TEMPLATE_PARAM = "template_param.txt";
 const QString MainWindow::DEFAULT_TEMPLATE_PARAM = "default_template_param.txt";
@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
 
     qDebug() << "initializing config file";
+
+    setupWindow = NULL;
 
     setupButton = this->findChild<QPushButton *>("setupButton");
     startButton = this->findChild<QPushButton *>("startButton");
@@ -31,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(startButton, SIGNAL(clicked()), this, SLOT(openSettings()));
     connect(remoteButton, SIGNAL(clicked()), this, SLOT(openRemoteJob()));
 
-    checkParams();
+    //checkParams();
     checkConfig();
 }
 
@@ -62,10 +64,11 @@ MainWindow::~MainWindow(){
  * Usually this lives in a template_config file. So if it doesn't exist, we'll have to create it.
  */
 bool MainWindow::checkConfig(){
-    ifstream config_file(TEMPLATE_CONFIG.toStdString().c_str());
+    std::ifstream config_file(TEMPLATE_CONFIG.toStdString().c_str());
 
     if (config_file.good()){
         warningLabel->hide();
+        qDebug() << "loading config";
         loadConfig(TEMPLATE_CONFIG);
     }else{
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_CONFIG.toStdString().c_str());
@@ -86,12 +89,12 @@ bool MainWindow::checkConfig(){
  */
 
 void MainWindow::checkParams(){
-    ifstream ifile(TEMPLATE_PARAM.toStdString().c_str());
+    std::ifstream ifile(TEMPLATE_PARAM.toStdString().c_str());
     if (ifile.good()){
-        qDebug() << "config file exists, now loading";
+        qDebug() << "param file exists, now loading";
         loadParams(TEMPLATE_PARAM);
     }else{
-        qDebug() << "config file doesnt exist, copying template file to config";
+        qDebug() << "param file doesnt exist, copying template file to config";
         std::ofstream param_config;
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_PARAM.toStdString().c_str());
 
@@ -106,5 +109,5 @@ void MainWindow::loadConfig(QString TEMPLATE_CONFIG){
 }
 
 void MainWindow::loadParams(QString TEMPLATE_PARAM){
-    PARAMS = Utilities::parseParams(TEMPLATE_PARAM);
+    //PARAMS = Utilities::parseParams(TEMPLATE_PARAM);
 }

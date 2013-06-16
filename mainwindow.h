@@ -10,6 +10,7 @@
 #include "utilities.h"
 #include "qhash.h"
 
+
 namespace Ui {
 class MainWindow;
 }

@@ -1,5 +1,5 @@
-#include "settingstab.h"
-#include "ui_settingstab.h"
+#include "SettingsTab.h"
+#include "ui_SettingsTab.h"
 
 SettingsTab::SettingsTab(QWidget *parent) :
     QWidget(parent),

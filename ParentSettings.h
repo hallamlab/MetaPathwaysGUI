@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "AdvancedSettingsTab.h"
-#include "settingstab.h"
+#include "SettingsTab.h"
 
 namespace Ui {
 class ParentSettings;
