@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>442</width>
-    <height>304</height>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,13 +44,13 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="pythonLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>80</y>
-     <width>71</width>
-     <height>21</height>
+     <y>70</y>
+     <width>91</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -62,12 +62,12 @@
     <string>Python</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="PYTHON_EXECUTABLE">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>110</y>
-     <width>62</width>
+     <width>411</width>
      <height>16</height>
     </rect>
    </property>
@@ -75,7 +75,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="pythonBrowseButton">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -88,7 +88,7 @@
     <string>Browse</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="perlLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -106,7 +106,7 @@
     <string>Perl</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="perlBrowseButton">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -119,12 +119,12 @@
     <string>Browse</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="PERL_EXECUTABLE">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>190</y>
-     <width>62</width>
+     <y>200</y>
+     <width>411</width>
      <height>16</height>
     </rect>
    </property>
@@ -132,13 +132,13 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="metapathwaysLabel">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>240</y>
-     <width>131</width>
-     <height>21</height>
+     <width>211</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -150,7 +150,7 @@
     <string>MetaPathways</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="metapathwaysBrowseButton">
    <property name="geometry">
     <rect>
      <x>320</x>
@@ -163,12 +163,12 @@
     <string>Browse</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QLabel" name="METAPATHWAYS_PATH">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>270</y>
-     <width>62</width>
+     <y>280</y>
+     <width>411</width>
      <height>16</height>
     </rect>
    </property>
@@ -208,11 +208,40 @@
      <x>20</x>
      <y>50</y>
      <width>411</width>
-     <height>16</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>MetaPathways needs to know where these programs are to work.</string>
+    <string>MetaPathways needs to know where these are to work.</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="saveButton">
+   <property name="geometry">
+    <rect>
+     <x>317</x>
+     <y>300</y>
+     <width>121</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Save Settings</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>300</y>
+     <width>111</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
    </property>
   </widget>
  </widget>

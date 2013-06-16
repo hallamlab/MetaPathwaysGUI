@@ -7,8 +7,8 @@
 #include "RemoteForm.h"
 #include "ui_mainwindow.h"
 #include "ParentSettings.h"
-#include "utilities.h"
 #include "qhash.h"
+#include "utilities.h"
 
 
 namespace Ui {
@@ -20,8 +20,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    QHash<QString,QString> *CONFIG;
-    QHash<QString,QString> *PARAMS;
+    static const QString TEMPLATE_PARAM;
+    static const QString DEFAULT_TEMPLATE_PARAM;
+
+    static const QString TEMPLATE_CONFIG;
+    static const QString DEFAULT_TEMPLATE_CONFIG;
+
+    static QHash<QString,QString> *CONFIG;
+    static QHash<QString,QString> *PARAMS;
 
     void checkParams();
     bool checkConfig();
@@ -39,12 +45,6 @@ public slots:
     void openRemoteJob();
 
 private:
-    static const QString TEMPLATE_PARAM;
-    static const QString DEFAULT_TEMPLATE_PARAM;
-
-    static const QString TEMPLATE_CONFIG;
-    static const QString DEFAULT_TEMPLATE_CONFIG;
-
     QPushButton *setupButton;
     QPushButton *startButton;
     QPushButton *remoteButton;

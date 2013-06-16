@@ -7,8 +7,8 @@ class Utilities
 {
 public:
     Utilities();
-    static QHash<QString,QString>* parseConfig(QString TEMPLATE_CONFIG);
-    static QHash<QString,QString>* parseParams(QString TEMPLATE_PARAM);
+    static QHash<QString,QString>* parseFile(QString TEMPLATE_FILE);
+    static bool writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString VALUE);
 };
 
 #endif // UTILITIES_H
