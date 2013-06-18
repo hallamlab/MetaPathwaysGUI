@@ -7,6 +7,7 @@ class Utilities
 {
 public:
     Utilities();
+    static QHash<QString,QString>* createMapping();
     static QHash<QString,QString>* parseFile(QString TEMPLATE_FILE);
     static bool writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString VALUE);
 };

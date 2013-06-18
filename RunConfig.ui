@@ -298,7 +298,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QGroupBox" name="metapathwaysPREPROCESS_FASTA">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -308,7 +308,7 @@
     </rect>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <widget class="QRadioButton" name="radioButton">
     <property name="geometry">
@@ -1203,8 +1203,7 @@
   <zorder>groupBox_9</zorder>
   <zorder>groupBox_10</zorder>
   <zorder>groupBox_11</zorder>
-  <zorder>groupBox_12</zorder>
-  <zorder>groupBox</zorder>
+  <zorder>metapathwaysPREPROCESS_FASTA</zorder>
   <zorder>groupBox_13</zorder>
   <zorder>groupBox_14</zorder>
   <zorder>groupBox_15</zorder>

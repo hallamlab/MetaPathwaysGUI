@@ -17,7 +17,6 @@ SOURCES += main.cpp\
         mainwindow.cpp \
         Setup.cpp \
         SettingsTab.cpp \
-        ParentSettings.cpp \
         AdvancedSettingsTab.cpp \
         RunConfig.cpp \
         ProgressDialog.cpp \
@@ -28,7 +27,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
             Setup.h \
             SettingsTab.h \
-            ParentSettings.h \
             AdvancedSettingsTab.h \
             RunConfig.h \
             ProgressDialog.h \
@@ -38,7 +36,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
             Setup.ui \
             SettingsTab.ui \
-            ParentSettings.ui \
             RunConfig.ui \
             ProgressDialog.ui \
             RemoteForm.ui \

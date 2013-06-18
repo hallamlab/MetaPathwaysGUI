@@ -11,6 +11,7 @@ const QString MainWindow::TEMPLATE_CONFIG = "template_config.txt";
 const QString MainWindow::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
 QHash<QString, QString> *MainWindow::CONFIG = NULL;
 QHash<QString, QString> *MainWindow::PARAMS = NULL;
+QHash<QString, QString> *MainWindow::CONFIG_MAPPING = NULL;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
@@ -45,10 +46,11 @@ void MainWindow::openRemoteJob(){
 }
 
 void MainWindow::openSettings(){
-    settingsWindow = new ParentSettings();
+    settingsWindow = new SettingsTab();
     settingsWindow->show();
 }
 
+// Only one instance allowed of this window.
 void MainWindow::openSetup(){
     if (setupWindow) setupWindow->show();
     else {
@@ -69,10 +71,7 @@ MainWindow::~MainWindow(){
 bool MainWindow::checkConfig(){
     std::ifstream config_file(TEMPLATE_CONFIG.toStdString().c_str());
 
-    if (config_file.good()){
-        warningLabel->hide();
-        qDebug() << "loading config";
-    }else{
+    if (!config_file){
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_CONFIG.toStdString().c_str());
         std::ofstream configFile;
         configFile.open(TEMPLATE_CONFIG.toStdString().c_str());
@@ -83,7 +82,6 @@ bool MainWindow::checkConfig(){
         startButton->setEnabled(false);
     }
     loadConfig(TEMPLATE_CONFIG);
-
 }
 
 /*
@@ -94,7 +92,7 @@ bool MainWindow::checkConfig(){
 
 void MainWindow::checkParams(){
     std::ifstream ifile(TEMPLATE_PARAM.toStdString().c_str());
-    if (!ifile.good()){
+    if (!ifile){
         qDebug() << "param file doesnt exist, copying template file to config";
         std::ofstream param_config;
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_PARAM.toStdString().c_str());
@@ -107,8 +105,12 @@ void MainWindow::checkParams(){
     loadParams(TEMPLATE_PARAM);
 }
 
+/*
+ * Load config to CONFIG and mapping to CONFIG_MAPPING.
+ */
 void MainWindow::loadConfig(QString TEMPLATE_CONFIG){
     MainWindow::CONFIG = Utilities::parseFile(TEMPLATE_CONFIG);
+    MainWindow::CONFIG_MAPPING = Utilities::createMapping();
 }
 
 void MainWindow::loadParams(QString TEMPLATE_PARAM){

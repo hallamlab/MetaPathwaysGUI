@@ -57,7 +57,7 @@
     <string>Batch Size</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="grid_engineBATCH_SIZE">
    <property name="geometry">
     <rect>
      <x>400</x>
@@ -80,7 +80,7 @@
     <string>Max Concurrent Batches</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox_2">
+  <widget class="QSpinBox" name="grid_engineMAX_CONCURRENT_BATCHES">
    <property name="geometry">
     <rect>
      <x>400</x>
@@ -103,7 +103,7 @@
     <string>Wall Time</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="grid_engineWALLTIME">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -126,7 +126,7 @@
     <string>RAM (GB)</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox_3">
+  <widget class="QSpinBox" name="grid_engineRAM">
    <property name="geometry">
     <rect>
      <x>400</x>
@@ -149,7 +149,7 @@
     <string>Username</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="grid_engineUSER">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -172,7 +172,7 @@
     <string>Server</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_3">
+  <widget class="QLineEdit" name="grid_engineSERVER">
    <property name="geometry">
     <rect>
      <x>140</x>
