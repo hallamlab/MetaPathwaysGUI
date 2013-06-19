@@ -12,34 +12,79 @@ RunConfig::RunConfig(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    groupBoxes = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^metapaths_steps*")));
+    groupBoxes = new QList<QGroupBox *>(this->findChildren<QGroupBox *>(QRegExp("^metapaths_steps*")));
 
-    runAllCheck = this->findChild<QCheckBox *>("runAllCheckBox");
-    skipAllCheck = this->findChild<QCheckBox *>("skipAllCheckBox");
-    redoAllCheck = this->findChild<QCheckBox *>("redoAllCheckBox");
+    runAll = this->findChild<QRadioButton *>("runAllRadioButton");
+    skipAll = this->findChild<QRadioButton *>("skipAllRadioButton");
+    redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
     fileSelectedPath = this->findChild<QLabel *>("fileBrowsePath");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     runButton = this->findChild<QPushButton *>("runButton");
+    runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
 
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
 
-    getAllRadioButtons();
     setStyling();
-    loadRunParams(MainWindow::PARAMS);
+    loadRunParams();
 
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
-    connect(runAllCheck, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
-    connect(skipAllCheck, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
-    connect(redoAllCheck, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
+    connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
+    connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
+    connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
+    connect(runButton, SIGNAL(clicked()),this,SLOT(run()));
 }
 
-void RunConfig::getAllRadioButtons(){
+void RunConfig::run(){
+    QList<QGroupBox *>::iterator i;
+    for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+        QGroupBox *temp = *i;
+        QString stepName = temp->objectName();
+        //get the name, look up in the hash the corresponding setting key value pair
+        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainWindow::PARAMS->value(configKey);
 
+        //get the name of the radiobutton on the form by isolating for caps from the step,
+        //taking the step name, to lower
+        QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+        QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+        QRadioButton *yesRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"YES");
+        QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
+        QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
+
+//        //write to hash the changes
+        if (yesRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "yes";
+        else if (redoRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "redo";
+        else MainWindow::PARAMS->operator [](configKey) = "skip";
+
+        //write to file the changes
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey));
+    }
 }
 
-void RunConfig::loadRunParams(QHash<QString,QString> *params){
+void RunConfig::loadRunParams(){
+    QList<QGroupBox *>::iterator i;
+    for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+        QGroupBox *temp = *i;
+        QString stepName = temp->objectName();
+        //get the name, look up in the hash the corresponding setting key value pair
+        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainWindow::PARAMS->value(configKey);
 
+        //get the name of the radiobutton on the form by isolating for caps from the step,
+        //taking the step name, to lower
+        QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+        QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+        QRadioButton *yesRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"YES");
+        QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
+        QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
+
+        if (configValue.operator ==("yes")) yesRadioButton->setChecked(true);
+        else if (configValue.operator ==("skip")) skipRadioButton->setChecked(true);
+        else redoRadioButton->setChecked(true);
+    }
 }
 
 void RunConfig::browseFile(){
@@ -48,15 +93,63 @@ void RunConfig::browseFile(){
 }
 
 void RunConfig::toggleAllRun(){
+    QList<QGroupBox *>::iterator i;
+    for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+        QGroupBox *temp = *i;
+        QString stepName = temp->objectName();
+        //get the name, look up in the hash the corresponding setting key value pair
+        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainWindow::CONFIG->value(configKey);
 
+        //get the name of the radiobutton on the form by isolating for caps from the step,
+        //taking the step name, to lower
+        QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+        QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+        QRadioButton *yesRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"YES");
+
+        yesRadioButton->setChecked(true);
+    }
 }
 
 void RunConfig::toggleAllSkip(){
+    QList<QGroupBox *>::iterator i;
+    for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+        QGroupBox *temp = *i;
+        QString stepName = temp->objectName();
+        //get the name, look up in the hash the corresponding setting key value pair
+        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainWindow::CONFIG->value(configKey);
 
+        //get the name of the radiobutton on the form by isolating for caps from the step,
+        //taking the step name, to lower
+        QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+        QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+        QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
+
+        skipRadioButton->setChecked(true);
+    }
 }
 
 void RunConfig::toggleAllRedo(){
+    QList<QGroupBox *>::iterator i;
+    for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+        QGroupBox *temp = *i;
+        QString stepName = temp->objectName();
+        //get the name, look up in the hash the corresponding setting key value pair
+        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainWindow::CONFIG->value(configKey);
 
+        //get the name of the radiobutton on the form by isolating for caps from the step,
+        //taking the step name, to lower
+        QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+        QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+        QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
+
+        redoRadioButton->setChecked(true);
+    }
 }
 
 void RunConfig::closeWindow(){
@@ -64,15 +157,14 @@ void RunConfig::closeWindow(){
 }
 
 void RunConfig::setStyling(){
-    QList<QWidget *>::iterator i;
+    QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i != groupBoxes->end(); ++i){
-        QWidget *widget = *i;
-        QGroupBox *temp = qobject_cast<QGroupBox *>(widget);
-        if (temp!=NULL){
-            temp->setStyleSheet("border:0;");
-            temp->setTitle("");
-        }
+        QGroupBox *widget = *i;
+        widget->setStyleSheet("border:0;");
+        widget->setTitle("");
     }
+    runOptionsGroupBox->setStyleSheet("border:0");
+    runOptionsGroupBox->setTitle("");
 }
 
 RunConfig::~RunConfig()

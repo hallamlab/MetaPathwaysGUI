@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include "qhash.h"
 #include "utilities.h"
+#include "parentwidget.h"
 #include "SettingsTab.h"
 
 
@@ -36,6 +37,7 @@ public:
 
     void loadParams(QString TEMPLATE_PARAM);
     void loadConfig(QString TEMPLATE_CONFIG);
+    void createMapping();
 
     explicit MainWindow(QWidget *parent = 0);
 
@@ -57,6 +59,7 @@ private:
     Setup *setupWindow;
     SettingsTab *settingsWindow;
     RemoteForm *remoteWindow;
+    ParentWidget *parentWidget;
 };
 
 #endif // MAINWINDOW_H

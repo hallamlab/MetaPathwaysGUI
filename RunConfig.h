@@ -6,6 +6,7 @@
 #include "qcheckbox.h"
 #include "qlabel.h"
 #include "qradiobutton.h"
+#include "qgroupbox.h"
 
 namespace Ui {
 class RunConfig;
@@ -25,8 +26,12 @@ private slots:
     void toggleAllSkip();
     void toggleAllRedo();
     void browseFile();
+    void run();
 
 private:
+    void loadRunParams();
+    void setStyling();
+
     QString selectedFile;
     QLabel *fileSelectedPath;
 
@@ -35,15 +40,12 @@ private:
     QPushButton *cancelButton;
     QPushButton *fileBrowseButton;
 
-    QCheckBox *runAllCheck;
-    QCheckBox *redoAllCheck;
-    QCheckBox *skipAllCheck;
+    QRadioButton *runAll;
+    QRadioButton *redoAll;
+    QRadioButton *skipAll;
 
-    void getAllRadioButtons();
-    void loadRunParams(QHash<QString,QString> *params);
-    void setStyling();
-    QList<QWidget *> *groupBoxes;
-    QList<QList<QRadioButton *>*> *radioButtons;
+    QList<QGroupBox *> *groupBoxes;
+    QGroupBox *runOptionsGroupBox;
 };
 
 #endif // RUNCONFIG_H

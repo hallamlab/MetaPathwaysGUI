@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     checkConfig();
     checkParams();
+    createMapping();
+
 }
 
 void MainWindow::openRemoteJob(){
@@ -52,12 +54,14 @@ void MainWindow::openSettings(){
 
 // Only one instance allowed of this window.
 void MainWindow::openSetup(){
-    if (setupWindow) setupWindow->show();
-    else {
-        setupWindow = new Setup();
-        setupWindow->show();
-    }
-    startButton->setEnabled(true);
+    parentWidget = new ParentWidget();
+    parentWidget->show();
+//    if (setupWindow) setupWindow->show();
+//    else {
+//        setupWindow = new Setup();
+//        setupWindow->show();
+//    }
+//    startButton->setEnabled(true);
 }
 
 MainWindow::~MainWindow(){
@@ -114,10 +118,13 @@ void MainWindow::checkParams(){
 void MainWindow::loadConfig(QString TEMPLATE_CONFIG){
     qDebug() << "calling utilities to parse config";
     MainWindow::CONFIG = Utilities::parseFile(TEMPLATE_CONFIG);
-    MainWindow::CONFIG_MAPPING = Utilities::createMapping();
 }
 
 void MainWindow::loadParams(QString TEMPLATE_PARAM){
     MainWindow::PARAMS = Utilities::parseFile(TEMPLATE_PARAM);
+}
+
+void MainWindow::createMapping(){
+    MainWindow::CONFIG_MAPPING = Utilities::createMapping();
 }
 

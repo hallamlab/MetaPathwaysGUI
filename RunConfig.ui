@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>475</width>
-    <height>801</height>
+    <height>837</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -109,7 +109,7 @@
      <x>10</x>
      <y>180</y>
      <width>451</width>
-     <height>531</height>
+     <height>561</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -230,6 +230,11 @@
      <string>Pathologic</string>
     </property>
    </row>
+   <row>
+    <property name="text">
+     <string>rRNA Statistics</string>
+    </property>
+   </row>
    <column>
     <property name="text">
      <string>run</string>
@@ -250,7 +255,7 @@
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>760</y>
+     <y>800</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -263,7 +268,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>760</y>
+     <y>800</y>
      <width>121</width>
      <height>32</height>
     </rect>
@@ -297,7 +302,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_7">
+   <widget class="QRadioButton" name="orf_predictionYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -310,7 +315,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_8">
+   <widget class="QRadioButton" name="orf_predictionSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -323,7 +328,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_9">
+   <widget class="QRadioButton" name="orf_predictionREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -349,7 +354,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_10">
+   <widget class="QRadioButton" name="gff_to_aminoYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -362,7 +367,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_11">
+   <widget class="QRadioButton" name="gff_to_aminoSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -375,7 +380,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_12">
+   <widget class="QRadioButton" name="gff_to_aminoREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -388,10 +393,6 @@
      <string/>
     </property>
    </widget>
-   <zorder>radioButton_10</zorder>
-   <zorder>radioButton_11</zorder>
-   <zorder>radioButton_12</zorder>
-   <zorder>metapaths_stepsORF_PREDICTION</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
    <property name="geometry">
@@ -405,7 +406,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_59">
+   <widget class="QRadioButton" name="filtered_fastaYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -418,7 +419,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_60">
+   <widget class="QRadioButton" name="filtered_fastaSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -431,7 +432,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_61">
+   <widget class="QRadioButton" name="filtered_fastaREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -457,7 +458,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_13">
+   <widget class="QRadioButton" name="compute_refscoreYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -470,7 +471,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_14">
+   <widget class="QRadioButton" name="compute_refscoreSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -483,7 +484,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_15">
+   <widget class="QRadioButton" name="compute_refscoreREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -509,7 +510,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_19">
+   <widget class="QRadioButton" name="blast_refdbYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -522,7 +523,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_20">
+   <widget class="QRadioButton" name="blast_refdbSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -535,7 +536,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_21">
+   <widget class="QRadioButton" name="blast_refdbREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -561,7 +562,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_22">
+   <widget class="QRadioButton" name="parse_blastYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -574,7 +575,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_23">
+   <widget class="QRadioButton" name="parse_blastSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -587,7 +588,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_24">
+   <widget class="QRadioButton" name="parse_blastREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -613,7 +614,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_34">
+   <widget class="QRadioButton" name="scan_rrnaYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -626,7 +627,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_35">
+   <widget class="QRadioButton" name="scan_rrnaSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -639,7 +640,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_36">
+   <widget class="QRadioButton" name="scan_rrnaREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -665,7 +666,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_37">
+   <widget class="QRadioButton" name="scan_trnaYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -678,7 +679,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_38">
+   <widget class="QRadioButton" name="scan_trnaSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -691,7 +692,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_39">
+   <widget class="QRadioButton" name="scan_trnaREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -717,7 +718,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_40">
+   <widget class="QRadioButton" name="pathologic_inputYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -730,7 +731,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_42">
+   <widget class="QRadioButton" name="pathologic_inputSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -743,7 +744,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_43">
+   <widget class="QRadioButton" name="pathologic_inputREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -769,7 +770,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_44">
+   <widget class="QRadioButton" name="annotateYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -782,7 +783,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_45">
+   <widget class="QRadioButton" name="annotateSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -795,7 +796,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_46">
+   <widget class="QRadioButton" name="annotateREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -821,7 +822,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_65">
+   <widget class="QRadioButton" name="create_sequin_fileYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -834,7 +835,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_66">
+   <widget class="QRadioButton" name="create_sequin_fileSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -847,7 +848,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_67">
+   <widget class="QRadioButton" name="create_sequin_fileREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -873,7 +874,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_68">
+   <widget class="QRadioButton" name="genbank_fileYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -886,7 +887,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_69">
+   <widget class="QRadioButton" name="genbank_fileSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -899,7 +900,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_70">
+   <widget class="QRadioButton" name="genbank_fileREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -925,7 +926,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_71">
+   <widget class="QRadioButton" name="create_report_filesYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -938,7 +939,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_72">
+   <widget class="QRadioButton" name="create_report_filesSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -951,7 +952,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_73">
+   <widget class="QRadioButton" name="create_report_filesREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -977,7 +978,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_74">
+   <widget class="QRadioButton" name="mltreemap_calculationYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -990,7 +991,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_75">
+   <widget class="QRadioButton" name="mltreemap_calculationSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -1003,7 +1004,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_76">
+   <widget class="QRadioButton" name="mltreemap_calculationREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -1029,7 +1030,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_77">
+   <widget class="QRadioButton" name="mltreemap_imagemakerYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -1042,7 +1043,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_78">
+   <widget class="QRadioButton" name="mltreemap_imagemakerSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -1055,7 +1056,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_79">
+   <widget class="QRadioButton" name="mltreemap_imagemakerREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -1081,7 +1082,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_83">
+   <widget class="QRadioButton" name="pathologicYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -1094,7 +1095,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_84">
+   <widget class="QRadioButton" name="pathologicSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -1107,7 +1108,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_85">
+   <widget class="QRadioButton" name="pathologicREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -1133,7 +1134,7 @@
    <property name="title">
     <string>GroupBox</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_16">
+   <widget class="QRadioButton" name="preprocess_fastaYES">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -1146,7 +1147,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_17">
+   <widget class="QRadioButton" name="preprocess_fastaSKIP">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -1159,7 +1160,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_18">
+   <widget class="QRadioButton" name="preprocess_fastaREDO">
     <property name="geometry">
      <rect>
       <x>230</x>
@@ -1173,52 +1174,13 @@
     </property>
    </widget>
   </widget>
-  <widget class="QCheckBox" name="runAllCheckBox">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>720</y>
-     <width>71</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Run All</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="skipAllCheckBox">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>720</y>
-     <width>71</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Skip All</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="redoAllCheckBox">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>720</y>
-     <width>81</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Redo All</string>
-   </property>
-  </widget>
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>740</y>
-     <width>511</width>
-     <height>16</height>
+     <y>780</y>
+     <width>471</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="orientation">
@@ -1237,6 +1199,110 @@
    <property name="text">
     <string>None</string>
    </property>
+  </widget>
+  <widget class="QGroupBox" name="metapaths_stepsSTATS_RRNA">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>700</y>
+     <width>281</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>GroupBox</string>
+   </property>
+   <widget class="QRadioButton" name="stats_rrnaYES">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="stats_rrnaSKIP">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>20</y>
+      <width>16</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="stats_rrnaREDO">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>20</y>
+      <width>16</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="runOptionsGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>740</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>GroupBox</string>
+   </property>
+   <widget class="QRadioButton" name="runAllRadioButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Run All</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="skipAllRadioButton">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>20</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Skip All</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="redoAllRadioButton">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>20</y>
+      <width>81</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Redo All</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
