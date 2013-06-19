@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>514</width>
-    <height>770</height>
+    <width>475</width>
+    <height>801</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,13 +72,13 @@
     <string>File Details</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="fileBrowseButton">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>50</y>
+     <x>350</x>
+     <y>60</y>
      <width>114</width>
-     <height>32</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -246,24 +246,11 @@
     </property>
    </column>
   </widget>
-  <widget class="QRadioButton" name="radioButton_51">
+  <widget class="QPushButton" name="runButton">
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>680</y>
-     <width>21</width>
-     <height>321</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>730</y>
+     <x>360</x>
+     <y>760</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -272,11 +259,11 @@
     <string>Run</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>730</y>
+     <x>230</x>
+     <y>760</y>
      <width>121</width>
      <height>32</height>
     </rect>
@@ -298,64 +285,12 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QGroupBox" name="metapathwaysPREPROCESS_FASTA">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>190</y>
-     <width>291</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <widget class="QRadioButton" name="radioButton">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_3">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_5">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="groupBox_2">
+  <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>220</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -402,12 +337,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_3">
+  <widget class="QGroupBox" name="metapaths_stepsGFF_TO_AMINO">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>250</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -453,13 +388,17 @@
      <string/>
     </property>
    </widget>
+   <zorder>radioButton_10</zorder>
+   <zorder>radioButton_11</zorder>
+   <zorder>radioButton_12</zorder>
+   <zorder>metapaths_stepsORF_PREDICTION</zorder>
   </widget>
-  <widget class="QGroupBox" name="groupBox_4">
+  <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>280</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -506,12 +445,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_5">
+  <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORE">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>310</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -558,12 +497,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_6">
+  <widget class="QGroupBox" name="metapaths_stepsBLAST_REFDB">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>340</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -610,12 +549,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_7">
+  <widget class="QGroupBox" name="metapaths_stepsPARSE_BLAST">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>370</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -662,12 +601,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_8">
+  <widget class="QGroupBox" name="metapaths_stepsSCAN_RRNA">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>400</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -714,12 +653,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_9">
+  <widget class="QGroupBox" name="metapaths_stepsSCAN_TRNA">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>430</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -766,12 +705,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_10">
+  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>490</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -818,12 +757,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_11">
+  <widget class="QGroupBox" name="metapaths_stepsANNOTATE">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>460</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -870,12 +809,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_13">
+  <widget class="QGroupBox" name="metapaths_stepsCREATE_SEQUIN_FILE">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>550</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -922,12 +861,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_14">
+  <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>520</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -974,12 +913,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_15">
+  <widget class="QGroupBox" name="metapaths_stepsCREATE_REPORT_FILES">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>580</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -1026,12 +965,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_16">
+  <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_CALCULATION">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>610</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -1078,12 +1017,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_17">
+  <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>640</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -1130,12 +1069,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_18">
+  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC">
    <property name="geometry">
     <rect>
      <x>170</x>
      <y>670</y>
-     <width>291</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
@@ -1182,34 +1121,123 @@
     </property>
    </widget>
   </widget>
-  <zorder>label</zorder>
-  <zorder>comboBox</zorder>
-  <zorder>label_2</zorder>
-  <zorder>label_3</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>label_4</zorder>
-  <zorder>tableWidget</zorder>
-  <zorder>radioButton_51</zorder>
-  <zorder>pushButton_2</zorder>
-  <zorder>pushButton_3</zorder>
-  <zorder>line</zorder>
-  <zorder>groupBox_2</zorder>
-  <zorder>groupBox_3</zorder>
-  <zorder>groupBox_4</zorder>
-  <zorder>groupBox_5</zorder>
-  <zorder>groupBox_6</zorder>
-  <zorder>groupBox_7</zorder>
-  <zorder>groupBox_8</zorder>
-  <zorder>groupBox_9</zorder>
-  <zorder>groupBox_10</zorder>
-  <zorder>groupBox_11</zorder>
-  <zorder>metapathwaysPREPROCESS_FASTA</zorder>
-  <zorder>groupBox_13</zorder>
-  <zorder>groupBox_14</zorder>
-  <zorder>groupBox_15</zorder>
-  <zorder>groupBox_16</zorder>
-  <zorder>groupBox_17</zorder>
-  <zorder>groupBox_18</zorder>
+  <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_FASTA">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>190</y>
+     <width>281</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>GroupBox</string>
+   </property>
+   <widget class="QRadioButton" name="radioButton_16">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_17">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>20</y>
+      <width>16</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_18">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>20</y>
+      <width>16</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QCheckBox" name="runAllCheckBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>720</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Run All</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="skipAllCheckBox">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>720</y>
+     <width>71</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Skip All</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="redoAllCheckBox">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>720</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Redo All</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>740</y>
+     <width>511</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="fileBrowsePath">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>61</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>None</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

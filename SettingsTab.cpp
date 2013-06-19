@@ -35,6 +35,7 @@ void SettingsTab::closeWindow(){
 void SettingsTab::openParameterSetup(){
     if (RunConfigWindow == NULL) RunConfigWindow = new RunConfig();
     RunConfigWindow->show();
+    close();
 }
 
 void SettingsTab::initWidgetValues(){
@@ -49,7 +50,6 @@ void SettingsTab::initWidgetValues(){
         if (qobject_cast<QComboBox *>(widget)!=NULL){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             temp->setCurrentIndex(temp->findText(value));
-            qDebug() << temp->findText(value);
         }
         else if (qobject_cast<QSpinBox *>(widget)!=NULL){
             QSpinBox *temp = qobject_cast<QSpinBox *>(widget);

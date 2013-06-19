@@ -144,13 +144,18 @@ QHash<QString,QString>* Utilities::parseFile(QString TEMPLATE_FILE){
 
                 QString key;
                 QString value;
-                if (splitList.count() > 0){
-                    //if the list has a key and value for us to use
-                    if (splitList.at(0) != "") key = splitList.at(0);
-                    value = splitList.at(1);
-                    key.replace("'","");
-                    value.replace("'","");
 
+                if (!splitList.isEmpty()){
+
+                    //if the list has a key and value for us to use
+                    key = splitList.at(0);
+                    key.replace("'","");
+
+                    if (splitList.size()>1){
+                        value = splitList.at(1);
+                        value.replace("'","");
+                    }
+                    else value = "";
                     configs->insert(key,value);
                 }
             }

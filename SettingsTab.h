@@ -27,7 +27,6 @@ private:
     void getAllWidgets();
     void initWidgetValues();
 
-
     QPushButton *cancelButton;
     QPushButton *continueButton;
     RunConfig *RunConfigWindow;
@@ -35,7 +34,6 @@ private:
     QList<QWidget *> *orfWidgets;
     QList<QWidget *> *annotationWidgets;
     QList<QWidget *> *rrnaWidgets;
-
     QList<QWidget *> *allWidgets;
 
     Ui::SettingsTab *ui;

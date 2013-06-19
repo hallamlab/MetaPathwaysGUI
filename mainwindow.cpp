@@ -70,8 +70,8 @@ MainWindow::~MainWindow(){
  */
 bool MainWindow::checkConfig(){
     std::ifstream config_file(TEMPLATE_CONFIG.toStdString().c_str());
-
     if (!config_file){
+        qDebug() << "no config file, copying";
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_CONFIG.toStdString().c_str());
         std::ofstream configFile;
         configFile.open(TEMPLATE_CONFIG.toStdString().c_str());
@@ -80,7 +80,10 @@ bool MainWindow::checkConfig(){
 
         warningLabel->show();
         startButton->setEnabled(false);
+    }else{
+        warningLabel->hide();
     }
+    qDebug() << "loading param file";
     loadConfig(TEMPLATE_CONFIG);
 }
 
@@ -93,7 +96,7 @@ bool MainWindow::checkConfig(){
 void MainWindow::checkParams(){
     std::ifstream ifile(TEMPLATE_PARAM.toStdString().c_str());
     if (!ifile){
-        qDebug() << "param file doesnt exist, copying template file to config";
+        qDebug() << "param file doesnt exist, copying template file to param";
         std::ofstream param_config;
         std::ifstream defaultConfig(DEFAULT_TEMPLATE_PARAM.toStdString().c_str());
 
@@ -109,6 +112,7 @@ void MainWindow::checkParams(){
  * Load config to CONFIG and mapping to CONFIG_MAPPING.
  */
 void MainWindow::loadConfig(QString TEMPLATE_CONFIG){
+    qDebug() << "calling utilities to parse config";
     MainWindow::CONFIG = Utilities::parseFile(TEMPLATE_CONFIG);
     MainWindow::CONFIG_MAPPING = Utilities::createMapping();
 }

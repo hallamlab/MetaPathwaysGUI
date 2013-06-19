@@ -6,9 +6,9 @@
 #include "Setup.h"
 #include "RemoteForm.h"
 #include "ui_mainwindow.h"
-#include "ParentSettings.h"
 #include "qhash.h"
 #include "utilities.h"
+#include "SettingsTab.h"
 
 
 namespace Ui {
