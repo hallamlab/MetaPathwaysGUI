@@ -20,6 +20,8 @@ Utilities::Utilities()
 QHash<QString,QString>* Utilities::createMapping(){
     QHash<QString,QString> *CONFIG_NAME_MAP = new QHash<QString,QString>();
 
+    CONFIG_NAME_MAP->operator []("INPUT:format") = "fileInputFormat";
+
     CONFIG_NAME_MAP->operator []("quality_control:min_length") = "quality_controlMIN_LENGTH";
     CONFIG_NAME_MAP->operator []("quality_control:delete_replicates") = "quality_controlDELETE_REPLICATES";
 

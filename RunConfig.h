@@ -7,6 +7,7 @@
 #include "qlabel.h"
 #include "qradiobutton.h"
 #include "qgroupbox.h"
+#include "qcombobox.h"
 
 namespace Ui {
 class RunConfig;
@@ -17,6 +18,8 @@ class RunConfig : public QWidget
     Q_OBJECT
     
 public:
+    QList<QGroupBox *> *groupBoxes;
+
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
 
@@ -26,7 +29,7 @@ private slots:
     void toggleAllSkip();
     void toggleAllRedo();
     void browseFile();
-    void run();
+    //void run();
 
 private:
     void loadRunParams();
@@ -36,15 +39,12 @@ private:
     QLabel *fileSelectedPath;
 
     Ui::RunConfig *ui;
-    QPushButton *runButton;
-    QPushButton *cancelButton;
     QPushButton *fileBrowseButton;
-
+    QComboBox *fileInputFormat;
     QRadioButton *runAll;
     QRadioButton *redoAll;
     QRadioButton *skipAll;
 
-    QList<QGroupBox *> *groupBoxes;
     QGroupBox *runOptionsGroupBox;
 };
 

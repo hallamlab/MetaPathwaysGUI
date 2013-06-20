@@ -15,14 +15,9 @@ SettingsTab::SettingsTab(QWidget *parent) :
     allWidgets = new QList<QWidget *>();
 
     RunConfigWindow = NULL;
-    cancelButton = this->findChild<QPushButton *>("cancelButton");
-    continueButton = this->findChild<QPushButton *>("continueButton");
 
     getAllWidgets();
     initWidgetValues();
-
-    connect(continueButton, SIGNAL(clicked()), this, SLOT(openParameterSetup()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
 }
 
 void SettingsTab::closeWindow(){

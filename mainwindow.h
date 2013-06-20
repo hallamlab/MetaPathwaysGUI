@@ -29,7 +29,6 @@ public:
 
     static QHash<QString,QString> *CONFIG;
     static QHash<QString,QString> *PARAMS;
-
     static QHash<QString,QString> *CONFIG_MAPPING;
 
     void checkParams();

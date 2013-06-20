@@ -7,6 +7,8 @@ RemoteForm::RemoteForm(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setFixedSize(555,304);
+
     QPushButton *connectButton = this->findChild<QPushButton *>("connectButton");
     QPushButton *cancelButton = this->findChild<QPushButton *>("cancelButton");
 

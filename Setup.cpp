@@ -14,6 +14,8 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     perlLabel = this->findChild<QLabel *>("PERL_EXECUTABLE");
     metapathwaysLabel = this->findChild<QLabel *>("METAPATHWAYS_PATH");
 
+    this->setFixedSize(442,340);
+
     pythonBrowseButton = this->findChild<QPushButton *>("pythonBrowseButton");
     perlBrowseButton = this->findChild<QPushButton *>("perlBrowseButton");
     metapathwaysBrowseButton = this->findChild<QPushButton *>("metapathwaysBrowseButton");
@@ -23,6 +25,10 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     pythonLabel->setText(MainWindow::CONFIG->value("PYTHON_EXECUTABLE"));
     perlLabel->setText(MainWindow::CONFIG->value("PERL_EXECUTABLE"));
     metapathwaysLabel->setText(MainWindow::CONFIG->value("METAPATHWAYS_PATH"));
+
+    pythonPath = MainWindow::CONFIG->operator[] ("PYTHON_EXECUTABLE");
+    perlPath = MainWindow::CONFIG->operator []("PERL_EXECUTABLE");
+    mpPath = MainWindow::CONFIG->operator []("METAPATHWAYS_PATH");
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));

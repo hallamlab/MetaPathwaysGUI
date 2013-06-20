@@ -16,8 +16,6 @@ QHash<QString, QString> *MainWindow::CONFIG_MAPPING = NULL;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
     ui->setupUi(this);
 
-    qDebug() << "initializing config file";
-
     setupWindow = NULL;
 
     setupButton = this->findChild<QPushButton *>("setupButton");
@@ -25,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     remoteButton = this->findChild<QPushButton *>("remoteButton");
     logo = this->findChild<QGraphicsView *>("logo");
     warningLabel = this->findChild<QLabel *>("warningLabel");
+
+    this->setFixedSize(786, 258);
+    this->setWindowTitle("MetaPathways - Modular Pipeline for Metagenomic Analysis");
 
     QGraphicsScene *imageScene = new QGraphicsScene();
     QPixmap image("logo.png");
@@ -48,20 +49,21 @@ void MainWindow::openRemoteJob(){
 }
 
 void MainWindow::openSettings(){
-    settingsWindow = new SettingsTab();
-    settingsWindow->show();
+    parentWidget = new ParentWidget();
+    parentWidget->show();
+//    settingsWindow = new SettingsTab();
+//    settingsWindow->show();
 }
 
 // Only one instance allowed of this window.
 void MainWindow::openSetup(){
-    parentWidget = new ParentWidget();
-    parentWidget->show();
-//    if (setupWindow) setupWindow->show();
-//    else {
-//        setupWindow = new Setup();
-//        setupWindow->show();
-//    }
-//    startButton->setEnabled(true);
+    if (setupWindow) setupWindow->show();
+    else {
+        setupWindow = new Setup();
+        setupWindow->show();
+    }
+    startButton->setEnabled(true);
+    warningLabel->hide();
 }
 
 MainWindow::~MainWindow(){

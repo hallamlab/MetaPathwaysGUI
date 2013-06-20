@@ -27,8 +27,6 @@ private:
     void getAllWidgets();
     void initWidgetValues();
 
-    QPushButton *cancelButton;
-    QPushButton *continueButton;
     RunConfig *RunConfigWindow;
     QList<QWidget *> *qcWidgets;
     QList<QWidget *> *orfWidgets;

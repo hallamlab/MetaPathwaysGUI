@@ -22,7 +22,9 @@ SOURCES += main.cpp\
         ProgressDialog.cpp \
         RemoteForm.cpp \
         utilities.cpp \
-    parentwidget.cpp
+    parentwidget.cpp \
+    resultwidget.cpp \
+    rundata.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -33,7 +35,9 @@ HEADERS  += mainwindow.h \
             ProgressDialog.h \
             RemoteForm.h \
             utilities.h \
-    parentwidget.h
+    parentwidget.h \
+    resultwidget.h \
+    rundata.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -42,4 +46,5 @@ FORMS    += mainwindow.ui \
             ProgressDialog.ui \
             RemoteForm.ui \
             AdvancedSettingsTab.ui \
-    parentwidget.ui
+    parentwidget.ui \
+    resultwidget.ui
