@@ -6,6 +6,8 @@
 #include "qfiledialog.h"
 #include "mainwindow.h"
 
+QComboBox *RunConfig::fileInputFormat = NULL;
+
 RunConfig::RunConfig(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RunConfig)
@@ -19,8 +21,9 @@ RunConfig::RunConfig(QWidget *parent) :
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
     fileSelectedPath = this->findChild<QLabel *>("fileBrowsePath");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
-    fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
+    RunConfig::fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
+
 
     setStyling();
     loadRunParams();
@@ -34,8 +37,7 @@ RunConfig::RunConfig(QWidget *parent) :
 void RunConfig::loadRunParams(){
     QString key = MainWindow::CONFIG_MAPPING->key(fileInputFormat->objectName());
     QString value = MainWindow::PARAMS->value(key);
-    qDebug() << key << value;
-    fileInputFormat->setCurrentIndex(fileInputFormat->findText(value));
+    RunConfig::fileInputFormat->setCurrentIndex(RunConfig::fileInputFormat->findText(value));
 
     QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){

@@ -15,3 +15,14 @@ RunData::RunData(QHash<QString,QString> *PARAMS,
     this->CONFIG_MAPPING = CONFIG_MAPPING;
 }
 
+QHash<QString,QString>* RunData::getParams(){
+    return this->PARAMS;
+}
+
+QHash<QString,QString>* RunData::getConfig(){
+    return this->CONFIG;
+}
+
+QHash<QString,QString>* RunData::getConfigMapping(){
+    return this->CONFIG_MAPPING;
+}

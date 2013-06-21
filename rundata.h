@@ -12,6 +12,10 @@ public:
             QHash<QString,QString> *CONFIG,
             QHash<QString,QString> *CONFIG_MAPPING);
 
+    QHash<QString,QString>* getParams();
+    QHash<QString,QString>* getConfig();
+    QHash<QString,QString>* getConfigMapping();
+
 private:
     QHash<QString,QString> *PARAMS;
     QHash<QString,QString> *CONFIG;

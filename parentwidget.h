@@ -6,6 +6,7 @@
 #include "RunConfig.h"
 #include "qtabwidget.h"
 #include "resultwidget.h"
+#include "rundata.h"
 
 namespace Ui {
 class ParentWidget;
@@ -26,6 +27,10 @@ private slots:
     void tabChanged();
 
 private:
+    void executionPrep();
+
+    RunData *run;
+
     Ui::ParentWidget *ui;
 
     QPushButton *continueButton;

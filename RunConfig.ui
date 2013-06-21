@@ -153,6 +153,9 @@
    <property name="frameShape">
     <enum>QFrame::StyledPanel</enum>
    </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
    <property name="lineWidth">
     <number>1</number>
    </property>
@@ -164,6 +167,12 @@
    </property>
    <property name="horizontalScrollBarPolicy">
     <enum>Qt::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="showGrid">
+    <bool>true</bool>
+   </property>
+   <property name="gridStyle">
+    <enum>Qt::DashLine</enum>
    </property>
    <property name="sortingEnabled">
     <bool>false</bool>
@@ -303,9 +312,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -315,10 +324,10 @@
    <widget class="QRadioButton" name="orf_predictionSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -329,10 +338,13 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
     <property name="text">
      <string/>
@@ -355,9 +367,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -367,10 +379,10 @@
    <widget class="QRadioButton" name="gff_to_aminoSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -381,15 +393,20 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>gff_to_aminoYES</zorder>
+   <zorder>gff_to_aminoSKIP</zorder>
+   <zorder>gff_to_aminoREDO</zorder>
+   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
+   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
    <property name="geometry">
@@ -407,9 +424,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -419,10 +436,10 @@
    <widget class="QRadioButton" name="filtered_fastaSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -433,9 +450,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -459,9 +476,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -471,10 +488,10 @@
    <widget class="QRadioButton" name="compute_refscoreSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -485,15 +502,20 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>compute_refscoreYES</zorder>
+   <zorder>compute_refscoreSKIP</zorder>
+   <zorder>compute_refscoreREDO</zorder>
+   <zorder>metapaths_stepsBLAST_REFDB</zorder>
+   <zorder>filtered_fastaREDO</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsBLAST_REFDB">
    <property name="geometry">
@@ -511,9 +533,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -523,10 +545,10 @@
    <widget class="QRadioButton" name="blast_refdbSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -537,9 +559,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -563,9 +585,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -575,10 +597,10 @@
    <widget class="QRadioButton" name="parse_blastSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -589,15 +611,20 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>parse_blastYES</zorder>
+   <zorder>parse_blastSKIP</zorder>
+   <zorder>parse_blastREDO</zorder>
+   <zorder>metapaths_stepsSCAN_RRNA</zorder>
+   <zorder>metapaths_stepsSCAN_RRNA</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsSCAN_RRNA">
    <property name="geometry">
@@ -615,9 +642,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -627,10 +654,10 @@
    <widget class="QRadioButton" name="scan_rrnaSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -641,9 +668,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -667,9 +694,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -679,10 +706,10 @@
    <widget class="QRadioButton" name="scan_trnaSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -693,15 +720,19 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>scan_trnaYES</zorder>
+   <zorder>scan_trnaSKIP</zorder>
+   <zorder>scan_trnaREDO</zorder>
+   <zorder>metapaths_stepsANNOTATE</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
@@ -719,9 +750,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -731,10 +762,10 @@
    <widget class="QRadioButton" name="pathologic_inputSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -745,15 +776,19 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>pathologic_inputYES</zorder>
+   <zorder>pathologic_inputSKIP</zorder>
+   <zorder>pathologic_inputREDO</zorder>
+   <zorder>metapaths_stepsGENBANK_FILE</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE">
    <property name="geometry">
@@ -771,9 +806,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -783,10 +818,10 @@
    <widget class="QRadioButton" name="annotateSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -797,9 +832,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -823,9 +858,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -835,10 +870,10 @@
    <widget class="QRadioButton" name="create_sequin_fileSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -849,15 +884,19 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>create_sequin_fileYES</zorder>
+   <zorder>create_sequin_fileSKIP</zorder>
+   <zorder>create_sequin_fileREDO</zorder>
+   <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
@@ -875,9 +914,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -887,10 +926,10 @@
    <widget class="QRadioButton" name="genbank_fileSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -901,9 +940,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -927,9 +966,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -939,10 +978,10 @@
    <widget class="QRadioButton" name="create_report_filesSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -953,9 +992,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -979,9 +1018,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -991,10 +1030,10 @@
    <widget class="QRadioButton" name="mltreemap_calculationSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1005,15 +1044,19 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>mltreemap_calculationYES</zorder>
+   <zorder>mltreemap_calculationSKIP</zorder>
+   <zorder>mltreemap_calculationREDO</zorder>
+   <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
    <property name="geometry">
@@ -1031,9 +1074,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1043,10 +1086,10 @@
    <widget class="QRadioButton" name="mltreemap_imagemakerSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1057,9 +1100,9 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1083,9 +1126,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>41</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1095,10 +1138,10 @@
    <widget class="QRadioButton" name="pathologicSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1109,15 +1152,19 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>pathologicYES</zorder>
+   <zorder>pathologicSKIP</zorder>
+   <zorder>pathologicREDO</zorder>
+   <zorder>metapaths_stepsSTATS_RRNA</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_FASTA">
    <property name="geometry">
@@ -1136,7 +1183,7 @@
      <rect>
       <x>40</x>
       <y>10</y>
-      <width>21</width>
+      <width>51</width>
       <height>41</height>
      </rect>
     </property>
@@ -1147,9 +1194,9 @@
    <widget class="QRadioButton" name="preprocess_fastaSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>140</x>
       <y>10</y>
-      <width>20</width>
+      <width>51</width>
       <height>41</height>
      </rect>
     </property>
@@ -1162,7 +1209,7 @@
      <rect>
       <x>230</x>
       <y>10</y>
-      <width>21</width>
+      <width>51</width>
       <height>41</height>
      </rect>
     </property>
@@ -1170,10 +1217,6 @@
      <string/>
     </property>
    </widget>
-   <zorder>preprocess_fastaYES</zorder>
-   <zorder>preprocess_fastaSKIP</zorder>
-   <zorder>preprocess_fastaREDO</zorder>
-   <zorder>tableWidget</zorder>
   </widget>
   <widget class="QLabel" name="fileBrowsePath">
    <property name="geometry">
@@ -1204,9 +1247,9 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>20</y>
-      <width>21</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1216,10 +1259,10 @@
    <widget class="QRadioButton" name="stats_rrnaSKIP">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <x>140</x>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -1230,13 +1273,16 @@
     <property name="geometry">
      <rect>
       <x>230</x>
-      <y>20</y>
-      <width>16</width>
-      <height>21</height>
+      <y>10</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="autoRepeatDelay">
+     <number>100</number>
     </property>
    </widget>
   </widget>

@@ -16,23 +16,36 @@ class SettingsTab : public QWidget
     
 public:
     explicit SettingsTab(QWidget *parent = 0);
+    static QList<QWidget *> *allWidgets;
+
     ~SettingsTab();
 
 private slots:
     void closeWindow();
     void openParameterSetup();
+    void annotationDBSPressed();
+    void rrnaREFDBSPressed();
 
 private:
     bool writeOutToFile();
     void getAllWidgets();
     void initWidgetValues();
 
+    QString annotationDBSPath;
+    QString rrnaREFDBSPath;
+
+    QPushButton *annotationDBSButton;
+    QPushButton *rrnaREFDBSButton;
+    QComboBox *annotationDBS;
+    QComboBox *rrnaREFDBS;
+
     RunConfig *RunConfigWindow;
     QList<QWidget *> *qcWidgets;
     QList<QWidget *> *orfWidgets;
     QList<QWidget *> *annotationWidgets;
     QList<QWidget *> *rrnaWidgets;
-    QList<QWidget *> *allWidgets;
+    QList<QWidget *> *pathwaysWidgets;
+
 
     Ui::SettingsTab *ui;
 };

@@ -20,6 +20,8 @@ Utilities::Utilities()
 QHash<QString,QString>* Utilities::createMapping(){
     QHash<QString,QString> *CONFIG_NAME_MAP = new QHash<QString,QString>();
 
+    CONFIG_NAME_MAP->operator []("fileInput") = "fileInput";
+
     CONFIG_NAME_MAP->operator []("INPUT:format") = "fileInputFormat";
 
     CONFIG_NAME_MAP->operator []("quality_control:min_length") = "quality_controlMIN_LENGTH";
@@ -29,6 +31,7 @@ QHash<QString,QString>* Utilities::createMapping(){
     CONFIG_NAME_MAP->operator []("orf_prediction:min_length") = "orf_predictionMIN_LENGTH";
 
     CONFIG_NAME_MAP->operator []("annotation:algorithm") = "annotationALGORITHM";
+    CONFIG_NAME_MAP->operator []("annotation:dbs") = "annotationDBS";
     CONFIG_NAME_MAP->operator []("annotation:min_bsr") = "annotationMIN_BSR";
     CONFIG_NAME_MAP->operator []("annotation:max_evalue") = "annotationMAX_EVALUE";
     CONFIG_NAME_MAP->operator []("annotation:min_score") = "annotationMIN_SCORE";
@@ -65,6 +68,8 @@ QHash<QString,QString>* Utilities::createMapping(){
     CONFIG_NAME_MAP->operator []("metapaths_steps:MLTREEMAP_CALCULATION") = "metapaths_stepsMLTREEMAP_CALCULATION";
     CONFIG_NAME_MAP->operator []("metapaths_steps:MLTREEMAP_IMAGEMAKER") = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
     CONFIG_NAME_MAP->operator []("metapaths_steps:PATHOLOGIC") = "metapaths_stepsPATHOLOGIC";
+
+    CONFIG_NAME_MAP->operator []("ptools_settings:taxonomic_pruning") = "ptools_settingsTAXONOMIC_PRUNING";
 
     return CONFIG_NAME_MAP;
 }

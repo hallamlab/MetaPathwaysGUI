@@ -2,6 +2,11 @@
 #include "ui_parentwidget.h"
 #include "utilities.h"
 #include "mainwindow.h"
+#include "qspinbox.h"
+#include "QDoubleSpinBox"
+#include "qtextedit.h"
+#include "qdebug.h"
+
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -57,11 +62,41 @@ void ParentWidget::continueButtonPressed(){
     if(tab->currentWidget() == settingsTab){
         tab->setCurrentWidget(runConfigTab);
         tab->setTabEnabled(1,true);
+
+        //write SettingsTab changes to file
+        QList<QWidget *>::iterator i;
+        QList<QWidget *> *allWidgets = SettingsTab::allWidgets;
+        for (i = allWidgets->begin(); i != allWidgets->end(); ++i){
+            QWidget *widget = *i;
+
+            QString objectName = widget->objectName();
+            QString configName = MainWindow::CONFIG_MAPPING->key(objectName);
+            QString value;
+
+            if (qobject_cast<QComboBox *>(widget)!=NULL){
+                QComboBox *temp = qobject_cast<QComboBox *>(widget);
+                value = temp->currentText();
+            }
+            else if (qobject_cast<QSpinBox *>(widget)!=NULL){
+                QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
+                value = QString::number(temp->value());
+            }
+            else if (qobject_cast<QDoubleSpinBox *>(widget)!=NULL){
+                QDoubleSpinBox *temp = qobject_cast<QDoubleSpinBox *>(widget);
+                value = QString::number(temp->value());
+            }
+            else if (qobject_cast<QTextEdit *>(widget)!=NULL){
+                QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
+                value = temp->toPlainText();
+            }
+            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value);
+        }
     }
     else{
         QList<QGroupBox *> *groupBoxes = runConfigTab->groupBoxes;
 
         QList<QGroupBox *>::iterator i;
+        //write radio button changes to file
         for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
             QGroupBox *temp = *i;
             QString stepName = temp->objectName();
@@ -86,8 +121,24 @@ void ParentWidget::continueButtonPressed(){
             //write to file the changes
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey));
         }
+        //write file format
+        QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(RunConfig::fileInputFormat->objectName());
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, RunConfig::fileInputFormat->currentText());
+        MainWindow::PARAMS->operator [](inputTypeKey) = RunConfig::fileInputFormat->currentText();
 
+        executionPrep();
     }
+}
+
+void ParentWidget::executionPrep(){
+    //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
+    run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING);
+
+    //reset MainWindow static instances
+    MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
+    MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
+
+
 }
 
 void ParentWidget::cancelButtonPressed(){
