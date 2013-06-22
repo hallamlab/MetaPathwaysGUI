@@ -33,7 +33,7 @@ SettingsTab::SettingsTab(QWidget *parent) :
 }
 
 void SettingsTab::annotationDBSPressed(){
-    annotationDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your annotation databases."), "/");
+    annotationDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your annotation databases."), getenv("METAPATHWAYS_PATH"));
     QDir annotationDBSDir(annotationDBSPath);
     QFileInfoList files = annotationDBSDir.entryInfoList();
     for (int i=0; i < files.size(); i++){
@@ -48,7 +48,7 @@ void SettingsTab::annotationDBSPressed(){
 }
 
 void SettingsTab::rrnaREFDBSPressed(){
-    rrnaREFDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your rRNA databases."), "/");
+    rrnaREFDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your rRNA databases."), getenv("METAPATHWAYS_PATH"));
     QDir refDBSDir(rrnaREFDBSPath);
     QFileInfoList files = refDBSDir.entryInfoList();
     for (int i=0; i < files.size(); i++){

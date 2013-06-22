@@ -6,7 +6,8 @@
 #include "QDoubleSpinBox"
 #include "qtextedit.h"
 #include "qdebug.h"
-
+#include "qprocess.h"
+#include "ProgressDialog.h"
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -138,7 +139,8 @@ void ParentWidget::executionPrep(){
     MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
     MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
 
-
+    ProgressDialog *progress = new ProgressDialog();
+    progress->show();
 }
 
 void ParentWidget::cancelButtonPressed(){
