@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     checkConfig();
     checkParams();
     createMapping();
-
 }
 
 void MainWindow::openRemoteJob(){

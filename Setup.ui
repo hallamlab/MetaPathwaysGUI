@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>442</width>
-    <height>425</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,9 +34,9 @@
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>0</x>
      <y>60</y>
-     <width>401</width>
+     <width>441</width>
      <height>20</height>
     </rect>
    </property>
@@ -48,7 +48,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>70</y>
+     <y>80</y>
      <width>91</width>
      <height>31</height>
     </rect>
@@ -67,7 +67,7 @@
     <rect>
      <x>20</x>
      <y>110</y>
-     <width>411</width>
+     <width>401</width>
      <height>16</height>
     </rect>
    </property>
@@ -110,7 +110,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>160</y>
+     <y>150</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -123,8 +123,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
-     <width>411</width>
+     <y>180</y>
+     <width>401</width>
      <height>16</height>
     </rect>
    </property>
@@ -136,8 +136,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>240</y>
-     <width>211</width>
+     <y>220</y>
+     <width>221</width>
      <height>31</height>
     </rect>
    </property>
@@ -154,7 +154,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>240</y>
+     <y>220</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -167,8 +167,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>280</y>
-     <width>411</width>
+     <y>250</y>
+     <width>401</width>
      <height>16</height>
     </rect>
    </property>
@@ -176,38 +176,12 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="Line" name="line_2">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>130</y>
-     <width>401</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>220</y>
-     <width>401</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>411</width>
+     <x>50</x>
+     <y>40</y>
+     <width>351</width>
      <height>21</height>
     </rect>
    </property>
@@ -221,8 +195,8 @@
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>380</y>
+     <x>320</x>
+     <y>360</y>
      <width>121</width>
      <height>27</height>
     </rect>
@@ -235,7 +209,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>380</y>
+     <y>360</y>
      <width>111</width>
      <height>27</height>
     </rect>
@@ -244,12 +218,12 @@
     <string>Cancel</string>
    </property>
   </widget>
-  <widget class="Line" name="line_4">
+  <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>300</y>
-     <width>401</width>
+     <x>0</x>
+     <y>130</y>
+     <width>441</width>
      <height>20</height>
     </rect>
    </property>
@@ -257,12 +231,25 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="pythonLabel_2">
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>200</y>
+     <width>441</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="metapathwaysLabel_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>320</y>
-     <width>111</width>
+     <y>290</y>
+     <width>171</width>
      <height>31</height>
     </rect>
    </property>
@@ -272,7 +259,59 @@
     </font>
    </property>
    <property name="text">
-    <string>Databases</string>
+    <string>Database Directory</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_4">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>270</y>
+     <width>441</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="databaseButton">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>290</y>
+     <width>114</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Browse</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="REFDBS">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>320</y>
+     <width>401</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_5">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>340</y>
+     <width>441</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>

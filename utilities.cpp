@@ -21,6 +21,7 @@ QHash<QString,QString>* Utilities::createMapping(){
     QHash<QString,QString> *CONFIG_NAME_MAP = new QHash<QString,QString>();
 
     CONFIG_NAME_MAP->operator []("fileInput") = "fileInput";
+    CONFIG_NAME_MAP->operator []("REFDBS") = "REFDBS";
 
     CONFIG_NAME_MAP->operator []("INPUT:format") = "fileInputFormat";
 
@@ -107,8 +108,12 @@ bool Utilities::writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString V
                 if (splitList.count() > 0){
                     //if the list has a key and value for us to use
                     if (splitList.at(0) == KEY ){
-                        splitList.replace(1,VALUE);
-                        out << splitList.at(0) << " " << splitList.at(1) << "\n";
+                        if (splitList.at(1).isEmpty() || splitList.at(1).isNull()){
+                            out << splitList.at(0) << " " << VALUE << "\n";
+                        } else {
+                            splitList.replace(1,VALUE);
+                            out << splitList.at(0) << " " << splitList.at(1) << "\n";
+                        }
                         found = true;
                     }
                 }

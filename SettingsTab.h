@@ -5,6 +5,7 @@
 #include "qlist.h"
 #include "RunConfig.h"
 #include "qpushbutton.h"
+#include "qtextedit.h"
 
 namespace Ui {
 class SettingsTab;
@@ -31,13 +32,16 @@ private:
     void getAllWidgets();
     void initWidgetValues();
 
-    QString annotationDBSPath;
-    QString rrnaREFDBSPath;
+    QStringList *annotationFiles;
+    QStringList *rrnaFiles;
+
+    QString *annotationFileList;
+    QString *rrnaFileList;
 
     QPushButton *annotationDBSButton;
     QPushButton *rrnaREFDBSButton;
-    QComboBox *annotationDBS;
-    QComboBox *rrnaREFDBS;
+    QTextEdit *annotationDBS;
+    QTextEdit *rrnaREFDBS;
 
     RunConfig *RunConfigWindow;
     QList<QWidget *> *qcWidgets;

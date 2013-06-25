@@ -20,46 +20,39 @@ SettingsTab::SettingsTab(QWidget *parent) :
 
     RunConfigWindow = NULL;
 
+
     getAllWidgets();
     initWidgetValues();
 
     annotationDBSButton = this->findChild<QPushButton *>("annotationDBSButton");
     rrnaREFDBSButton = this->findChild<QPushButton *>("rrnaREFDBSButton");
-    annotationDBS = this->findChild<QComboBox *>("annotationDBS");
-    rrnaREFDBS = this->findChild<QComboBox *>("rrnaREFDBS");
+    annotationDBS = this->findChild<QTextEdit *>("annotationDBS");
+    rrnaREFDBS = this->findChild<QTextEdit *>("rrnaREFDBS");
 
     connect(annotationDBSButton, SIGNAL(clicked()), this, SLOT(annotationDBSPressed()));
     connect(rrnaREFDBSButton, SIGNAL(clicked()), this, SLOT(rrnaREFDBSPressed()));
 }
 
 void SettingsTab::annotationDBSPressed(){
-    annotationDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your annotation databases."), getenv("METAPATHWAYS_PATH"));
-    QDir annotationDBSDir(annotationDBSPath);
-    QFileInfoList files = annotationDBSDir.entryInfoList();
-    for (int i=0; i < files.size(); i++){
-        QFileInfo file = files.operator [](i);
-        if (!file.isDir() && file.baseName() != ".." && file.baseName() != "." && !file.isExecutable() && file.isFile()){
-            if (annotationDBS->findText(file.baseName())==-1){
-                QString name = file.baseName().split(".").at(0);
-                annotationDBS->addItem(name);
-            }
-        }
+    annotationFileList = new QString("");
+    annotationFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select files to use as databases."), MainWindow::CONFIG->operator []("REFDBS")));
+    for (int i=0;i < annotationFiles->size(); i++){
+        QString file = annotationFiles->at(i).split("/").last();
+        annotationFileList->append(file);
+        annotationFileList->append(",");
     }
+    annotationDBS->setText(*annotationFileList);
 }
 
 void SettingsTab::rrnaREFDBSPressed(){
-    rrnaREFDBSPath = QFileDialog::getExistingDirectory(this, tr("Select the directory to your rRNA databases."), getenv("METAPATHWAYS_PATH"));
-    QDir refDBSDir(rrnaREFDBSPath);
-    QFileInfoList files = refDBSDir.entryInfoList();
-    for (int i=0; i < files.size(); i++){
-        QFileInfo file = files.operator [](i);
-        if (!file.isDir() && file.baseName() != ".." && file.baseName() != "." && !file.isExecutable() && file.isFile()){
-            if (rrnaREFDBS->findText(file.baseName())==-1){
-                QString name = file.baseName().split(".").at(0);
-                rrnaREFDBS->addItem(name);
-            }
-        }
+    rrnaFileList = new QString("");
+    rrnaFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select files to use as databases."), MainWindow::CONFIG->operator []("REFDBS")));
+    for (int i=0;i < rrnaFiles->size(); i++){
+        QString file = rrnaFiles->at(i).split("/").last();
+        rrnaFileList->append(file);
+        rrnaFileList->append(",");
     }
+    rrnaREFDBS->setText(*rrnaFileList);
 }
 
 void SettingsTab::closeWindow(){

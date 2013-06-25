@@ -24,6 +24,7 @@ public slots:
     void metapathwaysBrowse();
     void saveSetup();
     void cancelSetup();
+    void databaseBrowse();
 
 private:
     Ui::Setup *ui;
@@ -31,16 +32,20 @@ private:
     QString pythonPath;
     QString perlPath;
     QString mpPath;
+    QString databasePath;
 
     QLabel *pythonLabel;
     QLabel *perlLabel;
     QLabel *metapathwaysLabel;
+    QLabel *databaseLabel;
 
     QPushButton *pythonBrowseButton;
     QPushButton *perlBrowseButton;
     QPushButton *metapathwaysBrowseButton;
     QPushButton *saveButton;
     QPushButton *cancelButton;
+    QPushButton *databaseButton;
+
 };
 
 #endif // Setup_H
