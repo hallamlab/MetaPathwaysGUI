@@ -8,6 +8,7 @@
 #include "qradiobutton.h"
 #include "qgroupbox.h"
 #include "qcombobox.h"
+#include "QTableWidget"
 
 namespace Ui {
 class RunConfig;
@@ -45,6 +46,7 @@ private:
     QRadioButton *runAll;
     QRadioButton *redoAll;
     QRadioButton *skipAll;
+    QTableWidget *table;
 
     QGroupBox *runOptionsGroupBox;
 };

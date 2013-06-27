@@ -15,7 +15,7 @@ RunConfig::RunConfig(QWidget *parent) :
     ui->setupUi(this);
 
     groupBoxes = new QList<QGroupBox *>(this->findChildren<QGroupBox *>(QRegExp("^metapaths_steps*")));
-
+    table = this->findChild<QTableWidget *>("tableWidget");
     runAll = this->findChild<QRadioButton *>("runAllRadioButton");
     skipAll = this->findChild<QRadioButton *>("skipAllRadioButton");
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
@@ -131,6 +131,7 @@ void RunConfig::closeWindow(){
 }
 
 void RunConfig::setStyling(){
+
     QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i != groupBoxes->end(); ++i){
         QGroupBox *widget = *i;

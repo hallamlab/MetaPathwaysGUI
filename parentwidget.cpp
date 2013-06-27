@@ -26,6 +26,8 @@ ParentWidget::ParentWidget(QWidget *parent) :
     backButton = this->findChild<QPushButton *>("backButton");
 
     tab = ui->parentTabWidget;
+
+    //delete initial
     tab->removeTab(0);
     tab->removeTab(0);
 
@@ -130,6 +132,12 @@ void ParentWidget::continueButtonPressed(){
 
             //write to file the changes
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey));
+
+            //disable all buttons now for the run
+            yesRadioButton->setEnabled(false);
+            redoRadioButton->setEnabled(false);
+            skipRadioButton->setEnabled(false);
+            continueButton->setEnabled(false);
         }
         //write file format
         QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(RunConfig::fileInputFormat->objectName());
@@ -148,7 +156,7 @@ void ParentWidget::executionPrep(){
     MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
     MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
 
-    ProgressDialog *progress = new ProgressDialog();
+    ProgressDialog *progress = new ProgressDialog(this, run);
     progress->show();
 }
 

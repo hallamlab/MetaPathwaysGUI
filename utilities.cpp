@@ -77,6 +77,20 @@ QHash<QString,QString>* Utilities::createMapping(){
     return CONFIG_NAME_MAP;
 }
 
+/*
+ * Counts the number of stages to be run.
+ */
+int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
+    QHash<QString,QString>::iterator it;
+    int redoOrRunCount = 0;
+    for (it=PARAMS->begin();it!=PARAMS->end();++it){
+        if (it.value().operator ==("redo") || it.value().operator ==("yes")){
+            redoOrRunCount++;
+        }
+    }
+    return redoOrRunCount;
+}
+
 
 /*
  * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
