@@ -48,9 +48,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>180</y>
+     <y>150</y>
      <width>721</width>
-     <height>321</height>
+     <height>351</height>
     </rect>
    </property>
   </widget>
@@ -58,26 +58,13 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>160</y>
+     <y>130</y>
      <width>741</width>
      <height>16</height>
     </rect>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>570</x>
-     <y>130</y>
-     <width>141</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Advanced Details</string>
    </property>
   </widget>
   <widget class="QPushButton" name="cancelButton">

@@ -1,4 +1,8 @@
 #include "rundata.h"
+/*
+ * This class contains the data for a run. It is an internal object class that represents all the data
+ * about this instance of MetaPathways running.
+ */
 
 RunData::RunData(){
     this->PARAMS = NULL;
@@ -26,3 +30,7 @@ QHash<QString,QString>* RunData::getConfig(){
 QHash<QString,QString>* RunData::getConfigMapping(){
     return this->CONFIG_MAPPING;
 }
+
+
+
+

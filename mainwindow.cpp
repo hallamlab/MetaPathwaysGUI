@@ -50,8 +50,6 @@ void MainWindow::openRemoteJob(){
 void MainWindow::openSettings(){
     parentWidget = new ParentWidget();
     parentWidget->show();
-//    settingsWindow = new SettingsTab();
-//    settingsWindow->show();
 }
 
 // Only one instance allowed of this window.

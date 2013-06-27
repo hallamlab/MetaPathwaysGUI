@@ -20,7 +20,6 @@ SettingsTab::SettingsTab(QWidget *parent) :
 
     RunConfigWindow = NULL;
 
-
     getAllWidgets();
     initWidgetValues();
 

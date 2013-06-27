@@ -8,6 +8,8 @@
 #include "qdebug.h"
 #include "qprocess.h"
 #include "ProgressDialog.h"
+#include "tabfactory.h"
+#include "QDockWidget"
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -23,8 +25,6 @@ ParentWidget::ParentWidget(QWidget *parent) :
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     backButton = this->findChild<QPushButton *>("backButton");
 
-    this->setFixedSize(569, 891);
-
     tab = ui->parentTabWidget;
     tab->removeTab(0);
     tab->removeTab(0);
@@ -32,6 +32,15 @@ ParentWidget::ParentWidget(QWidget *parent) :
     tab->addTab(settingsTab,"Run Parameters");
     tab->addTab(runConfigTab,"Run Stages");
     tab->addTab(resultTab,"Run Results");
+
+    QDockWidget *test = TabFactory::createTable(5,5);
+    tab->addTab(test,"test");
+
+    QDockWidget *test2 = TabFactory::createGraph();
+    tab->addTab(test2, "test2");
+
+    QDockWidget *test3 = TabFactory::createBarGraph();
+    tab->addTab(test3, "test3");
 
     tab->setTabEnabled(1,false);
     tab->setTabEnabled(2,false);

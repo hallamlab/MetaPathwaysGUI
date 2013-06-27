@@ -4,6 +4,9 @@
 #include <QWidget>
 #include "qpushbutton.h"
 #include <QProcess>
+#include <QTextBrowser>
+#include <QTimer>
+
 
 namespace Ui {
 class ProgressDialog;
@@ -19,12 +22,16 @@ public:
 
 private slots:
     void terminateRun();
+    void updateText();
     
 private:
     Ui::ProgressDialog *ui;
 
     QPushButton *cancelButton;
+    QTextBrowser *textBrowser;
+
     QProcess *myProcess;
+    QTimer *timer;
 };
 
 #endif // ProgressDialog_H

@@ -24,7 +24,9 @@ SOURCES += main.cpp\
         utilities.cpp \
     parentwidget.cpp \
     resultwidget.cpp \
-    rundata.cpp
+    rundata.cpp \
+    qcustomplot.cpp \
+    tabfactory.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
             utilities.h \
     parentwidget.h \
     resultwidget.h \
-    rundata.h
+    rundata.h \
+    qcustomplot.h \
+    tabfactory.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \

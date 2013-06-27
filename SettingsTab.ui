@@ -7,709 +7,453 @@
     <x>0</x>
     <y>0</y>
     <width>547</width>
-    <height>756</height>
+    <height>884</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>80</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Quality Control</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>120</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Length</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>150</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Delete Replicates</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>150</y>
-     <width>81</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>yes</string>
-    </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="14" column="2">
+    <widget class="QSpinBox" name="annotationMIN_SCORE">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>no</string>
-    </property>
+   <item row="27" column="0" colspan="2">
+    <widget class="QLabel" name="label_17">
+     <property name="text">
+      <string>Maximum EValue</string>
+     </property>
+    </widget>
    </item>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>80</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>ORF Prediction</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>150</y>
-     <width>81</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Algorithm</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>300</x>
-     <y>120</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Length</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>180</y>
-     <width>551</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="orf_predictionALGORITHM">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>150</y>
-     <width>91</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>prodigal</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>200</y>
-     <width>271</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>ORF Annotation Parameters</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>240</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Algorithm</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="annotationALGORITHM">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>240</y>
-     <width>111</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>blast</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>last</string>
-    </property>
-   </item>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>280</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Databases</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_10">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>320</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum BSR</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_11">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>320</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Maximum EValue</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_12">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>360</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Score</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_13">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>400</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Length</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_14">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>360</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Maximum Hits</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line_3">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>430</y>
-     <width>551</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_15">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>450</y>
-     <width>271</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>rRNA Annotation Parameters</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_16">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>490</y>
-     <width>81</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Databases</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="annotationDBSButton">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>280</y>
-     <width>111</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Select Files</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_17">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>530</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Maximum EValue</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="rrnaMAX_EVALUE">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>530</y>
-     <width>121</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="html">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+   <item row="16" column="2">
+    <widget class="QTextEdit" name="annotationMAX_EVALUE">
+     <property name="minimumSize">
+      <size>
+       <width>139</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_18">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>570</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Identity</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_19">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>610</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mininum Bitscore</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line_4">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>650</y>
-     <width>551</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_20">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>670</y>
-     <width>271</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Pathway Tools Settings</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_21">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>710</y>
-     <width>131</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Taxonomic Pruning</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="ptools_settingsTAXONOMIC_PRUNING">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>710</y>
-     <width>81</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>yes</string>
-    </property>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>no</string>
-    </property>
+   <item row="18" column="0" colspan="3">
+    <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>ORF Prediction</string>
+     </property>
+    </widget>
    </item>
-  </widget>
-  <widget class="QPushButton" name="rrnaREFDBSButton">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>490</y>
-     <width>111</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Select Files</string>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>320</y>
-     <width>62</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <double>0.000000000000000</double>
-   </property>
-   <property name="maximum">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="singleStep">
-    <double>0.010000000000000</double>
-   </property>
-   <property name="value">
-    <double>0.010000000000000</double>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="annotationMIN_SCORE">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>360</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <number>1</number>
-   </property>
-   <property name="maximum">
-    <number>10000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="annotationMIN_LENGTH">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>400</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>1000</number>
-   </property>
-   <property name="value">
-    <number>1</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="annotationMAX_HITS">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>360</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <number>0</number>
-   </property>
-   <property name="maximum">
-    <number>1000</number>
-   </property>
-   <property name="value">
-    <number>1</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>610</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <number>1</number>
-   </property>
-   <property name="maximum">
-    <number>10000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>120</y>
-     <width>81</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <number>1</number>
-   </property>
-   <property name="maximum">
-    <number>10000</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="quality_controlMIN_LENGTH">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>120</y>
-     <width>81</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>99999999</number>
-   </property>
-   <property name="value">
-    <number>1</number>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>570</y>
-     <width>121</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="decimals">
-    <number>2</number>
-   </property>
-   <property name="minimum">
-    <double>0.000000000000000</double>
-   </property>
-   <property name="singleStep">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="value">
-    <double>1.000000000000000</double>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="annotationMAX_EVALUE">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>320</y>
-     <width>121</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="html">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+   <item row="9" column="0" colspan="4">
+    <widget class="QLabel" name="label_7">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>ORF Annotation Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="25" column="5">
+    <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+   </item>
+   <item row="23" column="2" colspan="3">
+    <widget class="QTextEdit" name="rrnaREFDBS">
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="25" column="2">
+    <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="25" column="0" colspan="2">
+    <widget class="QLabel" name="label_18">
+     <property name="text">
+      <string>Mininum Identity</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0" colspan="2">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>Maximum EValue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QSpinBox" name="quality_controlMIN_LENGTH">
+     <property name="maximum">
+      <number>99999999</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
+     <item>
+      <property name="text">
+       <string>yes</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>no</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="14" column="3" colspan="2">
+    <widget class="QLabel" name="label_13">
+     <property name="text">
+      <string>Mininum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="23" column="0">
+    <widget class="QLabel" name="label_16">
+     <property name="text">
+      <string>Databases</string>
+     </property>
+    </widget>
+   </item>
+   <item row="28" column="0" colspan="7">
+    <widget class="Line" name="line_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QComboBox" name="annotationALGORITHM">
+     <item>
+      <property name="text">
+       <string>blast</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>last</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>Databases</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label_22">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Run Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="21" column="0" colspan="7">
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="22" column="0" colspan="4">
+    <widget class="QLabel" name="label_15">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>rRNA Annotation Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="7">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="7">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Quality Control</string>
+     </property>
+    </widget>
+   </item>
+   <item row="31" column="2">
+    <widget class="QComboBox" name="ptools_settingsTAXONOMIC_PRUNING">
+     <item>
+      <property name="text">
+       <string>yes</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>no</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Algorithm</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
+    <widget class="QLabel" name="label_12">
+     <property name="text">
+      <string>Mininum Score</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="label_10">
+     <property name="text">
+      <string>Mininum BSR</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="0" colspan="7">
+    <widget class="Line" name="line_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="30" column="0">
+    <widget class="QLabel" name="label_20">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Pathway Tools Settings</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Delete Replicates</string>
+     </property>
+    </widget>
+   </item>
+   <item row="23" column="5">
+    <widget class="QPushButton" name="rrnaREFDBSButton">
+     <property name="text">
+      <string>Select Files</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Mininum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="3">
+    <widget class="QLabel" name="label_14">
+     <property name="text">
+      <string>Maximum Hits</string>
+     </property>
+    </widget>
+   </item>
+   <item row="27" column="2">
+    <widget class="QTextEdit" name="rrnaMAX_EVALUE">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>52</height>
+      </size>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_22">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>231</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>24</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Run Parameters</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line_2">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>50</y>
-     <width>551</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_5">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>60</y>
-     <width>20</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="annotationDBS">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>280</y>
-     <width>261</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="lineWrapMode">
-    <enum>QTextEdit::NoWrap</enum>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="rrnaREFDBS">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>490</y>
-     <width>261</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="lineWrapMode">
-    <enum>QTextEdit::NoWrap</enum>
-   </property>
-  </widget>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="5" colspan="2">
+    <widget class="QPushButton" name="annotationDBSButton">
+     <property name="text">
+      <string>Select Files</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="5">
+    <widget class="QSpinBox" name="annotationMAX_HITS">
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="2" colspan="3">
+    <widget class="QTextEdit" name="annotationDBS">
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QTextEdit::NoWrap</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="5">
+    <widget class="QSpinBox" name="annotationMIN_LENGTH">
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+     <property name="value">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="31" column="0" colspan="2">
+    <widget class="QLabel" name="label_21">
+     <property name="text">
+      <string>Taxonomic Pruning</string>
+     </property>
+    </widget>
+   </item>
+   <item row="25" column="3" colspan="2">
+    <widget class="QLabel" name="label_19">
+     <property name="text">
+      <string>Mininum Bitscore</string>
+     </property>
+    </widget>
+   </item>
+   <item row="19" column="0" colspan="2">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Mininum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="19" column="2">
+    <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="0" colspan="2">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Algorithm</string>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="2">
+    <widget class="QComboBox" name="orf_predictionALGORITHM">
+     <item>
+      <property name="text">
+       <string>prodigal</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

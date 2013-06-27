@@ -24,7 +24,6 @@ RunConfig::RunConfig(QWidget *parent) :
     RunConfig::fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
 
-
     setStyling();
     loadRunParams();
 

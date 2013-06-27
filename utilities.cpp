@@ -1,5 +1,4 @@
 #include "utilities.h"
-#include "iostream"
 #include "qstring.h"
 #include "qfile.h"
 #include "qtextstream.h"
@@ -7,6 +6,9 @@
 #include "qregexp.h"
 #include "qhash.h"
 #include "qsplitter.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 Utilities::Utilities()
 {
@@ -178,4 +180,3 @@ QHash<QString,QString>* Utilities::parseFile(QString TEMPLATE_FILE){
     inputFile.close();
     return configs;
 }
-
