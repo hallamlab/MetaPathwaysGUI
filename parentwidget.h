@@ -5,7 +5,6 @@
 #include "SettingsTab.h"
 #include "RunConfig.h"
 #include "qtabwidget.h"
-#include "resultwidget.h"
 #include "rundata.h"
 
 namespace Ui {
@@ -18,6 +17,9 @@ class ParentWidget : public QWidget
     
 public:
     explicit ParentWidget(QWidget *parent = 0);
+
+    RunConfig *runConfigTab;
+
     ~ParentWidget();
     
 private slots:
@@ -39,8 +41,6 @@ private:
 
     QTabWidget *tab;
     SettingsTab *settingsTab;
-    RunConfig *runConfigTab;
-    ResultWidget *resultTab;
 };
 
 #endif // PARENTWIDGET_H

@@ -7,6 +7,8 @@
 #include <QFile>
 #include "utilities.h"
 #include "rundata.h"
+#include "resultwindow.h"
+#include <QMovie>
 
 ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
 {
@@ -20,6 +22,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     progressBar = this->findChild<QProgressBar *>("progressBar");
 
     initProgressBar();
+    initMapping();
 
     timer = new QTimer(this);
     timer->start(1000);
@@ -59,6 +62,33 @@ void ProgressDialog::updateText(){
     }
 }
 
+/*
+ * There is no mapping from the table to the groupboxes. Therefore, this function will declare
+ * the mapping of a row index to its groupbox by augmenting TABLE_MAPPING.
+ */
+void ProgressDialog::initMapping(){
+    TABLE_MAPPING = new QHash<int,QString>();
+
+    TABLE_MAPPING->operator [](0) = "metapaths_stepsPREPROCESS_FASTA";
+    TABLE_MAPPING->operator [](1) = "metapaths_stepsORF_PREDICTION";
+    TABLE_MAPPING->operator [](2) = "metapaths_stepsGFF_TO_AMINO";
+    TABLE_MAPPING->operator [](3) = "metapaths_stepsFILTERED_FASTA";
+    TABLE_MAPPING->operator [](4) = "metapaths_stepsCOMPUTE_REFSCORE";
+    TABLE_MAPPING->operator [](5) = "metapaths_stepsBLAST_REFDB";
+    TABLE_MAPPING->operator [](6) = "metapaths_stepsPARSE_BLAST";
+    TABLE_MAPPING->operator [](7) = "metapaths_stepsSCAN_RRNA";
+    TABLE_MAPPING->operator [](8) = "metapaths_stepsSCAN_TRNA";
+    TABLE_MAPPING->operator [](9) = "metapaths_stepsANNOTATE";
+    TABLE_MAPPING->operator [](10) = "metapaths_stepsPATHOLOGIC_INPUT";
+    TABLE_MAPPING->operator [](11) = "metapaths_stepsGENBANK_FILE";
+    TABLE_MAPPING->operator [](12) = "metapaths_stepsCREATE_SEQUIN_FILE";
+    TABLE_MAPPING->operator [](13) = "metapaths_stepsCREATE_REPORT_FILES";
+    TABLE_MAPPING->operator [](14) = "metapaths_stepsMLTREEMAP_CALCULATION";
+    TABLE_MAPPING->operator [](15) = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
+    TABLE_MAPPING->operator [](16) = "metapaths_stepsPATHOLOGIC";
+    TABLE_MAPPING->operator [](17) = "metapaths_stepsSTATS_RRNA";
+}
+
 void ProgressDialog::colorRunConfig(QString line){
     QRegExp whiteSpace("\\s");
     QRegExp commentLine("#[^\"\\n\\r]*");
@@ -78,38 +108,37 @@ void ProgressDialog::colorRunConfig(QString line){
         QString radioName = stepName.remove(QRegExp("[a-z-]+_?")).toLower();
 
         if (!stepName.isEmpty()){
-            QRadioButton *yesRadioButton = group->findChild<QRadioButton *>(radioName+"YES");
-            QRadioButton *redoRadioButton = group->findChild<QRadioButton *>(radioName+"REDO");
-            QRadioButton *skipRadioButton = group->findChild<QRadioButton *>(radioName+"SKIP");
-
-            qDebug() << radioName+"YES";
+            QImage *img;
+            QTableWidgetItem *item = new QTableWidgetItem();
 
             if (status.operator ==("Failed")){
-                group->setStyleSheet("background-color:red");
-            }else if (status.operator ==("Skipping")){
-                group->setStyleSheet("background-color:grey");
-            }else if (step.operator ==("Running")){
-                group->setStyleSheet("background-color:blue");
+                img  = new QImage("cross.png");
+                item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
+                pw->runConfigTab->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
+            }else if (operation.operator ==("Running")){
+                QMovie *loading = new QMovie("loading.gif");
+                QLabel *imageLabel = new QLabel();
+                imageLabel->setFixedSize(30,25);
+                imageLabel->setMovie(loading);
+                imageLabel->updateGeometry();
+                loading->start();
+                pw->runConfigTab->table->setCellWidget(TABLE_MAPPING->key("metapaths_steps"+stepName),3,imageLabel);
             }else{
-                group->setStyleSheet("background-color:green");
+                img = new QImage("check.png");
+                item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
+                pw->runConfigTab->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
             }
-            yesRadioButton->setStyleSheet("background-color:none");
-            redoRadioButton->setStyleSheet("background-color:none");
-            skipRadioButton->setStyleSheet("background-color:none");
         }
     }
-
-
-}
-
-void ProgressDialog::closeEvent ( QCloseEvent * event ){
-    timer->stop();
-    this->destroy();
 }
 
 void ProgressDialog::terminateRun(){
     timer->stop();
     this->destroy();
+    pw->close();
+
+    ResultWindow *rw = new ResultWindow();
+    rw->show();
 }
 
 

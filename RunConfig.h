@@ -20,8 +20,10 @@ class RunConfig : public QWidget
     
 public:
     QList<QGroupBox *> *groupBoxes;
-
-    static QComboBox *fileInputFormat;
+    QGroupBox *runOptionsGroupBox;
+    QPushButton *fileBrowseButton;
+    QComboBox *fileInputFormat;
+    QTableWidget *table;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
@@ -42,13 +44,10 @@ private:
     QString selectedFile;
 
     Ui::RunConfig *ui;
-    QPushButton *fileBrowseButton;
     QRadioButton *runAll;
     QRadioButton *redoAll;
     QRadioButton *skipAll;
-    QTableWidget *table;
 
-    QGroupBox *runOptionsGroupBox;
 };
 
 #endif // RUNCONFIG_H

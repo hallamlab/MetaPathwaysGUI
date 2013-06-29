@@ -6,8 +6,6 @@
 #include "qfiledialog.h"
 #include "mainwindow.h"
 
-QComboBox *RunConfig::fileInputFormat = NULL;
-
 RunConfig::RunConfig(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RunConfig)
@@ -21,7 +19,7 @@ RunConfig::RunConfig(QWidget *parent) :
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
     fileSelectedPath = this->findChild<QLabel *>("fileBrowsePath");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
-    RunConfig::fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
+    fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
 
     setStyling();
@@ -36,7 +34,7 @@ RunConfig::RunConfig(QWidget *parent) :
 void RunConfig::loadRunParams(){
     QString key = MainWindow::CONFIG_MAPPING->key(fileInputFormat->objectName());
     QString value = MainWindow::PARAMS->value(key);
-    RunConfig::fileInputFormat->setCurrentIndex(RunConfig::fileInputFormat->findText(value));
+    fileInputFormat->setCurrentIndex(fileInputFormat->findText(value));
 
     QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
@@ -131,7 +129,6 @@ void RunConfig::closeWindow(){
 }
 
 void RunConfig::setStyling(){
-
     QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i != groupBoxes->end(); ++i){
         QGroupBox *widget = *i;
@@ -140,6 +137,10 @@ void RunConfig::setStyling(){
     }
     runOptionsGroupBox->setStyleSheet("border:0");
     runOptionsGroupBox->setTitle("");
+
+    table->setColumnWidth(3,30);
+    table->setHorizontalHeaderLabels(QString("run,skip,redo,").split(","));
+
 }
 
 RunConfig::~RunConfig()

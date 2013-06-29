@@ -23,6 +23,8 @@ public:
     explicit ProgressDialog(ParentWidget *pw = NULL, RunData *run = NULL, QWidget *parent = 0);
     void initProgressBar();
     void colorRunConfig(QString line);
+    void initMapping();
+    QHash<int,QString> *TABLE_MAPPING;
     ~ProgressDialog();
 
 private slots:
@@ -30,8 +32,6 @@ private slots:
     void updateText();
     
 private:
-    void closeEvent (QCloseEvent* event );
-
     Ui::ProgressDialog *ui;
     RunData *run;
     ParentWidget *pw;

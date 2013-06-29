@@ -6,7 +6,7 @@ class TabFactory
 {
 public:
     TabFactory();
-    static QDockWidget* createTable(int numRows,int numCols);
+    static QDockWidget* createTable(int numRows,int numCols, QString file);
     static QDockWidget* createGraph();
     static QDockWidget* createBarGraph();
 };

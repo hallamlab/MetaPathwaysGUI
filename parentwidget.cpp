@@ -19,7 +19,6 @@ ParentWidget::ParentWidget(QWidget *parent) :
 
     settingsTab = new SettingsTab();
     runConfigTab = new RunConfig();
-    resultTab = new ResultWidget();
 
     continueButton = this->findChild<QPushButton *>("continueButton");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
@@ -33,16 +32,6 @@ ParentWidget::ParentWidget(QWidget *parent) :
 
     tab->addTab(settingsTab,"Run Parameters");
     tab->addTab(runConfigTab,"Run Stages");
-    tab->addTab(resultTab,"Run Results");
-
-    QDockWidget *test = TabFactory::createTable(5,5);
-    tab->addTab(test,"test");
-
-    QDockWidget *test2 = TabFactory::createGraph();
-    tab->addTab(test2, "test2");
-
-    QDockWidget *test3 = TabFactory::createBarGraph();
-    tab->addTab(test3, "test3");
 
     tab->setTabEnabled(1,false);
     tab->setTabEnabled(2,false);
@@ -55,7 +44,7 @@ ParentWidget::ParentWidget(QWidget *parent) :
 }
 
 void ParentWidget::tabChanged(){
-    if (tab->currentWidget() == runConfigTab || tab->currentWidget() == resultTab){
+    if (tab->currentWidget() == runConfigTab){
         backButton->show();
     }
     else backButton->hide();
@@ -64,9 +53,6 @@ void ParentWidget::tabChanged(){
 void ParentWidget::backButtonPressed(){
     if(tab->currentWidget() == runConfigTab){
         tab->setCurrentWidget(settingsTab);
-    }
-    else if (tab->currentWidget() == resultTab){
-        tab->setCurrentWidget(runConfigTab);
     }
 }
 
@@ -137,12 +123,20 @@ void ParentWidget::continueButtonPressed(){
             yesRadioButton->setEnabled(false);
             redoRadioButton->setEnabled(false);
             skipRadioButton->setEnabled(false);
-            continueButton->setEnabled(false);
         }
+
+        //set all applicable buttons to be disabled
+        runConfigTab->runOptionsGroupBox->setEnabled(false);
+        runConfigTab->fileBrowseButton->setEnabled(false);
+        runConfigTab->fileInputFormat->setEnabled(false);
+        continueButton->setEnabled(false);
+        backButton->setEnabled(false);
+        cancelButton->setEnabled(false);
+
         //write file format
-        QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(RunConfig::fileInputFormat->objectName());
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, RunConfig::fileInputFormat->currentText());
-        MainWindow::PARAMS->operator [](inputTypeKey) = RunConfig::fileInputFormat->currentText();
+        QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(runConfigTab->fileInputFormat->objectName());
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText());
+        MainWindow::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
 
         executionPrep();
     }

@@ -1,16 +1,23 @@
 #include "tabfactory.h"
 #include "QDockWidget"
+#include "QGridLayout"
 #include "QTableWidget"
 #include "qcustomplot.h"
+#include "QTextEdit"
 
 TabFactory::TabFactory()
 {
 }
 
-QDockWidget* TabFactory::createTable(int numRows, int numCols){
+QDockWidget* TabFactory::createTable(int numRows, int numCols, QString file){
     QTableWidget *table = new QTableWidget(numRows,numCols);
     QDockWidget *dock = new QDockWidget();
-    dock->setWidget(table);
+    QGridLayout *grid = new QGridLayout();
+    QTextEdit *text = new QTextEdit();
+    text->setReadOnly(true);
+
+    grid->addWidget(text);
+    grid->addWidget(table);
     return dock;
 }
 
