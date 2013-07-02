@@ -239,6 +239,11 @@
    </row>
    <row>
     <property name="text">
+     <string>rRNA Statistics</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
      <string>Annotate</string>
     </property>
    </row>
@@ -275,11 +280,6 @@
    <row>
     <property name="text">
      <string>Pathologic</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
-     <string>rRNA Statistics</string>
     </property>
    </row>
    <column>
@@ -709,7 +709,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>530</y>
+     <y>560</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -764,7 +764,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>500</y>
+     <y>530</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -819,7 +819,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>590</y>
+     <y>620</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -874,7 +874,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>560</y>
+     <y>590</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -929,7 +929,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>620</y>
+     <y>650</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -984,7 +984,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>650</y>
+     <y>680</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1039,7 +1039,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>680</y>
+     <y>710</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1094,7 +1094,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>710</y>
+     <y>740</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1217,7 +1217,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>740</y>
+     <y>500</y>
      <width>314</width>
      <height>31</height>
     </rect>

@@ -17,7 +17,9 @@ class ParentWidget : public QWidget
     
 public:
     explicit ParentWidget(QWidget *parent = 0);
-
+    QPushButton *continueButton;
+    QPushButton *cancelButton;
+    QPushButton *backButton;
     RunConfig *runConfigTab;
 
     ~ParentWidget();
@@ -31,14 +33,10 @@ private slots:
 private:
     void executionPrep();
 
-    RunData *run;
 
     Ui::ParentWidget *ui;
 
-    QPushButton *continueButton;
-    QPushButton *cancelButton;
-    QPushButton *backButton;
-
+    RunData *run;
     QTabWidget *tab;
     SettingsTab *settingsTab;
 };

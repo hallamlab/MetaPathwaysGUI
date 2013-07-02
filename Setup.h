@@ -16,6 +16,7 @@ class Setup : public QWidget
     
 public:
     explicit Setup(QWidget *parent = 0);
+    void canSave();
     ~Setup();
 
 public slots:
@@ -25,6 +26,7 @@ public slots:
     void saveSetup();
     void cancelSetup();
     void databaseBrowse();
+
 
 private:
     Ui::Setup *ui;

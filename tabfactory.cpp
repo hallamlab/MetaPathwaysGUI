@@ -4,21 +4,23 @@
 #include "QTableWidget"
 #include "qcustomplot.h"
 #include "QTextEdit"
+#include <QLabel>
 
 TabFactory::TabFactory()
 {
 }
 
-QDockWidget* TabFactory::createTable(int numRows, int numCols, QString file){
-    QTableWidget *table = new QTableWidget(numRows,numCols);
-    QDockWidget *dock = new QDockWidget();
-    QGridLayout *grid = new QGridLayout();
-    QTextEdit *text = new QTextEdit();
-    text->setReadOnly(true);
+QWidget* TabFactory::createTable(QString file){
+    QTableWidget *table = new QTableWidget();
+    QVBoxLayout *layout = new QVBoxLayout();
+    QWidget *mainWidget = new QWidget();
+    QLabel *text = new QLabel("asdlkfjsdlkjflsdfdjsflkjdsfjdlfjldsfjlsdjfldsfjlfjdsfjdlkfjd");
 
-    grid->addWidget(text);
-    grid->addWidget(table);
-    return dock;
+    mainWidget->setLayout(layout);
+    layout->addWidget(text);
+    layout->addWidget(table);
+
+    return mainWidget;
 }
 
 QDockWidget* TabFactory::createGraph(){

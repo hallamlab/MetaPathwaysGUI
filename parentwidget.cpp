@@ -17,8 +17,8 @@ ParentWidget::ParentWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    settingsTab = new SettingsTab();
-    runConfigTab = new RunConfig();
+    settingsTab = new SettingsTab(this);
+    runConfigTab = new RunConfig(this);
 
     continueButton = this->findChild<QPushButton *>("continueButton");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
@@ -58,6 +58,7 @@ void ParentWidget::backButtonPressed(){
 
 void ParentWidget::continueButtonPressed(){
     if(tab->currentWidget() == settingsTab){
+
         tab->setCurrentWidget(runConfigTab);
         tab->setTabEnabled(1,true);
 
@@ -89,6 +90,8 @@ void ParentWidget::continueButtonPressed(){
             }
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value);
         }
+//        if (runConfigTab->selectedFile.isEmpty()) continueButton->setEnabled(false);
+//        else continueButton->setEnabled(true);
     }
     else{
         QList<QGroupBox *> *groupBoxes = runConfigTab->groupBoxes;

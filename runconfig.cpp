@@ -60,7 +60,7 @@ void RunConfig::loadRunParams(){
 }
 
 void RunConfig::browseFile(){
-    selectedFile = QFileDialog::getOpenFileName(this, tr("Select file run."),"/");
+    selectedFile = QFileDialog::getOpenFileName(this, tr("Select file run."));
     fileSelectedPath->setText(selectedFile);
 }
 

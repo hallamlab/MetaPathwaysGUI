@@ -27,10 +27,16 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     mpPath = MainWindow::CONFIG->value("METAPATHWAYS_PATH");
     databasePath = MainWindow::CONFIG->value("REFDBS");
 
-    if (pythonPath.isNull() || pythonPath.isEmpty()) pythonLabel->setText("Please select the path to your Python directory.");
-    if (perlPath.isNull() || perlPath.isEmpty()) perlLabel->setText("Please select the path to your Perl directory.");
-    if (mpPath.isNull() || mpPath.isEmpty()) metapathwaysLabel->setText("Please select the path to your MetaPathways directory.");
-    if (databasePath.isNull() || databasePath.isEmpty()) databaseLabel->setText("Please select the path to your database directory.");
+    canSave();
+
+    if (pythonPath.isEmpty()) pythonLabel->setText("Please select the path to your Python executable.");
+    else pythonLabel->setText(pythonPath);
+    if (perlPath.isEmpty()) perlLabel->setText("Please select the path to your Perl executable.");
+    else perlLabel->setText(perlPath);
+    if (mpPath.isEmpty()) metapathwaysLabel->setText("Please select the path to your MetaPathways directory.");
+    else metapathwaysLabel->setText(mpPath);
+    if (databasePath.isEmpty()) databaseLabel->setText("Please select the path to your database directory.");
+    else databaseLabel->setText(databasePath);
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
@@ -40,46 +46,55 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelSetup()));
 }
 
+void Setup::canSave(){
+    if ((pythonPath.isEmpty() && perlPath.isEmpty() && mpPath.isEmpty() && databasePath.isEmpty())){
+        saveButton->setEnabled(false);
+    }else saveButton->setEnabled(true);
+}
+
 void Setup::databaseBrowse(){
-    databasePath = QFileDialog::getExistingDirectory(this, tr("Select the directory where your databases are defined."),"/");
+    databasePath = QFileDialog::getExistingDirectory(this, tr("Select the directory where your databases are defined."));
     databaseLabel->setText(databasePath);
+    canSave();
 }
 
 void Setup::pythonBrowse(){
-    pythonPath = QFileDialog::getOpenFileName(this,tr("Select Python Executable"),"/");
+    pythonPath = QFileDialog::getOpenFileName(this,tr("Select Python Executable"));
     pythonLabel->setText(pythonPath);
+    canSave();
 }
 
 void Setup::perlBrowse(){
-    perlPath = QFileDialog::getOpenFileName(this,tr("Select Perl Executable"),"/");
+    perlPath = QFileDialog::getOpenFileName(this,tr("Select Perl Executable"));
     perlLabel->setText(perlPath);
+    canSave();
 }
 
 void Setup::metapathwaysBrowse(){
-    mpPath = QFileDialog::getExistingDirectory(this,tr("Select MetaPathways Directory"),"/");
+    mpPath = QFileDialog::getExistingDirectory(this,tr("Select MetaPathways Directory"));
     metapathwaysLabel->setText(mpPath);
+    canSave();
 }
 
 void Setup::saveSetup(){
 
     //write to file only if the user has provided input
-    if (!pythonPath.isNull() && !pythonPath.isEmpty()) {
+    if (!pythonPath.isEmpty()) {
         MainWindow::CONFIG->operator []("PYTHON_EXECUTABLE") = pythonPath;
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath);
     }
-    if (!perlPath.isNull() && !perlPath.isEmpty()) {
+    if (!perlPath.isEmpty()) {
         MainWindow::CONFIG->operator []("PERL_EXECUTABLE") = perlPath;
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath);
     }
-    if (!mpPath.isNull() && !mpPath.isEmpty()) {
+    if (!mpPath.isEmpty()) {
         MainWindow::CONFIG->operator []("METAPATHWAYS_PATH") = mpPath;
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath);
     }
-    if (!databasePath.isNull() && !databasePath.isEmpty()) {
+    if (!databasePath.isEmpty()) {
         MainWindow::CONFIG->operator []("REFDBS") = databasePath;
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "REFDBS", databasePath);
     }
-
     close();
 }
 

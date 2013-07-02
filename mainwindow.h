@@ -3,18 +3,20 @@
 
 #include <QMainWindow>
 #include "qstring.h"
-#include "Setup.h"
 #include "RemoteForm.h"
 #include "ui_mainwindow.h"
 #include "qhash.h"
 #include "utilities.h"
 #include "parentwidget.h"
 #include "SettingsTab.h"
+#include "Setup.h"
 
 
 namespace Ui {
 class MainWindow;
 }
+
+class Setup;
 
 class MainWindow : public QMainWindow
 {

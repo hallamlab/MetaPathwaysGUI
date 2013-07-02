@@ -14,6 +14,7 @@ TEMPLATE = app
 CONFIG += console
 
 SOURCES += main.cpp\
+        parentwidget.cpp \
         mainwindow.cpp \
         Setup.cpp \
         SettingsTab.cpp \
@@ -22,7 +23,6 @@ SOURCES += main.cpp\
         ProgressDialog.cpp \
         RemoteForm.cpp \
         utilities.cpp \
-    parentwidget.cpp \
     rundata.cpp \
     qcustomplot.cpp \
     tabfactory.cpp \
@@ -30,6 +30,7 @@ SOURCES += main.cpp\
 
 
 HEADERS  += mainwindow.h \
+            parentwidget.h \
             Setup.h \
             SettingsTab.h \
             AdvancedSettingsTab.h \
@@ -37,7 +38,6 @@ HEADERS  += mainwindow.h \
             ProgressDialog.h \
             RemoteForm.h \
             utilities.h \
-    parentwidget.h \
     rundata.h \
     qcustomplot.h \
     tabfactory.h \

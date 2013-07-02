@@ -121,12 +121,16 @@ bool Utilities::writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString V
                 splitList = splitList.filter(keepRegex);
                 //filter the line into a list, keeping only non-whitespace characters
 
-                if (splitList.count() > 0){
+                if (splitList.size() > 0){
                     //if the list has a key and value for us to use
-                    if (splitList.at(0) == KEY ){
-                        if (splitList.at(1).isEmpty() || splitList.at(1).isNull()){
+                    if (splitList.at(0).operator ==(KEY)){
+                        if (splitList.size()<2){
+                            //if only the key exists, the value hasn't been selected
+                            //then write out a line with the key and the newly defined value
                             out << splitList.at(0) << " " << VALUE << "\n";
-                        } else {
+                        }else {
+                            //the value exists in file, we're replacing it, so replace the
+                            //stringlist entry with the new value
                             splitList.replace(1,VALUE);
                             out << splitList.at(0) << " " << splitList.at(1) << "\n";
                         }

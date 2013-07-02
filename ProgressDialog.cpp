@@ -78,15 +78,15 @@ void ProgressDialog::initMapping(){
     TABLE_MAPPING->operator [](6) = "metapaths_stepsPARSE_BLAST";
     TABLE_MAPPING->operator [](7) = "metapaths_stepsSCAN_RRNA";
     TABLE_MAPPING->operator [](8) = "metapaths_stepsSCAN_TRNA";
-    TABLE_MAPPING->operator [](9) = "metapaths_stepsANNOTATE";
-    TABLE_MAPPING->operator [](10) = "metapaths_stepsPATHOLOGIC_INPUT";
-    TABLE_MAPPING->operator [](11) = "metapaths_stepsGENBANK_FILE";
-    TABLE_MAPPING->operator [](12) = "metapaths_stepsCREATE_SEQUIN_FILE";
-    TABLE_MAPPING->operator [](13) = "metapaths_stepsCREATE_REPORT_FILES";
-    TABLE_MAPPING->operator [](14) = "metapaths_stepsMLTREEMAP_CALCULATION";
-    TABLE_MAPPING->operator [](15) = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
-    TABLE_MAPPING->operator [](16) = "metapaths_stepsPATHOLOGIC";
-    TABLE_MAPPING->operator [](17) = "metapaths_stepsSTATS_RRNA";
+    TABLE_MAPPING->operator [](9) = "metapaths_stepsSTATS_RRNA";
+    TABLE_MAPPING->operator [](10) = "metapaths_stepsANNOTATE";
+    TABLE_MAPPING->operator [](11) = "metapaths_stepsPATHOLOGIC_INPUT";
+    TABLE_MAPPING->operator [](12) = "metapaths_stepsGENBANK_FILE";
+    TABLE_MAPPING->operator [](13) = "metapaths_stepsCREATE_SEQUIN_FILE";
+    TABLE_MAPPING->operator [](14) = "metapaths_stepsCREATE_REPORT_FILES";
+    TABLE_MAPPING->operator [](15) = "metapaths_stepsMLTREEMAP_CALCULATION";
+    TABLE_MAPPING->operator [](16) = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
+    TABLE_MAPPING->operator [](17) = "metapaths_stepsPATHOLOGIC";
 }
 
 void ProgressDialog::colorRunConfig(QString line){
@@ -110,14 +110,18 @@ void ProgressDialog::colorRunConfig(QString line){
         if (!stepName.isEmpty()){
             QImage *img;
             QTableWidgetItem *item = new QTableWidgetItem();
+            QMovie *loading = new QMovie("loading.gif");
+            QLabel *imageLabel = new QLabel();
+
+            //set to blank to start, in case it's changed since the last step
+            pw->runConfigTab->table->removeCellWidget(TABLE_MAPPING->key("metapaths_steps"+stepName),3);
+            pw->runConfigTab->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, NULL);
 
             if (status.operator ==("Failed")){
                 img  = new QImage("cross.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
                 pw->runConfigTab->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
             }else if (operation.operator ==("Running")){
-                QMovie *loading = new QMovie("loading.gif");
-                QLabel *imageLabel = new QLabel();
                 imageLabel->setFixedSize(30,25);
                 imageLabel->setMovie(loading);
                 imageLabel->updateGeometry();

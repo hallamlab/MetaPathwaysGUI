@@ -59,8 +59,6 @@ void MainWindow::openSetup(){
         setupWindow = new Setup();
         setupWindow->show();
     }
-    startButton->setEnabled(true);
-    warningLabel->hide();
 }
 
 MainWindow::~MainWindow(){

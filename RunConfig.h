@@ -10,6 +10,8 @@
 #include "qcombobox.h"
 #include "QTableWidget"
 
+class ParentWidget;
+
 namespace Ui {
 class RunConfig;
 }
@@ -24,6 +26,8 @@ public:
     QPushButton *fileBrowseButton;
     QComboBox *fileInputFormat;
     QTableWidget *table;
+    QString selectedFile;
+    QLabel *fileSelectedPath;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
@@ -39,9 +43,6 @@ private slots:
 private:
     void loadRunParams();
     void setStyling();
-
-    QLabel *fileSelectedPath;
-    QString selectedFile;
 
     Ui::RunConfig *ui;
     QRadioButton *runAll;

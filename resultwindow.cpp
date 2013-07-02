@@ -12,7 +12,10 @@ ResultWindow::ResultWindow(QWidget *parent) :
     resultTabs->removeTab(0);
     resultTabs->removeTab(0);
 
-    resultTabs->addTab(TabFactory::createTable(5,5, NULL),"Nuc. Data");
+    resultTabs->addTab(TabFactory::createTable("test_sample2.nuc.stats"),"Nuc. Data");
+    resultTabs->addTab(TabFactory::createTable("test_sample2.nuc.stats"),"Amino Data");
+
+
 }
 
 ResultWindow::~ResultWindow()
