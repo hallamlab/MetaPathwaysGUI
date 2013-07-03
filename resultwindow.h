@@ -15,11 +15,17 @@ class ResultWindow : public QWidget
 public:
     explicit ResultWindow(QWidget *parent = 0);
     ~ResultWindow();
-    
+
+
 private:
     Ui::ResultWindow *ui;
 
     QTabWidget *resultTabs;
+    QWidget *aminoWidget;
+    QWidget *nucWidget;
+
+    QTableWidget *nucTable;
+    QTableWidget *aminoTable;
 };
 
 #endif // RESULTWINDOW_H

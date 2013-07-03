@@ -7,6 +7,7 @@
 #include <QLabel>
 #include "utilities.h"
 
+
 TabFactory::TabFactory()
 {
 }
@@ -14,18 +15,29 @@ TabFactory::TabFactory()
 QWidget* TabFactory::createTable(QString FILE_NAME){
     QGridLayout *layout = new QGridLayout();
     QWidget *mainWidget = new QWidget();
-
-    QList<QLabel *> *labels;
+    QString summaryText;
+    QList<QString>* labelText;
     QTableWidget *table;
 
-    labels = Utilities::createLabels(FILE_NAME);
-    //table = Utilities::createTable(FILE_NAME);
+    QLabel *summaryLabel = new QLabel();
+    summaryLabel->setWordWrap(true);
 
-    foreach (QLabel *label, *labels){
-        label->setStyleSheet("qproperty-alignment: AlignLeft;");
-        label->setStyleSheet("background-color:red");
-        layout->addWidget(label);
+    QChar labelDELIM = '$';
+    QChar tableDELIM = '#';
+
+    labelText = Utilities::parseResults(FILE_NAME,labelDELIM);
+    table = Utilities::createTable(FILE_NAME, tableDELIM);
+
+    layout->addWidget(table, 0, 0, -1, 1);
+
+
+    foreach(QString s, *labelText){
+        summaryText.append(s.trimmed());
+        summaryText.append("\n");
     }
+
+    summaryLabel->setText(summaryText);
+    layout->addWidget(summaryLabel, 0, 1 ,1, 1);
 
     mainWidget->setLayout(layout);
 

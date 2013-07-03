@@ -12,11 +12,19 @@ ResultWindow::ResultWindow(QWidget *parent) :
     resultTabs->removeTab(0);
     resultTabs->removeTab(0);
 
-    resultTabs->addTab(TabFactory::createTable("test_sample2.nuc.stats"),"Nuc. Data");
-    resultTabs->addTab(TabFactory::createTable("test_sample2.nuc.stats"),"Amino Data");
+    QString nucFile = "test_sample2.nuc.stats";
+    QString aminoFile = "test_sample2.amino.stats";
 
+    nucWidget = TabFactory::createTable(nucFile);
+    aminoWidget = TabFactory::createTable(aminoFile);
 
+    resultTabs->addTab(nucWidget,"Nuc. Data");
+    resultTabs->addTab(aminoWidget,"Amino Data");
+
+    nucTable = nucWidget->findChild<QTableWidget *>(nucFile);
+    aminoTable = nucWidget->findChild<QTableWidget *>(aminoFile);
 }
+
 
 ResultWindow::~ResultWindow()
 {

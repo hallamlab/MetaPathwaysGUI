@@ -15,6 +15,39 @@ Utilities::Utilities()
 }
 
 /*
+ * Helper class for enabling numberic sorting of table items.
+ * Credit to author at http://stackoverflow.com/a/17382750/485500 .
+ */
+class TableNumberItem : public QTableWidgetItem
+{
+public:
+    TableNumberItem(const QString txt = QString("0"))
+        :QTableWidgetItem(txt)
+    {
+    }
+    bool operator <(const QTableWidgetItem &other) const
+    {
+        QString str1 = text();
+        QString str2 = other.text();
+
+        if (str1[0] == '$' || str1[0] == '€') {
+            str1.remove(0, 1);
+            str2.remove(0, 1); // we assume both items have the same format
+        }
+
+        if (str1[str1.length() - 1] == '%') {
+            str1.chop(1);
+            str2.chop(1); // this works for "N%" and for "N %" formatted strings
+        }
+
+        double f1 = str1.toDouble();
+        double f2 = str2.toDouble();
+
+    return str1.toDouble() < str2.toDouble();
+    }
+};
+
+/*
  * Create a mapping of a CONFIG_KEY -> FORM_WIDGET_NAME. We cannot directly copy
  * the existing CONFIG key values to the form, because it contains invalid characters (like colon)
  * to assign to variables. So, we should create a hash to reflect an indirect mapping.
@@ -80,8 +113,8 @@ QHash<QString,QString>* Utilities::createMapping(){
 /*
  * Constructs labels based on the file given. Uses "$" as a delim.
  */
-QList<QLabel *>* Utilities::createLabels(QString FILE_NAME){
-    QList<QString>* strings = Utilities::parseResults(FILE_NAME, '$');
+QList<QLabel *>* Utilities::createLabels(const QString &FILE_NAME, const QChar &DELIM){
+    QList<QString>* strings = Utilities::parseResults(FILE_NAME, DELIM);
     QList<QLabel *>* labels = new QList<QLabel *>();
     foreach (QString str, *strings){
         QLabel *temp = new QLabel(str.trimmed());
@@ -91,19 +124,56 @@ QList<QLabel *>* Utilities::createLabels(QString FILE_NAME){
 }
 
 /*
- * Constructs a table widget based on the file given. Uses "#" as a delim.
+ * Parses FILE_NAME given, constructs a table widget based on the file given. Uses "#" as a delim.
  */
-QTableWidget* Utilities::createTable(QString FILE_NAME){
+QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELIM){
     QTableWidget* table = new QTableWidget();
+    table->setSortingEnabled(true);
+    table->setColumnCount(4);
+    table->setObjectName(FILE_NAME);
 
+    QFile inputFile(FILE_NAME);
 
+    QString headerDELIM;
+    headerDELIM.append(DELIM);
+    headerDELIM.append(DELIM);
+
+    QStringList headers;
+    int k = 0;
+
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+           QString line = in.readLine().trimmed();
+           QStringList lineSplit = line.split(QRegExp("\\s"));
+           lineSplit.removeAll("");
+           if (lineSplit.at(0)==headerDELIM){
+               //found header, get the header line for the table
+               lineSplit.removeAll(headerDELIM);
+               headers = lineSplit;
+           }
+           else if (lineSplit.at(0)==DELIM){
+               //found data, insert into table
+               lineSplit.removeAll(DELIM);
+               table->insertRow(table->rowCount());
+               for (int i=0;i<lineSplit.length();i++){
+                   table->setItem(k,i,new TableNumberItem(lineSplit.at(i)));
+               }
+               k++;
+           }
+       }
+    }
+    table->setHorizontalHeaderLabels(headers);
+    table->resizeColumnsToContents();
+    return table;
 }
-
 
 /*
  * Returns a list of strings which have the first character in each line matching DELIM.
  */
-QList<QString>* Utilities::parseResults(QString FILE_NAME, QChar DELIM){
+QList<QString>* Utilities::parseResults(const QString &FILE_NAME, const QChar &DELIM){
     QFile inputFile(FILE_NAME);
     QList<QString>* strings = new QList<QString>();
     if (inputFile.open(QIODevice::ReadOnly))
@@ -111,7 +181,7 @@ QList<QString>* Utilities::parseResults(QString FILE_NAME, QChar DELIM){
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
        {
-            QString line = in.readLine();
+           QString line = in.readLine().trimmed();
             if (line.at(0)==DELIM){
                 line.remove(0,1);
                 strings->append(line);
@@ -142,7 +212,7 @@ int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
  * pairing for settings.
  */
 
-bool Utilities::writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString VALUE){
+bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE){
     QFile inputFile(TEMPLATE_FILE);
     QFile newFile( TEMPLATE_FILE + "_new" );
 
@@ -201,7 +271,7 @@ bool Utilities::writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString V
  * For parsing the template config or parameter file.
  * Returns a hash of String to Strings, denoting the settings key, value pairs.
  */
-QHash<QString,QString>* Utilities::parseFile(QString TEMPLATE_FILE){
+QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
     QFile inputFile(TEMPLATE_FILE);
     QHash<QString, QString> *configs = new QHash<QString,QString>();
 

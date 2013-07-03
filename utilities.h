@@ -9,12 +9,12 @@ class Utilities
 {
 public:
     Utilities();
-    static QList<QLabel *>* createLabels(QString FILE_NAME);
-    static QTableWidget* createTable(QString FILE_NAME);
-    static QList<QString>* parseResults(QString FILE_NAME, QChar DELIM);
+    static QList<QLabel *>* createLabels(const QString &FILE_NAME,const QChar &DELIM);
+    static QTableWidget* createTable(const QString &FILE_NAME, const QChar &DELIM);
+    static QList<QString>* parseResults(const QString &FILE_NAME, const QChar &DELIM);
     static QHash<QString,QString>* createMapping();
-    static QHash<QString,QString>* parseFile(QString TEMPLATE_FILE);
-    static bool writeSettingToFile(QString TEMPLATE_FILE, QString KEY, QString VALUE);
+    static QHash<QString,QString>* parseFile(const QString &TEMPLATE_FILE);
+    static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
 };
 
