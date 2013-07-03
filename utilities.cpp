@@ -78,6 +78,51 @@ QHash<QString,QString>* Utilities::createMapping(){
 }
 
 /*
+ * Constructs labels based on the file given. Uses "$" as a delim.
+ */
+QList<QLabel *>* Utilities::createLabels(QString FILE_NAME){
+    QList<QString>* strings = Utilities::parseResults(FILE_NAME, '$');
+    QList<QLabel *>* labels = new QList<QLabel *>();
+    foreach (QString str, *strings){
+        QLabel *temp = new QLabel(str.trimmed());
+        labels->append(temp);
+    }
+    return labels;
+}
+
+/*
+ * Constructs a table widget based on the file given. Uses "#" as a delim.
+ */
+QTableWidget* Utilities::createTable(QString FILE_NAME){
+    QTableWidget* table = new QTableWidget();
+
+
+}
+
+
+/*
+ * Returns a list of strings which have the first character in each line matching DELIM.
+ */
+QList<QString>* Utilities::parseResults(QString FILE_NAME, QChar DELIM){
+    QFile inputFile(FILE_NAME);
+    QList<QString>* strings = new QList<QString>();
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine();
+            if (line.at(0)==DELIM){
+                line.remove(0,1);
+                strings->append(line);
+            }
+       }
+    }
+    return strings;
+}
+
+
+/*
  * Counts the number of stages to be run.
  */
 int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){

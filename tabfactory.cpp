@@ -5,20 +5,29 @@
 #include "qcustomplot.h"
 #include "QTextEdit"
 #include <QLabel>
+#include "utilities.h"
 
 TabFactory::TabFactory()
 {
 }
 
-QWidget* TabFactory::createTable(QString file){
-    QTableWidget *table = new QTableWidget();
-    QVBoxLayout *layout = new QVBoxLayout();
+QWidget* TabFactory::createTable(QString FILE_NAME){
+    QGridLayout *layout = new QGridLayout();
     QWidget *mainWidget = new QWidget();
-    QLabel *text = new QLabel("asdlkfjsdlkjflsdfdjsflkjdsfjdlfjldsfjlsdjfldsfjlfjdsfjdlkfjd");
+
+    QList<QLabel *> *labels;
+    QTableWidget *table;
+
+    labels = Utilities::createLabels(FILE_NAME);
+    //table = Utilities::createTable(FILE_NAME);
+
+    foreach (QLabel *label, *labels){
+        label->setStyleSheet("qproperty-alignment: AlignLeft;");
+        label->setStyleSheet("background-color:red");
+        layout->addWidget(label);
+    }
 
     mainWidget->setLayout(layout);
-    layout->addWidget(text);
-    layout->addWidget(table);
 
     return mainWidget;
 }
