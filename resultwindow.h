@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTableWidget>
+#include <QPushButton>
 
 namespace Ui {
 class ResultWindow;
@@ -16,6 +17,8 @@ public:
     explicit ResultWindow(QWidget *parent = 0);
     ~ResultWindow();
 
+private slots:
+    void exportData();
 
 private:
     Ui::ResultWindow *ui;
@@ -26,6 +29,9 @@ private:
 
     QTableWidget *nucTable;
     QTableWidget *aminoTable;
+
+    QPushButton *exportAmino;
+    QPushButton *exportNuc;
 };
 
 #endif // RESULTWINDOW_H

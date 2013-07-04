@@ -6,7 +6,7 @@
 #include "QTextEdit"
 #include <QLabel>
 #include "utilities.h"
-
+#include <QPushButton>
 
 TabFactory::TabFactory()
 {
@@ -14,9 +14,8 @@ TabFactory::TabFactory()
 
 QWidget* TabFactory::createTable(QString FILE_NAME){
     QGridLayout *layout = new QGridLayout();
+    QVBoxLayout *vLayout = new QVBoxLayout();
     QWidget *mainWidget = new QWidget();
-    QString summaryText;
-    QList<QString>* labelText;
     QTableWidget *table;
 
     QLabel *summaryLabel = new QLabel();
@@ -25,11 +24,13 @@ QWidget* TabFactory::createTable(QString FILE_NAME){
     QChar labelDELIM = '$';
     QChar tableDELIM = '#';
 
+    QString summaryText;
+    QList<QString>* labelText;
+
     labelText = Utilities::parseResults(FILE_NAME,labelDELIM);
     table = Utilities::createTable(FILE_NAME, tableDELIM);
 
-    layout->addWidget(table, 0, 0, -1, 1);
-
+    vLayout->addWidget(table);
 
     foreach(QString s, *labelText){
         summaryText.append(s.trimmed());
@@ -37,9 +38,15 @@ QWidget* TabFactory::createTable(QString FILE_NAME){
     }
 
     summaryLabel->setText(summaryText);
-    layout->addWidget(summaryLabel, 0, 1 ,1, 1);
+    vLayout->addWidget(summaryLabel);
 
-    mainWidget->setLayout(layout);
+    QPushButton *exportButton = new QPushButton();
+    exportButton->setObjectName(FILE_NAME+"Button");
+    exportButton->setText("Export Table");
+
+    vLayout->addWidget(exportButton);
+
+    mainWidget->setLayout(vLayout);
 
     return mainWidget;
 }

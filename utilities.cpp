@@ -132,6 +132,7 @@ QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELI
     table->setColumnCount(4);
     table->setObjectName(FILE_NAME);
 
+
     QFile inputFile(FILE_NAME);
 
     QString headerDELIM;
@@ -160,6 +161,7 @@ QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELI
                table->insertRow(table->rowCount());
                for (int i=0;i<lineSplit.length();i++){
                    table->setItem(k,i,new TableNumberItem(lineSplit.at(i)));
+                   table->item(k,i)->setTextAlignment(Qt::AlignCenter);
                }
                k++;
            }

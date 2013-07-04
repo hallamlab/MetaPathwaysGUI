@@ -1,6 +1,8 @@
 #include "resultwindow.h"
 #include "ui_resultwindow.h"
 #include "tabfactory.h"
+#include <QFileDialog>
+#include <QDebug>
 
 ResultWindow::ResultWindow(QWidget *parent) :
     QWidget(parent),
@@ -22,9 +24,18 @@ ResultWindow::ResultWindow(QWidget *parent) :
     resultTabs->addTab(aminoWidget,"Amino Data");
 
     nucTable = nucWidget->findChild<QTableWidget *>(nucFile);
-    aminoTable = nucWidget->findChild<QTableWidget *>(aminoFile);
+    aminoTable = aminoWidget->findChild<QTableWidget *>(aminoFile);
+
+    exportAmino = aminoWidget->findChild<QPushButton *>(aminoFile+"Button");
+    exportNuc = nucWidget->findChild<QPushButton *>(nucFile+"Button");
+
+    connect(exportAmino,SIGNAL(clicked()),this,SLOT(exportData()));
+
 }
 
+void ResultWindow::exportData(){
+
+}
 
 ResultWindow::~ResultWindow()
 {
