@@ -16,6 +16,8 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 
     this->run = run;
     this->pw = pw;
+    this->RUN_RESULT = run->getRunResults();
+    this->RUN_RESULT = new QHash<QString,QString>();
 
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     textBrowser = this->findChild<QTextBrowser *>("textBrowser");
@@ -97,17 +99,23 @@ void ProgressDialog::colorRunConfig(QString line){
         //if not a comment line
         QStringList splitList = line.split(whiteSpace);
         QString step = splitList.at(0).trimmed();
-        QString operation = splitList.at(1).trimmed();
+        QString operation = splitList.at(1).trimmed();        
 
         QString status;
         if (splitList.size()==3) status = splitList.at(2).trimmed();
 
         //find the step equivalent on the chart
         QString stepName = run->getConfigMapping()->operator [](step);
+        QString untrimmed = stepName;
         QGroupBox *group = pw->findChild<QGroupBox *>(stepName);
-        QString radioName = stepName.remove(QRegExp("[a-z-]+_?")).toLower();
+        stepName.remove(QRegExp("[a-z-]+_?")).toLower();
 
         if (!stepName.isEmpty()){
+            //save the run status
+//            qDebug() << splitList << splitList.at(2).isNull();
+//            this->RUN_RESULT->operator [](untrimmed) = splitList.at(1);
+//            if (!(splitList.at(2).isEmpty())) this->RUN_RESULT->operator [](untrimmed) = splitList.at(1) + " " + splitList.at(2);
+
             QImage *img;
             QTableWidgetItem *item = new QTableWidgetItem();
             QMovie *loading = new QMovie("loading.gif");

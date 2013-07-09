@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     rundata.cpp \
     qcustomplot.cpp \
     tabfactory.cpp \
-    resultwindow.cpp
+    resultwindow.cpp \
+    resultpage.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     rundata.h \
     qcustomplot.h \
     tabfactory.h \
-    resultwindow.h
+    resultwindow.h \
+    resultpage.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -51,4 +53,5 @@ FORMS    += mainwindow.ui \
             RemoteForm.ui \
             AdvancedSettingsTab.ui \
     parentwidget.ui \
-    resultwindow.ui
+    resultwindow.ui \
+    resultpage.ui

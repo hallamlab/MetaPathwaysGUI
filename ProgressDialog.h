@@ -39,6 +39,7 @@ private:
     QPushButton *cancelButton;
     QTextBrowser *textBrowser;
     QProgressBar *progressBar;
+    QHash<QString,QString> *RUN_RESULT;
 
     QProcess *myProcess;
     QTimer *timer;

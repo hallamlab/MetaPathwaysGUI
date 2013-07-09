@@ -1,6 +1,7 @@
 #ifndef Setup_H
 #define Setup_H
 
+#include "mainwindow.h"
 #include <QWidget>
 #include "ui_Setup.h"
 #include "qstring.h"
@@ -10,13 +11,16 @@ namespace Ui {
 class Setup;
 }
 
+class MainWindow;
+
 class Setup : public QWidget
 {
     Q_OBJECT
     
 public:
-    explicit Setup(QWidget *parent = 0);
+    explicit Setup( QWidget *parent,MainWindow *mw);
     void canSave();
+
     ~Setup();
 
 public slots:
@@ -27,9 +31,11 @@ public slots:
     void cancelSetup();
     void databaseBrowse();
 
+signals:
 
 private:
     Ui::Setup *ui;
+    MainWindow *mw;
 
     QString pythonPath;
     QString perlPath;

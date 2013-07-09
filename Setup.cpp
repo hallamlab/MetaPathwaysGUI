@@ -1,14 +1,14 @@
 #include "Setup.h"
 #include "ui_Setup.h"
 #include "string.h"
-#include "mainwindow.h"
 #include "qfiledialog.h"
 #include "qdebug.h"
 #include "utilities.h"
 
-Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
+Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setup)
 {
     ui->setupUi(this);
+    this->mw = mw;
 
     pythonLabel = this->findChild<QLabel *>("PYTHON_EXECUTABLE");
     perlLabel = this->findChild<QLabel *>("PERL_EXECUTABLE");
@@ -47,9 +47,9 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
 }
 
 void Setup::canSave(){
-    if ((pythonPath.isEmpty() && perlPath.isEmpty() && mpPath.isEmpty() && databasePath.isEmpty())){
-        saveButton->setEnabled(false);
-    }else saveButton->setEnabled(true);
+    if (!(pythonPath.isEmpty() && perlPath.isEmpty() && mpPath.isEmpty() && databasePath.isEmpty())){
+        saveButton->setEnabled(true);
+    }else saveButton->setEnabled(false);
 }
 
 void Setup::databaseBrowse(){
@@ -96,6 +96,8 @@ void Setup::saveSetup(){
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "REFDBS", databasePath);
     }
     close();
+    this->mw->startRun();
+
 }
 
 void Setup::cancelSetup(){

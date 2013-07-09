@@ -15,11 +15,14 @@ public:
     QHash<QString,QString>* getParams();
     QHash<QString,QString>* getConfig();
     QHash<QString,QString>* getConfigMapping();
+    QHash<QString,QString>* getRunResults();
+
 
 private:
     QHash<QString,QString> *PARAMS;
     QHash<QString,QString> *CONFIG;
     QHash<QString,QString> *CONFIG_MAPPING;
+    QHash<QString,QString> *RUN_RESULTS;
 
 };
 

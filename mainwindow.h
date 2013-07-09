@@ -11,17 +11,11 @@
 #include "SettingsTab.h"
 #include "Setup.h"
 
-
-namespace Ui {
-class MainWindow;
-}
-
 class Setup;
 
-class MainWindow : public QMainWindow
+class MainWindow : public QObject
 {
     Q_OBJECT
-    
 public:
     static const QString TEMPLATE_PARAM;
     static const QString DEFAULT_TEMPLATE_PARAM;
@@ -33,33 +27,22 @@ public:
     static QHash<QString,QString> *PARAMS;
     static QHash<QString,QString> *CONFIG_MAPPING;
 
-    void checkParams();
+    bool checkParams();
     bool checkConfig();
-
-    void loadParams(QString TEMPLATE_PARAM);
-    void loadConfig(QString TEMPLATE_CONFIG);
+    void setupParams();
+    void setupConfig();
     void createMapping();
+    void openSetup();
 
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow();
 
     ~MainWindow();
 
 public slots:
-    void openSetup();
-    void openSettings();
-    void openRemoteJob();
+    void startRun();
 
-private:
-    QPushButton *setupButton;
-    QPushButton *startButton;
-    QPushButton *remoteButton;
-    QLabel *warningLabel;
-    QGraphicsView *logo;
-
-    Ui::MainWindow *ui;
+public:
     Setup *setupWindow;
-    SettingsTab *settingsWindow;
-    RemoteForm *remoteWindow;
     ParentWidget *parentWidget;
 };
 

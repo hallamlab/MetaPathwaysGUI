@@ -8,6 +8,7 @@ RunData::RunData(){
     this->PARAMS = NULL;
     this->CONFIG = NULL;
     this->CONFIG_MAPPING = NULL;
+    this->RUN_RESULTS = NULL;
 }
 
 RunData::RunData(QHash<QString,QString> *PARAMS,
@@ -31,6 +32,9 @@ QHash<QString,QString>* RunData::getConfigMapping(){
     return this->CONFIG_MAPPING;
 }
 
+QHash<QString,QString>* RunData::getRunResults(){
+    return this->RUN_RESULTS;
+}
 
 
 
