@@ -71,7 +71,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>File Input : </string>
+    <string>File Inputs : </string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -95,7 +95,7 @@
   <widget class="QPushButton" name="fileBrowseButton">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>480</x>
      <y>60</y>
      <width>114</width>
      <height>31</height>
@@ -1200,13 +1200,13 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="fileBrowsePath">
+  <widget class="QLabel" name="filesSelected">
    <property name="geometry">
     <rect>
      <x>150</x>
      <y>61</y>
-     <width>261</width>
-     <height>20</height>
+     <width>321</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
@@ -1386,26 +1386,26 @@
   <zorder>fileBrowseButton</zorder>
   <zorder>label_4</zorder>
   <zorder>line</zorder>
-  <zorder>metapaths_stepsORF_PREDICTION</zorder>
+  <zorder>filesSelected</zorder>
   <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
-  <zorder>metapaths_stepsBLAST_REFDB</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
-  <zorder>metapaths_stepsANNOTATE</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsGENBANK_FILE</zorder>
-  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
   <zorder>metapaths_stepsPATHOLOGIC</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>fileBrowsePath</zorder>
-  <zorder>metapaths_stepsSTATS_RRNA</zorder>
-  <zorder>runOptionsGroupBox</zorder>
+  <zorder>metapaths_stepsSCAN_RRNA</zorder>
+  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>metapaths_stepsGENBANK_FILE</zorder>
+  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
+  <zorder>metapaths_stepsSTATS_RRNA</zorder>
+  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>metapaths_stepsBLAST_REFDB</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
+  <zorder>metapaths_stepsANNOTATE</zorder>
+  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
+  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
+  <zorder>metapaths_stepsORF_PREDICTION</zorder>
+  <zorder>runOptionsGroupBox</zorder>
  </widget>
  <resources/>
  <connections/>

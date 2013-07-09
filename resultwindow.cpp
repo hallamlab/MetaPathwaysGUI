@@ -1,36 +1,34 @@
 #include "resultwindow.h"
 #include "ui_resultwindow.h"
-#include "tabfactory.h"
+#include "resultpage.h"
+#include "tabledata.h"
 #include <QFileDialog>
 #include <QDebug>
 
-ResultWindow::ResultWindow(QWidget *parent) :
+ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ResultWindow)
 {
     ui->setupUi(this);
+    this->run = run;
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
+
     resultTabs->removeTab(0);
     resultTabs->removeTab(0);
 
     QString nucFile = "test_sample2.nuc.stats";
     QString aminoFile = "test_sample2.amino.stats";
 
-    nucWidget = TabFactory::createTable(nucFile);
-    aminoWidget = TabFactory::createTable(aminoFile);
+    ResultPage *rp = new ResultPage(this->run);
+    TableData *td = new TableData(nucFile);
 
-    resultTabs->addTab(nucWidget,"Nuc. Data");
-    resultTabs->addTab(aminoWidget,"Amino Data");
+    resultTabs->addTab(rp, "Execution Summary");
+    resultTabs->addTab(td, "Nuc. Data");
+}
 
-    nucTable = nucWidget->findChild<QTableWidget *>(nucFile);
-    aminoTable = aminoWidget->findChild<QTableWidget *>(aminoFile);
-
-    exportAmino = aminoWidget->findChild<QPushButton *>(aminoFile+"Button");
-    exportNuc = nucWidget->findChild<QPushButton *>(nucFile+"Button");
-
-    connect(exportAmino,SIGNAL(clicked()),this,SLOT(exportData()));
-
+RunData* ResultWindow::getRunData(){
+    return this->run;
 }
 
 void ResultWindow::exportData(){

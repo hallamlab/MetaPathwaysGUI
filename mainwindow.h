@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include "qstring.h"
-#include "RemoteForm.h"
 #include "ui_mainwindow.h"
 #include "qhash.h"
 #include "utilities.h"

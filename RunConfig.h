@@ -26,8 +26,8 @@ public:
     QPushButton *fileBrowseButton;
     QComboBox *fileInputFormat;
     QTableWidget *table;
-    QString selectedFile;
-    QLabel *fileSelectedPath;
+    QStringList *selectedFiles;
+    QLabel *filesSelected;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();

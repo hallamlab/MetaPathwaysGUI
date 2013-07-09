@@ -17,7 +17,7 @@ RunConfig::RunConfig(QWidget *parent) :
     runAll = this->findChild<QRadioButton *>("runAllRadioButton");
     skipAll = this->findChild<QRadioButton *>("skipAllRadioButton");
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
-    fileSelectedPath = this->findChild<QLabel *>("fileBrowsePath");
+    filesSelected = this->findChild<QLabel *>("filesSelected");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
@@ -60,8 +60,14 @@ void RunConfig::loadRunParams(){
 }
 
 void RunConfig::browseFile(){
-    selectedFile = QFileDialog::getOpenFileName(this, tr("Select file run."));
-    fileSelectedPath->setText(selectedFile);
+    QString selectedFileList = "";
+    selectedFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select file run.")));
+    for (int i=0;i < selectedFiles->size(); i++){
+        QString file = selectedFiles->at(i).split("/").last();
+        selectedFileList.append(file);
+        selectedFileList.append(",");
+    }
+    filesSelected->setText(selectedFileList);
 }
 
 void RunConfig::toggleAllRun(){
@@ -137,6 +143,8 @@ void RunConfig::setStyling(){
     }
     runOptionsGroupBox->setStyleSheet("border:0");
     runOptionsGroupBox->setTitle("");
+
+    table->horizontalHeader()->setStretchLastSection(true);
 
     table->setColumnWidth(3,30);
     table->setHorizontalHeaderLabels(QString("run,skip,redo,").split(","));

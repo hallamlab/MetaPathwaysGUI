@@ -132,7 +132,6 @@ QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELI
     table->setColumnCount(4);
     table->setObjectName(FILE_NAME);
 
-
     QFile inputFile(FILE_NAME);
 
     QString headerDELIM;

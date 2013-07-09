@@ -10,6 +10,7 @@
 #include "ProgressDialog.h"
 #include "tabfactory.h"
 #include "QDockWidget"
+#include "resultwindow.h"
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -141,6 +142,9 @@ void ParentWidget::continueButtonPressed(){
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText());
         MainWindow::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
 
+        //save file selected
+        MainWindow::PARAMS->operator [](runConfigTab->filesSelected->objectName()) = runConfigTab->filesSelected->text();
+
         executionPrep();
     }
 }
@@ -154,7 +158,12 @@ void ParentWidget::executionPrep(){
     MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
 
     ProgressDialog *progress = new ProgressDialog(this, run);
+    ResultWindow *rw = new ResultWindow(run);
+
+    rw->show();
     progress->show();
+
+    close();
 }
 
 void ParentWidget::cancelButtonPressed(){

@@ -21,14 +21,12 @@ QWidget* TabFactory::createTable(QString FILE_NAME){
     QLabel *summaryLabel = new QLabel();
     summaryLabel->setWordWrap(true);
 
-    QChar labelDELIM = '$';
-    QChar tableDELIM = '#';
+
 
     QString summaryText;
     QList<QString>* labelText;
 
-    labelText = Utilities::parseResults(FILE_NAME,labelDELIM);
-    table = Utilities::createTable(FILE_NAME, tableDELIM);
+
 
     vLayout->addWidget(table);
 

@@ -18,40 +18,37 @@ SOURCES += main.cpp\
         mainwindow.cpp \
         Setup.cpp \
         SettingsTab.cpp \
-        AdvancedSettingsTab.cpp \
         RunConfig.cpp \
         ProgressDialog.cpp \
-        RemoteForm.cpp \
         utilities.cpp \
     rundata.cpp \
     qcustomplot.cpp \
     tabfactory.cpp \
     resultwindow.cpp \
-    resultpage.cpp
+    resultpage.cpp \
+    tabledata.cpp
 
 
 HEADERS  += mainwindow.h \
             parentwidget.h \
             Setup.h \
             SettingsTab.h \
-            AdvancedSettingsTab.h \
             RunConfig.h \
             ProgressDialog.h \
-            RemoteForm.h \
             utilities.h \
     rundata.h \
     qcustomplot.h \
     tabfactory.h \
     resultwindow.h \
-    resultpage.h
+    resultpage.h \
+    tabledata.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
             SettingsTab.ui \
             RunConfig.ui \
             ProgressDialog.ui \
-            RemoteForm.ui \
-            AdvancedSettingsTab.ui \
     parentwidget.ui \
     resultwindow.ui \
-    resultpage.ui
+    resultpage.ui \
+    tabledata.ui
