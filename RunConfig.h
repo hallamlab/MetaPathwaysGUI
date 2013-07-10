@@ -2,13 +2,13 @@
 #define RUNCONFIG_H
 
 #include <QWidget>
-#include "qpushbutton.h"
-#include "qcheckbox.h"
-#include "qlabel.h"
-#include "qradiobutton.h"
-#include "qgroupbox.h"
-#include "qcombobox.h"
-#include "QTableWidget"
+#include <QPushButton>
+#include <QCheckBox>
+#include <QLabel>
+#include <QRadioButton>
+#include <QGroupBox>
+#include <QComboBox>
+#include <QTableWidget>
 
 class ParentWidget;
 
@@ -39,6 +39,9 @@ private slots:
     void toggleAllRedo();
     void browseFile();
     //void run();
+
+signals:
+    void fileSet();
 
 private:
     void loadRunParams();

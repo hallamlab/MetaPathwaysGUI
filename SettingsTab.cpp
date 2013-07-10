@@ -1,12 +1,12 @@
 #include "SettingsTab.h"
 #include "ui_SettingsTab.h"
-#include "qobject.h"
-#include "qdebug"
-#include "qstring.h"
 #include "mainwindow.h"
-#include "qdir.h"
-#include "qfiledialog.h"
-#include "qfileinfo.h"
+#include <QObject>
+#include <QDebug>
+#include <QString>
+#include <QDir>
+#include <QFileDialog>
+#include <QFileInfo>
 
 QList<QWidget *> *SettingsTab::allWidgets = NULL;
 
@@ -15,7 +15,6 @@ SettingsTab::SettingsTab(QWidget *parent) :
     ui(new Ui::SettingsTab)
 {
     ui->setupUi(this);
-
     SettingsTab::allWidgets = new QList<QWidget *>();
 
     RunConfigWindow = NULL;

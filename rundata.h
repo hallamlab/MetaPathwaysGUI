@@ -1,8 +1,8 @@
 #ifndef RUNDATA_H
 #define RUNDATA_H
 
-#include "qhash.h"
-#include "qstring.h"
+#include <QHash>
+#include <QString>
 
 class RunData
 {

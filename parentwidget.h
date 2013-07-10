@@ -1,11 +1,11 @@
 #ifndef PARENTWIDGET_H
 #define PARENTWIDGET_H
 
-#include <QWidget>
 #include "SettingsTab.h"
 #include "RunConfig.h"
 #include "qtabwidget.h"
 #include "rundata.h"
+#include <QWidget>
 
 namespace Ui {
 class ParentWidget;
@@ -21,6 +21,7 @@ public:
     QPushButton *cancelButton;
     QPushButton *backButton;
     RunConfig *runConfigTab;
+    QLabel* sampleWarning;
 
     ~ParentWidget();
     
@@ -29,11 +30,10 @@ private slots:
     void cancelButtonPressed();
     void backButtonPressed();
     void tabChanged();
+    void enableContinueButton();
 
 private:
     void executionPrep();
-
-
     Ui::ParentWidget *ui;
 
     RunData *run;

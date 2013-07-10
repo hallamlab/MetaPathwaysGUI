@@ -2,15 +2,15 @@
 #include "ui_parentwidget.h"
 #include "utilities.h"
 #include "mainwindow.h"
-#include "qspinbox.h"
-#include "QDoubleSpinBox"
-#include "qtextedit.h"
-#include "qdebug.h"
-#include "qprocess.h"
 #include "ProgressDialog.h"
 #include "tabfactory.h"
-#include "QDockWidget"
 #include "resultwindow.h"
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QTextEdit>
+#include <QDebug>
+#include <QProcess>
+#include <QDockWidget>
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -24,6 +24,7 @@ ParentWidget::ParentWidget(QWidget *parent) :
     continueButton = this->findChild<QPushButton *>("continueButton");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     backButton = this->findChild<QPushButton *>("backButton");
+    sampleWarning = this->findChild<QLabel *>("sampleWarning");
 
     tab = ui->parentTabWidget;
 
@@ -34,8 +35,6 @@ ParentWidget::ParentWidget(QWidget *parent) :
     tab->addTab(settingsTab,"Run Parameters");
     tab->addTab(runConfigTab,"Run Stages");
 
-    tab->setTabEnabled(1,false);
-    tab->setTabEnabled(2,false);
     backButton->hide();
 
     connect(continueButton, SIGNAL(clicked()), this, SLOT(continueButtonPressed()));
@@ -44,11 +43,22 @@ ParentWidget::ParentWidget(QWidget *parent) :
     connect(tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
 }
 
+void ParentWidget::enableContinueButton(){
+    continueButton->setEnabled(true);
+    sampleWarning->hide();
+}
+
 void ParentWidget::tabChanged(){
     if (tab->currentWidget() == runConfigTab){
         backButton->show();
+    }else backButton->hide();
+    if (tab->currentWidget() == runConfigTab && runConfigTab->selectedFiles==0){
+        continueButton->setEnabled(false);
+        sampleWarning->show();
+    }else{
+        sampleWarning->hide();
+        continueButton->setEnabled(true);
     }
-    else backButton->hide();
 }
 
 void ParentWidget::backButtonPressed(){
@@ -73,26 +83,24 @@ void ParentWidget::continueButtonPressed(){
             QString configName = MainWindow::CONFIG_MAPPING->key(objectName);
             QString value;
 
-            if (qobject_cast<QComboBox *>(widget)!=NULL){
+            if (qobject_cast<QComboBox *>(widget)){
                 QComboBox *temp = qobject_cast<QComboBox *>(widget);
                 value = temp->currentText();
             }
-            else if (qobject_cast<QSpinBox *>(widget)!=NULL){
+            else if (qobject_cast<QSpinBox *>(widget)){
                 QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
                 value = QString::number(temp->value());
             }
-            else if (qobject_cast<QDoubleSpinBox *>(widget)!=NULL){
+            else if (qobject_cast<QDoubleSpinBox *>(widget)){
                 QDoubleSpinBox *temp = qobject_cast<QDoubleSpinBox *>(widget);
                 value = QString::number(temp->value());
             }
-            else if (qobject_cast<QTextEdit *>(widget)!=NULL){
+            else if (qobject_cast<QTextEdit *>(widget)){
                 QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
                 value = temp->toPlainText();
             }
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value);
         }
-//        if (runConfigTab->selectedFile.isEmpty()) continueButton->setEnabled(false);
-//        else continueButton->setEnabled(true);
     }
     else{
         QList<QGroupBox *> *groupBoxes = runConfigTab->groupBoxes;
@@ -115,7 +123,7 @@ void ParentWidget::continueButtonPressed(){
             QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
             QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
 
-    //        //write to hash the changes
+            //write to hash the changes
             if (yesRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "yes";
             else if (redoRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "redo";
             else MainWindow::PARAMS->operator [](configKey) = "skip";
@@ -164,6 +172,7 @@ void ParentWidget::executionPrep(){
     progress->show();
 
     close();
+    this->parentWidget()->close();
 }
 
 void ParentWidget::cancelButtonPressed(){

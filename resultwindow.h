@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTableWidget>
 #include <QPushButton>
+#include <QComboBox>
+#include <QSignalMapper>
 #include "rundata.h"
 
 namespace Ui {
@@ -19,15 +21,13 @@ public:
     RunData* getRunData();
     ~ResultWindow();
 
-private slots:
-    void exportData();
-
 private:
     Ui::ResultWindow *ui;
     QWidget* parent;
     RunData *run;
-
+    QComboBox* sampleSelect;
     QTabWidget *resultTabs;
+    QSignalMapper *signal;
 };
 
 #endif // RESULTWINDOW_H

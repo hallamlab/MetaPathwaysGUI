@@ -127,7 +127,7 @@ void ResultPage::colorRunConfig(QString line){
         if (!stepName.isEmpty()){
             QImage *img;
             QTableWidgetItem *item = new QTableWidgetItem();
-            QMovie *loading = new QMovie("loading.gif");
+            QMovie *loading = new QMovie(":/images/loading.gif");
             QLabel *imageLabel = new QLabel();
 
             //set to blank to start, in case it's changed since the last step
@@ -135,7 +135,7 @@ void ResultPage::colorRunConfig(QString line){
             this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, NULL);
 
             if (status.operator ==("Failed")){
-                img  = new QImage("cross.png");
+                img  = new QImage(":/images/cross.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
                 this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
             }else if (operation.operator ==("Running")){
@@ -145,7 +145,7 @@ void ResultPage::colorRunConfig(QString line){
                 loading->start();
                 this->table->setCellWidget(TABLE_MAPPING->key("metapaths_steps"+stepName),3,imageLabel);
             }else{
-                img = new QImage("check.png");
+                img = new QImage(":/images/check.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
                 this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
             }

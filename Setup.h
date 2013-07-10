@@ -1,11 +1,10 @@
 #ifndef Setup_H
 #define Setup_H
-
+#include "ui_Setup.h"
 #include "mainwindow.h"
 #include <QWidget>
-#include "ui_Setup.h"
-#include "qstring.h"
-#include "qhash.h"
+#include <QString>
+#include <QHash>
 
 namespace Ui {
 class Setup;

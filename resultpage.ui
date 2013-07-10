@@ -16,7 +16,7 @@
   <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>134</x>
      <y>90</y>
      <width>351</width>
      <height>31</height>
@@ -34,7 +34,7 @@
   <widget class="QGroupBox" name="metapaths_stepsGFF_TO_AMINO">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>220</y>
      <width>314</width>
      <height>31</height>
@@ -89,7 +89,7 @@
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_CALCULATION">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>610</y>
      <width>314</width>
      <height>31</height>
@@ -144,7 +144,7 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>44</x>
      <y>140</y>
      <width>495</width>
      <height>561</height>
@@ -325,7 +325,7 @@
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>670</y>
      <width>314</width>
      <height>31</height>
@@ -380,7 +380,7 @@
   <widget class="QGroupBox" name="metapaths_stepsSCAN_RRNA">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>370</y>
      <width>314</width>
      <height>31</height>
@@ -435,7 +435,7 @@
   <widget class="QGroupBox" name="metapaths_stepsCREATE_REPORT_FILES">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>580</y>
      <width>314</width>
      <height>31</height>
@@ -490,7 +490,7 @@
   <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>520</y>
      <width>314</width>
      <height>31</height>
@@ -545,7 +545,7 @@
   <widget class="QGroupBox" name="metapaths_stepsSCAN_TRNA">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>400</y>
      <width>314</width>
      <height>31</height>
@@ -600,7 +600,7 @@
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORE">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>280</y>
      <width>314</width>
      <height>31</height>
@@ -655,7 +655,7 @@
   <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>250</y>
      <width>314</width>
      <height>31</height>
@@ -710,7 +710,7 @@
   <widget class="QGroupBox" name="metapaths_stepsSTATS_RRNA">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>430</y>
      <width>314</width>
      <height>31</height>
@@ -768,7 +768,7 @@
   <widget class="QGroupBox" name="metapaths_stepsPARSE_BLAST">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>340</y>
      <width>314</width>
      <height>31</height>
@@ -823,7 +823,7 @@
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>490</y>
      <width>314</width>
      <height>31</height>
@@ -878,7 +878,7 @@
   <widget class="QGroupBox" name="metapaths_stepsBLAST_REFDB">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>310</y>
      <width>314</width>
      <height>31</height>
@@ -933,7 +933,7 @@
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>640</y>
      <width>314</width>
      <height>31</height>
@@ -988,7 +988,7 @@
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>460</y>
      <width>314</width>
      <height>31</height>
@@ -1043,7 +1043,7 @@
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_FASTA">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>160</y>
      <width>314</width>
      <height>30</height>
@@ -1098,7 +1098,7 @@
   <widget class="QGroupBox" name="metapaths_stepsCREATE_SEQUIN_FILE">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>550</y>
      <width>314</width>
      <height>31</height>
@@ -1153,7 +1153,7 @@
   <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
-     <x>196</x>
+     <x>200</x>
      <y>190</y>
      <width>314</width>
      <height>31</height>
@@ -1210,24 +1210,24 @@
   </widget>
   <zorder>title</zorder>
   <zorder>tableWidget</zorder>
+  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   <zorder>metapaths_stepsPATHOLOGIC</zorder>
+  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
+  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
   <zorder>metapaths_stepsSTATS_RRNA</zorder>
   <zorder>metapaths_stepsBLAST_REFDB</zorder>
-  <zorder>metapaths_stepsANNOTATE</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
-  <zorder>metapaths_stepsGENBANK_FILE</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
+  <zorder>metapaths_stepsGENBANK_FILE</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
-  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
+  <zorder>metapaths_stepsSCAN_RRNA</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
+  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsANNOTATE</zorder>
  </widget>
  <resources/>
  <connections/>

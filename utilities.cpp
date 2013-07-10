@@ -1,11 +1,10 @@
 #include "utilities.h"
-#include "qstring.h"
-#include "qfile.h"
-#include "qtextstream.h"
-#include "qdebug.h"
-#include "qregexp.h"
-#include "qhash.h"
-#include "qsplitter.h"
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QRegExp>
+#include <QHash>
+#include <QSplitter>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -39,10 +38,6 @@ public:
             str1.chop(1);
             str2.chop(1); // this works for "N%" and for "N %" formatted strings
         }
-
-        double f1 = str1.toDouble();
-        double f2 = str2.toDouble();
-
     return str1.toDouble() < str2.toDouble();
     }
 };

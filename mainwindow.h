@@ -2,15 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "qstring.h"
 #include "ui_mainwindow.h"
-#include "qhash.h"
 #include "utilities.h"
 #include "parentwidget.h"
 #include "SettingsTab.h"
 #include "Setup.h"
+#include "welcome.h"
+#include "parentsettingsmainwindow.h"
+#include <QHash>
+#include <QString>
 
 class Setup;
+class ParentSettingsMainWindow;
 
 class MainWindow : public QObject
 {
@@ -31,7 +34,6 @@ public:
     void setupParams();
     void setupConfig();
     void createMapping();
-    void openSetup();
 
     explicit MainWindow();
 
@@ -39,10 +41,11 @@ public:
 
 public slots:
     void startRun();
+    void openSetup();
 
 public:
     Setup *setupWindow;
-    ParentWidget *parentWidget;
+    ParentSettingsMainWindow *parent;
 };
 
 #endif // MAINWINDOW_H

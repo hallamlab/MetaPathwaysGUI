@@ -37,6 +37,10 @@ void TableData::setupFromFile(){
     titleLabel->setText(this->file);
 }
 
+void TableData::sampleChanged(QString sample){
+    qDebug() << sample;
+}
+
 TableData::~TableData()
 {
     delete ui;

@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     tabfactory.cpp \
     resultwindow.cpp \
     resultpage.cpp \
-    tabledata.cpp
+    tabledata.cpp \
+    welcome.cpp \
+    parentsettingsmainwindow.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -41,7 +43,9 @@ HEADERS  += mainwindow.h \
     tabfactory.h \
     resultwindow.h \
     resultpage.h \
-    tabledata.h
+    tabledata.h \
+    welcome.h \
+    parentsettingsmainwindow.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -51,4 +55,9 @@ FORMS    += mainwindow.ui \
     parentwidget.ui \
     resultwindow.ui \
     resultpage.ui \
-    tabledata.ui
+    tabledata.ui \
+    welcome.ui \
+    parentsettingsmainwindow.ui
+
+RESOURCES += \
+    Resources.qrc

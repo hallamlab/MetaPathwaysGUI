@@ -1,10 +1,10 @@
 #include "RunConfig.h"
 #include "ui_RunConfig.h"
-#include "qregexp.h"
-#include "qobject.h"
-#include "QDebug"
-#include "qfiledialog.h"
 #include "mainwindow.h"
+#include <QRegExp>
+#include <QObject>
+#include "QDebug"
+#include <QFileDialog>
 
 RunConfig::RunConfig(QWidget *parent) :
     QWidget(parent),
@@ -21,6 +21,7 @@ RunConfig::RunConfig(QWidget *parent) :
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
+    selectedFiles = 0;
 
     setStyling();
     loadRunParams();
@@ -29,6 +30,7 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
+    connect(this, SIGNAL(fileSet()), this->parent(), SLOT(enableContinueButton()));
 }
 
 void RunConfig::loadRunParams(){
@@ -68,6 +70,8 @@ void RunConfig::browseFile(){
         selectedFileList.append(",");
     }
     filesSelected->setText(selectedFileList);
+    //send a signal to the parent to enable the continue button
+    emit fileSet();
 }
 
 void RunConfig::toggleAllRun(){

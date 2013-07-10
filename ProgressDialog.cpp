@@ -1,13 +1,13 @@
 #include "ProgressDialog.h"
 #include "ui_ProgressDialog.h"
-#include "qprocess.h"
+#include "utilities.h"
+#include "rundata.h"
+#include "resultwindow.h"
+#include <QProcess>
 #include <QPushButton>
 #include <QDebug>
 #include <QString>
 #include <QFile>
-#include "utilities.h"
-#include "rundata.h"
-#include "resultwindow.h"
 
 ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
 {

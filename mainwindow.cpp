@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-#include "qstring.h"
-#include "qdebug.h"
+#include <QString>
+#include <QDebug>
 #include <fstream>
 #include <iostream>
 
@@ -13,8 +13,14 @@ QHash<QString, QString> *MainWindow::PARAMS = NULL;
 QHash<QString, QString> *MainWindow::CONFIG_MAPPING = NULL;
 
 MainWindow::MainWindow(){
+    //display startup screen
+    Welcome *welcomeScreen = new Welcome();
+    welcomeScreen->show();
+    sleep(2);
+    welcomeScreen->close();
+
     setupWindow = 0;
-    parentWidget = 0;
+    parent = 0;
 
     MainWindow::CONFIG_MAPPING = Utilities::createMapping();
     if (checkParams() && checkConfig()){
@@ -29,13 +35,19 @@ MainWindow::MainWindow(){
 }
 
 void MainWindow::startRun(){
-    parentWidget = new ParentWidget();
-    parentWidget->show();
+    if (parent) parent->show();
+    else{
+        parent = new ParentSettingsMainWindow(this);
+        parent->show();
+    }
 }
 
 void MainWindow::openSetup(){
-    setupWindow = new Setup(0, this);
-    setupWindow->show();
+    if (setupWindow) setupWindow->show();
+    else {
+        setupWindow = new Setup(0, this);
+        setupWindow->show();
+    }
 }
 
 MainWindow::~MainWindow(){

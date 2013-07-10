@@ -1,11 +1,11 @@
 #include "tabfactory.h"
-#include "QDockWidget"
-#include "QGridLayout"
-#include "QTableWidget"
 #include "qcustomplot.h"
-#include "QTextEdit"
-#include <QLabel>
 #include "utilities.h"
+#include <QDockWidget>
+#include <QGridLayout>
+#include <QTableWidget>
+#include <QTextEdit>
+#include <QLabel>
 #include <QPushButton>
 
 TabFactory::TabFactory()

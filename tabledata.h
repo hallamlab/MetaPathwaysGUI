@@ -23,6 +23,9 @@ public:
     QTableWidget* tableData;
     QString file;
 
+public slots:
+    void sampleChanged(QString sample);
+
 private:
     Ui::TableData *ui;
 };

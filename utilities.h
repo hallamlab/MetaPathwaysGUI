@@ -1,7 +1,7 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
-#include "QHash"
-#include "qstring.h"
+#include <QHash>
+#include <QString>
 #include <QLabel>
 #include <QTableWidget>
 

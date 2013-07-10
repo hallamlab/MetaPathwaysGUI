@@ -1,11 +1,10 @@
 #ifndef SETTINGSTAB_H
 #define SETTINGSTAB_H
-
-#include <QWidget>
-#include "qlist.h"
 #include "RunConfig.h"
-#include "qpushbutton.h"
-#include "qtextedit.h"
+#include <QWidget>
+#include <qlist>
+#include <QPushButton>
+#include <QTextEdit>
 
 namespace Ui {
 class SettingsTab;

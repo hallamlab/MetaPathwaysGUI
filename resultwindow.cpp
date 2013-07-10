@@ -13,7 +13,7 @@ ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
     this->run = run;
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
-
+    sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     resultTabs->removeTab(0);
     resultTabs->removeTab(0);
 
@@ -25,15 +25,16 @@ ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
 
     resultTabs->addTab(rp, "Execution Summary");
     resultTabs->addTab(td, "Nuc. Data");
+
+    sampleSelect->addItem("test");
+    sampleSelect->addItem("test2");
+    connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),td,SLOT(sampleChanged(QString)));
 }
 
 RunData* ResultWindow::getRunData(){
     return this->run;
 }
 
-void ResultWindow::exportData(){
-
-}
 
 ResultWindow::~ResultWindow()
 {

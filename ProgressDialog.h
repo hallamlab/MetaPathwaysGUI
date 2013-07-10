@@ -1,15 +1,14 @@
 #ifndef ProgressDialog_H
 #define ProgressDialog_H
 
-#include <QWidget>
 #include "qpushbutton.h"
-#include <QProcess>
-#include <QTextBrowser>
-#include "rundata.h"
-#include <QProgressBar>
 #include "rundata.h"
 #include "parentwidget.h"
 #include <QTimer>
+#include <QWidget>
+#include <QProcess>
+#include <QTextBrowser>
+#include <QProgressBar>
 
 
 namespace Ui {
