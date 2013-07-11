@@ -159,7 +159,7 @@ void ParentWidget::continueButtonPressed(){
 
 void ParentWidget::executionPrep(){
     //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
-    run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING);
+    run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING, 0);
 
     //reset MainWindow static instances
     MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);

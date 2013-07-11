@@ -9,6 +9,7 @@ class Utilities
 {
 public:
     Utilities();
+    static bool validateConfig(const QHash<QString,QString>* PARAMS);
     static QList<QLabel *>* createLabels(const QString &FILE_NAME,const QChar &DELIM);
     static QTableWidget* createTable(const QString &FILE_NAME, const QChar &DELIM);
     static QList<QString>* parseResults(const QString &FILE_NAME, const QChar &DELIM);

@@ -49,7 +49,6 @@ Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setu
 }
 
 void Setup::canSave(){
-    qDebug() << pythonPath.isEmpty() << perlPath.isEmpty() << mpPath.isEmpty() << databasePath.isEmpty();
     if ((!pythonPath.isEmpty() && !perlPath.isEmpty() && !mpPath.isEmpty() && !databasePath.isEmpty())){
         saveButton->setEnabled(true);
     }else saveButton->setEnabled(false);

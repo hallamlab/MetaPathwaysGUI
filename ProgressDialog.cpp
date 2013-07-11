@@ -33,6 +33,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 //    myProcess = new QProcess();
 //    qDebug() << "starting program";
 //    myProcess->start(program, arguments);
+//    run->setProcess(myProcess);
 
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));

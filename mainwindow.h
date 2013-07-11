@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 #include "ui_mainwindow.h"
 #include "utilities.h"
 #include "parentwidget.h"
@@ -45,6 +46,7 @@ public slots:
 
 public:
     Setup *setupWindow;
+    QMessageBox *warning;
     ParentSettingsMainWindow *parent;
 };
 

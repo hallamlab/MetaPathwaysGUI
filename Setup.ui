@@ -49,7 +49,7 @@
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>91</width>
+     <width>271</width>
      <height>31</height>
     </rect>
    </property>
@@ -59,7 +59,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Python</string>
+    <string>Python Executable</string>
    </property>
   </widget>
   <widget class="QLabel" name="PYTHON_EXECUTABLE">
@@ -93,7 +93,7 @@
     <rect>
      <x>20</x>
      <y>160</y>
-     <width>71</width>
+     <width>191</width>
      <height>21</height>
     </rect>
    </property>
@@ -103,7 +103,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Perl</string>
+    <string>Perl Executable</string>
    </property>
   </widget>
   <widget class="QPushButton" name="perlBrowseButton">
@@ -147,7 +147,7 @@
     </font>
    </property>
    <property name="text">
-    <string>MetaPathways</string>
+    <string>MetaPathways Directory</string>
    </property>
   </widget>
   <widget class="QPushButton" name="metapathwaysBrowseButton">

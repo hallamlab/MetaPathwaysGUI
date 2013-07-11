@@ -28,6 +28,7 @@ private:
     QAction *openGridSetupAction;
     QAction *openAboutAction;
     ParentWidget* parentWidget;
+    MainWindow* mw;
 };
 
 #endif // PARENTSETTINGSMAINWINDOW_H

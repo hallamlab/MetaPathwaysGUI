@@ -43,6 +43,22 @@ public:
 };
 
 /*
+ * Validate the currently loaded run parameters.
+ */
+bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
+    QString python = PARAMS->operator []("PYTHON_EXECUTABLE");
+    QString perl = PARAMS->operator []("PERL_EXECUTABLE");
+    QString mp = PARAMS->operator []("METAPATHWAYS_PATH");
+    QString blastdbs = PARAMS->operator []("REFDBS");
+
+    if (python.isEmpty()) return false;
+    else if (perl.isEmpty()) return false;
+    else if (mp.isEmpty()) return false;
+    else if (blastdbs.isEmpty()) return false;
+    else return true;
+}
+
+/*
  * Create a mapping of a CONFIG_KEY -> FORM_WIDGET_NAME. We cannot directly copy
  * the existing CONFIG key values to the form, because it contains invalid characters (like colon)
  * to assign to variables. So, we should create a hash to reflect an indirect mapping.

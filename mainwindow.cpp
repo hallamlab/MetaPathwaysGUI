@@ -21,12 +21,18 @@ MainWindow::MainWindow(){
 
     setupWindow = 0;
     parent = 0;
+    warning = new QMessageBox();
 
     MainWindow::CONFIG_MAPPING = Utilities::createMapping();
     if (checkParams() && checkConfig()){
         MainWindow::CONFIG = Utilities::parseFile(TEMPLATE_CONFIG);
         MainWindow::PARAMS = Utilities::parseFile(TEMPLATE_PARAM);
-        startRun();
+        if(!Utilities::validateConfig(this->CONFIG)){
+            warning->warning(0,"Configuration Invalid!","Ooops! \nYou appear to have a configuration file for me, but parameters may be missing! Please check that all required executables and folders are specified through setup.", QMessageBox::Ok);
+            this->openSetup();
+        }else{
+            startRun();
+        }
     }else{
         setupConfig();
         setupParams();
@@ -38,7 +44,6 @@ void MainWindow::startRun(){
     if (parent) parent->show();
     else{
         parent = new ParentSettingsMainWindow(this);
-        parent->show();
     }
 }
 
