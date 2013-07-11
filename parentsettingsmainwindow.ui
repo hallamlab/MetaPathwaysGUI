@@ -23,17 +23,18 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="openSetup"/>
-   </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
     <addaction name="openHelp"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="openSetupWindow"/>
+    <addaction name="openGridSetupAction"/>
    </widget>
    <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
@@ -41,12 +42,32 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="openSetup">
    <property name="text">
-    <string>Modify Setup</string>
+    <string>Setup</string>
    </property>
   </action>
   <action name="openHelp">
    <property name="text">
     <string>Help</string>
+   </property>
+  </action>
+  <action name="openGridSetup">
+   <property name="text">
+    <string>Grid Setup</string>
+   </property>
+  </action>
+  <action name="openSetupAction">
+   <property name="text">
+    <string>Setup</string>
+   </property>
+  </action>
+  <action name="openGridSetupAction">
+   <property name="text">
+    <string>Grid Settings</string>
+   </property>
+  </action>
+  <action name="openSetupWindow">
+   <property name="text">
+    <string>Open Setup</string>
    </property>
   </action>
  </widget>

@@ -10,6 +10,8 @@ Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setu
     ui->setupUi(this);
     this->mw = mw;
 
+    this->setWindowTitle("MetaPathways - Setup");
+
     pythonLabel = this->findChild<QLabel *>("PYTHON_EXECUTABLE");
     perlLabel = this->findChild<QLabel *>("PERL_EXECUTABLE");
     metapathwaysLabel = this->findChild<QLabel *>("METAPATHWAYS_PATH");

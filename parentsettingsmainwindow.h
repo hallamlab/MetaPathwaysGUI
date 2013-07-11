@@ -25,6 +25,7 @@ private:
     Ui::ParentSettingsMainWindow *ui;
     QMenuBar *menu;
     QAction *openSetupAction;
+    QAction *openGridSetupAction;
     QAction *openAboutAction;
     ParentWidget* parentWidget;
 };

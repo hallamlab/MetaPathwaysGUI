@@ -71,7 +71,7 @@ void RunConfig::browseFile(){
     }
     filesSelected->setText(selectedFileList);
     //send a signal to the parent to enable the continue button
-    emit fileSet();
+    if (!selectedFiles->empty()) emit fileSet();
 }
 
 void RunConfig::toggleAllRun(){

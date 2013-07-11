@@ -177,6 +177,7 @@ void ParentWidget::executionPrep(){
 
 void ParentWidget::cancelButtonPressed(){
     close();
+    this->parentWidget()->close();
 }
 
 ParentWidget::~ParentWidget()

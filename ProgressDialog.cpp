@@ -16,6 +16,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     this->run = run;
     this->pw = pw;
 
+    this->setWindowTitle("MetaPathways - Run Progress");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     textBrowser = this->findChild<QTextBrowser *>("textBrowser");
     progressBar = this->findChild<QProgressBar *>("progressBar");
