@@ -23,16 +23,39 @@ SettingsTab::SettingsTab(QWidget *parent) :
     initWidgetValues();
 
     annotationDBSButton = this->findChild<QPushButton *>("annotationDBSButton");
+    annotationDBSWarning = this->findChild<QLabel *>("annotationDBSWarning");
     rrnaREFDBSButton = this->findChild<QPushButton *>("rrnaREFDBSButton");
     annotationDBS = this->findChild<QTextEdit *>("annotationDBS");
     rrnaREFDBS = this->findChild<QTextEdit *>("rrnaREFDBS");
+    rrnaREFDBSWarning = this->findChild<QLabel *>("rrnaREFDBSWarning");
+
+    annotationFileList = new QString("");
+    rrnaFileList = new QString("");
+
+    connect(this, SIGNAL(setContinueButton()), this->parent(), SLOT(enableContinueButton()));
+
+    if (!MainWindow::PARAMS->value("annotation:dbs").isEmpty()){
+        annotationDBSWarning->hide();
+    }
+    if (!MainWindow::PARAMS->value("rRNA:refdbs").isEmpty()){
+        rrnaREFDBSWarning->hide();
+    }
+    if (annotationDBSWarning->isHidden() && rrnaREFDBSWarning->isHidden()){
+        emit setContinueButton();
+    }
+
+    setStyling();
 
     connect(annotationDBSButton, SIGNAL(clicked()), this, SLOT(annotationDBSPressed()));
     connect(rrnaREFDBSButton, SIGNAL(clicked()), this, SLOT(rrnaREFDBSPressed()));
 }
 
+void SettingsTab::setStyling(){
+    rrnaREFDBSWarning->setStyleSheet("color:red");
+    annotationDBSWarning->setStyleSheet("color:red");
+}
+
 void SettingsTab::annotationDBSPressed(){
-    annotationFileList = new QString("");
     annotationFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select files to use as databases."), MainWindow::CONFIG->operator []("REFDBS")));
     for (int i=0;i < annotationFiles->size(); i++){
         QString file = annotationFiles->at(i).split("/").last();
@@ -40,10 +63,15 @@ void SettingsTab::annotationDBSPressed(){
         annotationFileList->append(",");
     }
     annotationDBS->setText(*annotationFileList);
+    if (annotationFileList->length() > 0){
+        annotationDBSWarning->hide();
+    }
+    if (annotationFileList->length() > 0 && rrnaFileList->length() > 0){
+        emit setContinueButton();
+    }
 }
 
 void SettingsTab::rrnaREFDBSPressed(){
-    rrnaFileList = new QString("");
     rrnaFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select files to use as databases."), MainWindow::CONFIG->operator []("REFDBS")));
     for (int i=0;i < rrnaFiles->size(); i++){
         QString file = rrnaFiles->at(i).split("/").last();
@@ -51,6 +79,12 @@ void SettingsTab::rrnaREFDBSPressed(){
         rrnaFileList->append(",");
     }
     rrnaREFDBS->setText(*rrnaFileList);
+    if (rrnaFileList->length() > 0){
+        rrnaREFDBSWarning->hide();
+    }
+    if (annotationFileList->length() > 0 && rrnaFileList->length() > 0){
+        emit setContinueButton();
+    }
 }
 
 void SettingsTab::closeWindow(){

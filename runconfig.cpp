@@ -21,6 +21,10 @@ RunConfig::RunConfig(QWidget *parent) :
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
+    sampleWarning = this->findChild<QLabel *>("sampleWarning");
+    gridBlastChoice = this->findChild<QCheckBox *>("gridBlastChoice");
+    setupGrids = this->findChild<QPushButton *>("setupGrids");
+
     selectedFiles = 0;
 
     setStyling();
@@ -31,6 +35,7 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
     connect(this, SIGNAL(fileSet()), this->parent(), SLOT(enableContinueButton()));
+    connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 }
 
 void RunConfig::loadRunParams(){
@@ -61,6 +66,15 @@ void RunConfig::loadRunParams(){
     }
 }
 
+void RunConfig::specifyGrid(){
+    if (gridSetup){
+        gridSetup->show();
+    }else{
+        gridSetup = new GridSetup();
+        gridSetup->show();
+    }
+}
+
 void RunConfig::browseFile(){
     QString selectedFileList = "";
     selectedFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select file run.")));
@@ -71,7 +85,10 @@ void RunConfig::browseFile(){
     }
     filesSelected->setText(selectedFileList);
     //send a signal to the parent to enable the continue button
-    if (!selectedFiles->empty()) emit fileSet();
+    if (!selectedFiles->empty()){
+        emit fileSet();
+        sampleWarning->hide();
+    }
 }
 
 void RunConfig::toggleAllRun(){

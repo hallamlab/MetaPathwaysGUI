@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     resultpage.cpp \
     tabledata.cpp \
     welcome.cpp \
-    parentsettingsmainwindow.cpp
+    parentsettingsmainwindow.cpp \
+    gridchoice.cpp \
+    gridsetup.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -45,7 +47,9 @@ HEADERS  += mainwindow.h \
     resultpage.h \
     tabledata.h \
     welcome.h \
-    parentsettingsmainwindow.h
+    parentsettingsmainwindow.h \
+    gridchoice.h \
+    gridsetup.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -57,7 +61,9 @@ FORMS    += mainwindow.ui \
     resultpage.ui \
     tabledata.ui \
     welcome.ui \
-    parentsettingsmainwindow.ui
+    parentsettingsmainwindow.ui \
+    gridchoice.ui \
+    gridsetup.ui
 
 RESOURCES += \
     Resources.qrc

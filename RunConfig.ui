@@ -1280,8 +1280,8 @@
   <widget class="QGroupBox" name="runOptionsGroupBox">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>780</y>
+     <x>320</x>
+     <y>160</y>
      <width>251</width>
      <height>41</height>
     </rect>
@@ -1405,6 +1405,32 @@
     <string>At least one input must be specified!</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="blastWithGrid">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>780</y>
+     <width>281</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Compute BLAST with grids (optional)</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="setupGrids">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>810</y>
+     <width>114</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Setup Grids</string>
+   </property>
+  </widget>
   <zorder>tableWidget</zorder>
   <zorder>label</zorder>
   <zorder>fileInputFormat</zorder>
@@ -1434,6 +1460,8 @@
   <zorder>runOptionsGroupBox</zorder>
   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
   <zorder>sampleWarning</zorder>
+  <zorder>blastWithGrid</zorder>
+  <zorder>setupGrids</zorder>
  </widget>
  <resources/>
  <connections/>

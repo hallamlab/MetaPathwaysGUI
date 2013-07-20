@@ -9,6 +9,7 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QTableWidget>
+#include "gridsetup.h"
 
 class ParentWidget;
 
@@ -28,6 +29,10 @@ public:
     QTableWidget *table;
     QStringList *selectedFiles;
     QLabel *filesSelected;
+    QLabel* sampleWarning;
+    QCheckBox* gridBlastChoice;
+    QPushButton* setupGrids;
+    GridSetup* gridSetup;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
@@ -38,6 +43,7 @@ private slots:
     void toggleAllSkip();
     void toggleAllRedo();
     void browseFile();
+    void specifyGrid();
     //void run();
 
 signals:

@@ -21,7 +21,7 @@ public:
     QPushButton *cancelButton;
     QPushButton *backButton;
     RunConfig *runConfigTab;
-    QLabel* sampleWarning;
+    SettingsTab *settingsTab;
 
     ~ParentWidget();
     
@@ -38,7 +38,6 @@ private:
 
     RunData *run;
     QTabWidget *tab;
-    SettingsTab *settingsTab;
 };
 
 #endif // PARENTWIDGET_H

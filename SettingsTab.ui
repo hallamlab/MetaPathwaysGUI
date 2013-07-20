@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="14" column="2">
+   <item row="15" column="2">
     <widget class="QSpinBox" name="annotationMIN_SCORE">
      <property name="minimum">
       <number>1</number>
@@ -24,14 +24,14 @@
      </property>
     </widget>
    </item>
-   <item row="27" column="0" colspan="2">
+   <item row="30" column="0" colspan="2">
     <widget class="QLabel" name="label_17">
      <property name="text">
       <string>Maximum EValue</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="2">
+   <item row="17" column="2">
     <widget class="QTextEdit" name="annotationMAX_EVALUE">
      <property name="minimumSize">
       <size>
@@ -48,7 +48,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="18" column="0" colspan="3">
+   <item row="19" column="0" colspan="3">
     <widget class="QLabel" name="label_4">
      <property name="font">
       <font>
@@ -72,7 +72,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="12" column="2">
+   <item row="13" column="2">
     <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
      <property name="minimum">
       <double>0.000000000000000</double>
@@ -88,7 +88,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="25" column="5">
+   <item row="28" column="5">
     <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
      <property name="minimum">
       <number>1</number>
@@ -98,7 +98,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="23" column="2" colspan="3">
+   <item row="25" column="2" colspan="3">
     <widget class="QTextEdit" name="rrnaREFDBS">
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -107,11 +107,11 @@ p, li { white-space: pre-wrap; }
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
      <property name="lineWrapMode">
-      <enum>QTextEdit::NoWrap</enum>
+      <enum>QTextEdit::WidgetWidth</enum>
      </property>
     </widget>
    </item>
-   <item row="25" column="2">
+   <item row="28" column="2">
     <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
      <property name="decimals">
       <number>2</number>
@@ -127,14 +127,14 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="25" column="0" colspan="2">
+   <item row="28" column="0" colspan="2">
     <widget class="QLabel" name="label_18">
      <property name="text">
       <string>Mininum Identity</string>
      </property>
     </widget>
    </item>
-   <item row="16" column="0" colspan="2">
+   <item row="17" column="0" colspan="2">
     <widget class="QLabel" name="label_11">
      <property name="text">
       <string>Maximum EValue</string>
@@ -165,21 +165,21 @@ p, li { white-space: pre-wrap; }
      </item>
     </widget>
    </item>
-   <item row="14" column="3" colspan="2">
+   <item row="15" column="3" colspan="2">
     <widget class="QLabel" name="label_13">
      <property name="text">
       <string>Mininum Length</string>
      </property>
     </widget>
    </item>
-   <item row="23" column="0">
+   <item row="25" column="0">
     <widget class="QLabel" name="label_16">
      <property name="text">
       <string>Databases</string>
      </property>
     </widget>
    </item>
-   <item row="28" column="0" colspan="7">
+   <item row="31" column="0" colspan="7">
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -219,14 +219,14 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="21" column="0" colspan="7">
+   <item row="22" column="0" colspan="7">
     <widget class="Line" name="line_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="22" column="0" colspan="4">
+   <item row="23" column="0" colspan="4">
     <widget class="QLabel" name="label_15">
      <property name="font">
       <font>
@@ -235,6 +235,13 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>rRNA Annotation Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="26" column="2" colspan="3">
+    <widget class="QLabel" name="rrnaREFDBSWarning">
+     <property name="text">
+      <string>At least one database must be specified!</string>
      </property>
     </widget>
    </item>
@@ -264,7 +271,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="31" column="2">
+   <item row="34" column="2">
     <widget class="QComboBox" name="ptools_settingsTAXONOMIC_PRUNING">
      <item>
       <property name="text">
@@ -285,28 +292,28 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="14" column="0">
+   <item row="15" column="0">
     <widget class="QLabel" name="label_12">
      <property name="text">
       <string>Mininum Score</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="0">
+   <item row="13" column="0">
     <widget class="QLabel" name="label_10">
      <property name="text">
       <string>Mininum BSR</string>
      </property>
     </widget>
    </item>
-   <item row="17" column="0" colspan="7">
+   <item row="18" column="0" colspan="7">
     <widget class="Line" name="line_5">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="30" column="0">
+   <item row="33" column="0">
     <widget class="QLabel" name="label_20">
      <property name="font">
       <font>
@@ -325,7 +332,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="23" column="5">
+   <item row="25" column="5">
     <widget class="QPushButton" name="rrnaREFDBSButton">
      <property name="text">
       <string>Select DBs</string>
@@ -339,14 +346,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="12" column="3">
-    <widget class="QLabel" name="label_14">
-     <property name="text">
-      <string>Maximum Hits</string>
-     </property>
-    </widget>
-   </item>
-   <item row="27" column="2">
+   <item row="30" column="2">
     <widget class="QTextEdit" name="rrnaMAX_EVALUE">
      <property name="maximumSize">
       <size>
@@ -363,14 +363,14 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="11" column="5" colspan="2">
-    <widget class="QPushButton" name="annotationDBSButton">
+   <item row="13" column="3">
+    <widget class="QLabel" name="label_14">
      <property name="text">
-      <string>Select DBs</string>
+      <string>Maximum Hits</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="5">
+   <item row="13" column="5">
     <widget class="QSpinBox" name="annotationMAX_HITS">
      <property name="minimum">
       <number>0</number>
@@ -383,6 +383,13 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
+   <item row="11" column="5" colspan="2">
+    <widget class="QPushButton" name="annotationDBSButton">
+     <property name="text">
+      <string>Select DBs</string>
+     </property>
+    </widget>
+   </item>
    <item row="11" column="2" colspan="3">
     <widget class="QTextEdit" name="annotationDBS">
      <property name="verticalScrollBarPolicy">
@@ -392,11 +399,11 @@ p, li { white-space: pre-wrap; }
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
      <property name="lineWrapMode">
-      <enum>QTextEdit::NoWrap</enum>
+      <enum>QTextEdit::WidgetWidth</enum>
      </property>
     </widget>
    </item>
-   <item row="14" column="5">
+   <item row="15" column="5">
     <widget class="QSpinBox" name="annotationMIN_LENGTH">
      <property name="maximum">
       <number>1000</number>
@@ -406,28 +413,21 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="31" column="0" colspan="2">
+   <item row="34" column="0" colspan="2">
     <widget class="QLabel" name="label_21">
      <property name="text">
       <string>Taxonomic Pruning</string>
      </property>
     </widget>
    </item>
-   <item row="25" column="3" colspan="2">
+   <item row="28" column="3" colspan="2">
     <widget class="QLabel" name="label_19">
      <property name="text">
       <string>Mininum Bitscore</string>
      </property>
     </widget>
    </item>
-   <item row="19" column="0" colspan="2">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Mininum Length</string>
-     </property>
-    </widget>
-   </item>
-   <item row="19" column="2">
+   <item row="20" column="2">
     <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
      <property name="minimum">
       <number>1</number>
@@ -438,19 +438,33 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
    <item row="20" column="0" colspan="2">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Mininum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="21" column="0" colspan="2">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Algorithm</string>
      </property>
     </widget>
    </item>
-   <item row="20" column="2">
+   <item row="21" column="2">
     <widget class="QComboBox" name="orf_predictionALGORITHM">
      <item>
       <property name="text">
        <string>prodigal</string>
       </property>
      </item>
+    </widget>
+   </item>
+   <item row="12" column="2" colspan="2">
+    <widget class="QLabel" name="annotationDBSWarning">
+     <property name="text">
+      <string>At least one database must be specified!</string>
+     </property>
     </widget>
    </item>
   </layout>

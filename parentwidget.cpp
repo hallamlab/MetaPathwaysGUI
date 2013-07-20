@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QProcess>
 #include <QDockWidget>
+#include <QDebug>
 
 ParentWidget::ParentWidget(QWidget *parent) :
     QWidget(parent),
@@ -18,24 +19,24 @@ ParentWidget::ParentWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    settingsTab = new SettingsTab(this);
-    runConfigTab = new RunConfig(this);
-
     continueButton = this->findChild<QPushButton *>("continueButton");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     backButton = this->findChild<QPushButton *>("backButton");
-    sampleWarning = this->findChild<QLabel *>("sampleWarning");
+
+    continueButton->setEnabled(false);
+    backButton->hide();
+
+    settingsTab = new SettingsTab(this);
+    runConfigTab = new RunConfig(this);
 
     tab = ui->parentTabWidget;
-
     //delete initial
     tab->removeTab(0);
     tab->removeTab(0);
 
     tab->addTab(settingsTab,"Run Parameters");
     tab->addTab(runConfigTab,"Run Stages");
-
-    backButton->hide();
+    tab->setTabEnabled(1,false);
 
     connect(continueButton, SIGNAL(clicked()), this, SLOT(continueButtonPressed()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelButtonPressed()));
@@ -45,18 +46,17 @@ ParentWidget::ParentWidget(QWidget *parent) :
 
 void ParentWidget::enableContinueButton(){
     continueButton->setEnabled(true);
-    sampleWarning->hide();
 }
 
 void ParentWidget::tabChanged(){
     if (tab->currentWidget() == runConfigTab){
         backButton->show();
-    }else backButton->hide();
-    if (tab->currentWidget() == runConfigTab && runConfigTab->selectedFiles==0){
-        continueButton->setEnabled(false);
-        sampleWarning->show();
     }else{
-        sampleWarning->hide();
+        backButton->hide();
+    }
+    if (tab->currentWidget() == runConfigTab && runConfigTab->selectedFiles == 0){
+        continueButton->setEnabled(false);
+    }else{
         continueButton->setEnabled(true);
     }
 }
@@ -153,6 +153,11 @@ void ParentWidget::continueButtonPressed(){
         //save file selected
         MainWindow::PARAMS->operator [](runConfigTab->filesSelected->objectName()) = runConfigTab->filesSelected->text();
 
+        //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
+        if (runConfigTab->gridBlastChoice->isChecked() && MainWindow::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
+            MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB") = "grid";
+            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid");
+        }
         executionPrep();
     }
 }
@@ -161,9 +166,15 @@ void ParentWidget::executionPrep(){
     //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
     run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING, 0);
 
-    //reset MainWindow static instances
-    MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
-    MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
+    //set the rrnaDB and annotationDBS so we know how many to look for in the log
+    QStringList* rrnaDBS = new QStringList();
+    rrnaDBS = new QStringList(MainWindow::PARAMS->operator []("rRNA:refdbs"));
+
+    QStringList* annotationDBS = new QStringList();
+    annotationDBS = new QStringList(MainWindow::PARAMS->operator []("annotation:dbs"));
+
+    run->setAnnotationDBS(annotationDBS);
+    run->setRRNADBS(rrnaDBS);
 
     ProgressDialog *progress = new ProgressDialog(this, run);
     ResultWindow *rw = new ResultWindow(run);
@@ -173,6 +184,10 @@ void ParentWidget::executionPrep(){
 
     close();
     this->parentWidget()->close();
+
+    //reset MainWindow static instances
+    MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
+    MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
 }
 
 void ParentWidget::cancelButtonPressed(){

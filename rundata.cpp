@@ -4,14 +4,6 @@
  * about this instance of MetaPathways running.
  */
 
-RunData::RunData(){
-    this->PARAMS = NULL;
-    this->CONFIG = NULL;
-    this->CONFIG_MAPPING = NULL;
-    this->RUN_RESULTS = NULL;
-    this->run = NULL;
-}
-
 RunData::RunData(QHash<QString,QString> *PARAMS,
                  QHash<QString,QString> *CONFIG,
                  QHash<QString,QString> *CONFIG_MAPPING,
@@ -43,8 +35,25 @@ QProcess* RunData::getProcess(){
     return this->run;
 }
 
+void RunData::setRRNADBS(QStringList* rrnaDBS){
+    this->rrnaDBS = rrnaDBS;
+}
+
+void RunData::setAnnotationDBS(QStringList* annotationDBS){
+    this->annotationDBS = annotationDBS;
+}
+
+QStringList* RunData::getRRNADBS(){
+    return this->rrnaDBS;
+}
+
+QStringList* RunData::getAnnotationDBS(){
+    return this->annotationDBS;
+}
+
 void RunData::setProcess(QProcess* run){
     this->run = run;
 }
+
 
 

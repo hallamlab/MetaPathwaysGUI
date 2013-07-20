@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QMovie>
 #include <QTextStream>
+#include <QDebug>
 
 
 ResultPage::ResultPage(RunData *run, QWidget *parent) :
@@ -123,6 +124,7 @@ void ResultPage::colorRunConfig(QString line){
         QString untrimmed = stepName;
         QGroupBox *group = this->findChild<QGroupBox *>(stepName);
         stepName.remove(QRegExp("[a-z-]+_?")).toLower();
+
 
         if (!stepName.isEmpty()){
             QImage *img;
