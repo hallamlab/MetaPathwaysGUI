@@ -10,6 +10,7 @@
 #include "Setup.h"
 #include "welcome.h"
 #include "parentsettingsmainwindow.h"
+#include "grid.h"
 #include <QHash>
 #include <QString>
 
@@ -29,6 +30,7 @@ public:
     static QHash<QString,QString> *CONFIG;
     static QHash<QString,QString> *PARAMS;
     static QHash<QString,QString> *CONFIG_MAPPING;
+    static QHash<QString, Grid*> *GRIDS;
 
     bool checkParams();
     bool checkConfig();

@@ -22,7 +22,7 @@ RunConfig::RunConfig(QWidget *parent) :
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
     sampleWarning = this->findChild<QLabel *>("sampleWarning");
-    gridBlastChoice = this->findChild<QCheckBox *>("gridBlastChoice");
+    gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
 
     selectedFiles = 0;
@@ -169,6 +169,11 @@ void RunConfig::setStyling(){
 
     table->setColumnWidth(3,30);
     table->setHorizontalHeaderLabels(QString("run,skip,redo,").split(","));
+
+    //set grid checkbox
+    if (MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB")=="grid"){
+        gridBlastChoice->setChecked(true);
+    }
 
 }
 

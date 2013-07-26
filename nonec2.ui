@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>NonEC2</class>
+ <widget class="QWidget" name="NonEC2">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>676</width>
+    <height>374</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="max_parallel_jobsLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>67</y>
+     <width>140</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Max Parallel Jobs</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="gridNameLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>22</y>
+     <width>140</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Name</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gridName">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>22</y>
+     <width>169</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="working_dir">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>205</y>
+     <width>481</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="serverLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>160</y>
+     <width>140</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Server Address</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="max_parallel_jobs">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>67</y>
+     <width>82</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>999</number>
+   </property>
+   <property name="value">
+    <number>20</number>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="os">
+   <property name="geometry">
+    <rect>
+     <x>169</x>
+     <y>248</y>
+     <width>88</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>linux</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>win</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>mac</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QCheckBox" name="enabled">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>333</y>
+     <width>93</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enabled</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="usernameLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>115</y>
+     <width>140</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Username</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="server">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>160</y>
+     <width>481</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="username">
+   <property name="geometry">
+    <rect>
+     <x>172</x>
+     <y>115</y>
+     <width>266</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="bit">
+   <property name="geometry">
+    <rect>
+     <x>169</x>
+     <y>291</y>
+     <width>88</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>bit32</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>bit64</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QLabel" name="bitLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>293</y>
+     <width>140</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>System Bit Type</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="working_dirLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>205</y>
+     <width>140</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Working Dir (optional)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="osLabel">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>250</y>
+     <width>140</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Operating System</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

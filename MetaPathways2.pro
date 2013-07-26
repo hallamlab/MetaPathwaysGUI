@@ -30,7 +30,10 @@ SOURCES += main.cpp\
     welcome.cpp \
     parentsettingsmainwindow.cpp \
     gridchoice.cpp \
-    gridsetup.cpp
+    gridsetup.cpp \
+    grid.cpp \
+    nonec2.cpp \
+    ec2grid.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -49,7 +52,10 @@ HEADERS  += mainwindow.h \
     welcome.h \
     parentsettingsmainwindow.h \
     gridchoice.h \
-    gridsetup.h
+    gridsetup.h \
+    grid.h \
+    nonec2.h \
+    ec2grid.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -63,7 +69,9 @@ FORMS    += mainwindow.ui \
     welcome.ui \
     parentsettingsmainwindow.ui \
     gridchoice.ui \
-    gridsetup.ui
+    gridsetup.ui \
+    nonec2.ui \
+    ec2grid.ui
 
 RESOURCES += \
     Resources.qrc

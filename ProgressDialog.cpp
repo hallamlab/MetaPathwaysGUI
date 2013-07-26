@@ -41,6 +41,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 
 void ProgressDialog::initProgressBar(){
     progressBar->setMaximum(Utilities::countRunSteps(run->getParams()));
+    progressBar->setValue(4);
     progressBar->setMinimum(0);
 }
 

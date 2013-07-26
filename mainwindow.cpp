@@ -11,6 +11,7 @@ const QString MainWindow::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt
 QHash<QString, QString> *MainWindow::CONFIG = NULL;
 QHash<QString, QString> *MainWindow::PARAMS = NULL;
 QHash<QString, QString> *MainWindow::CONFIG_MAPPING = NULL;
+QHash<QString, Grid*> *MainWindow::GRIDS = NULL;
 
 MainWindow::MainWindow(){
     //display startup screen
