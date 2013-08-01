@@ -25,6 +25,7 @@ RunConfig::RunConfig(QWidget *parent) :
     gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
 
+    gridSetup = 0;
     selectedFiles = 0;
 
     setStyling();
@@ -68,8 +69,10 @@ void RunConfig::loadRunParams(){
 
 void RunConfig::specifyGrid(){
     if (gridSetup){
+        qDebug() << "showing existing grid";
         gridSetup->show();
     }else{
+        qDebug() << "create new grid setup";
         gridSetup = new GridSetup();
         gridSetup->show();
     }

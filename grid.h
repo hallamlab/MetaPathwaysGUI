@@ -8,6 +8,7 @@ class Grid
 {
 public:
     Grid();
+    Grid(QHash<QString,QString>* values, bool enabled);
     QHash<QString,QString> *values;
 
     bool enabled;

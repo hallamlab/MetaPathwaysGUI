@@ -13,6 +13,7 @@ class ParentSettingsMainWindow;
 
 class MainWindow;
 
+
 class ParentSettingsMainWindow : public QMainWindow
 {
     Q_OBJECT

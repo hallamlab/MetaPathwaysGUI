@@ -13,247 +13,174 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="max_parallel_jobsLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>57</y>
-     <width>140</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Max Parallel Jobs</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="cluster_nameLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>12</y>
-     <width>140</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Name</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="cluster_name">
-   <property name="geometry">
-    <rect>
-     <x>172</x>
-     <y>12</y>
-     <width>169</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="working_dir">
-   <property name="geometry">
-    <rect>
-     <x>172</x>
-     <y>195</y>
-     <width>481</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>/home/sgeadmin/</string>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="serverLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>150</y>
-     <width>140</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>EC2 Keyfile</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="max_parallel_jobs">
-   <property name="geometry">
-    <rect>
-     <x>172</x>
-     <y>57</y>
-     <width>82</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <number>999</number>
-   </property>
-   <property name="value">
-    <number>20</number>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="os">
-   <property name="geometry">
-    <rect>
-     <x>169</x>
-     <y>238</y>
-     <width>121</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>awslinux</string>
-    </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="3" column="0">
+    <widget class="QLabel" name="serverLabel">
+     <property name="text">
+      <string>EC2 Keyfile</string>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>linux</string>
-    </property>
+   <item row="8" column="1">
+    <widget class="QComboBox" name="bit">
+     <item>
+      <property name="text">
+       <string>bit64</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bit32</string>
+      </property>
+     </item>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>win</string>
-    </property>
+   <item row="8" column="0">
+    <widget class="QLabel" name="bitLabel">
+     <property name="text">
+      <string>System Bit Type</string>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>mac</string>
-    </property>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="user">
+     <property name="text">
+      <string>sgeadmin</string>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
-  </widget>
-  <widget class="QCheckBox" name="enabled">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>323</y>
-     <width>93</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Enabled</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="usernameLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>105</y>
-     <width>140</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Username</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="keyfile">
-   <property name="geometry">
-    <rect>
-     <x>172</x>
-     <y>150</y>
-     <width>381</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="username">
-   <property name="geometry">
-    <rect>
-     <x>172</x>
-     <y>105</y>
-     <width>171</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>sgeadmin</string>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="bit">
-   <property name="geometry">
-    <rect>
-     <x>169</x>
-     <y>281</y>
-     <width>121</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>bit64</string>
-    </property>
+   <item row="6" column="0">
+    <widget class="QLabel" name="working_dirLabel">
+     <property name="text">
+      <string>Working Dir (optional)</string>
+     </property>
+    </widget>
    </item>
-   <item>
-    <property name="text">
-     <string>bit32</string>
-    </property>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="amazon_aws_config">
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
-  </widget>
-  <widget class="QLabel" name="bitLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>283</y>
-     <width>140</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>System Bit Type</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="working_dirLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>195</y>
-     <width>140</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Working Dir (optional)</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="osLabel">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>240</y>
-     <width>140</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Operating System</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="keyFileBrowse">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>150</y>
-     <width>114</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Browse</string>
-   </property>
-  </widget>
+   <item row="2" column="0">
+    <widget class="QLabel" name="userLabel">
+     <property name="text">
+      <string>Username</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLineEdit" name="cluster_name">
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="osLabel">
+     <property name="text">
+      <string>Operating System</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="max_parallel_jobs">
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="value">
+      <number>20</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="max_parallel_jobsLabel">
+     <property name="text">
+      <string>Max Parallel Jobs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="awsConfigLabel">
+     <property name="text">
+      <string>Amazon AWS Config File</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="working_directory">
+     <property name="text">
+      <string>/home/sgeadmin/</string>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="keyfile">
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="cluster_nameLabel">
+     <property name="text">
+      <string>EC2 Cluster Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="keyFileButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QComboBox" name="os">
+     <item>
+      <property name="text">
+       <string>awslinux</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>linux</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>win</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>mac</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QCheckBox" name="enabled">
+     <property name="text">
+      <string>Enabled</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QPushButton" name="amazon_aws_configButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

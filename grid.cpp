@@ -6,3 +6,8 @@ Grid::Grid()
     this->enabled = true;
 }
 
+Grid::Grid(QHash<QString,QString> *values, bool enabled){
+    this->values = values;
+    this->enabled = enabled;
+}
+

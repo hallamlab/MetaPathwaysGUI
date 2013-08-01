@@ -47,7 +47,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="EC2Instance">
      <property name="text">
       <string>Specify Amazon EC2 Instance</string>
      </property>
@@ -71,7 +71,7 @@
     </widget>
    </item>
    <item row="6" column="0">
-    <widget class="QPushButton" name="pushButton_2">
+    <widget class="QPushButton" name="NonEC2Instance">
      <property name="text">
       <string>Specify Non-EC2 Grid Instance</string>
      </property>

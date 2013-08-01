@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>690</width>
-    <height>506</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,6 +26,61 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0" colspan="8">
+    <widget class="QStackedWidget" name="stackedWidget">
+     <widget class="QWidget" name="page">
+      <widget class="QLabel" name="startMessage">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>160</y>
+         <width>511</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>No existing grid configurations found in parameter file, please add a new one!</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="page_2"/>
+    </widget>
+   </item>
+   <item row="3" column="5" colspan="3">
+    <widget class="QPushButton" name="saveButton">
+     <property name="text">
+      <string>Save and Continue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Selected Grid</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="6">
+    <widget class="QToolButton" name="addGrid">
+     <property name="text">
+      <string>+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QToolButton" name="deleteGrid">
+     <property name="text">
+      <string>-</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="8">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="font">
@@ -38,67 +93,15 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2" colspan="2">
-    <widget class="QPushButton" name="pushButton_2">
+   <item row="0" column="4" colspan="2">
+    <widget class="QComboBox" name="gridSelection"/>
+   </item>
+   <item row="3" column="4">
+    <widget class="QPushButton" name="cancelButton">
      <property name="text">
       <string>Cancel</string>
      </property>
     </widget>
-   </item>
-   <item row="2" column="0" colspan="7">
-    <widget class="QWidget" name="widget" native="true">
-     <widget class="QLabel" name="startMessage">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>170</y>
-        <width>351</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select a grid from above, or click &quot;+&quot; to add a new grid.</string>
-      </property>
-     </widget>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="7">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QToolButton" name="addGrid">
-     <property name="text">
-      <string>+</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QToolButton" name="deleteGrid">
-     <property name="text">
-      <string>-</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="4" colspan="3">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>Save and Continue</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Selected Grid</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" colspan="2">
-    <widget class="QComboBox" name="gridSelection"/>
    </item>
   </layout>
  </widget>

@@ -12,6 +12,7 @@
 #include "gridsetup.h"
 
 class ParentWidget;
+class GridSetup;
 
 namespace Ui {
 class RunConfig;
