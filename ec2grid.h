@@ -11,6 +11,8 @@ namespace Ui {
 class EC2Grid;
 }
 
+class Grid;
+
 class EC2Grid : public QWidget
 {
     Q_OBJECT
@@ -28,7 +30,7 @@ public:
     QLineEdit* amazon_aws_config;
 
     explicit EC2Grid(QWidget *parent = 0);
-    void populateValues(const QHash<QString,QString> *values, const QString &selected);
+    void populateValues(const Grid *g, const QString &selected);
     ~EC2Grid();
     
 private:

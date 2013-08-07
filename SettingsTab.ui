@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>925</height>
+    <width>641</width>
+    <height>977</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -469,6 +469,26 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>quality_controlMIN_LENGTH</tabstop>
+  <tabstop>quality_controlDELETE_REPLICATES</tabstop>
+  <tabstop>annotationALGORITHM</tabstop>
+  <tabstop>annotationDBS</tabstop>
+  <tabstop>annotationDBSButton</tabstop>
+  <tabstop>annotationMIN_BSR</tabstop>
+  <tabstop>annotationMAX_HITS</tabstop>
+  <tabstop>annotationMIN_SCORE</tabstop>
+  <tabstop>annotationMIN_LENGTH</tabstop>
+  <tabstop>annotationMAX_EVALUE</tabstop>
+  <tabstop>orf_predictionMIN_LENGTH</tabstop>
+  <tabstop>orf_predictionALGORITHM</tabstop>
+  <tabstop>rrnaREFDBS</tabstop>
+  <tabstop>rrnaREFDBSButton</tabstop>
+  <tabstop>rrnaMIN_IDENTITY</tabstop>
+  <tabstop>rrnaMIN_BITSCORE</tabstop>
+  <tabstop>rrnaMAX_EVALUE</tabstop>
+  <tabstop>ptools_settingsTAXONOMIC_PRUNING</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

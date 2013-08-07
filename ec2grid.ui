@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>673</width>
-    <height>360</height>
+    <height>329</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,20 +19,6 @@
      <property name="text">
       <string>EC2 Keyfile</string>
      </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QComboBox" name="bit">
-     <item>
-      <property name="text">
-       <string>bit64</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>bit32</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="8" column="0">
@@ -87,20 +73,17 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="max_parallel_jobs">
-     <property name="maximum">
-      <number>999</number>
-     </property>
-     <property name="value">
-      <number>20</number>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="keyfile">
+     <property name="readOnly">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="max_parallel_jobsLabel">
+   <item row="5" column="2">
+    <widget class="QPushButton" name="amazon_aws_configButton">
      <property name="text">
-      <string>Max Parallel Jobs</string>
+      <string>Browse</string>
      </property>
     </widget>
    </item>
@@ -108,23 +91,6 @@
     <widget class="QLabel" name="awsConfigLabel">
      <property name="text">
       <string>Amazon AWS Config File</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QLineEdit" name="working_directory">
-     <property name="text">
-      <string>/home/sgeadmin/</string>
-     </property>
-     <property name="readOnly">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="keyfile">
-     <property name="readOnly">
-      <bool>false</bool>
      </property>
     </widget>
    </item>
@@ -166,6 +132,37 @@
      </item>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="max_parallel_jobsLabel">
+     <property name="text">
+      <string>Max Parallel Jobs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QComboBox" name="bit">
+     <item>
+      <property name="text">
+       <string>bit64</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bit32</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLineEdit" name="working_directory">
+     <property name="text">
+      <string>/home/sgeadmin/</string>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
    <item row="9" column="1">
     <widget class="QCheckBox" name="enabled">
      <property name="text">
@@ -173,15 +170,34 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
-    <widget class="QPushButton" name="amazon_aws_configButton">
-     <property name="text">
-      <string>Browse</string>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="max_parallel_jobs">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>999</number>
+     </property>
+     <property name="value">
+      <number>20</number>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cluster_name</tabstop>
+  <tabstop>max_parallel_jobs</tabstop>
+  <tabstop>user</tabstop>
+  <tabstop>keyfile</tabstop>
+  <tabstop>keyFileButton</tabstop>
+  <tabstop>amazon_aws_config</tabstop>
+  <tabstop>amazon_aws_configButton</tabstop>
+  <tabstop>working_directory</tabstop>
+  <tabstop>os</tabstop>
+  <tabstop>bit</tabstop>
+  <tabstop>enabled</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

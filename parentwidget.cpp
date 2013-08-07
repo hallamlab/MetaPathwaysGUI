@@ -99,7 +99,7 @@ void ParentWidget::continueButtonPressed(){
                 QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
                 value = temp->toPlainText();
             }
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value);
+            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value, false, false);
         }
     }
     else{
@@ -129,7 +129,7 @@ void ParentWidget::continueButtonPressed(){
             else MainWindow::PARAMS->operator [](configKey) = "skip";
 
             //write to file the changes
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey));
+            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey), false, false);
 
             //disable all buttons now for the run
             yesRadioButton->setEnabled(false);
@@ -147,7 +147,7 @@ void ParentWidget::continueButtonPressed(){
 
         //write file format
         QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(runConfigTab->fileInputFormat->objectName());
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText());
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText(), false, false);
         MainWindow::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
 
         //save file selected
@@ -156,7 +156,7 @@ void ParentWidget::continueButtonPressed(){
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
         if (runConfigTab->gridBlastChoice->isChecked() && MainWindow::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
             MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB") = "grid";
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid");
+            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
         }
         executionPrep();
     }

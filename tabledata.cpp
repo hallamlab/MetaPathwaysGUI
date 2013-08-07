@@ -4,7 +4,7 @@
 #include "QDebug"
 
 TableData::TableData(const QString &file, QWidget *parent) :
-    QWidget(parent),
+    QWidget(parent), MetaWidget(),
     ui(new Ui::TableData)
 {
     ui->setupUi(this);
@@ -14,10 +14,10 @@ TableData::TableData(const QString &file, QWidget *parent) :
     statsLabel = this->findChild<QLabel *>("statsLabel");
     tableData = this->findChild<QTableWidget *>("tableData");
 
-    setupFromFile();
+    this->setupFromFile(file);
 }
 
-void TableData::setupFromFile(){
+void TableData::setupFromFile(const QString &){
     QChar labelDELIM = '$';
     QChar tableDELIM = '#';
 
@@ -35,10 +35,6 @@ void TableData::setupFromFile(){
 
     statsLabel->setText(summaryText);
     titleLabel->setText(this->file);
-}
-
-void TableData::sampleChanged(QString sample){
-    qDebug() << sample;
 }
 
 TableData::~TableData()

@@ -315,6 +315,14 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>pythonBrowseButton</tabstop>
+  <tabstop>perlBrowseButton</tabstop>
+  <tabstop>metapathwaysBrowseButton</tabstop>
+  <tabstop>databaseButton</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>saveButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

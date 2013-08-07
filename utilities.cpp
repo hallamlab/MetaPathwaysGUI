@@ -218,13 +218,12 @@ int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
     return redoOrRunCount;
 }
 
-
 /*
  * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
  * pairing for settings.
  */
 
-bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE){
+bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE){
     QFile inputFile(TEMPLATE_FILE);
     QFile newFile( TEMPLATE_FILE + "_new" );
 
@@ -251,7 +250,11 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
                 if (splitList.size() > 0){
                     //if the list has a key and value for us to use
                     if (splitList.at(0).operator ==(KEY)){
-                        if (splitList.size()<2){
+                        if (DELETE){
+                            //we're not going to copy this entry over to the new configuration file
+                            continue;
+                        }
+                        else if (splitList.size()<2){
                             //if only the key exists, the value hasn't been selected
                             //then write out a line with the key and the newly defined value
                             out << splitList.at(0) << " " << VALUE << "\n";
@@ -267,6 +270,11 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
             }
             if (!found) out << line << "\n";
        }
+
+       if (CREATE){
+           out << KEY << " " << VALUE;
+       }
+
        inputFile.close();
        inputFile.remove(TEMPLATE_FILE);
        //delete old file

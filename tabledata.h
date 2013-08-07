@@ -4,27 +4,23 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
+#include "metawidget.h"
 
 namespace Ui {
 class TableData;
 }
 
-class TableData : public QWidget
+
+class TableData : public QWidget, public MetaWidget
 {
     Q_OBJECT
-    
+
 public:
     explicit TableData(const QString &file, QWidget *parent = 0);
+    void setupFromFile(const QString &file);
     ~TableData();
 
-    void setupFromFile();
-    QLabel* titleLabel;
-    QLabel* statsLabel;
     QTableWidget* tableData;
-    QString file;
-
-public slots:
-    void sampleChanged(QString sample);
 
 private:
     Ui::TableData *ui;

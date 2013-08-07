@@ -12,13 +12,15 @@ namespace Ui {
 class NonEC2;
 }
 
+class Grid;
+
 class NonEC2 : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit NonEC2(QWidget *parent = 0);
-    void populateValues(const QHash<QString,QString> *values, const QString &selected);
+    void populateValues(const Grid *g, const QString &selected);
 
     QComboBox* bit;
     QCheckBox* enabled;

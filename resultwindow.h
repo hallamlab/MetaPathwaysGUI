@@ -21,6 +21,9 @@ public:
     RunData* getRunData();
     ~ResultWindow();
 
+public slots:
+    void sampleChanged(QString changed);
+
 private:
     Ui::ResultWindow *ui;
     QWidget* parent;

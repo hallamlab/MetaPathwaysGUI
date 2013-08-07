@@ -10,7 +10,8 @@ EC2Grid::EC2Grid(QWidget *parent) :
     ui->setupUi(this);
 }
 
-void EC2Grid::populateValues(const QHash<QString,QString> *values, const QString &selected){
+void EC2Grid::populateValues(const Grid *g, const QString &selected){
+    QHash<QString,QString>* values = g->values;
     QList<QWidget *>::iterator i;
     QList<QWidget *> formValues = this->findChildren<QWidget *>();
 
@@ -18,23 +19,24 @@ void EC2Grid::populateValues(const QHash<QString,QString> *values, const QString
         QWidget *widget = *i;
         QString value = values->value(widget->objectName());
 
-        if (qobject_cast<QComboBox *>(widget)!=NULL){
+        if (qobject_cast<QComboBox *>(widget)!=0){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             temp->setCurrentIndex(temp->findText(value));
             if (temp->currentIndex()==-1){
                 temp->addItem(value);
             }
         }
-        else if (qobject_cast<QLineEdit *>(widget)!=NULL){
+        else if (qobject_cast<QLineEdit *>(widget)!=0){
             QLineEdit *temp = qobject_cast<QLineEdit *>(widget);
             temp->setText(value);
         }
-        else if (qobject_cast<QCheckBox *>(widget)!=NULL){
+        else if (qobject_cast<QCheckBox *>(widget)!=0){
             QCheckBox *temp = qobject_cast<QCheckBox *>(widget);
-            if (temp->isChecked()) MainWindow::GRIDS->value(selected)->enabled = true;
-            else MainWindow::GRIDS->value(selected)->enabled = false;
+            if (g->enabled==true){
+                temp->setChecked(true);
+            }
         }
-        else if (qobject_cast<QSpinBox *>(widget)!=NULL){
+        else if (qobject_cast<QSpinBox *>(widget)!=0){
             QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
             temp->setValue(value.toInt());
         }

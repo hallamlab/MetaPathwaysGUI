@@ -83,19 +83,19 @@ void Setup::saveSetup(){
     //write to file only if the user has provided input
     if (!pythonPath.isEmpty()) {
         MainWindow::CONFIG->operator []("PYTHON_EXECUTABLE") = pythonPath;
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath);
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath, false, false);
     }
     if (!perlPath.isEmpty()) {
         MainWindow::CONFIG->operator []("PERL_EXECUTABLE") = perlPath;
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath);
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath, false, false);
     }
     if (!mpPath.isEmpty()) {
         MainWindow::CONFIG->operator []("METAPATHWAYS_PATH") = mpPath;
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath);
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath, false, false);
     }
     if (!databasePath.isEmpty()) {
         MainWindow::CONFIG->operator []("REFDBS") = databasePath;
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "REFDBS", databasePath);
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "REFDBS", databasePath, false, false);
     }
     close();
     this->mw->startRun();

@@ -33,7 +33,9 @@ SOURCES += main.cpp\
     gridsetup.cpp \
     grid.cpp \
     nonec2.cpp \
-    ec2grid.cpp
+    ec2grid.cpp \
+    metawidget.cpp \
+    graphdata.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -55,7 +57,9 @@ HEADERS  += mainwindow.h \
     gridsetup.h \
     grid.h \
     nonec2.h \
-    ec2grid.h
+    ec2grid.h \
+    metawidget.h \
+    graphdata.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -71,7 +75,8 @@ FORMS    += mainwindow.ui \
     gridchoice.ui \
     gridsetup.ui \
     nonec2.ui \
-    ec2grid.ui
+    ec2grid.ui \
+    graphdata.ui
 
 RESOURCES += \
     Resources.qrc

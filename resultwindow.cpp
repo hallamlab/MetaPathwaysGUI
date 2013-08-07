@@ -1,6 +1,7 @@
 #include "resultwindow.h"
 #include "ui_resultwindow.h"
 #include "resultpage.h"
+#include "graphdata.h"
 #include "tabledata.h"
 #include <QFileDialog>
 #include <QDebug>
@@ -24,11 +25,22 @@ ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
     TableData *td = new TableData(nucFile);
 
     resultTabs->addTab(rp, "Execution Summary");
-    resultTabs->addTab(td, "Nuc. Data");
 
-    sampleSelect->addItem("test");
-    sampleSelect->addItem("test2");
-    connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),td,SLOT(sampleChanged(QString)));
+    for (int i=0;i<5;i++){
+        resultTabs->addTab(new TableData(nucFile), "data");
+        resultTabs->addTab(new GraphData(nucFile), "graph");
+    }
+
+    QStringList samples = run->getParams()->value("filesSelected").split(",");
+    samples.removeAll("");
+    sampleSelect->addItems(samples);
+
+    connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
+}
+
+
+void ResultWindow::sampleChanged(QString changed){
+    qDebug() << changed;
 }
 
 RunData* ResultWindow::getRunData(){

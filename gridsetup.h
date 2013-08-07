@@ -27,23 +27,26 @@ public:
     ~GridSetup();
     QComboBox* gridSelection;
     QLabel* startMessage;
+    QLabel* inputLabel;
     QStackedWidget* wid;
     QToolButton* addGrid;
     QToolButton* deleteGrid;
     QPushButton* cancelButton;
     QPushButton* saveButton;
 
-    QHash<QString, EC2Grid*> *EC2Grids;
-    QHash<QString, NonEC2*> *NonEC2Grids;
+    QHash<QString, Grid*> *Grids;
+    QList<QWidget *> *allWidgets;
 
     GridChoice *gc;
 
+    void getWidgetValues(const Grid &g);
     void initGridValues();
     void initSelectChoices();
     void populateValues();
 
 public slots:
-    void initForm(QString selected);
+    void initForm(const QString &selected);
+    void changeForm(QString selected);
 
     void addNewGrid();
     void deleteExistingGrid();

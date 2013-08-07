@@ -3,6 +3,11 @@
 
 #include <QString>
 #include <QHash>
+#include "ec2grid.h"
+#include "nonec2.h"
+
+class EC2Grid;
+class NonEC2;
 
 class Grid
 {
@@ -11,23 +16,13 @@ public:
     Grid(QHash<QString,QString>* values, bool enabled);
     QHash<QString,QString> *values;
 
-    bool enabled;
-//    QString AWS_key_id;
-//    QString AWS_secret_access_key;
-//    QString AWS_user_id;
-//    QString keyfile;
-//    QString amazon_aws_config;
-//    QString cluster_name;
+    EC2Grid* ec2;
+    NonEC2* nonec2;
 
-//    QString max_parallel_jobs;
-//    QString name;
-//    QString user;
-//    QString server;
-//    QString gridName;
-//    QString os;
-//    QString bit;
-//    QString type;
-//    QString working_dir;
+    bool enabled;
+    bool newGrid;
+    bool deleted;
+    QString name;
 };
 
 #endif // GRID_H

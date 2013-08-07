@@ -15,7 +15,7 @@ public:
     static QList<QString>* parseResults(const QString &FILE_NAME, const QChar &DELIM);
     static QHash<QString,QString>* createMapping();
     static QHash<QString,QString>* parseFile(const QString &TEMPLATE_FILE);
-    static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE);
+    static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
 };
 

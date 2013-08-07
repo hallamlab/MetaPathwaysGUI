@@ -1210,25 +1210,82 @@
   </widget>
   <zorder>title</zorder>
   <zorder>tableWidget</zorder>
+  <zorder>metapaths_stepsSCAN_RRNA</zorder>
+  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsSTATS_RRNA</zorder>
+  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
+  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
+  <zorder>metapaths_stepsBLAST_REFDB</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
   <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   <zorder>metapaths_stepsPATHOLOGIC</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
-  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsSTATS_RRNA</zorder>
-  <zorder>metapaths_stepsBLAST_REFDB</zorder>
-  <zorder>metapaths_stepsFILTERED_FASTA</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>metapaths_stepsGENBANK_FILE</zorder>
-  <zorder>metapaths_stepsORF_PREDICTION</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
   <zorder>metapaths_stepsANNOTATE</zorder>
+  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
+  <zorder>metapaths_stepsFILTERED_FASTA</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
+  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
+  <zorder>metapaths_stepsORF_PREDICTION</zorder>
+  <zorder>metapaths_stepsGENBANK_FILE</zorder>
  </widget>
+ <tabstops>
+  <tabstop>preprocess_fastaYES</tabstop>
+  <tabstop>preprocess_fastaSKIP</tabstop>
+  <tabstop>preprocess_fastaREDO</tabstop>
+  <tabstop>orf_predictionYES</tabstop>
+  <tabstop>orf_predictionSKIP</tabstop>
+  <tabstop>orf_predictionREDO</tabstop>
+  <tabstop>gff_to_aminoYES</tabstop>
+  <tabstop>gff_to_aminoSKIP</tabstop>
+  <tabstop>gff_to_aminoREDO</tabstop>
+  <tabstop>filtered_fastaYES</tabstop>
+  <tabstop>filtered_fastaSKIP</tabstop>
+  <tabstop>filtered_fastaREDO</tabstop>
+  <tabstop>compute_refscoreYES</tabstop>
+  <tabstop>compute_refscoreSKIP</tabstop>
+  <tabstop>compute_refscoreREDO</tabstop>
+  <tabstop>blast_refdbYES</tabstop>
+  <tabstop>blast_refdbSKIP</tabstop>
+  <tabstop>blast_refdbREDO</tabstop>
+  <tabstop>parse_blastYES</tabstop>
+  <tabstop>parse_blastSKIP</tabstop>
+  <tabstop>parse_blastREDO</tabstop>
+  <tabstop>scan_rrnaYES</tabstop>
+  <tabstop>scan_rrnaSKIP</tabstop>
+  <tabstop>scan_rrnaREDO</tabstop>
+  <tabstop>scan_trnaYES</tabstop>
+  <tabstop>scan_trnaSKIP</tabstop>
+  <tabstop>scan_trnaREDO</tabstop>
+  <tabstop>stats_rrnaYES</tabstop>
+  <tabstop>stats_rrnaSKIP</tabstop>
+  <tabstop>stats_rrnaREDO</tabstop>
+  <tabstop>annotateYES</tabstop>
+  <tabstop>annotateSKIP</tabstop>
+  <tabstop>annotateREDO</tabstop>
+  <tabstop>pathologic_inputYES</tabstop>
+  <tabstop>pathologic_inputSKIP</tabstop>
+  <tabstop>pathologic_inputREDO</tabstop>
+  <tabstop>genbank_fileYES</tabstop>
+  <tabstop>genbank_fileSKIP</tabstop>
+  <tabstop>genbank_fileREDO</tabstop>
+  <tabstop>create_sequin_fileYES</tabstop>
+  <tabstop>create_sequin_fileSKIP</tabstop>
+  <tabstop>create_sequin_fileREDO</tabstop>
+  <tabstop>create_report_filesYES</tabstop>
+  <tabstop>create_report_filesSKIP</tabstop>
+  <tabstop>create_report_filesREDO</tabstop>
+  <tabstop>mltreemap_calculationYES</tabstop>
+  <tabstop>mltreemap_calculationSKIP</tabstop>
+  <tabstop>mltreemap_calculationREDO</tabstop>
+  <tabstop>mltreemap_imagemakerYES</tabstop>
+  <tabstop>mltreemap_imagemakerSKIP</tabstop>
+  <tabstop>mltreemap_imagemakerREDO</tabstop>
+  <tabstop>pathologicYES</tabstop>
+  <tabstop>pathologicSKIP</tabstop>
+  <tabstop>pathologicREDO</tabstop>
+  <tabstop>tableWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

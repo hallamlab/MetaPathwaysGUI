@@ -69,7 +69,9 @@ void RunConfig::loadRunParams(){
 
 void RunConfig::specifyGrid(){
     if (gridSetup){
-        qDebug() << "showing existing grid";
+        qDebug() << "making a new grid";
+        delete gridSetup;
+        gridSetup = new GridSetup();
         gridSetup->show();
     }else{
         qDebug() << "create new grid setup";
