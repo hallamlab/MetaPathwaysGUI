@@ -3,8 +3,8 @@
 #include "utilities.h"
 #include "mainwindow.h"
 #include "ProgressDialog.h"
-#include "tabfactory.h"
 #include "resultwindow.h"
+#include "resultpage.h"
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QTextEdit>
@@ -151,7 +151,7 @@ void ParentWidget::continueButtonPressed(){
         MainWindow::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
 
         //save file selected
-        MainWindow::PARAMS->operator [](runConfigTab->filesSelected->objectName()) = runConfigTab->filesSelected->text();
+        MainWindow::PARAMS->operator []("fileInput") = runConfigTab->filesSelected->text();
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
         if (runConfigTab->gridBlastChoice->isChecked() && MainWindow::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
@@ -178,8 +178,12 @@ void ParentWidget::executionPrep(){
 
     ProgressDialog *progress = new ProgressDialog(this, run);
     ResultWindow *rw = new ResultWindow(run);
+    ResultPage *rp = new ResultPage(this->run);
+
+    qDebug() << this->run->getParams()->operator []("fileInput");
 
     rw->show();
+    rp->show();
     progress->show();
 
     close();

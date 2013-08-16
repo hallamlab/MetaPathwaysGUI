@@ -17,30 +17,24 @@ Utilities::Utilities()
  * Helper class for enabling numberic sorting of table items.
  * Credit to author at http://stackoverflow.com/a/17382750/485500 .
  */
-class TableNumberItem : public QTableWidgetItem
+
+bool TableNumberItem::operator <(const QTableWidgetItem &other) const
 {
-public:
-    TableNumberItem(const QString txt = QString("0"))
-        :QTableWidgetItem(txt)
-    {
-    }
-    bool operator <(const QTableWidgetItem &other) const
-    {
-        QString str1 = text();
-        QString str2 = other.text();
+    QString str1 = text();
+    QString str2 = other.text();
 
-        if (str1[0] == '$' || str1[0] == '€') {
-            str1.remove(0, 1);
-            str2.remove(0, 1); // we assume both items have the same format
-        }
-
-        if (str1[str1.length() - 1] == '%') {
-            str1.chop(1);
-            str2.chop(1); // this works for "N%" and for "N %" formatted strings
-        }
-    return str1.toDouble() < str2.toDouble();
+    if (str1[0] == '$' || str1[0] == '€') {
+        str1.remove(0, 1);
+        str2.remove(0, 1); // we assume both items have the same format
     }
-};
+
+    if (str1[str1.length() - 1] == '%') {
+        str1.chop(1);
+        str2.chop(1); // this works for "N%" and for "N %" formatted strings
+    }
+return str1.toDouble() < str2.toDouble();
+}
+
 
 /*
  * Validate the currently loaded run parameters.
@@ -134,53 +128,53 @@ QList<QLabel *>* Utilities::createLabels(const QString &FILE_NAME, const QChar &
     return labels;
 }
 
-/*
- * Parses FILE_NAME given, constructs a table widget based on the file given. Uses "#" as a delim.
- */
-QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELIM){
-    QTableWidget* table = new QTableWidget();
-    table->setSortingEnabled(true);
-    table->setColumnCount(4);
-    table->setObjectName(FILE_NAME);
+///*
+// * Parses FILE_NAME given, constructs a table widget based on the file given. Uses "#" as a delim.
+// */
+//QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELIM){
+//    QTableWidget* table = new QTableWidget();
+//    table->setSortingEnabled(true);
+//    table->setColumnCount(4);
+//    table->setObjectName(FILE_NAME);
 
-    QFile inputFile(FILE_NAME);
+//    QFile inputFile(FILE_NAME);
 
-    QString headerDELIM;
-    headerDELIM.append(DELIM);
-    headerDELIM.append(DELIM);
+//    QString headerDELIM;
+//    headerDELIM.append(DELIM);
+//    headerDELIM.append(DELIM);
 
-    QStringList headers;
-    int k = 0;
+//    QStringList headers;
+//    int k = 0;
 
-    if (inputFile.open(QIODevice::ReadOnly))
-    {
-       QTextStream in(&inputFile);
-       while ( !in.atEnd() )
-       {
-           QString line = in.readLine().trimmed();
-           QStringList lineSplit = line.split(QRegExp("\\s"));
-           lineSplit.removeAll("");
-           if (lineSplit.at(0)==headerDELIM){
-               //found header, get the header line for the table
-               lineSplit.removeAll(headerDELIM);
-               headers = lineSplit;
-           }
-           else if (lineSplit.at(0)==DELIM){
-               //found data, insert into table
-               lineSplit.removeAll(DELIM);
-               table->insertRow(table->rowCount());
-               for (int i=0;i<lineSplit.length();i++){
-                   table->setItem(k,i,new TableNumberItem(lineSplit.at(i)));
-                   table->item(k,i)->setTextAlignment(Qt::AlignCenter);
-               }
-               k++;
-           }
-       }
-    }
-    table->setHorizontalHeaderLabels(headers);
-    table->resizeColumnsToContents();
-    return table;
-}
+//    if (inputFile.open(QIODevice::ReadOnly))
+//    {
+//       QTextStream in(&inputFile);
+//       while ( !in.atEnd() )
+//       {
+//           QString line = in.readLine().trimmed();
+//           QStringList lineSplit = line.split(QRegExp("\\s"));
+//           lineSplit.removeAll("");
+//           if (lineSplit.at(0)==headerDELIM){
+//               //found header, get the header line for the table
+//               lineSplit.removeAll(headerDELIM);
+//               headers = lineSplit;
+//           }
+//           else if (lineSplit.at(0)==DELIM){
+//               //found data, insert into table
+//               lineSplit.removeAll(DELIM);
+//               table->insertRow(table->rowCount());
+//               for (int i=0;i<lineSplit.length();i++){
+//                   table->setItem(k,i,new TableNumberItem(lineSplit.at(i)));
+//                   table->item(k,i)->setTextAlignment(Qt::AlignCenter);
+//               }
+//               k++;
+//           }
+//       }
+//    }
+//    table->setHorizontalHeaderLabels(headers);
+//    table->resizeColumnsToContents();
+//    return table;
+//}
 
 /*
  * Returns a list of strings which have the first character in each line matching DELIM.
@@ -202,7 +196,6 @@ QList<QString>* Utilities::parseResults(const QString &FILE_NAME, const QChar &D
     }
     return strings;
 }
-
 
 /*
  * Counts the number of stages to be run.

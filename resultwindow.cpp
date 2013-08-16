@@ -1,6 +1,5 @@
 #include "resultwindow.h"
 #include "ui_resultwindow.h"
-#include "resultpage.h"
 #include "graphdata.h"
 #include "tabledata.h"
 #include <QFileDialog>
@@ -11,6 +10,7 @@ ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
     ui(new Ui::ResultWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("MetaPathways - Results and Data");
     this->run = run;
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
@@ -21,15 +21,10 @@ ResultWindow::ResultWindow(RunData *run, QWidget *parent) :
     QString nucFile = "test_sample2.nuc.stats";
     QString aminoFile = "test_sample2.amino.stats";
 
-    ResultPage *rp = new ResultPage(this->run);
-    TableData *td = new TableData(nucFile);
+    resultTabs->addTab(new TableData(true, nucFile), "data");
+    resultTabs->addTab(new TableData(false, "fandt.txt"), "table");
+    resultTabs->addTab(new GraphData(nucFile), "graph");
 
-    resultTabs->addTab(rp, "Execution Summary");
-
-    for (int i=0;i<5;i++){
-        resultTabs->addTab(new TableData(nucFile), "data");
-        resultTabs->addTab(new GraphData(nucFile), "graph");
-    }
 
     QStringList samples = run->getParams()->value("filesSelected").split(",");
     samples.removeAll("");

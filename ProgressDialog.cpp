@@ -21,22 +21,51 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     textBrowser = this->findChild<QTextBrowser *>("textBrowser");
     progressBar = this->findChild<QProgressBar *>("progressBar");
 
+    initProcess();
     initProgressBar();
 
     timer = new QTimer(this);
     timer->start(1000);
 
-//    QString program = "/usr/bin/python";
-//    QStringList arguments;
-//    arguments <<  "/Users/michaelwu/workspace/MetaPathways2-build-Desktop-Release/MetaPathways2.app/Contents/MacOS/test.py";
-//    qDebug() << "declaring program";
-//    myProcess = new QProcess();
-//    qDebug() << "starting program";
-//    myProcess->start(program, arguments);
-//    run->setProcess(myProcess);
-
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
+
+    connect(myProcess,SIGNAL(stateChanged(QProcess::ProcessState)),this,SLOT(changed(QProcess::ProcessState)));
+}
+
+void ProgressDialog::initProcess(){
+    QString program = run->getConfig()->operator []("PYTHON_EXECUTABLE");
+    QStringList arguments;
+    QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
+
+    arguments <<  METAPATH + "/MetaPathways.py";
+    arguments << "-i" << this->run->getParams()->operator []("fileInput");
+
+    if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB").compare("grid")==0){
+        arguments << "-o" << METAPATH + "/output/distribute";
+    }else arguments << "-o" << METAPATH + "/output";
+
+    arguments << "-p" << METAPATH + "/template_param.txt";
+    arguments << "-c" << METAPATH + "/template_config.txt";
+    arguments << "-r" << "overwrite";
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("CURRDIR", METAPATH);
+    env.insert("METAPATH", METAPATH);
+    env.insert("METAPATHLIB", METAPATH + "/libs");
+    env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
+
+    QByteArray pythonEnvValue = qgetenv("PYTHONPATH");
+    qDebug() << pythonEnvValue.constData();
+
+//    myProcess = new QProcess();
+//    myProcess->setProcessEnvironment(env);
+//    myProcess->start(program, arguments);
+//    run->setProcess(myProcess);
+}
+
+void ProgressDialog::changed(QProcess::ProcessState state){
+    qDebug() << myProcess->readAllStandardOutput() << myProcess->readAllStandardError() << state;
 }
 
 void ProgressDialog::initProgressBar(){

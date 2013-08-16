@@ -4,4 +4,3 @@ MetaWidget::MetaWidget()
 {
 }
 
-

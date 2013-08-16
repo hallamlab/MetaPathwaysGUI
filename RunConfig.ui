@@ -95,8 +95,8 @@
   <widget class="QPushButton" name="fileBrowseButton">
    <property name="geometry">
     <rect>
-     <x>493</x>
-     <y>60</y>
+     <x>490</x>
+     <y>90</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -181,7 +181,7 @@
     <bool>true</bool>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -1200,12 +1200,12 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="filesSelected">
+  <widget class="QLabel" name="fileInput">
    <property name="geometry">
     <rect>
      <x>140</x>
      <y>60</y>
-     <width>251</width>
+     <width>451</width>
      <height>21</height>
     </rect>
    </property>
@@ -1389,7 +1389,7 @@
     <rect>
      <x>150</x>
      <y>60</y>
-     <width>321</width>
+     <width>341</width>
      <height>20</height>
     </rect>
    </property>
@@ -1402,7 +1402,7 @@
     <string notr="true">color:red;</string>
    </property>
    <property name="text">
-    <string>At least one input must be specified!</string>
+    <string>Please select a folder containing your sample inputs.</string>
    </property>
   </widget>
   <widget class="QCheckBox" name="blastWithGrid">
@@ -1439,7 +1439,7 @@
   <zorder>fileBrowseButton</zorder>
   <zorder>label_4</zorder>
   <zorder>line</zorder>
-  <zorder>filesSelected</zorder>
+  <zorder>fileInput</zorder>
   <zorder>sampleWarning</zorder>
   <zorder>blastWithGrid</zorder>
   <zorder>setupGrids</zorder>

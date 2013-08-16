@@ -17,7 +17,7 @@ RunConfig::RunConfig(QWidget *parent) :
     runAll = this->findChild<QRadioButton *>("runAllRadioButton");
     skipAll = this->findChild<QRadioButton *>("skipAllRadioButton");
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
-    filesSelected = this->findChild<QLabel *>("filesSelected");
+    filesSelected = this->findChild<QLabel *>("fileInput");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
@@ -81,16 +81,11 @@ void RunConfig::specifyGrid(){
 }
 
 void RunConfig::browseFile(){
-    QString selectedFileList = "";
-    selectedFiles = new QStringList(QFileDialog::getOpenFileNames(this, tr("Select file run.")));
-    for (int i=0;i < selectedFiles->size(); i++){
-        QString file = selectedFiles->at(i).split("/").last();
-        selectedFileList.append(file);
-        selectedFileList.append(",");
-    }
-    filesSelected->setText(selectedFileList);
+    selectedFiles = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory with your files.")));
+    filesSelected->setText(*selectedFiles);
+
     //send a signal to the parent to enable the continue button
-    if (!selectedFiles->empty()){
+    if (selectedFiles){
         emit fileSet();
         sampleWarning->hide();
     }

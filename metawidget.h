@@ -6,10 +6,11 @@
 
 class MetaWidget
 {
+
 public:
     MetaWidget();
+    virtual void setupFromFile(const QString &file) = 0;
 
-    void setupFromFile(const QString &file);
     QLabel* titleLabel;
     QLabel* statsLabel;
     QString file;

@@ -5,6 +5,13 @@
 #include <QLabel>
 #include <QTableWidget>
 
+class TableNumberItem : public QTableWidgetItem{
+
+public:
+    TableNumberItem(const QString txt = QString("0")) :QTableWidgetItem(txt) {}
+    bool operator <(const QTableWidgetItem &other) const;
+};
+
 class Utilities
 {
 public:

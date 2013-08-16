@@ -28,7 +28,7 @@ public:
     QPushButton *fileBrowseButton;
     QComboBox *fileInputFormat;
     QTableWidget *table;
-    QStringList *selectedFiles;
+    QString *selectedFiles;
     QLabel *filesSelected;
     QLabel* sampleWarning;
     QCheckBox* gridBlastChoice;

@@ -22,16 +22,21 @@ class ProgressDialog : public QWidget
 public:
     explicit ProgressDialog(ParentWidget *pw = NULL, RunData *run = NULL, QWidget *parent = 0);
     void initProgressBar();
+    void initProcess();
+
+    RunData *run;
+    ParentWidget *pw;
+
+
     ~ProgressDialog();
 
 private slots:
     void terminateRun();
     void updateText();
-    
+    void changed(QProcess::ProcessState state);
+
 private:
     Ui::ProgressDialog *ui;
-    RunData *run;
-    ParentWidget *pw;
 
     QPushButton *cancelButton;
     QTextBrowser *textBrowser;

@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>589</width>
-    <height>868</height>
+    <width>522</width>
+    <height>627</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -16,11 +28,17 @@
   <widget class="QLabel" name="title">
    <property name="geometry">
     <rect>
-     <x>134</x>
-     <y>90</y>
-     <width>351</width>
-     <height>31</height>
+     <x>100</x>
+     <y>0</y>
+     <width>400</width>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>400</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="font">
     <font>
@@ -34,11 +52,23 @@
   <widget class="QGroupBox" name="metapaths_stepsGFF_TO_AMINO">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>220</y>
+     <x>170</x>
+     <y>130</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -55,6 +85,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -67,6 +109,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -81,6 +135,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -89,11 +155,23 @@
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_CALCULATION">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>610</y>
+     <x>170</x>
+     <y>520</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -110,6 +188,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -122,6 +212,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -136,6 +238,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -144,10 +258,10 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>44</x>
-     <y>140</y>
+     <x>14</x>
+     <y>50</y>
      <width>495</width>
-     <height>561</height>
+     <height>562</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -325,11 +439,23 @@
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>670</y>
+     <x>170</x>
+     <y>580</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -346,6 +472,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -358,6 +496,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -372,6 +522,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -380,11 +542,23 @@
   <widget class="QGroupBox" name="metapaths_stepsSCAN_RRNA">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>370</y>
+     <x>170</x>
+     <y>280</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -401,6 +575,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -413,6 +599,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -427,6 +625,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -435,11 +645,23 @@
   <widget class="QGroupBox" name="metapaths_stepsCREATE_REPORT_FILES">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>580</y>
+     <x>170</x>
+     <y>490</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -456,6 +678,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -468,6 +702,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -482,6 +728,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -490,11 +748,23 @@
   <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>520</y>
+     <x>170</x>
+     <y>430</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -511,6 +781,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -523,6 +805,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -537,6 +831,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -545,11 +851,23 @@
   <widget class="QGroupBox" name="metapaths_stepsSCAN_TRNA">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>400</y>
+     <x>170</x>
+     <y>310</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -566,6 +884,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -578,6 +908,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -592,6 +934,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -600,11 +954,23 @@
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORE">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>280</y>
+     <x>170</x>
+     <y>190</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -621,6 +987,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -633,6 +1011,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -647,6 +1037,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -655,11 +1057,23 @@
   <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>250</y>
+     <x>170</x>
+     <y>160</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -676,6 +1090,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -688,6 +1114,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -702,6 +1140,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -710,11 +1160,23 @@
   <widget class="QGroupBox" name="metapaths_stepsSTATS_RRNA">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>430</y>
+     <x>170</x>
+     <y>340</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -731,6 +1193,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -743,6 +1217,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -757,6 +1243,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -768,11 +1266,23 @@
   <widget class="QGroupBox" name="metapaths_stepsPARSE_BLAST">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>340</y>
+     <x>170</x>
+     <y>250</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -789,6 +1299,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -801,6 +1323,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -815,6 +1349,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -823,11 +1369,23 @@
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>490</y>
+     <x>170</x>
+     <y>400</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -844,6 +1402,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -856,6 +1426,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -870,6 +1452,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -878,11 +1472,23 @@
   <widget class="QGroupBox" name="metapaths_stepsBLAST_REFDB">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>310</y>
+     <x>170</x>
+     <y>220</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -899,6 +1505,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -911,6 +1529,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -925,6 +1555,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -933,11 +1575,23 @@
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>640</y>
+     <x>170</x>
+     <y>550</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -954,6 +1608,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -966,6 +1632,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -980,6 +1658,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -988,11 +1678,23 @@
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>460</y>
+     <x>170</x>
+     <y>370</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1009,6 +1711,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1021,6 +1735,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -1035,6 +1761,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1043,11 +1781,23 @@
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_FASTA">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>160</y>
+     <x>170</x>
+     <y>70</y>
      <width>314</width>
-     <height>30</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1064,6 +1814,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1076,6 +1838,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -1090,19 +1864,47 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
    </widget>
+   <zorder>preprocess_fastaYES</zorder>
+   <zorder>preprocess_fastaSKIP</zorder>
+   <zorder>preprocess_fastaREDO</zorder>
+   <zorder>metapaths_stepsPATHOLOGIC</zorder>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsCREATE_SEQUIN_FILE">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>550</y>
+     <x>170</x>
+     <y>460</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1119,6 +1921,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1131,6 +1945,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -1145,6 +1971,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1153,11 +1991,23 @@
   <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>190</y>
+     <x>170</x>
+     <y>100</y>
      <width>314</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>51</width>
+     <height>41</height>
+    </size>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1174,6 +2024,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -1186,6 +2048,18 @@
       <width>51</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
     </property>
     <property name="text">
      <string/>
@@ -1200,6 +2074,18 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>51</width>
+      <height>41</height>
+     </size>
+    </property>
     <property name="layoutDirection">
      <enum>Qt::LeftToRight</enum>
     </property>
@@ -1210,24 +2096,24 @@
   </widget>
   <zorder>title</zorder>
   <zorder>tableWidget</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
-  <zorder>metapaths_stepsSTATS_RRNA</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsBLAST_REFDB</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
-  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC</zorder>
-  <zorder>metapaths_stepsANNOTATE</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
-  <zorder>metapaths_stepsFILTERED_FASTA</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
   <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
-  <zorder>metapaths_stepsORF_PREDICTION</zorder>
   <zorder>metapaths_stepsGENBANK_FILE</zorder>
+  <zorder>metapaths_stepsORF_PREDICTION</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
+  <zorder>metapaths_stepsSCAN_RRNA</zorder>
+  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC</zorder>
+  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>metapaths_stepsFILTERED_FASTA</zorder>
+  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsBLAST_REFDB</zorder>
+  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>metapaths_stepsANNOTATE</zorder>
+  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
+  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
+  <zorder>metapaths_stepsSTATS_RRNA</zorder>
  </widget>
  <tabstops>
   <tabstop>preprocess_fastaYES</tabstop>

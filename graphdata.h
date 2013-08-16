@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QPushButton>
 #include "metawidget.h"
+#include "qcustomplot.h"
 
 namespace Ui {
 class GraphData;
@@ -15,11 +17,12 @@ class GraphData : public QWidget, public MetaWidget
     
 public:
     explicit GraphData(const QString &file, QWidget *parent = 0);
-    void setupFromFile(const QString &file);
-    QString file;
-    QLabel* titleLabel;
-    QLabel* statsLabel;
-    QWidget* graph;
+    virtual void setupFromFile(const QString &file);
+    QList<QStringList>* parseFile(const QString &file, const QChar &DELIM, bool HAS_COMMENT);
+    void plotSomeGraph(QCustomPlot *graph);
+
+    QCustomPlot* graph;
+    QPushButton* exportButton;
     ~GraphData();
     
 private:

@@ -13,6 +13,10 @@ ResultPage::ResultPage(RunData *run, QWidget *parent) :
     ui->setupUi(this);
     this->run = run;
 
+    this->setWindowTitle("MetaPathways - Execution Status");
+    this->setFixedWidth(522);
+    this->setFixedHeight(627);
+
     groupBoxes = new QList<QGroupBox *>(this->findChildren<QGroupBox *>(QRegExp("^metapaths_steps*")));
     table = this->findChild<QTableWidget *>("tableWidget");
     fileSelectedPath = this->findChild<QLabel *>("fileBrowsePath");

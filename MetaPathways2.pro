@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = MetaPathways2
 TEMPLATE = app
@@ -23,7 +23,6 @@ SOURCES += main.cpp\
         utilities.cpp \
     rundata.cpp \
     qcustomplot.cpp \
-    tabfactory.cpp \
     resultwindow.cpp \
     resultpage.cpp \
     tabledata.cpp \
@@ -47,7 +46,6 @@ HEADERS  += mainwindow.h \
             utilities.h \
     rundata.h \
     qcustomplot.h \
-    tabfactory.h \
     resultwindow.h \
     resultpage.h \
     tabledata.h \
