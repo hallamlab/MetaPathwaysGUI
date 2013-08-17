@@ -25,11 +25,17 @@ void TableData::setupFromFile(const QString &file){
     QChar tableDELIM = '#';
 
     data = parseFile(file, tableDELIM, this->HAS_COMMENT);
-    titleLabel->setText(file);
-    if (HAS_COMMENT) statsLabel->setText(*statsText);
-    else statsLabel->hide();
+    if (!data->isEmpty()){
+        titleLabel->setText(file);
+        if (HAS_COMMENT) statsLabel->setText(*statsText);
+        else statsLabel->hide();
 
-    this->populateTable(*tableData, *data, *headers);
+        qDebug() << "trying to populate table";
+        this->populateTable(*tableData, *data, *headers);
+    }else{
+        titleLabel->setText("File empty, please wait...");
+        statsLabel->setText("Data most likely still generating...");
+    }
 }
 
 /*

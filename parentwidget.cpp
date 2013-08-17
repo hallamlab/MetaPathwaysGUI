@@ -177,8 +177,8 @@ void ParentWidget::executionPrep(){
     run->setRRNADBS(rrnaDBS);
 
     ProgressDialog *progress = new ProgressDialog(this, run);
-    ResultWindow *rw = new ResultWindow(run);
     ResultPage *rp = new ResultPage(this->run);
+    ResultWindow *rw = new ResultWindow(rp, progress, run);
 
     qDebug() << this->run->getParams()->operator []("fileInput");
 

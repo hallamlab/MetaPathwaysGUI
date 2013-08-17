@@ -26,14 +26,17 @@ public:
 
     RunData *run;
     ParentWidget *pw;
-
+    QString METAPATH;
+    QStringList *filesDetected;
 
     ~ProgressDialog();
 
 private slots:
     void terminateRun();
     void updateText();
+    void checkFiles();
     void changed(QProcess::ProcessState state);
+    void selectedFileChanged(QString file);
 
 private:
     Ui::ProgressDialog *ui;
@@ -41,9 +44,11 @@ private:
     QPushButton *cancelButton;
     QTextBrowser *textBrowser;
     QProgressBar *progressBar;
+    QString currentFile;
 
     QProcess *myProcess;
     QTimer *timer;
+    QTimer *fileCheckTimer;
 };
 
 #endif // ProgressDialog_H

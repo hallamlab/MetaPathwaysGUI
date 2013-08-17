@@ -28,8 +28,9 @@ public:
     explicit ResultPage(RunData *run = 0, QWidget *parent = 0);
     ~ResultPage();
 
-private slots:
+public slots:
     void updateSteps();
+    void updateFile(QString changed);
 
 private:
     void loadRunParams();
@@ -38,6 +39,7 @@ private:
     void setStyling();
     RunData *run;
     QTimer *timer;
+    QString currentFile;
 
     Ui::ResultPage *ui;
 };

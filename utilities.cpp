@@ -288,7 +288,7 @@ QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
     QFile inputFile(TEMPLATE_FILE);
     QHash<QString, QString> *configs = new QHash<QString,QString>();
 
-    if (inputFile.open(QIODevice::ReadOnly))
+    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
        QTextStream in(&inputFile);
        while ( !in.atEnd() )

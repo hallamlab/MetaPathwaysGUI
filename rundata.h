@@ -20,6 +20,9 @@ public:
     QHash<QString,QString>* getRunResults();
     QStringList* getRRNADBS();
     QStringList* getAnnotationDBS();
+
+    QStringList *files;
+
     void setRRNADBS(QStringList* rrnaDBS);
     void setAnnotationDBS(QStringList* annotationDBS);
     QProcess* getProcess();

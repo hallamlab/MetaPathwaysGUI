@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QString>
 #include <QFile>
+#include <QDir>
 
 ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
 {
@@ -24,24 +25,29 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     initProcess();
     initProgressBar();
 
+    currentFile = "";
+
     timer = new QTimer(this);
     timer->start(1000);
 
+    fileCheckTimer = new QTimer(this);
+    fileCheckTimer->start(500);
+
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
+    connect(fileCheckTimer, SIGNAL(timeout()),this,SLOT(checkFiles()));
 
-    connect(myProcess,SIGNAL(stateChanged(QProcess::ProcessState)),this,SLOT(changed(QProcess::ProcessState)));
 }
 
 void ProgressDialog::initProcess(){
     QString program = run->getConfig()->operator []("PYTHON_EXECUTABLE");
     QStringList arguments;
-    QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
+    METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
 
     arguments <<  METAPATH + "/MetaPathways.py";
     arguments << "-i" << this->run->getParams()->operator []("fileInput");
 
-    if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB").compare("grid")==0){
+    if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
         arguments << "-o" << METAPATH + "/output/distribute";
     }else arguments << "-o" << METAPATH + "/output";
 
@@ -50,13 +56,12 @@ void ProgressDialog::initProcess(){
     arguments << "-r" << "overwrite";
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
     env.insert("CURRDIR", METAPATH);
     env.insert("METAPATH", METAPATH);
     env.insert("METAPATHLIB", METAPATH + "/libs");
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
-
-    QByteArray pythonEnvValue = qgetenv("PYTHONPATH");
-    qDebug() << pythonEnvValue.constData();
+    env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
 //    myProcess = new QProcess();
 //    myProcess->setProcessEnvironment(env);
@@ -65,7 +70,7 @@ void ProgressDialog::initProcess(){
 }
 
 void ProgressDialog::changed(QProcess::ProcessState state){
-    qDebug() << myProcess->readAllStandardOutput() << myProcess->readAllStandardError() << state;
+    qDebug() << "process state changed to " << state;
 }
 
 void ProgressDialog::initProgressBar(){
@@ -76,7 +81,8 @@ void ProgressDialog::initProgressBar(){
 
 void ProgressDialog::updateText(){
     textBrowser->clear();
-    QFile inputFile("metapathways_steps_log.txt");
+    QString sampleStepsLogPath = METAPATH + "/output/" + currentFile + "/metapathways_steps_log.txt";
+    QFile inputFile(sampleStepsLogPath);
 
     if (inputFile.open(QIODevice::ReadOnly))
     {
@@ -89,12 +95,47 @@ void ProgressDialog::updateText(){
     }
 }
 
+void ProgressDialog::selectedFileChanged(QString file){
+    currentFile = file;
+}
+
+void ProgressDialog::checkFiles(){
+    QDir currentDir(this->run->getParams()->operator []("fileInput"));
+    QString fileType = this->run->getParams()->operator []("INPUT:format");
+    filesDetected = new QStringList();
+
+    currentDir.setFilter(QDir::Files);
+    QStringList entries = currentDir.entryList();
+
+    for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+    {
+        QString temp = *entry;
+        QStringList file = temp.split(".");
+        if (fileType == "fasta"){
+            if (file.last()=="fa" || file.last()=="fas" || file.last()=="fasta" ||
+                file.last()=="faa" || file.last()=="f" ||file.last()=="fna"){
+                filesDetected->append(file.first());
+            }
+        }
+        else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
+            if (file.last() == "gbk"){
+                filesDetected->append(file.first());
+            }
+        }
+        else if (fileType == "gff-annotated" || fileType == "gff-unannotated"){
+            if (file.last() == "gff"){
+                filesDetected->append(file.first());
+            }
+        }
+    }
+    this->run->files = filesDetected;
+}
+
 void ProgressDialog::terminateRun(){
     timer->stop();
     this->close();
     delete ui;
 }
-
 
 ProgressDialog::~ProgressDialog()
 {

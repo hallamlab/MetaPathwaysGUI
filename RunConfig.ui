@@ -181,7 +181,7 @@
     <bool>true</bool>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -1443,25 +1443,25 @@
   <zorder>sampleWarning</zorder>
   <zorder>blastWithGrid</zorder>
   <zorder>setupGrids</zorder>
-  <zorder>runOptionsGroupBox</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsORF_PREDICTION</zorder>
-  <zorder>metapaths_stepsBLAST_REFDB</zorder>
   <zorder>metapaths_stepsPATHOLOGIC</zorder>
-  <zorder>metapaths_stepsGENBANK_FILE</zorder>
   <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
-  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>runOptionsGroupBox</zorder>
   <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>metapaths_stepsSTATS_RRNA</zorder>
-  <zorder>metapaths_stepsANNOTATE</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
   <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
   <zorder>metapaths_stepsFILTERED_FASTA</zorder>
+  <zorder>metapaths_stepsSTATS_RRNA</zorder>
+  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
+  <zorder>metapaths_stepsANNOTATE</zorder>
+  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
+  <zorder>metapaths_stepsBLAST_REFDB</zorder>
+  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsGENBANK_FILE</zorder>
+  <zorder>metapaths_stepsSCAN_RRNA</zorder>
+  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>metapaths_stepsORF_PREDICTION</zorder>
  </widget>
  <tabstops>
   <tabstop>fileBrowseButton</tabstop>
