@@ -105,8 +105,6 @@ void ResultPage::updateSteps(){
     QString pathToLog = METAPATH + "/output/" + currentFile + "/metapathways_steps_log.txt";
     QFile inputFile(pathToLog);
 
-    qDebug() << pathToLog;
-
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
        QTextStream in(&inputFile);
@@ -125,15 +123,11 @@ void ResultPage::colorRunConfig(QString line){
     if (!commentLine.exactMatch(line) && line.length()>0){
         //if not a comment line
         QStringList splitList = line.split(whiteSpace);
-        QString step = "metapaths_steps" + splitList.at(0).trimmed();
-        QString operation = splitList.at(1).trimmed();
+        QString step = splitList.at(0).trimmed();
+        QString status = splitList.at(1).trimmed();
+        QString stepName = "metapaths_steps" + step;
 
-        //find the step equivalent on the chart
-        QString stepName = run->getConfigMapping()->operator [](step);
-
-        qDebug() << step << operation << stepName;
-
-        if (!stepName.isEmpty()){
+        if (!step.isEmpty()){
 
             QImage *img;
             QTableWidgetItem *item = new QTableWidgetItem();
@@ -141,25 +135,23 @@ void ResultPage::colorRunConfig(QString line){
             QLabel *imageLabel = new QLabel();
 
             //set to blank to start, in case it's changed since the last step
-            this->table->removeCellWidget(TABLE_MAPPING->key("metapaths_steps"+stepName),3);
-            this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, NULL);
+            this->table->removeCellWidget(TABLE_MAPPING->key(stepName),3);
+            this->table->setItem(TABLE_MAPPING->key(stepName),3, NULL);
 
-            qDebug() << stepName << operation << stepName;
-
-            if (operation.operator ==("Failed")){
+            if (status.operator ==("Failed")){
                 img  = new QImage(":/images/cross.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
-                this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
-            }else if (operation.operator ==("Running")){
+                this->table->setItem(TABLE_MAPPING->key(stepName),3, item);
+            }else if (status.operator ==("Running")){
                 imageLabel->setFixedSize(30,25);
                 imageLabel->setMovie(loading);
                 imageLabel->updateGeometry();
                 loading->start();
-                this->table->setCellWidget(TABLE_MAPPING->key("metapaths_steps"+stepName),3,imageLabel);
-            }else if (operation.operator ==("Success")){
+                this->table->setCellWidget(TABLE_MAPPING->key(stepName),3,imageLabel);
+            }else if (status.operator ==("Success")){
                 img = new QImage(":/images/check.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
-                this->table->setItem(TABLE_MAPPING->key("metapaths_steps"+stepName),3, item);
+                this->table->setItem(TABLE_MAPPING->key(stepName),3, item);
             }
         }
     }

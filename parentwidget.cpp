@@ -30,9 +30,8 @@ ParentWidget::ParentWidget(QWidget *parent) :
     runConfigTab = new RunConfig(this);
 
     tab = ui->parentTabWidget;
+    tab->clear();
     //delete initial
-    tab->removeTab(0);
-    tab->removeTab(0);
 
     tab->addTab(settingsTab,"Run Parameters");
     tab->addTab(runConfigTab,"Run Stages");
@@ -99,6 +98,7 @@ void ParentWidget::continueButtonPressed(){
                 QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
                 value = temp->toPlainText();
             }
+            MainWindow::PARAMS->operator [](configName) = value;
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value, false, false);
         }
     }
@@ -167,11 +167,27 @@ void ParentWidget::executionPrep(){
     run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING, 0);
 
     //set the rrnaDB and annotationDBS so we know how many to look for in the log
-    QStringList* rrnaDBS = new QStringList();
-    rrnaDBS = new QStringList(MainWindow::PARAMS->operator []("rRNA:refdbs"));
+    QStringList* rrnaDBS;
+    QString rdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
+    rrnaDBS = new QStringList(rdbs.split(","));
+    rrnaDBS->removeAll("");
 
-    QStringList* annotationDBS = new QStringList();
-    annotationDBS = new QStringList(MainWindow::PARAMS->operator []("annotation:dbs"));
+    QStringList* annotationDBS;
+    QString adbs = MainWindow::PARAMS->operator []("annotation:dbs");
+    annotationDBS = new QStringList(adbs.split(","));
+    annotationDBS->removeAll("");
+
+    QStringList *uniqueRRNADBS = new QStringList();
+    QStringList *uniqueADBS = new QStringList();
+
+    Utilities::getUniqueDBS(*rrnaDBS, uniqueRRNADBS);
+    Utilities::getUniqueDBS(*annotationDBS, uniqueADBS);
+
+    rrnaDBS = uniqueRRNADBS;
+    annotationDBS = uniqueADBS;
+
+    run->nADB = annotationDBS->length();
+    run->nRRNADB = rrnaDBS->length();
 
     run->setAnnotationDBS(annotationDBS);
     run->setRRNADBS(rrnaDBS);
@@ -179,8 +195,6 @@ void ParentWidget::executionPrep(){
     ProgressDialog *progress = new ProgressDialog(this, run);
     ResultPage *rp = new ResultPage(this->run);
     ResultWindow *rw = new ResultWindow(rp, progress, run);
-
-    qDebug() << this->run->getParams()->operator []("fileInput");
 
     rw->show();
     rp->show();

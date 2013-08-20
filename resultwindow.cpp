@@ -56,8 +56,8 @@ void ResultWindow::sampleChanged(QString changed){
     QFile aminoStats(aminoFile);
 
     resultTabs->clear();
-    if (nucStats.exists()) resultTabs->addTab(new TableData(true, nucFile), "Nuclieotide Statistics");
-    if (aminoStats.exists()) resultTabs->addTab(new TableData(true, aminoFile), "Amino Statistics");
+    //if (nucStats.exists()) resultTabs->addTab(new TableData(true, nucFile), "Nuclieotide Statistics");
+    //if (aminoStats.exists()) resultTabs->addTab(new TableData(true, aminoFile), "Amino Statistics");
 
     emit fileChanged(changed);
 }

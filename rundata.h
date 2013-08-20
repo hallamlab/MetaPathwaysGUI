@@ -22,6 +22,8 @@ public:
     QStringList* getAnnotationDBS();
 
     QStringList *files;
+    int nRRNADB;
+    int nADB;
 
     void setRRNADBS(QStringList* rrnaDBS);
     void setAnnotationDBS(QStringList* annotationDBS);
@@ -37,7 +39,6 @@ private:
     QStringList *rrnaDBS;
     QStringList *annotationDBS;
     QProcess* run;
-
 };
 
 

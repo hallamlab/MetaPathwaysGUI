@@ -36,6 +36,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
     connect(fileCheckTimer, SIGNAL(timeout()),this,SLOT(checkFiles()));
+    connect(myProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changed(QProcess::ProcessState)));
 
 }
 
@@ -63,19 +64,22 @@ void ProgressDialog::initProcess(){
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
     env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
-//    myProcess = new QProcess();
-//    myProcess->setProcessEnvironment(env);
-//    myProcess->start(program, arguments);
-//    run->setProcess(myProcess);
+    myProcess = new QProcess();
+    myProcess->setProcessEnvironment(env);
+    myProcess->start(program, arguments);
+
+    run->setProcess(myProcess);
 }
 
 void ProgressDialog::changed(QProcess::ProcessState state){
     qDebug() << "process state changed to " << state;
+    qDebug() << myProcess->readAllStandardOutput();
+    qDebug() << myProcess->readAllStandardError();
 }
 
 void ProgressDialog::initProgressBar(){
-    progressBar->setMaximum(Utilities::countRunSteps(run->getParams()));
-    progressBar->setValue(4);
+    progressBar->setMaximum(Utilities::countRunSteps(run->getParams()) + run->nADB + run->nRRNADB);
+    progressBar->setValue(stepsPassed);
     progressBar->setMinimum(0);
 }
 
@@ -86,13 +90,16 @@ void ProgressDialog::updateText(){
 
     if (inputFile.open(QIODevice::ReadOnly))
     {
+       stepsPassed = 0;
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
        {
             QString line = in.readLine();
             textBrowser->append(line);
+            stepsPassed++;
        }
     }
+    progressBar->setValue(stepsPassed);
 }
 
 void ProgressDialog::selectedFileChanged(QString file){

@@ -24,6 +24,7 @@ public:
     static QHash<QString,QString>* parseFile(const QString &TEMPLATE_FILE);
     static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
+    static void getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS);
 };
 
 #endif // UTILITIES_H

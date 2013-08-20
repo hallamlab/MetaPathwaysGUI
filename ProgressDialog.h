@@ -28,6 +28,7 @@ public:
     ParentWidget *pw;
     QString METAPATH;
     QStringList *filesDetected;
+    int stepsPassed;
 
     ~ProgressDialog();
 

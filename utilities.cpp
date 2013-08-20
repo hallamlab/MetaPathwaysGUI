@@ -5,6 +5,7 @@
 #include <QRegExp>
 #include <QHash>
 #include <QSplitter>
+#include <QDebug>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -205,6 +206,7 @@ int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
     int redoOrRunCount = 0;
     for (it=PARAMS->begin();it!=PARAMS->end();++it){
         if (it.value().operator ==("redo") || it.value().operator ==("yes")){
+            if (it.key().operator ==("metapaths_steps:BLAST_REFDB")) continue;
             redoOrRunCount++;
         }
     }
@@ -278,6 +280,28 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
        return true;
     }
     return false;
+}
+
+/*
+ * Returns db names that are unique in a list.
+ * 1.) Sort all files alphabetically
+ * 2.) Ensure that only strings that do not exist as substrings for other strings in the list are returned.
+ */
+void Utilities::getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS){
+    dbs.sort();
+    QString current = dbs.at(0);
+    QStringList dbList;
+    dbList.append(current);
+    for (int i=1;i<dbs.length();i++){
+        if (dbs.at(i).indexOf(current)!=-1){
+            //if it exists as a substring
+            continue;
+        }
+        else{
+            current = dbs.at(i);
+            dbList.append(current);
+        }
+    }
 }
 
 /*
