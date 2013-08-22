@@ -37,6 +37,12 @@ private:
     void initMapping();
     void colorRunConfig(QString line);
     void setStyling();
+
+    int blastCount;
+    int parseBlastCount;
+    int scanRRNACount;
+    int statsRRNACount;
+
     RunData *run;
     QTimer *timer;
     QString currentFile;

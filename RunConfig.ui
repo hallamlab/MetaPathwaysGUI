@@ -1408,8 +1408,8 @@
   <widget class="QCheckBox" name="blastWithGrid">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>780</y>
+     <x>70</x>
+     <y>800</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -1422,13 +1422,26 @@
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>810</y>
+     <y>780</y>
      <width>114</width>
      <height>32</height>
     </rect>
    </property>
    <property name="text">
     <string>Setup Grids</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="overwrite">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>780</y>
+     <width>241</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Purge and overwrite existing data</string>
    </property>
   </widget>
   <zorder>tableWidget</zorder>
@@ -1462,6 +1475,7 @@
   <zorder>metapaths_stepsSCAN_RRNA</zorder>
   <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
+  <zorder>overwrite</zorder>
  </widget>
  <tabstops>
   <tabstop>fileBrowseButton</tabstop>

@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include <QDebug>
 
-ResultWindow::ResultWindow(ResultPage *rp, ProgressDialog *prog, RunData *run, QWidget *parent) :
+ResultWindow::ResultWindow(ProgressDialog *prog, RunData *run, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ResultWindow)
 {
@@ -22,7 +22,6 @@ ResultWindow::ResultWindow(ResultPage *rp, ProgressDialog *prog, RunData *run, Q
     getFileNames->start(500);
 
     connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
-    connect(sampleSelect, SIGNAL(currentIndexChanged(QString)), rp, SLOT(updateFile(QString)));
     connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
 
@@ -36,13 +35,11 @@ void ResultWindow::updateFileNames(){
         existing.append(sampleSelect->itemText(i));
     }
 
-    sampleSelect->blockSignals(true);
     foreach (QString f, files){
         if (!existing.contains(f)){
             sampleSelect->addItem(f);
         }
     }
-    sampleSelect->blockSignals(false);
 }
 
 
@@ -56,8 +53,8 @@ void ResultWindow::sampleChanged(QString changed){
     QFile aminoStats(aminoFile);
 
     resultTabs->clear();
-    //if (nucStats.exists()) resultTabs->addTab(new TableData(true, nucFile), "Nuclieotide Statistics");
-    //if (aminoStats.exists()) resultTabs->addTab(new TableData(true, aminoFile), "Amino Statistics");
+    if (nucStats.exists()) resultTabs->addTab(new TableData(true, nucFile), "Nuclieotide Statistics");
+    if (aminoStats.exists()) resultTabs->addTab(new TableData(true, aminoFile), "Amino Statistics");
 
     emit fileChanged(changed);
 }

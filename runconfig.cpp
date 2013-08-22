@@ -24,6 +24,7 @@ RunConfig::RunConfig(QWidget *parent) :
     sampleWarning = this->findChild<QLabel *>("sampleWarning");
     gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
+    overwrite = this->findChild<QCheckBox *>("overwrite");
 
     gridSetup = 0;
     selectedFiles = 0;

@@ -117,7 +117,7 @@ void ResultPage::updateSteps(){
 }
 
 void ResultPage::colorRunConfig(QString line){
-    QRegExp whiteSpace("\\s");
+    QRegExp whiteSpace("\\t");
     QRegExp commentLine("#[^\"\\n\\r]*");
 
     if (!commentLine.exactMatch(line) && line.length()>0){
@@ -127,8 +127,12 @@ void ResultPage::colorRunConfig(QString line){
         QString status = splitList.at(1).trimmed();
         QString stepName = "metapaths_steps" + step;
 
-        if (!step.isEmpty()){
+        QRegExp blastReg("BLAST_REFDB_\\w*");
+        QRegExp parseBlast("PARSE_BLAST_\\w*");
+        QRegExp scanRRNA("SCAN_rRNA_\\w*");
+        QRegExp statsRRNA("STATS_\\w*");
 
+        if (!step.isEmpty()){
             QImage *img;
             QTableWidgetItem *item = new QTableWidgetItem();
             QMovie *loading = new QMovie(":/images/loading.gif");
@@ -138,17 +142,17 @@ void ResultPage::colorRunConfig(QString line){
             this->table->removeCellWidget(TABLE_MAPPING->key(stepName),3);
             this->table->setItem(TABLE_MAPPING->key(stepName),3, NULL);
 
-            if (status.operator ==("Failed")){
+            if (status.operator ==("FAILED")){
                 img  = new QImage(":/images/cross.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
                 this->table->setItem(TABLE_MAPPING->key(stepName),3, item);
-            }else if (status.operator ==("Running")){
+            }else if (status.operator ==("RUNNING")){
                 imageLabel->setFixedSize(30,25);
                 imageLabel->setMovie(loading);
                 imageLabel->updateGeometry();
                 loading->start();
                 this->table->setCellWidget(TABLE_MAPPING->key(stepName),3,imageLabel);
-            }else if (status.operator ==("Success")){
+            }else if (status.operator ==("SUCCESS") || status.operator ==("ALREADY_COMPUTED")){
                 img = new QImage(":/images/check.png");
                 item->setData(Qt::DecorationRole, QPixmap::fromImage(*img).scaled(12,12));
                 this->table->setItem(TABLE_MAPPING->key(stepName),3, item);

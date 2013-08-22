@@ -34,6 +34,7 @@ public:
     QCheckBox* gridBlastChoice;
     QPushButton* setupGrids;
     GridSetup* gridSetup;
+    QCheckBox* overwrite;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>742</width>
-    <height>548</height>
+    <width>775</width>
+    <height>802</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,22 +21,86 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="cancelButton">
+   <item row="7" column="1">
+    <widget class="QTextBrowser" name="logBrowser"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="progressLabel_2">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>Cancel</string>
+      <string>Global Progress</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="5" column="0" colspan="2">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="label">
+   <item row="6" column="0">
+    <widget class="QLabel" name="summaryLabel">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Sample Execution Summary</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QProgressBar" name="globalProgressBar">
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QLabel" name="logLabel">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Progress Log</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" alignment="Qt::AlignRight">
+    <widget class="QPushButton" name="cancelButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="progressLabel">
      <property name="font">
       <font>
        <pointsize>24</pointsize>
@@ -47,8 +111,132 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QTextBrowser" name="textBrowser"/>
+   <item row="4" column="0">
+    <widget class="QPushButton" name="hideButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Show/Hide Advanced Details</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QTableWidget" name="summaryTable">
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>100</number>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>PREPROCESS_FASTA</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>ORF_PREDICTION</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>GFF_TO_AMINO</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>FILTERED_FASTA</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>COMPUTE_REFSCORE</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>BLAST_REFDB</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>PARSE_BLAST</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>SCAN_rRNA</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>STATS_rRNA</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>SCAN_tRNA</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>ANNOTATE</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>PATHOLOGIC_INPUT</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>GENBANK_FILE</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>CREATE_SEQUIN_FILE</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>CREATE_REPORT_FILES</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>MLTREEMAP_CALCULATION</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>MLTREEMAP_IMAGEMAKER</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>PATHOLOGIC</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Result</string>
+      </property>
+     </column>
+    </widget>
    </item>
   </layout>
  </widget>

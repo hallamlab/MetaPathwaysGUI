@@ -4,6 +4,7 @@
 #include "qpushbutton.h"
 #include "rundata.h"
 #include "parentwidget.h"
+#include "resultpage.h"
 #include <QTimer>
 #include <QWidget>
 #include <QProcess>
@@ -28,7 +29,13 @@ public:
     ParentWidget *pw;
     QString METAPATH;
     QStringList *filesDetected;
+    QHash<int,QString> *TABLE_MAPPING;
+    QHash<QString, QString> previousStatus;
+
     int stepsPassed;
+
+    void colorRunConfig(const QString stepName, const QString status);
+    void initMapping();
 
     ~ProgressDialog();
 
@@ -36,6 +43,8 @@ private slots:
     void terminateRun();
     void updateText();
     void checkFiles();
+    void toggleDetails();
+    void updateTable();
     void changed(QProcess::ProcessState state);
     void selectedFileChanged(QString file);
 
@@ -43,10 +52,15 @@ private:
     Ui::ProgressDialog *ui;
 
     QPushButton *cancelButton;
-    QTextBrowser *textBrowser;
+    QPushButton *hideButton;
+    QTextBrowser *logBrowser;
+    QLabel *logLabel;
+    QTableWidget *summaryTable;
+    QLabel *summaryLabel;
     QProgressBar *progressBar;
+    QProgressBar *globalProgressBar;
     QString currentFile;
-
+    QLabel* progressLabel;
     QProcess *myProcess;
     QTimer *timer;
     QTimer *fileCheckTimer;

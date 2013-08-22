@@ -158,6 +158,25 @@ void ParentWidget::continueButtonPressed(){
             MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB") = "grid";
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
         }
+
+        //trim off commas on refdbs for rRNA and annotation
+        QString rRNArefdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
+        qDebug() << rRNArefdbs;
+        if (rRNArefdbs.at(rRNArefdbs.length()-1) == ',' ) rRNArefdbs.chop(1);
+        MainWindow::PARAMS->operator []("rRNA:refdbs") = rRNArefdbs;
+
+        QString annotationDBS = MainWindow::PARAMS->operator []("annotation:dbs");
+        if (annotationDBS.at(annotationDBS.length()-1) == ',' )annotationDBS.chop(1);
+        MainWindow::PARAMS->operator []("annotationDBS") = annotationDBS;
+
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
+        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
+
+        //use overwrite settings?
+        if (runConfigTab->overwrite->isChecked()){
+            MainWindow::PARAMS->operator []("overwrite") = "overwrite";
+        }else MainWindow::PARAMS->operator []("overwrite") = "overlay";
+
         executionPrep();
     }
 }
@@ -189,15 +208,17 @@ void ParentWidget::executionPrep(){
     run->nADB = annotationDBS->length();
     run->nRRNADB = rrnaDBS->length();
 
+    qDebug() << *rrnaDBS << *annotationDBS;
+
     run->setAnnotationDBS(annotationDBS);
     run->setRRNADBS(rrnaDBS);
 
     ProgressDialog *progress = new ProgressDialog(this, run);
-    ResultPage *rp = new ResultPage(this->run);
-    ResultWindow *rw = new ResultWindow(rp, progress, run);
+    //ResultPage *rp = new ResultPage(this->run);
+    ResultWindow *rw = new ResultWindow(progress, run);
 
     rw->show();
-    rp->show();
+    //rp->show();
     progress->show();
 
     close();
