@@ -205,20 +205,16 @@ void ParentWidget::executionPrep(){
     rrnaDBS = uniqueRRNADBS;
     annotationDBS = uniqueADBS;
 
-    run->nADB = annotationDBS->length();
-    run->nRRNADB = rrnaDBS->length();
-
-    qDebug() << *rrnaDBS << *annotationDBS;
+    run->nADB = annotationDBS->size();
+    run->nRRNADB = rrnaDBS->size();
 
     run->setAnnotationDBS(annotationDBS);
     run->setRRNADBS(rrnaDBS);
 
     ProgressDialog *progress = new ProgressDialog(this, run);
-    //ResultPage *rp = new ResultPage(this->run);
     ResultWindow *rw = new ResultWindow(progress, run);
 
     rw->show();
-    //rp->show();
     progress->show();
 
     close();

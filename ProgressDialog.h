@@ -32,9 +32,20 @@ public:
     QHash<int,QString> *TABLE_MAPPING;
     QHash<QString, QString> previousStatus;
 
-    int stepsPassed;
+    int blastCount;
+    int parseBlastCount;
+    int scanRRNACount;
+    int statsCount;
 
-    void colorRunConfig(const QString stepName, const QString status);
+    bool blastFailed;
+    bool parseBlastFailed;
+    bool scanRRNAFailed;
+    bool statsFailed;
+
+    QHash<QString,int> *stepsPassed;
+
+    void colorRunConfig(QString stepName,  QString status);
+    void multiStepCheck(QString *stepName, QString *status);
     void initMapping();
 
     ~ProgressDialog();
@@ -45,7 +56,6 @@ private slots:
     void checkFiles();
     void toggleDetails();
     void updateTable();
-    void changed(QProcess::ProcessState state);
     void selectedFileChanged(QString file);
 
 private:
@@ -64,6 +74,7 @@ private:
     QProcess *myProcess;
     QTimer *timer;
     QTimer *fileCheckTimer;
+    QTextEdit *standardOut;
 };
 
 #endif // ProgressDialog_H

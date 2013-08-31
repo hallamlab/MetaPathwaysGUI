@@ -29,24 +29,35 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     globalProgressBar = this->findChild<QProgressBar *>("globalProgressBar");
     progressLabel = this->findChild<QLabel *>("progressLabel");
     hideButton = this->findChild<QPushButton *>("hideButton");
+    standardOut = this->findChild<QTextEdit *>("standardOut");
 
     summaryTable->setSortingEnabled(false);
 
+    blastCount = 0;
+    parseBlastCount = 0;
+    scanRRNACount = 0;
+    statsCount = 0;
+
+    blastFailed = false;
+    parseBlastFailed = false;
+    scanRRNAFailed = false;
+    statsFailed = false;
+
+    stepsPassed = new QHash<QString, int>();
+
     initProcess();
     initMapping();
-    initProgressBar();
     checkFiles();
 
     currentFile = "";
 
     timer = new QTimer(this);
-    timer->start(1000);
+    timer->start(5000);
 
     connect(hideButton, SIGNAL(clicked()), this, SLOT(toggleDetails()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
-    connect(timer,SIGNAL(timeout()),this,SLOT(updateTable()));
-    connect(myProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(changed(QProcess::ProcessState)));
+    //connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
+    //connect(timer,SIGNAL(timeout()),this,SLOT(updateTable()));
 }
 
 void ProgressDialog::updateTable(){
@@ -56,7 +67,6 @@ void ProgressDialog::updateTable(){
     QHash<QString, QString> statusHash;
     QRegExp whiteSpace("\\t");
     QRegExp commentLine("#[^\"\\n\\r]*");
-
 
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
@@ -73,11 +83,10 @@ void ProgressDialog::updateTable(){
                 if (!step.isEmpty())  statusHash[stepName] = status;
             }
        }
-       foreach(const  QString key, statusHash.keys()) {
+       foreach(const QString key, statusHash.keys()) {
            colorRunConfig(key, statusHash[key]);
        }
-
-
+       initProgressBar();
     }
 }
 
@@ -95,9 +104,9 @@ void ProgressDialog::initMapping(){
     TABLE_MAPPING->operator [](4) = "COMPUTE_REFSCORE";
     TABLE_MAPPING->operator [](5) = "BLAST_REFDB";
     TABLE_MAPPING->operator [](6) = "PARSE_BLAST";
-    TABLE_MAPPING->operator [](7) = "SCAN_RRNA";
-    TABLE_MAPPING->operator [](8) = "SCAN_TRNA";
-    TABLE_MAPPING->operator [](9) = "STATS_RRNA";
+    TABLE_MAPPING->operator [](7) = "SCAN_rRNA";
+    TABLE_MAPPING->operator [](8) = "STATS_rRNA";
+    TABLE_MAPPING->operator [](9) = "SCAN_tRNA";
     TABLE_MAPPING->operator [](10) = "ANNOTATE";
     TABLE_MAPPING->operator [](11) = "PATHOLOGIC_INPUT";
     TABLE_MAPPING->operator [](12) = "GENBANK_FILE";
@@ -108,14 +117,77 @@ void ProgressDialog::initMapping(){
     TABLE_MAPPING->operator [](17) = "PATHOLOGIC";
 }
 
-void ProgressDialog::colorRunConfig(const QString stepName, const QString status){
+void ProgressDialog::multiStepCheck(QString *stepName, QString *status){
+    QStringList subStep = stepName->split("_");
+    if (subStep.at(0) == "BLAST" && subStep.at(1) == "REFDB"){
+        if (*status == "FAILED"){
+            blastFailed = true;
+        }
+        blastCount++;
+        *stepName = "BLAST_REFDB";
+
+        if (blastFailed) *status == "FAILED";
+        else *status == "RUNNING";
+
+        if (blastCount == run->nADB){
+            *status = "SUCCESS";
+        }
+    }
+    else if (subStep.at(0) == "PARSE" && subStep.at(1) == "BLAST"){
+        if (*status == "FAILED"){
+            parseBlastFailed = true;
+        }
+        parseBlastCount++;
+        *stepName = "PARSE_BLAST";
+
+        if (parseBlastFailed) *status == "FAILED";
+        else *status == "RUNNING";
+
+        if (parseBlastCount == run->nADB){
+            *status = "SUCCESS";
+        }
+    }
+    else if (subStep.at(0) == "SCAN" && subStep.at(1) == "rRNA"){
+        if (*status == "FAILED"){
+            scanRRNAFailed = true;
+        }
+        scanRRNACount++;
+        *stepName = "SCAN_rRNA";
+
+        if (scanRRNAFailed) *status == "FAILED";
+        else *status == "RUNNING";
+
+        if (scanRRNACount == run->nRRNADB){
+            *status = "SUCCESS";
+        }
+    }
+    else if (subStep.at(0) == "STATS"){
+        if (*status == "FAILED"){
+            statsFailed = true;
+        }
+        statsCount++;
+        *stepName = "STATS_rRNA";
+
+        if (statsFailed) *status == "FAILED";
+        else *status == "RUNNING";
+
+        if (statsCount == run->nRRNADB){
+            *status = "SUCCESS";
+        }
+    }
+
+    //qDebug() << blastCount << parseBlastCount << scanRRNACount << statsCount;
+}
+
+void ProgressDialog::colorRunConfig(QString stepName, QString status){
     QImage *img;
     QTableWidgetItem *item = new QTableWidgetItem();
     QMovie *loading = new QMovie(":/images/loading.gif");
     QLabel *imageLabel = new QLabel();
 
-
     if( this->previousStatus.contains(stepName) && status == this->previousStatus[stepName]  ) return ;
+
+    multiStepCheck(&stepName, &status);
 
     //clear old cell
     this->summaryTable->removeCellWidget(TABLE_MAPPING->key(stepName),0);
@@ -139,6 +211,13 @@ void ProgressDialog::colorRunConfig(const QString stepName, const QString status
         this->summaryTable->setItem(TABLE_MAPPING->key(stepName),0, item);
     }
     this->previousStatus.insert(stepName,status);
+
+    if (!stepsPassed->contains(currentFile)){
+        stepsPassed->operator [](currentFile) = 0;
+    }
+
+    stepsPassed->operator [](currentFile) = stepsPassed->operator [](currentFile)++;
+
 }
 
 void ProgressDialog::toggleDetails(){
@@ -158,9 +237,12 @@ void ProgressDialog::toggleDetails(){
         summaryLabel->hide();
     }else summaryLabel->show();
 
+    if (!standardOut->isHidden()){
+        standardOut->hide();
+    }else standardOut->show();
+
     this->adjustSize();
 }
-
 
 void ProgressDialog::initProcess(){
     QString program = run->getConfig()->operator []("PYTHON_EXECUTABLE");
@@ -188,6 +270,7 @@ void ProgressDialog::initProcess(){
 
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);
+    myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
 
     run->setProcess(myProcess);
@@ -196,16 +279,21 @@ void ProgressDialog::initProcess(){
     //qDebug() << program << arguments;
 }
 
-void ProgressDialog::changed(QProcess::ProcessState state){
-    qDebug() << "process state changed to " << state;
-    qDebug() << myProcess->readAllStandardOutput();
-    qDebug() << myProcess->readAllStandardError();
-}
-
 void ProgressDialog::initProgressBar(){
     progressBar->setMaximum(Utilities::countRunSteps(run->getParams()) + run->nADB + run->nRRNADB);
-    progressBar->setValue(stepsPassed + this->run->nADB + this->run->nRRNADB - 2);
+    progressBar->setValue(stepsPassed->value(currentFile));
     progressBar->setMinimum(0);
+
+    int globalSum = 0;
+    for (int i=0;i<stepsPassed->values().length();i++){
+        globalSum += stepsPassed->values().at(i);
+    }
+
+    globalProgressBar->setMaximum(progressBar->maximum() * this->run->files->length());
+    globalProgressBar->setValue(globalSum);
+    globalProgressBar->setMinimum(0);
+
+    //qDebug() << *stepsPassed << globalSum << globalProgressBar->maximum() << progressBar->value() << progressBar->maximum();
 }
 
 void ProgressDialog::updateText(){
@@ -215,16 +303,17 @@ void ProgressDialog::updateText(){
 
     if (inputFile.open(QIODevice::ReadOnly))
     {
-       stepsPassed = 0;
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
        {
             QString line = in.readLine();
             logBrowser->append(line);
-            stepsPassed++;
        }
     }
-    progressBar->setValue(stepsPassed);
+
+    QByteArray read = myProcess->readAll();
+    if (!read.isEmpty()) standardOut->append(QString(read));
+
 }
 
 void ProgressDialog::selectedFileChanged(QString file){

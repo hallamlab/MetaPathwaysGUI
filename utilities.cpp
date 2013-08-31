@@ -195,6 +195,7 @@ QList<QString>* Utilities::parseResults(const QString &FILE_NAME, const QChar &D
             }
        }
     }
+    inputFile.close();
     return strings;
 }
 
@@ -290,8 +291,7 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
 void Utilities::getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS){
     dbs.sort();
     QString current = dbs.at(0);
-    QStringList dbList;
-    dbList.append(current);
+    uniqueDBS->append(current);
     for (int i=1;i<dbs.length();i++){
         if (dbs.at(i).indexOf(current)!=-1){
             //if it exists as a substring
@@ -299,7 +299,7 @@ void Utilities::getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS){
         }
         else{
             current = dbs.at(i);
-            dbList.append(current);
+            uniqueDBS->append(current);
         }
     }
 }

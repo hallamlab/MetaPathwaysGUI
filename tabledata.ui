@@ -49,7 +49,7 @@
     </widget>
    </item>
    <item row="1" column="0" rowspan="2">
-    <widget class="QTableWidget" name="tableData">
+    <widget class="QTableWidget" name="tableWidget">
      <property name="enabled">
       <bool>true</bool>
      </property>

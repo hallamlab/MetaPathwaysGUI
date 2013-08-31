@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     nonec2.cpp \
     ec2grid.cpp \
     metawidget.cpp \
-    graphdata.cpp
+    graphdata.cpp \
+    largetable.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -57,7 +58,8 @@ HEADERS  += mainwindow.h \
     nonec2.h \
     ec2grid.h \
     metawidget.h \
-    graphdata.h
+    graphdata.h \
+    largetable.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \

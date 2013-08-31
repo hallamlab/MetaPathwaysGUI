@@ -46,15 +46,22 @@ void ResultWindow::updateFileNames(){
 void ResultWindow::sampleChanged(QString changed){
     QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
 
-    QString nucFile = METAPATH + "/output/" + changed + "/run_statistics/" + changed + ".nuc.stats";
-    QString aminoFile = METAPATH + "/output/" + changed + "/run_statistics/" + changed + ".amino.stats";
+    const QString nucFile = METAPATH + "/output/" + changed + "/run_statistics/" + changed + ".nuc.stats";
+    const QString aminoFile = METAPATH + "/output/" + changed + "/run_statistics/" + changed + ".amino.stats";
+    const QString funcFile = METAPATH + "/output/" + changed + "/results/annotation_table" + "/functional_and_taxonomic_table.txt";
 
     QFile nucStats(nucFile);
     QFile aminoStats(aminoFile);
+    QFile funcTable(funcFile);
 
     resultTabs->clear();
-    if (nucStats.exists()) resultTabs->addTab(new TableData(true, nucFile), "Nuclieotide Statistics");
-    if (aminoStats.exists()) resultTabs->addTab(new TableData(true, aminoFile), "Amino Statistics");
+    if (nucStats.exists()) resultTabs->addTab(new TableData(false, true, nucFile), "Nuclieotide Statistics");
+    if (aminoStats.exists()) resultTabs->addTab(new TableData(false, true, aminoFile), "Amino Statistics");
+//  if (funcTable.exists()) resultTabs->addTab(new TableData(true, false, funcFile), "Functional Table");
+    QList<enum TYPE> types;
+
+    types << STRING << STRING << INT << INT << STRING << STRING << STRING << STRING;
+    resultTabs->addTab(new TableData(true, false, "/Users/michaelwu/workspace/MetaPathways2-build-Desktop-Release/MetaPathways2.app/Contents/MacOS/functional_and_taxonomic_table.txt", types),"functional and taxonomic table");
 
     emit fileChanged(changed);
 }
