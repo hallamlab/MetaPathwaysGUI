@@ -52,11 +52,10 @@ public:
 
 private slots:
     void terminateRun();
-    void updateText();
     void checkFiles();
     void toggleDetails();
-    void updateTable();
     void selectedFileChanged(QString file);
+    void readStepsLog();
 
 private:
     Ui::ProgressDialog *ui;

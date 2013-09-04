@@ -44,6 +44,7 @@ public:
 
     QTableWidget* tableWidget;
 
+
 public slots:
     void outputRows(int top);
     void headerClicked(int index);

@@ -52,15 +52,14 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
     currentFile = "";
 
     timer = new QTimer(this);
-    timer->start(5000);
+    timer->start(10000);
 
     connect(hideButton, SIGNAL(clicked()), this, SLOT(toggleDetails()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
-    //connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
-    //connect(timer,SIGNAL(timeout()),this,SLOT(updateTable()));
+    //connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
 }
 
-void ProgressDialog::updateTable(){
+void ProgressDialog::readStepsLog(){
     QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
     QString pathToLog = METAPATH + "/output/" + currentFile + "/metapathways_steps_log.txt";
     QFile inputFile(pathToLog);
@@ -68,14 +67,19 @@ void ProgressDialog::updateTable(){
     QRegExp whiteSpace("\\t");
     QRegExp commentLine("#[^\"\\n\\r]*");
 
+    logBrowser->clear();
+
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
        {
             QString line = in.readLine();
+
             if (!commentLine.exactMatch(line) && line.length()>0){
                 //if not a comment line
+                logBrowser->append(line);
+
                 QStringList splitList = line.split(whiteSpace);
                 QString step = splitList.at(0).trimmed();
                 QString status = splitList.at(1).trimmed();
@@ -83,11 +87,16 @@ void ProgressDialog::updateTable(){
                 if (!step.isEmpty())  statusHash[stepName] = status;
             }
        }
+       inputFile.close();
+
        foreach(const QString key, statusHash.keys()) {
            colorRunConfig(key, statusHash[key]);
        }
        initProgressBar();
     }
+
+    QByteArray read = myProcess->readAll();
+    if (!read.isEmpty()) standardOut->append(QString(read));
 }
 
 /*
@@ -187,7 +196,7 @@ void ProgressDialog::colorRunConfig(QString stepName, QString status){
 
     if( this->previousStatus.contains(stepName) && status == this->previousStatus[stepName]  ) return ;
 
-    multiStepCheck(&stepName, &status);
+    //multiStepCheck(&stepName, &status);
 
     //clear old cell
     this->summaryTable->removeCellWidget(TABLE_MAPPING->key(stepName),0);
@@ -294,26 +303,6 @@ void ProgressDialog::initProgressBar(){
     globalProgressBar->setMinimum(0);
 
     //qDebug() << *stepsPassed << globalSum << globalProgressBar->maximum() << progressBar->value() << progressBar->maximum();
-}
-
-void ProgressDialog::updateText(){
-    logBrowser->clear();
-    QString sampleStepsLogPath = METAPATH + "/output/" + currentFile + "/metapathways_steps_log.txt";
-    QFile inputFile(sampleStepsLogPath);
-
-    if (inputFile.open(QIODevice::ReadOnly))
-    {
-       QTextStream in(&inputFile);
-       while ( !in.atEnd() )
-       {
-            QString line = in.readLine();
-            logBrowser->append(line);
-       }
-    }
-
-    QByteArray read = myProcess->readAll();
-    if (!read.isEmpty()) standardOut->append(QString(read));
-
 }
 
 void ProgressDialog::selectedFileChanged(QString file){

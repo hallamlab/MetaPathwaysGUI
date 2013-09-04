@@ -17,6 +17,9 @@ typedef struct row{
     QList<int> intVar;
     QList<double> doubleVar;
     QList<QString>  strVar;
+    int intTemp;
+    double doubleTemp;
+    QString strTemp;
 } ROW;
 
 enum TYPE {INT, DOUBLE, STRING};
@@ -33,17 +36,21 @@ public:
     unsigned int getBegData( int pivotPoint = 0, unsigned int deltaW = 100);
     void sortByField(unsigned int fieldNum);
 
+    void copyDataToSort(unsigned int k);
+
     int getPivot();
     void setPivot(int pivot);
-
+//
 
     QList< ROW *> tableData;
     QStringList *colNames;
 
+    unsigned int lastUsedField;
     unsigned int numCols;
     enum TYPE *types;
     unsigned int *varType;
     unsigned int *index;
+    bool sortingDirectionForward;
 
 private:
     int pivotPointer;

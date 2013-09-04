@@ -53,12 +53,14 @@ void TableData::setNumCols(unsigned int numCols) {
 void TableData::headerClicked(int index){
     qDebug() << "sorting";
     this->largeTable->sortByField(index);
-    qDebug() << "before clear";
+    qDebug() << "done sorting";
     tableWidget->clearContents();
-    qDebug() << "getting sorted data";
-    this->largeTable->getData(bigdata, 0,dw);
-    qDebug() << "putting it into the table";
-    this->populateTable(*tableWidget, *data, *headers);
+
+    int currPos = tableWidget->verticalScrollBar()->value();
+        qDebug() << "getting sorted data at " << currPos;
+    this->largeTable->getData(bigdata, currPos,dw);
+    qDebug() << "putting it into the table " << bigdata.length();
+    this->populateTable(*tableWidget, bigdata, *headers, currPos);
 }
 
 void TableData::outputRows(int top){
@@ -115,36 +117,39 @@ void TableData::setupFromFile(const QString &file){
     QChar tableDELIM = '#';
 
 
-    if (!LARGE){
-        data = parseFile(file, tableDELIM, this->HAS_COMMENT);
-        tableWidget->setRowCount(data->length());
-    }
-    else{
+       if (!LARGE){
+           data = parseFile(file, tableDELIM, this->HAS_COMMENT);
+           tableWidget->setRowCount(data->length());
+       }
+       else{
 
-        largeTable = new LargeTable(file, '\t', true, true, types);
+          largeTable = new LargeTable(file, '\t', true, true, types);
 
-        largeTable->getData(bigdata, 0,dw);
+           qDebug() << " Getting the data";
+           largeTable->getData(bigdata, 0,dw);
+           qDebug() << " Gotten the data";
+           qDebug() << "Size of data" << bigdata.length();
+           tableWidget->setRowCount(largeTable->tableData.length());
+           tableWidget->setColumnCount(largeTable->colNames->length());
+           headers = largeTable->colNames;
 
-
-        tableWidget->setRowCount(largeTable->tableData.length());
-        tableWidget->setColumnCount(largeTable->colNames->length());
-        headers = largeTable->colNames;
-
-    }
+        }
 
 
         titleLabel->setText(file);
         if (HAS_COMMENT) statsLabel->setText(*statsText);
         else statsLabel->hide();
 
-      //  qDebug() << "Data Size " << data->length();
 
-        if( !LARGE && data != 0)
-           this->populateTable(*tableWidget, *data, *headers, top);
 
-        if( LARGE && !bigdata.empty() )
+        if( !LARGE && data != 0) {
+            qDebug() << " Going to insert small data";
+            this->populateTable(*tableWidget, *data, *headers, top);
+        }
+        if( LARGE && !bigdata.empty() ) {
+            qDebug() << "Large data going to read";
            this->populateTable(*tableWidget, bigdata, *headers, top);
-
+        }
         qDebug() << "Done";
 
 }
@@ -161,21 +166,23 @@ void TableData::populateTable(QTableWidget &table, const QList<QStringList *> &d
 
     int k = from;
 
+
     foreach (QStringList *sl, data){
         for (int i=0;i<sl->length();i++){
             //try to cast to an integer
             bool ok;
 
-
             sl->at(i).toInt(&ok,10);
-         if (ok){
-                table.setItem(k,i,new TableNumberItem(sl->at(i)));
-            }else{
-                table.setItem(k,i,new QTableWidgetItem(sl->at(i)));
+            if (ok){
+               table.setItem(k,i,new TableNumberItem(sl->at(i)));
+            }
+            else {
+                table.setItem(k,i, new QTableWidgetItem(sl->at(i)) );
             }
             table.item(k,i)->setTextAlignment(Qt::AlignCenter);
 
            // table.setItem(k,i,0);
+
         }
         k++;
     }
@@ -189,26 +196,29 @@ void TableData::populateTable(QTableWidget &table, const QList<QStringList *> &d
 //BIG DATA
 void TableData::populateTable(QTableWidget &table,  QList<ROW *> &data, const QStringList &headers, int from){
 
-         //   qDebug() << "<<<<<";;
+
     table.setColumnCount(headers.size());
-    if( !LARGE) table.setSortingEnabled(true);
     table.setHorizontalHeaderLabels(headers);
 
     int k = from;
 
 
+
+    table.clearContents();
     foreach( ROW *datum,  data) {
       for( unsigned int i = 0; i < largeTable->numCols; i++) {
           try{
               //table.setItem(k,i,new QTableWidgetItem("aldkfjglkjdsfgjdfsjglkjdsfgjldfkgjjdfglkdfgjldfjgljdsflkjlsdkfjglkjsdflgjlkdsfjgljdfslgjldfgljdsflkgjkdfsjlgkja;sdkfj;alwkj;l435u3209"));
-
               if( types[i] == INT) {
-                //  qDebug() << QString::number(datum->intVar[largeTable->index[i]]) << "  ";
-                  table.setItem(k,i, new QTableWidgetItem(QString::number(datum->intVar.at(largeTable->index[i]))));}
-              //if( types[i] == DOUBLE) table.setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
+                 table.setItem(k,i, new QTableWidgetItem(QString::number(datum->intVar.at(largeTable->index[i]))));
+
+
+              }
+              if( types[i] == DOUBLE) table.setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
 
 
               if(types[i] == STRING) {
+                  /*
                   if( datum->strVar.length() <= largeTable->index[i]) {
                       qDebug() << " Length of the data " << data.length();
                       qDebug() << " Wrong access of data";
@@ -217,11 +227,9 @@ void TableData::populateTable(QTableWidget &table,  QList<ROW *> &data, const QS
                       qDebug() << "num int elements " << datum->intVar.length();
                       qDebug() << " number of table data " << largeTable->tableData.length();
 
-                  }
+                  }*/
                   table.setItem(k,i,new QTableWidgetItem(QString(datum->strVar.at(largeTable->index[i]))));
               }
-
-
 
           }
           catch(...) {

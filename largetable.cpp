@@ -20,9 +20,16 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
         *(this->types + i) = type;
         i++;
     }
+
+
     qDebug() << "Reading in line 20 " << fileName;
     int read = readDataFile(fileName, delim, firstRowAsHeaders);
+
     pivotPointer = 0.0;
+    lastUsedField = 1000000;
+    sortingDirectionForward = true;
+    qDebug() << " Created the LargeTable";
+
 }
 
 
@@ -62,9 +69,6 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QString line = in.readLine().trimmed();
-            // process header seperately
-          //  qDebug() << line;
-
 
             if(i==0 && firstRowAsHeaders ) {
                 QStringList fields = line.split(QRegExp(delim));
@@ -80,58 +84,43 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             QStringList qlist = line.split(QRegExp(delim));
           //  qDebug() << qlist << "  " <<i;
             if( qlist.size() == numCols) {
-            for(unsigned int k = 0;k<numCols;k++){
+                for(unsigned int k = 0;k<numCols;k++){
                 //qDebug() << "   Field " << qlist[k];
-                if( types[k]== INT) {
-                    qlist[k].toInt(&ok);
+                   if( types[k]== INT) {
+                       qlist[k].toInt(&ok);
                     //qDebug() << "   " << "INT";
-                    if (ok)
-                        list->intVar.append(qlist.at(k).toInt());
-                    else
-                        list->intVar.append(-1);
-                }
-                else if( types[k]==DOUBLE) {
-                    qlist[k].toDouble(&ok);
+                       if (ok)
+                           list->intVar.append(qlist.at(k).toInt());
+                       else
+                           list->intVar.append(-1);
+                   }
+                   else if( types[k]==DOUBLE) {
+                      qlist[k].toDouble(&ok);
                    // qDebug() << "   " << "DOUBLE";
 
-                    if(ok)
-                        list->doubleVar.append(qlist.at(k).toDouble());
-                    else
-                        list->doubleVar.append(-1);
+                      if(ok)
+                          list->doubleVar.append(qlist.at(k).toDouble());
+                      else
+                          list->doubleVar.append(-1);
 
-                }
-                else if( types[k]==STRING){
+                   }
+                   else if( types[k]==STRING){
                    // qDebug() << "   " << "STR";
-                    if( qlist[k].isEmpty()) qlist[k]="--";
-                    list->strVar.append(QString(qlist[k]));
-                }
-            }
-
-               if( list->strVar.length() < 5) {
-                //for(unsigned int j=0 ; j < 8; j++)
-                  qDebug() << qlist << "  " << i;
-                /*
-                qDebug() << " Type " << types[j];
-                qDebug() << "Serious error ine line " << i;
-                qDebug() << "number of string values " << list->strVar.length() ;
-                qDebug() << "number of int values " << list->intVar.length() ;
-                qDebug() << "number of double values " << list->doubleVar.length() ;
-                qDebug() << " number of cols " << numCols;
-                */
-                //exit(0);
-
-               }
-
-               tableData.append(list);
+                       if( qlist[k].isEmpty()) qlist[k]="-";
+                       list->strVar.append(QString(qlist[k]));
+                   }
+                 }
+                 tableData.append(list);
            }
            i++;
-         }
+        }
     }else return 0;
 
     qDebug() << " All done at k = " << i;
 
 
     inputFile.close();
+    qDebug() << "Closed the file";
 
     return 0;
 
@@ -141,81 +130,116 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
 
 class CompareIntField {
   public:
-    CompareIntField(unsigned int field, enum TYPE *_types, unsigned int *_index, unsigned int _numCols)  {
-        i = field;
-        numCols = _numCols;
-        types = new enum TYPE[numCols];
-        index = new unsigned int[numCols];
-        for(unsigned int j=0 ; j < numCols; j++ ) {
-            types[j] = _types[j];
-            index[j] = _index[j];
-        }
-
+    CompareIntField()  {
     }
     bool operator()(const  ROW *a, const ROW *b) {
-        return (a->intVar.at(index[i]) <=  b->intVar.at( index[i]));
+        return (a->intTemp <=  b->intTemp);
     }
-private:
-    unsigned int i; //col to compare
-    enum TYPE *types;
-    unsigned int *index;
-    unsigned int numCols;
 
 };
 
 class CompareStrField {
   public:
-    CompareStrField(unsigned int field, enum TYPE *_types, unsigned int *_index, unsigned int _numCols){
-        i = field;
-        numCols = _numCols;
-        types = new enum TYPE[numCols];
-        index = new unsigned int[numCols];
-        for(unsigned int j=0 ; j < numCols; j++ ) {
-            types[j] = _types[j];
-            index[j] = _index[j];
-        }
-
+    CompareStrField(){
     }
 
     bool operator()(const  ROW *a, const ROW *b) {
-        return a->strVar.at(index[i]) <=  b->strVar.at( index[i]);
+        return a->strTemp <=  b->strTemp;
     }
-private:
-    unsigned int i; //col to compare
-    enum TYPE *types;
-    unsigned int *index;
-    unsigned int numCols;
-
 };
 
 class CompareDoubleField {
   public:
-    CompareDoubleField(unsigned int field, enum TYPE *_types, unsigned int *_index, unsigned int _numCols) {
-        i = field;
-        numCols = _numCols;
-        types = new enum TYPE[numCols];
-        index = new unsigned int[numCols];
-        for(unsigned int j=0 ; j < numCols; j++ ) {
-            types[j] = _types[j];
-            index[j] = _index[j];
-        }
+    CompareDoubleField() {
     }
     bool operator()(const  ROW *a, const ROW *b) {
-        return a->doubleVar.at(index[i]) <=  b->doubleVar.at( index[i]);
+        return a->doubleTemp<=  b->doubleTemp;
     }
-private:
-    unsigned int i; //col to compare
-    enum TYPE *types;
-    unsigned int *index;
-    unsigned int numCols;
-
 };
 
+void LargeTable::copyDataToSort(unsigned int k) {
+    if(types[k]==INT) {
+       foreach(ROW *r, tableData)
+           r->intTemp = r->intVar[index[k]];
+    }
+
+    if(types[k]==DOUBLE)
+       foreach(ROW *r, tableData)
+           r->doubleTemp = r->doubleVar[index[k]];
+
+    if(types[k]==STRING) {
+       foreach(ROW *r, tableData)
+           r->strTemp = r->strVar[index[k]];
+       qDebug() << "Copied the strings";
+    }
+}
+
+bool compareInt(const  ROW *a, const ROW *b) {
+   // qDebug() << a->intTemp << "  " << b->intTemp;
+    return a->intTemp<   b->intTemp;
+}
+
+
+bool compareDouble(const  ROW *a, const ROW *b) {
+   // qDebug() << a->intTemp << "  " << b->intTemp;
+    return a->doubleTemp<   b->doubleTemp;
+}
+
+bool compareStr(const  ROW *a, const ROW *b) {
+    //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
+    return a->strTemp< b->strTemp;
+}
+
+
+bool compareIntRev(const  ROW *a, const ROW *b) {
+   // qDebug() << a->intTemp << "  " << b->intTemp;
+    return a->intTemp >   b->intTemp;
+}
+
+bool compareDoubleRev(const  ROW *a, const ROW *b) {
+   // qDebug() << a->intTemp << "  " << b->intTemp;
+    return a->doubleTemp >   b->doubleTemp;
+}
+
+bool compareStrRev(const  ROW *a, const ROW *b) {
+    //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
+    return a->strTemp > b->strTemp;
+}
 
 void LargeTable::sortByField(unsigned int fieldNum) {
-    if( types[fieldNum]== INT) qSort(tableData.begin(), tableData.end(), CompareIntField(fieldNum, types, index, numCols));
-    if( types[fieldNum]== DOUBLE) qSort(tableData.begin(), tableData.end(), CompareDoubleField(fieldNum, types, index, numCols));
-    if( types[fieldNum]== STRING) qSort(tableData.begin(), tableData.end(), CompareStrField(fieldNum, types, index, numCols));
+
+    if(lastUsedField!=fieldNum) {
+        copyDataToSort(fieldNum);
+        lastUsedField = fieldNum;
+        sortingDirectionForward = true;
+    }
+    if( types[fieldNum]== INT) {
+        if(sortingDirectionForward)
+           qSort(tableData.begin(), tableData.end(), compareInt);
+        else
+           qSort(tableData.begin(), tableData.end(), compareIntRev);
+    }
+
+    if( types[fieldNum]== DOUBLE) {
+        if(sortingDirectionForward)
+           qSort(tableData.begin(), tableData.end(), compareDouble);
+        else
+           qSort(tableData.begin(), tableData.end(), compareDoubleRev);
+    }
+
+    if( types[fieldNum]== STRING) {
+        if(sortingDirectionForward)
+           qSort(tableData.begin(), tableData.end(), compareStr);
+        else
+           qSort(tableData.begin(), tableData.end(), compareStrRev);
+    }
+
+    if(sortingDirectionForward)
+        sortingDirectionForward = false;
+    else
+        sortingDirectionForward = true;
+
+
 }
 
 
@@ -224,6 +248,7 @@ unsigned int LargeTable::getBegData( int pivotPoint, unsigned int  deltaW) {
 }
 
 void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  deltaW) {
+    data.clear();
     for (int i =pivotPoint; i <  pivotPoint + deltaW && i < tableData.length(); i++){
         data.append(tableData.at(i));
     }

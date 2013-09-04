@@ -55,11 +55,14 @@ void ResultWindow::sampleChanged(QString changed){
     QFile funcTable(funcFile);
 
     resultTabs->clear();
+    QList<enum TYPE> types;
+   // types  << INT << INT << INT << INT;
     if (nucStats.exists()) resultTabs->addTab(new TableData(false, true, nucFile), "Nuclieotide Statistics");
+   // types  << INT << INT << INT << INT;
     if (aminoStats.exists()) resultTabs->addTab(new TableData(false, true, aminoFile), "Amino Statistics");
 //  if (funcTable.exists()) resultTabs->addTab(new TableData(true, false, funcFile), "Functional Table");
-    QList<enum TYPE> types;
 
+    types.clear();
     types << STRING << STRING << INT << INT << STRING << STRING << STRING << STRING;
     resultTabs->addTab(new TableData(true, false, "/Users/michaelwu/workspace/MetaPathways2-build-Desktop-Release/MetaPathways2.app/Contents/MacOS/functional_and_taxonomic_table.txt", types),"functional and taxonomic table");
 
