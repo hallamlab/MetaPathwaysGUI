@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QLabel>
+#include <QVector>
 #include <QPushButton>
 #include "metawidget.h"
 #include "qcustomplot.h"
@@ -23,9 +24,28 @@ public:
 
     QCustomPlot* graph;
     QPushButton* exportButton;
+    QVector<double>* graphData;
     ~GraphData();
+
+    void setNumBuckets(unsigned int num);
+    unsigned int getNumBuckets();
+
+    void setMaxValue(double m);
+    void setMinValue(double s);
+    void setYMax(double y);
+    double getMaxValue();
+    double getMinValue();
+    double getYMaxValue();
+    void computeParams();
+    void computeHistoGram();
     
 private:
+    double bucketSize;
+    double min, max;
+    double ymax;
+    unsigned int numBuckets;
+    QVector<double> x, y;
+
     Ui::GraphData *ui;
 };
 

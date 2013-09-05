@@ -12,87 +12,124 @@ GraphData::GraphData(const QString &file, QWidget *parent) :
     graph = this->findChild<QCustomPlot *>("graph");
     titleLabel->setText(file);
 
+    this->setNumBuckets(500);
+
     this->setupFromFile(file);
+
+    this->computeParams();
+
+    qDebug() << graphData->size();
+    this->computeHistoGram();
+    this->plotSomeGraph(this->graph);
+}
+
+unsigned int GraphData::getNumBuckets() {
+    return this->numBuckets;
+}
+
+void GraphData::computeParams() {
+    double _min= 999999, _max = -999999;
+    foreach(double v, *graphData) {
+        if( v > _max ) _max = v;
+        if( v < _min ) _min= v;
+    }
+    setMaxValue(_max);
+    setMinValue(_min);
+    this->bucketSize = (getMaxValue() - getMinValue())/(double)getNumBuckets();
+}
+
+
+
+void GraphData::setNumBuckets(unsigned int n) {
+    this->numBuckets =n;
+
+}
+
+
+
+void GraphData::setMaxValue(double m) {
+    this->max = m;
+}
+
+void GraphData::setMinValue(double s) {
+    this->min = s;
+}
+
+double GraphData::getMaxValue() {
+    return this->max;
+}
+
+double GraphData::getMinValue() {
+    return this->min;
 }
 
 void GraphData::setupFromFile(const QString &file){
-    plotSomeGraph(this->graph);
+    graphData = new QVector<double>();
+    QFile inputFile(file);
+
+    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists()){
+        QTextStream in(&inputFile);
+
+        while (!in.atEnd()){
+            QString line = in.readLine().trimmed();
+            QRegExp splitRegex("\\t");
+
+            QStringList splitList = line.split(splitRegex);
+
+            foreach (QString number, splitList){
+                bool ok;
+                number.toDouble(&ok);
+                if (ok) graphData->append(number.toDouble());
+            }
+        }
+        inputFile.close();
+    }
+
+
+}
+void GraphData::computeHistoGram() {
+    for(unsigned int i =0; i < getNumBuckets(); i++) {
+        y.push_back(0);
+        x.push_back(this->bucketSize*(i + 0.5));
+    }
+
+    unsigned int j;
+    foreach(double v, *graphData) {
+        j = (unsigned int)(v - this->min)/this->bucketSize;
+        y[j]++;
+    }
+
+    double _ymax = 0;
+    foreach(double v, y){
+        if (v > _ymax) _ymax = v;
+    }
+    this->setYMax(_ymax);
+    qDebug() << y;
+    qDebug() << x;
+
+}
+
+void GraphData::setYMax(double y){
+    this->ymax = y;
 }
 
 void GraphData::plotSomeGraph(QCustomPlot *customPlot){
-    customPlot->legend->setVisible(true);
-    customPlot->legend->setFont(QFont("Helvetica",9));
-    // set locale to english, so we get english decimal separator:
-    customPlot->setLocale(QLocale(QLocale::English, QLocale::UnitedKingdom));
-    // add confidence band graphs:
-    customPlot->addGraph();
-    QPen pen;
-    pen.setStyle(Qt::DotLine);
-    pen.setWidth(1);
-    pen.setColor(QColor(180,180,180));
-    customPlot->graph(0)->setName("Confidence Band 68%");
-    customPlot->graph(0)->setPen(pen);
-    customPlot->graph(0)->setBrush(QBrush(QColor(255,50,30,20)));
-    customPlot->addGraph();
-    customPlot->legend->removeItem(customPlot->legend->itemCount()-1); // don't show two confidence band graphs in legend
-    customPlot->graph(1)->setPen(pen);
-    customPlot->graph(0)->setChannelFillGraph(customPlot->graph(1));
-    // add theory curve graph:
-    customPlot->addGraph();
-    pen.setStyle(Qt::DashLine);
-    pen.setWidth(2);
-    pen.setColor(Qt::red);
-    customPlot->graph(2)->setPen(pen);
-    customPlot->graph(2)->setName("Theory Curve");
-    // add data point graph:
-    customPlot->addGraph();
-    customPlot->graph(3)->setPen(QPen(Qt::blue));
-    customPlot->graph(3)->setLineStyle(QCPGraph::lsNone);
-    customPlot->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCross, 4));
-    customPlot->graph(3)->setErrorType(QCPGraph::etValue);
-    customPlot->graph(3)->setErrorPen(QPen(QColor(180,180,180)));
-    customPlot->graph(3)->setName("Measurement");
+    QCPBars *barGraph = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+    // create graph and assign data to it:
+    customPlot->addPlottable(barGraph);
 
-    // generate ideal sinc curve data and some randomly perturbed data for scatter plot:
-    QVector<double> x0(250), y0(250);
-    QVector<double> yConfUpper(250), yConfLower(250);
-    for (int i=0; i<250; ++i)
-    {
-      x0[i] = (i/249.0-0.5)*30+0.01; // by adding a small offset we make sure not do divide by zero in next code line
-      y0[i] = sin(x0[i])/x0[i]; // sinc function
-      yConfUpper[i] = y0[i]+0.15;
-      yConfLower[i] = y0[i]-0.15;
-      x0[i] *= 1000;
-    }
-    QVector<double> x1(50), y1(50), y1err(50);
-    for (int i=0; i<50; ++i)
-    {
-      // generate a gaussian distributed random number:
-      double tmp1 = rand()/(double)RAND_MAX;
-      double tmp2 = rand()/(double)RAND_MAX;
-      double r = sqrt(-2*log(tmp1))*cos(2*M_PI*tmp2); // box-muller transform for gaussian distribution
-      // set y1 to value of y0 plus a random gaussian pertubation:
-      x1[i] = (i/50.0-0.5)*30+0.25;
-      y1[i] = sin(x1[i])/x1[i]+r*0.15;
-      x1[i] *= 1000;
-      y1err[i] = 0.15;
-    }
-    // pass data to graphs and let QCustomPlot determine the axes ranges so the whole thing is visible:
-    customPlot->graph(0)->setData(x0, yConfUpper);
-    customPlot->graph(1)->setData(x0, yConfLower);
-    customPlot->graph(2)->setData(x0, y0);
-    customPlot->graph(3)->setDataValueError(x1, y1, y1err);
-    customPlot->graph(2)->rescaleAxes();
-    customPlot->graph(3)->rescaleAxes(true);
-    // setup look of bottom tick labels:
-    customPlot->xAxis->setTickLabelRotation(30);
-    customPlot->xAxis->setAutoTickCount(9);
-    customPlot->xAxis->setNumberFormat("ebc");
-    customPlot->xAxis->setNumberPrecision(1);
-    customPlot->xAxis->moveRange(-10);
-    // make top right axes clones of bottom left axes. Looks prettier:
-    customPlot->axisRect()->setupFullAxesBox();
+    barGraph->setBrush(QBrush(QColor(255,255,255)));
+    barGraph->setData(this->x, this->y);
+    // give the axes some labels:
+    customPlot->xAxis->setLabel("x");
+    customPlot->yAxis->setLabel("y");
+    // set axes ranges, so we see all data:
+    customPlot->yAxis->setRange(0,this->ymax);
+    customPlot->xAxis->setRange(this->min -1 , this->max + 1);
+    barGraph->setBrush(Qt::SolidPattern);
     customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    //customPlot->setInteractions(QCP::iRangeZoom | QCP::iSelectPlottables);
+
 }
 
 

@@ -56,11 +56,11 @@ void ResultWindow::sampleChanged(QString changed){
 
     resultTabs->clear();
     QList<enum TYPE> types;
-   // types  << INT << INT << INT << INT;
     if (nucStats.exists()) resultTabs->addTab(new TableData(false, true, nucFile), "Nuclieotide Statistics");
-   // types  << INT << INT << INT << INT;
     if (aminoStats.exists()) resultTabs->addTab(new TableData(false, true, aminoFile), "Amino Statistics");
-//  if (funcTable.exists()) resultTabs->addTab(new TableData(true, false, funcFile), "Functional Table");
+
+    resultTabs->addTab(new GraphData("/Users/michaelwu/workspace/MetaPathways2-build-Desktop-Release/MetaPathways2.app/Contents/MacOS/contig_lengths.txt"),"Contig Lengths");
+    resultTabs->addTab(new GraphData("/Users/michaelwu/workspace/MetaPathways2-build-Desktop-Release/MetaPathways2.app/Contents/MacOS/orf_lengths.txt"),"Orf Lengths");
 
     types.clear();
     types << STRING << STRING << INT << INT << STRING << STRING << STRING << STRING;

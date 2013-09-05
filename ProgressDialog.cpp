@@ -33,11 +33,6 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 
     summaryTable->setSortingEnabled(false);
 
-    blastCount = 0;
-    parseBlastCount = 0;
-    scanRRNACount = 0;
-    statsCount = 0;
-
     blastFailed = false;
     parseBlastFailed = false;
     scanRRNAFailed = false;
@@ -56,7 +51,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 
     connect(hideButton, SIGNAL(clicked()), this, SLOT(toggleDetails()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
-    //connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
 }
 
 void ProgressDialog::readStepsLog(){
@@ -69,6 +64,10 @@ void ProgressDialog::readStepsLog(){
 
     logBrowser->clear();
 
+    blastCount = 0;
+    parseBlastCount = 0;
+    scanRRNACount = 0;
+    statsCount = 0;
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
        QTextStream in(&inputFile);
@@ -88,12 +87,13 @@ void ProgressDialog::readStepsLog(){
             }
        }
        inputFile.close();
-
-       foreach(const QString key, statusHash.keys()) {
-           colorRunConfig(key, statusHash[key]);
-       }
-       initProgressBar();
     }
+
+    foreach(const QString key, statusHash.keys()) {
+        colorRunConfig(key, statusHash[key]);
+    }
+
+    initProgressBar();
 
     QByteArray read = myProcess->readAll();
     if (!read.isEmpty()) standardOut->append(QString(read));
@@ -196,7 +196,7 @@ void ProgressDialog::colorRunConfig(QString stepName, QString status){
 
     if( this->previousStatus.contains(stepName) && status == this->previousStatus[stepName]  ) return ;
 
-    //multiStepCheck(&stepName, &status);
+    multiStepCheck(&stepName, &status);
 
     //clear old cell
     this->summaryTable->removeCellWidget(TABLE_MAPPING->key(stepName),0);

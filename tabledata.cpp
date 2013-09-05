@@ -18,8 +18,6 @@ TableData::TableData(bool LARGE, bool HAS_COMMENT, const QString &file, QList<en
         types.append(type);
     }
 
-
-
     this->file = file;
     this->HAS_COMMENT = HAS_COMMENT;
     this->LARGE = LARGE;
@@ -161,7 +159,7 @@ void TableData::setupFromFile(const QString &file){
 void TableData::populateTable(QTableWidget &table, const QList<QStringList *> &data, const QStringList &headers, int from){
 
     table.setColumnCount(headers.size());
-    if( !LARGE) table.setSortingEnabled(true);
+    table.setSortingEnabled(true);
     table.setHorizontalHeaderLabels(headers);
 
     int k = from;
@@ -187,10 +185,9 @@ void TableData::populateTable(QTableWidget &table, const QList<QStringList *> &d
         k++;
     }
 
-    /*table.resizeColumnsToContents();
+    table.resizeColumnsToContents();
     table.resizeRowsToContents();
     table.horizontalHeader()->setStretchLastSection(true);
-    */
 }
 
 //BIG DATA

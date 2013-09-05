@@ -81,6 +81,9 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             if (ignoreComments && comment.exactMatch(line)) continue;
 
             ROW *list = new ROW;
+            if (i%2 == 0) list->visible = true;
+            else list->visible = false;
+
             QStringList qlist = line.split(QRegExp(delim));
           //  qDebug() << qlist << "  " <<i;
             if( qlist.size() == numCols) {
@@ -249,7 +252,11 @@ unsigned int LargeTable::getBegData( int pivotPoint, unsigned int  deltaW) {
 
 void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  deltaW) {
     data.clear();
-    for (int i =pivotPoint; i <  pivotPoint + deltaW && i < tableData.length(); i++){
-        data.append(tableData.at(i));
+    int j = 0;
+    for (int i = pivotPoint; j < deltaW && i < tableData.length(); i++){
+        if (tableData.at(i)->visible){
+            j++;
+            data.append(tableData.at(i));
+        }
     }
 }

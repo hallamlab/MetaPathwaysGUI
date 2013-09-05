@@ -14,6 +14,7 @@
 
 
 typedef struct row{
+    bool visible;
     QList<int> intVar;
     QList<double> doubleVar;
     QList<QString>  strVar;
