@@ -318,15 +318,37 @@ void ProgressDialog::checkFiles(){
     currentDir.setFilter(QDir::Files);
     QStringList entries = currentDir.entryList();
 
+    QList<QRegExp> regList;
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+
+
     for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
     {
         QString temp = *entry;
         QStringList file = temp.split(".");
+
+
+
         if (fileType == "fasta"){
-            if (file.last()=="fa" || file.last()=="fas" || file.last()=="fasta" ||
-                file.last()=="faa" || file.last()=="f" ||file.last()=="fna"){
-                filesDetected->append(file.first());
+            foreach(QRegExp reg, regList ) {
+               if(temp.indexOf(reg,0) > -1 ) {
+                   filesDetected->append( temp.remove(reg) );
+                   break;
+               }
             }
+
+            /*
+            if (file.last()=="fa" || file.last()=="fas" || file.last()=="fasta" ||
+                file.last()=="faa" || file.last()=="fna"){
+                if (file.size() == 2){
+                    filesDetected->append(file.first());
+                }
+                else if(file.size() > 2){
+                    file.pop_back();
+                    QString nameAssembled = file.join(".");
+                }
+            }*/
+
         }
         else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
             if (file.last() == "gbk"){

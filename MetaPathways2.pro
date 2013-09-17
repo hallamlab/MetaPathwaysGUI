@@ -25,17 +25,30 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     resultwindow.cpp \
     resultpage.cpp \
-    tabledata.cpp \
+    dataviews/tabledata.cpp \
     welcome.cpp \
     parentsettingsmainwindow.cpp \
-    gridchoice.cpp \
-    gridsetup.cpp \
-    grid.cpp \
-    nonec2.cpp \
-    ec2grid.cpp \
+    grid/gridchoice.cpp \
+    grid/gridsetup.cpp \
+    grid/grid.cpp \
+    grid/nonec2.cpp \
+    grid/ec2grid.cpp \
     metawidget.cpp \
-    graphdata.cpp \
-    largetable.cpp
+    dataviews/graphdata.cpp \
+    dataviews/largetable.cpp \
+    popupviews/searchwidget.cpp \
+    popupviews/exportwidget.cpp \
+    popupviews/exportbox.cpp \
+    popupviews/popuplistener.cpp \
+    popupviews/displayinfo.cpp \
+    caching/fileindexmanager.cpp \
+    caching/fileindex.cpp \
+    caching/tablemanager.cpp \
+    genebrowser/graphicsrepresentation.cpp \
+    genebrowser/graphicsitemscollection.cpp \
+    genebrowser/genebrowser.cpp \
+    genebrowser/genomeview.cpp \
+    dataviews/meganviewer.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -49,17 +62,31 @@ HEADERS  += mainwindow.h \
     qcustomplot.h \
     resultwindow.h \
     resultpage.h \
-    tabledata.h \
+    dataviews/tabledata.h \
     welcome.h \
     parentsettingsmainwindow.h \
-    gridchoice.h \
-    gridsetup.h \
-    grid.h \
-    nonec2.h \
-    ec2grid.h \
+    grid/gridchoice.h \
+    grid/gridsetup.h \
+    grid/grid.h \
+    grid/nonec2.h \
+    grid/ec2grid.h \
     metawidget.h \
-    graphdata.h \
-    largetable.h
+    dataviews/graphdata.h \
+    dataviews/largetable.h \
+    popupviews/searchwidget.h \
+    popupviews/exportwidget.h \
+    popupviews/exportbox.h \
+    popupviews/popuplistener.h \
+    popupviews/displayinfo.h \
+    caching/fileindexmanager.h \
+    caching/fileindex.h \
+    types.h \
+    caching/tablemanager.h \
+    genebrowser/graphicsrepresentation.h \
+    genebrowser/graphicsitemscollection.h \
+    genebrowser/genebrowser.h \
+    genebrowser/genomeview.h \
+    dataviews/meganviewer.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -69,14 +96,19 @@ FORMS    += mainwindow.ui \
     parentwidget.ui \
     resultwindow.ui \
     resultpage.ui \
-    tabledata.ui \
+    dataviews/tabledata.ui \
     welcome.ui \
     parentsettingsmainwindow.ui \
-    gridchoice.ui \
-    gridsetup.ui \
-    nonec2.ui \
-    ec2grid.ui \
-    graphdata.ui
+    grid/gridchoice.ui \
+    grid/gridsetup.ui \
+    grid/nonec2.ui \
+    grid/ec2grid.ui \
+    dataviews/graphdata.ui \
+    popupviews/searchwidget.ui \
+    popupviews/exportwidget.ui \
+    displayText.ui \
+    popupviews/displayinfo.ui \
+    graphicsrepresentation.ui
 
 RESOURCES += \
     Resources.qrc

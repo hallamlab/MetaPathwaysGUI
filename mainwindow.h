@@ -10,7 +10,7 @@
 #include "Setup.h"
 #include "welcome.h"
 #include "parentsettingsmainwindow.h"
-#include "grid.h"
+#include "grid/grid.h"
 #include <QHash>
 #include <QString>
 

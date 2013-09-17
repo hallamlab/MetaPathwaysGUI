@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>642</width>
-    <height>937</height>
+    <width>1141</width>
+    <height>1001</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -33,6 +39,9 @@
     <widget class="QTabWidget" name="resultTabs">
      <property name="currentIndex">
       <number>1</number>
+     </property>
+     <property name="usesScrollButtons">
+      <bool>true</bool>
      </property>
      <widget class="QWidget" name="tab">
       <property name="enabled">

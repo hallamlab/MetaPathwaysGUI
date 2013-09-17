@@ -9,7 +9,7 @@
 #include <QGroupBox>
 #include <QComboBox>
 #include <QTableWidget>
-#include "gridsetup.h"
+#include "grid/gridsetup.h"
 
 class ParentWidget;
 class GridSetup;
