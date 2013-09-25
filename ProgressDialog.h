@@ -21,7 +21,7 @@ class ProgressDialog : public QWidget
     Q_OBJECT
     
 public:
-    explicit ProgressDialog(ParentWidget *pw = NULL, RunData *run = NULL, QWidget *parent = 0);
+    explicit ProgressDialog(ParentWidget *pw = NULL, QWidget *parent = 0);
     void initProgressBar();
     void initProcess();
 

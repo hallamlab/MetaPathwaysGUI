@@ -8,34 +8,31 @@
 class RunData
 {
 public:
-    RunData();
-    RunData(QHash<QString,QString> *PARAMS,
-            QHash<QString,QString> *CONFIG,
-            QHash<QString,QString> *CONFIG_MAPPING,
-            QProcess *run);
+    void setParams(QHash<QString,QString>* PARAMS);
+    void setConfig(QHash<QString,QString>* CONFIG);
+    void setConfigMapping(QHash<QString,QString>* CONFIG_MAPPING);
+    void setProcess(QProcess* run);
+    void setRRNADBS(QStringList* rrnaDBS);
+    void setAnnotationDBS(QStringList* annotationDBS);
 
     QHash<QString,QString>* getParams();
     QHash<QString,QString>* getConfig();
     QHash<QString,QString>* getConfigMapping();
-    QHash<QString,QString>* getRunResults();
-    QStringList* getRRNADBS();
-    QStringList* getAnnotationDBS();
+    QProcess* getProcess();
+
+    static RunData* getRunData();
 
     QStringList *files;
     int nRRNADB;
     int nADB;
 
-    void setRRNADBS(QStringList* rrnaDBS);
-    void setAnnotationDBS(QStringList* annotationDBS);
-    QProcess* getProcess();
-    void setProcess(QProcess* run);
-
-
 private:
+    RunData();
+    static RunData* runData;
+
     QHash<QString,QString> *PARAMS;
     QHash<QString,QString> *CONFIG;
     QHash<QString,QString> *CONFIG_MAPPING;
-    QHash<QString,QString> *RUN_RESULTS;
     QStringList *rrnaDBS;
     QStringList *annotationDBS;
     QProcess* run;

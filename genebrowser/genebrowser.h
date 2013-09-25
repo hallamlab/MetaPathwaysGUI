@@ -11,12 +11,14 @@
 #include <QWheelEvent>
 #include <QObject>
 #include "genebrowser/graphicsitemscollection.h"
+#include <math.h>
 
 class GraphicsNotchedLine;
 class GraphicsGeneItems;
 
 class GeneBrowser
 {
+   // Q_OBJECT
 public:
     GeneBrowser(QGraphicsView *view);
     GeneBrowser();
@@ -24,7 +26,7 @@ public:
     void setQGraphicsViewer(QGraphicsView *view);
     void setData(GeneBrowserData &data);
     void drawGenomeBrowser();
-    void addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen);
+   // void addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen);
 
     void eventFilter(QObject *object, QEvent *event);
     void wheelEvent(QWheelEvent* event);

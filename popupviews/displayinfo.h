@@ -9,6 +9,8 @@
 #include "types.h"
 #include "caching/fileindex.h"
 #include <QHash>
+#include <QPushButton>
+#include "genebrowser/genomeview.h"
 
 namespace Ui {
 class DisplayInfo;
@@ -27,6 +29,8 @@ public slots:
     void itemDoubleClicked(QTableWidgetItem * item );
     void addFileIndex(FileIndex *fileIndex, unsigned int);
     void removeFileIndexes();
+    void openGenomeView();
+    void receiveSequenceData( QTableWidgetItem *item, GeneBrowserData gbdata);
 
 
 private:
@@ -36,6 +40,8 @@ private:
     QString sourceFile;
     SOURCETYPE sourceType;
     QHash<unsigned int, FileIndex *>fileIndexes;
+    QPushButton *orfMap;
+    GeneBrowserData gbdata;
 
 };
 

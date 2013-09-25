@@ -46,6 +46,11 @@ bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
     QString mp = PARAMS->operator []("METAPATHWAYS_PATH");
     QString blastdbs = PARAMS->operator []("REFDBS");
 
+    qDebug() << python;
+    qDebug() << perl;
+    qDebug() << mp;
+    qDebug() << blastdbs;
+
     if (python.isEmpty()) return false;
     else if (perl.isEmpty()) return false;
     else if (mp.isEmpty()) return false;
@@ -323,6 +328,7 @@ QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
             QRegExp keepRegex("\\w+");
             if (!comment.exactMatch(line)){
                 //if the line doesn't begin with a comment hash
+                line = line.remove(QRegExp("[,\\s]*$"));
                 QStringList splitList = line.split(splitRegex);
                 //then, split the line up by white space
                 splitList = splitList.filter(keepRegex);

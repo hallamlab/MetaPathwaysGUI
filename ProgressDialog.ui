@@ -174,11 +174,6 @@
      </row>
      <row>
       <property name="text">
-       <string>CREATE_SEQUIN_FILE</string>
-      </property>
-     </row>
-     <row>
-      <property name="text">
        <string>CREATE_REPORT_FILES</string>
       </property>
      </row>

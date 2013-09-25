@@ -20,8 +20,9 @@ class ExportBox : public QWidget
 {
     Q_OBJECT
 public:
+    void setTableData(TableData *td);
     explicit ExportBox(TableData *td = 0, QWidget *parent = 0);
-    ~ExportBox() {}
+    ~ExportBox() ;
 signals:
     
 public slots:
@@ -30,6 +31,11 @@ public slots:
 private:
     QGroupBox *createNonExclusiveGroup(QGridLayout *grid);
     TableData *td;
+
+    QGroupBox *exportFormat;
+    QRadioButton *tsvRadio, *csvRadio;
+    QHBoxLayout *vbox;
+    QPushButton *cancelButton, *exportButton;
 
     QList<EXPORT_SELECT> Columns;
 

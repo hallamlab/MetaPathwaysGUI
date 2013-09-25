@@ -17,6 +17,10 @@
 class Setup;
 class ParentSettingsMainWindow;
 
+typedef struct _ENVVARIABLES {
+    QString pathMetaPathways;
+} ENV;
+
 class MainWindow : public QObject
 {
     Q_OBJECT
@@ -36,6 +40,8 @@ public:
     void setupParams();
     void setupConfig();
     void createMapping();
+    static bool settingsAvailable();
+    void loadPathVariables();
 
     explicit MainWindow();
 
@@ -49,6 +55,7 @@ public:
     Setup *setupWindow;
     QMessageBox *warning;
     ParentSettingsMainWindow *parent;
+    QString pathMetaPathways;
 };
 
 #endif // MAINWINDOW_H

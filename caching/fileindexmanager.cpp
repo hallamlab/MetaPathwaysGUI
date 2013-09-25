@@ -25,7 +25,6 @@ FileIndex *FileIndexManager::getFileIndex(QString fileName, enum SOURCETYPE type
     FileIndex *iFile = new FileIndex(fileName, type);
     indexedFiles[fileName] = iFile;
 
-    qDebug() << " creating a new index ";
     return iFile;
 }
 

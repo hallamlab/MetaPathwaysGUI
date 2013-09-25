@@ -12,11 +12,11 @@
 #include <QTextStream>
 #include <QDir>
 
-ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
+ProgressDialog::ProgressDialog(ParentWidget *pw, QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
 {
     ui->setupUi(this);
 
-    this->run = run;
+    this->run = RunData::getRunData();
     this->pw = pw;
 
     this->setWindowTitle("MetaPathways - Run Progress");
@@ -55,8 +55,10 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, RunData *run, QWidget *parent) 
 }
 
 void ProgressDialog::readStepsLog(){
-    QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
-    QString pathToLog = METAPATH + "/output/" + currentFile + "/metapathways_steps_log.txt";
+    QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
+    qDebug() << "OUTPUT " << OUTPUTPATH;
+    QString pathToLog = OUTPUTPATH + "/" + currentFile + "/metapathways_steps_log.txt";
+
     QFile inputFile(pathToLog);
     QHash<QString, QString> statusHash;
     QRegExp whiteSpace("\\t");
@@ -261,9 +263,8 @@ void ProgressDialog::initProcess(){
     arguments <<  METAPATH + "/MetaPathways.py";
     arguments << "-i" << this->run->getParams()->operator []("fileInput");
 
-    if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
-        arguments << "-o" << METAPATH + "/output/distribute";
-    }else arguments << "-o" << METAPATH + "/output";
+  //  if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
+    arguments << "-o" << this->run->getParams()->operator []("folderOutput");
 
     arguments << "-p" << METAPATH + "/template_param.txt";
     arguments << "-c" << METAPATH + "/template_config.txt";
@@ -285,7 +286,7 @@ void ProgressDialog::initProcess(){
     run->setProcess(myProcess);
 
     //qDebug() << env.toStringList();
-    //qDebug() << program << arguments;
+    qDebug() << program << arguments;
 }
 
 void ProgressDialog::initProgressBar(){
@@ -328,27 +329,15 @@ void ProgressDialog::checkFiles(){
         QStringList file = temp.split(".");
 
 
-
+        qDebug() << "file " <<  temp;
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
                if(temp.indexOf(reg,0) > -1 ) {
-                   filesDetected->append( temp.remove(reg) );
+                   filesDetected->append( temp.remove(reg).replace('.','_') );
+                   qDebug() << " file  short " << temp.remove(reg).replace('.','_');
                    break;
                }
             }
-
-            /*
-            if (file.last()=="fa" || file.last()=="fas" || file.last()=="fasta" ||
-                file.last()=="faa" || file.last()=="fna"){
-                if (file.size() == 2){
-                    filesDetected->append(file.first());
-                }
-                else if(file.size() > 2){
-                    file.pop_back();
-                    QString nameAssembled = file.join(".");
-                }
-            }*/
-
         }
         else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
             if (file.last() == "gbk"){
@@ -362,6 +351,7 @@ void ProgressDialog::checkFiles(){
         }
     }
     this->run->files = filesDetected;
+
 }
 
 void ProgressDialog::terminateRun(){

@@ -9,9 +9,11 @@ GenomeView::GenomeView()
     this->viewport()->installEventFilter(this);
 
 
-    qDebug() << " Geometry X " << this->size();
+//    qDebug() << " Geometry X " << this->size();
 
     gBrowser = new GeneBrowser(this);
+
+/*
 
     SequenceData s;
     s.start =0;
@@ -143,13 +145,35 @@ GenomeView::GenomeView()
     gbd.orfData.append(orf);
 
 
+  //  gBrowser->setData(gbd);
+   // gBrowser->drawGenomeBrowser();
+   */
+}
 
-
-    gBrowser->setData(gbd);
-    gBrowser->drawGenomeBrowser();
+void GenomeView::showData(GeneBrowserData &gbdata) {
+    this->gBrowser->setData(gbdata);
+    this->gBrowser->drawGenomeBrowser();
 }
 
 
 void GenomeView::wheelEvent(QWheelEvent* event) {
     gBrowser->wheelEvent(event);
 }
+
+
+
+void GenomeView::itemGenomeDisplay(QTableWidgetItem * item) {
+    static  int column= -1;
+    static  int row = -1;
+
+    qDebug() << " you just clicked";
+    if( !(column==item->column() && row == item->row()) )  {
+       column = item->column();
+       row = item->row();
+       return;
+    }
+    qDebug() << "ready to go";
+    this->show();
+}
+
+

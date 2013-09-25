@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     genebrowser/graphicsitemscollection.cpp \
     genebrowser/genebrowser.cpp \
     genebrowser/genomeview.cpp \
-    dataviews/meganviewer.cpp
+    dataviews/megandata.cpp \
+    dataviews/meganview.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -86,7 +87,8 @@ HEADERS  += mainwindow.h \
     genebrowser/graphicsitemscollection.h \
     genebrowser/genebrowser.h \
     genebrowser/genomeview.h \
-    dataviews/meganviewer.h
+    dataviews/megandata.h \
+    dataviews/meganview.h
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -108,7 +110,12 @@ FORMS    += mainwindow.ui \
     popupviews/exportwidget.ui \
     displayText.ui \
     popupviews/displayinfo.ui \
-    graphicsrepresentation.ui
+    graphicsrepresentation.ui \
+    dataviews/meganbrowser.ui
+
 
 RESOURCES += \
     Resources.qrc
+
+
+

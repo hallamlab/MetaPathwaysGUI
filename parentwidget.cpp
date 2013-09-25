@@ -152,6 +152,7 @@ void ParentWidget::continueButtonPressed(){
 
         //save file selected
         MainWindow::PARAMS->operator []("fileInput") = runConfigTab->filesSelected->text();
+        MainWindow::PARAMS->operator []("folderOutput") = runConfigTab->folderSelected->text();
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
         if (runConfigTab->gridBlastChoice->isChecked() && MainWindow::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
@@ -162,11 +163,13 @@ void ParentWidget::continueButtonPressed(){
         //trim off commas on refdbs for rRNA and annotation
         QString rRNArefdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
         qDebug() << rRNArefdbs;
-        if (rRNArefdbs.at(rRNArefdbs.length()-1) == ',' ) rRNArefdbs.chop(1);
+        rRNArefdbs = rRNArefdbs.remove(QRegExp("[\s,]*$"));
         MainWindow::PARAMS->operator []("rRNA:refdbs") = rRNArefdbs;
 
         QString annotationDBS = MainWindow::PARAMS->operator []("annotation:dbs");
-        if (annotationDBS.at(annotationDBS.length()-1) == ',' )annotationDBS.chop(1);
+        qDebug() << " cleaning it " << annotationDBS;
+        annotationDBS = annotationDBS.remove(QRegExp("[\s,]*$"));
+          qDebug() << " clead it " << annotationDBS;
         MainWindow::PARAMS->operator []("annotationDBS") = annotationDBS;
 
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
@@ -183,7 +186,10 @@ void ParentWidget::continueButtonPressed(){
 
 void ParentWidget::executionPrep(){
     //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
-    run = new RunData(MainWindow::PARAMS,MainWindow::CONFIG,MainWindow::CONFIG_MAPPING, 0);
+    run = RunData::getRunData();
+    run->setParams(MainWindow::PARAMS);
+    run->setConfig(MainWindow::CONFIG);
+    run->setConfigMapping(MainWindow::CONFIG_MAPPING);
 
     //set the rrnaDB and annotationDBS so we know how many to look for in the log
     QStringList* rrnaDBS;
@@ -211,8 +217,8 @@ void ParentWidget::executionPrep(){
     run->setAnnotationDBS(annotationDBS);
     run->setRRNADBS(rrnaDBS);
 
-    ProgressDialog *progress = new ProgressDialog(this, run);
-    ResultWindow *rw = new ResultWindow(progress, run);
+    ProgressDialog *progress = new ProgressDialog(this);
+    ResultWindow *rw = new ResultWindow(progress);
 
     rw->show();
     progress->show();

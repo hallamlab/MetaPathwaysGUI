@@ -11,7 +11,7 @@
 #include "genebrowser/graphicsitemscollection.h"
 #include "genebrowser/genomeview.h"
 #include "metawidget.h"
-#include "dataviews/meganviewer.h"
+#include "dataviews/meganview.h"
 
 
 
@@ -39,6 +39,8 @@ private:
     GeneBrowser *gBrowser;
     unsigned int XSIZE;
     unsigned int YSIZE;
+    MeganView *meganView;
+
 };
 
 #endif // GRAPHICSREPRESENTATION_H

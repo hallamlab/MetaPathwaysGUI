@@ -1,4 +1,5 @@
 #include "genebrowser.h"
+#include <QToolTip>
 
 GeneBrowser::GeneBrowser()
 {
@@ -36,7 +37,11 @@ void GeneBrowser::setData(GeneBrowserData &data) {
 
 void GeneBrowser::drawGenomeBrowser() {
 
-    if( gscene==0) gscene = new QGraphicsScene(0,0,this->XSIZE*100, this->YSIZE, this->view);
+    //if( data.seq.length > 50000) basePairToPixelRatio = 5;
+   // this->XSIZE = this->data.seq.length*basePairToPixelRatio*1.05;
+    unsigned int nomInterval = pow(10, (unsigned int) log10(this->data.seq.length/100));
+
+    if( gscene==0) gscene = new QGraphicsScene(0,0,this->data.seq.length*basePairToPixelRatio*1.05 , this->YSIZE, this->view);
 
     view->setScene(gscene);
 
@@ -46,7 +51,6 @@ void GeneBrowser::drawGenomeBrowser() {
     pen.ystart = this->xstart;
 
     GraphicsItemsCollection *itemCreator  = GraphicsItemsCollection::getGraphicsItemsCollection();
-
 
     unsigned int fwdMaxLevel = this->computeORFLevels(data.orfData, FORWARD);
     this->computeORFLevels(data.orfData, REVERSE);
@@ -58,6 +62,8 @@ void GeneBrowser::drawGenomeBrowser() {
     geneProp.spaceBelow = 5;
     geneProp.color = Qt::green;
     geneProp.basePairToPixelRatio = basePairToPixelRatio;
+
+
     fwdorfs = itemCreator->getORFDiagrams(data.orfData, FORWARD,geneProp, pen);
     gscene->addItem(this->fwdorfs);
 
@@ -69,29 +75,44 @@ void GeneBrowser::drawGenomeBrowser() {
     nparams.y = pen.ystart;
     nparams.height = 2;
     nparams.width = basePairToPixelRatio*data.seq.length;
-    nparams.pixInterval = 10*basePairToPixelRatio;
+    nparams.pixInterval = nomInterval*basePairToPixelRatio;
     nparams.nomWidth = data.seq.length;
     nparams.notchHeight = 2 + 1*basePairToPixelRatio;
     nparams.basePairToPixelRatio = basePairToPixelRatio;
 
+/*
+
+     qDebug() << " Before drawing 3";
+     qDebug() << "x " << nparams.x;
+     qDebug() << "y " << nparams.y;
+     qDebug() << "height " << nparams.height;
+     qDebug() << "width " << nparams.width ;
+     qDebug() << "pixinterval  " << nparams.pixInterval;
+     qDebug() << "nomwidth " << nparams.nomWidth;
+     qDebug() << "notch height " << nparams.notchHeight;
+     qDebug() << "baseparitopixel " << nparams.basePairToPixelRatio;
+*/
 
     this->line = itemCreator->getNotchedLine(nparams);
     gscene->addItem(this->line);
 
     pen.ystart = pen.ystart + 2*(2 + 1*basePairToPixelRatio);
     geneProp.color = Qt::red;
+
     this->revorfs = itemCreator->getORFDiagrams(data.orfData, REVERSE, geneProp, pen);
     gscene->addItem(this->revorfs);
 
-
+    this->view->setAttribute( Qt::WA_AlwaysShowToolTips);
     gscene->setSceneRect(gscene->itemsBoundingRect());
 
-}
 
+}
+/*
 void GeneBrowser::addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen)  {
     GraphicsItemsCollection *itemCreator  = GraphicsItemsCollection::getGraphicsItemsCollection();
 
     QGraphicsPolygonItem *p;
+
 
     foreach( ORFData orf, orfs) {
         if( orf.strand != strand ) continue;
@@ -100,11 +121,15 @@ void GeneBrowser::addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPER
             geneProp.width = (orf.end - orf.start)*geneProp.basePairToPixelRatio;
             geneProp.width = geneProp.width*this->scale;
             p = itemCreator->getGeneShape(geneProp, strand);
-            p->setToolTip(orf.note);
+
+            p->setToolTip(QString("hello"));
+            qDebug() << "this is my tooltip " << p->toolTip();
+            //p->setToolTip( "Function : " + orf.func_annot + "<br>" \
+              //             + "Taxonomy : " + orf.tax_annot);
             gscene->addItem(p);
     }
 }
-
+*/
 
 bool GeneBrowser::sortRankBeginPair(const RANK_BEGIN_PAIR &a, const RANK_BEGIN_PAIR &b) {
     if( a.begin < b.begin )
@@ -163,7 +188,7 @@ void  GeneBrowser::eventFilter(QObject *object, QEvent *event){
         view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
         // Scale the view / do the zoom
-        double scaleFactor = 1.01;
+        double scaleFactor = 1.05;
         QWheelEvent *qwe = dynamic_cast<QWheelEvent *>(event);
         if(qwe->delta() > 0) {
             view->scale(scaleFactor, 1);
@@ -171,6 +196,7 @@ void  GeneBrowser::eventFilter(QObject *object, QEvent *event){
             view->scale(1.0 / scaleFactor, 1.0);
         }
     }
+    //return true;
 }
 
 void GeneBrowser::wheelEvent(QWheelEvent* event) {
@@ -178,7 +204,7 @@ void GeneBrowser::wheelEvent(QWheelEvent* event) {
     view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     // Scale the view / do the zoom
-    double scaleFactor = 1.01;
+    double scaleFactor = 1.05;
    // qDebug() << " scale value before " << this->scale;
     if(event->delta() > 0) {
         this->scale = this->scale*scaleFactor;
@@ -195,7 +221,7 @@ void GeneBrowser::wheelEvent(QWheelEvent* event) {
     fwdorfs->clearORFs();
     fwdorfs->insertORFs(this->scale);
 
-
+    gscene->setSceneRect(gscene->itemsBoundingRect());
     view->update();
 
 

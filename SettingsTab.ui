@@ -35,13 +35,6 @@
      </property>
     </widget>
    </item>
-   <item row="30" column="0" colspan="2">
-    <widget class="QLabel" name="label_18">
-     <property name="text">
-      <string>Mininum Identity</string>
-     </property>
-    </widget>
-   </item>
    <item row="16" column="3" colspan="2">
     <widget class="QLabel" name="label_13">
      <property name="text">
@@ -66,13 +59,28 @@
      <property name="maximum">
       <number>99999999</number>
      </property>
-     <property name="value">
+     <property name="singleStep">
       <number>1</number>
+     </property>
+     <property name="value">
+      <number>180</number>
      </property>
     </widget>
    </item>
    <item row="6" column="2">
     <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="maxVisibleItems">
+      <number>2</number>
+     </property>
+     <property name="maxCount">
+      <number>2</number>
+     </property>
      <item>
       <property name="text">
        <string>yes</string>
@@ -111,7 +119,7 @@
       <number>1000</number>
      </property>
      <property name="value">
-      <number>1</number>
+      <number>60</number>
      </property>
     </widget>
    </item>
@@ -136,6 +144,9 @@
      </property>
      <property name="maximum">
       <number>10000</number>
+     </property>
+     <property name="value">
+      <number>60</number>
      </property>
     </widget>
    </item>
@@ -268,6 +279,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="30" column="2">
     <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
+     <property name="suffix">
+      <string>%</string>
+     </property>
      <property name="decimals">
       <number>2</number>
      </property>
@@ -278,7 +292,7 @@ p, li { white-space: pre-wrap; }
       <double>1.000000000000000</double>
      </property>
      <property name="value">
-      <double>1.000000000000000</double>
+      <double>30.000000000000000</double>
      </property>
     </widget>
    </item>
@@ -360,7 +374,7 @@ p, li { white-space: pre-wrap; }
       <number>1000</number>
      </property>
      <property name="value">
-      <number>1</number>
+      <number>10</number>
      </property>
     </widget>
    </item>
@@ -400,6 +414,12 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="10" column="2">
     <widget class="QComboBox" name="annotationALGORITHM">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
      <item>
       <property name="text">
        <string>blast</string>
@@ -470,6 +490,13 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="annotationDBSButton">
      <property name="text">
       <string>Select DBs</string>
+     </property>
+    </widget>
+   </item>
+   <item row="30" column="0">
+    <widget class="QLabel" name="label_18">
+     <property name="text">
+      <string>Mininum Identity         </string>
      </property>
     </widget>
    </item>

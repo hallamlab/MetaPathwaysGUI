@@ -1,5 +1,5 @@
 #include "graphicsitemscollection.h"
-
+#include <math.h>
 
 GraphicsItemsCollection *GraphicsItemsCollection::graphicsItemsCreator =0;
 GraphicsItemsCollection::GraphicsItemsCollection() {
@@ -81,6 +81,43 @@ void GraphicsNotchedLine::clearMarkers() {
     }
     this->markers.clear();
 }
+/*********************** GRAPHICS NAME ITEM  *********************/
+ GraphicsNameItem::GraphicsNameItem() {
+
+     this->inscene = false;
+ }
+
+/***********************   GRAPHICSTAXONITEM *********************/
+GraphicsTaxonItem::GraphicsTaxonItem() {
+
+   this->inscene = false;
+
+}
+
+
+/***********************   GRAPHICS CONNECTOR LINE ****************/
+GraphicsConnectorLines::GraphicsConnectorLines() {
+   this->inscene = false;
+
+}
+
+void GraphicsConnectorLines::addLineSegment(QGraphicsLineItem *line) {
+    segments.append(line);
+}
+
+void GraphicsConnectorLines::setStyle(LineStyle style) {
+    this->style  = style;
+}
+
+GraphicsConnectorLines::~GraphicsConnectorLines() {
+   QList<QGraphicsLineItem *>::iterator it;
+   for(it  = this->segments.begin(); it!=this->segments.end(); it++) {
+       delete  *it;
+       qDebug() << "deleting ";
+   }
+}
+
+/************************  GRAPHICS GENE ITEM *********************/
 
 void GraphicsGeneItems::insertORFs(double scale) {
     this->scale = scale;
@@ -118,7 +155,8 @@ void GraphicsGeneItems::drawORFDiagrams()  {
         this->geneProp.width = (orf.end - orf.start)*this->geneProp.basePairToPixelRatio;
         this->geneProp.width = this->geneProp.width*this->scale;
         p = itemCreator->getGeneShape(this->geneProp, strand);
-        p->setToolTip(orf.note);
+        p->setToolTip("Function : " + orf.func_annot + "<br>" \
+                + "Taxonomy : " + orf.tax_annot);
         orfs.push_back(p);
         this->addToGroup(p);
     }
@@ -160,5 +198,55 @@ QGraphicsPolygonItem *GraphicsItemsCollection::getGeneShape(GENEPROPERTY &gene, 
 
     return p;
 }
+
+
+GraphicsTaxonItem *GraphicsItemsCollection::getTaxonNode(TREENODE *node, double STARTX, double STARTY) {
+    GraphicsTaxonItem *taxon;
+    taxon = new GraphicsTaxonItem();
+    taxon->radius = node->count > 1 ? log(node->count)*5 + 2 : 2 ;
+    taxon->setRect(STARTX + node->depth + taxon->radius/2, STARTY + (node->Ydown + node->Yup)/2 + taxon->radius/2, taxon->radius, taxon->radius );
+    taxon->name = node->name;
+    taxon->depth = node->depth;
+   // qDebug() << " Setting depth item " << taxon->depth << " from " << node->depth;
+    taxon->setToolTip(taxon->name + " " + QString::number(node->depth + taxon->radius/2) + " " + QString::number((node->Ydown + node->Yup)/2 + taxon->radius/2) + " depth = " + QString::number(node->depth));
+    return taxon;
+}
+
+
+GraphicsNameItem *GraphicsItemsCollection::getNameNode(GraphicsTaxonItem *taxon, double STARTX, double STARTY) {
+    GraphicsNameItem *name= new GraphicsNameItem();
+    name->setPlainText(taxon->name);
+    return name;
+}
+
+GraphicsConnectorLines *GraphicsItemsCollection::getLineBetweenTaxonItems(GraphicsTaxonItem *a, GraphicsTaxonItem *b, LineStyle style, QPen pen) {
+    GraphicsConnectorLines *connector = new GraphicsConnectorLines;
+  //  qDebug() << " hello; ";
+    connector->setStyle(style);
+    if( style == STRAIGHT ) {
+         QGraphicsLineItem *line = new QGraphicsLineItem(); //a->rect().left() + a->radius/2, a->rect().top() + a->radius/2, b->rect().left()+ a->radius/2, b->rect().top() + b->radius/2);
+         line->setPen(pen);
+         connector->addToGroup(line);
+         connector->addLineSegment(line);
+    }
+    if( style == MANHATTAN) {
+       //  qDebug() << " hello;1 ";
+        QGraphicsLineItem *line = new QGraphicsLineItem() ; //a->rect().left() + a->radius/2, a->rect().top() + a->radius/2, b->rect().left()+ a->radius/2, a->rect().top() + a->radius/2);
+        line->setPen(pen);
+        connector->addToGroup(line);
+        connector->addLineSegment(line);
+ //qDebug() << " hello2 ";
+        line = new QGraphicsLineItem(); //b->rect().left()+ a->radius/2, a->rect().top() + a->radius/2, b->rect().left()+ a->radius/2, b->rect().top() + b->radius/2);
+        line->setPen( pen);
+        connector->addToGroup(line);
+        connector->addLineSegment(line);
+       //  qDebug() << " hello 4 ";
+    }
+    connector->setZValue(-1);
+   //  qDebug() << " hello 5 ";
+    return connector;
+}
+
+
 
 

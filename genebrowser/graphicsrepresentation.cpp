@@ -15,15 +15,10 @@ GraphicsRepresentation::GraphicsRepresentation(QWidget *parent) :
     graphicsView = new GenomeView;
     graphicsView->show();
 
-    MeganViewer *megan = new MeganViewer;
+    meganView = new MeganView();
+    meganView->setDataFromFile("/tmp/megan_tree.tre");
+    meganView->show();
 
-    QFile file("/tmp/megan_tree.tre");
-    if(file.open(QIODevice::ReadOnly)) {
-        QTextStream in(&file);
-        QString  data = in.readAll();
-        megan->setData(data);
-        megan->createTreeView();
-    }
     QString s;
 
 }

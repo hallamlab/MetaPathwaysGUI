@@ -6,6 +6,7 @@
 #include <QGraphicsItem>
 
 
+typedef enum { MANHATTAN, STRAIGHT } LineStyle;
 
 enum SOURCETYPE {FASTA, TABTABLE};
 

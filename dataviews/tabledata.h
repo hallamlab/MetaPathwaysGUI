@@ -10,6 +10,7 @@
 #include "popupviews/exportwidget.h"
 #include "popupviews/exportbox.h"
 #include "popupviews/displayinfo.h"
+#include "genebrowser/genomeview.h"
 #include "caching/tablemanager.h"
 
 #include <QStringList>
@@ -40,6 +41,7 @@ public:
     bool setParameters(bool HAS_COMMENT, const QString &file, QList<enum TYPE> _types,bool CACHE=false);
 
     void setPopupListener(DisplayInfo *p);
+    void setPopupListener(GenomeView *g);
     void initializeSearchFilter(QString query, int column=0, bool caseSensitive = true) ;
     enum TYPE getFieldType(unsigned int i);
 
@@ -67,10 +69,14 @@ public slots:
     void outputRows(int top);
     void headerClicked(int index);
     void searchQuery(QString query, int column, bool caseSensitive);
+    void createGeneViewData(QTableWidgetItem *item);
 
 private slots:
     void searchButtonPressed();
     void exportButtonPressed();
+
+signals:
+    void transmitSequenceData(QTableWidgetItem *item, GeneBrowserData gbdata);
 
 private:
     int dw;
@@ -82,6 +88,7 @@ private:
     ExportWidget* exportWidget;
     QPushButton* exportButton;
     DisplayInfo *p;
+    GenomeView *g;
 
 
     ExportBox* exportBox;

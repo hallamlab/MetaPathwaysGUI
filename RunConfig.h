@@ -35,6 +35,9 @@ public:
     QPushButton* setupGrids;
     GridSetup* gridSetup;
     QCheckBox* overwrite;
+    QPushButton *folderBrowseButton;
+    QLabel * folderSelected;
+    QString *selectedFolder;
 
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
@@ -45,6 +48,7 @@ private slots:
     void toggleAllSkip();
     void toggleAllRedo();
     void browseFile();
+    void browseFolder();
     void specifyGrid();
     //void run();
 

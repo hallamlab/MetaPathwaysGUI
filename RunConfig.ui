@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>90</y>
+     <y>120</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -30,10 +30,16 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>90</y>
+     <y>120</y>
      <width>151</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <property name="maxVisibleItems">
+    <number>6</number>
    </property>
    <item>
     <property name="text">
@@ -95,8 +101,8 @@
   <widget class="QPushButton" name="fileBrowseButton">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>90</y>
+     <x>500</x>
+     <y>60</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -181,7 +187,7 @@
     <bool>true</bool>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -321,7 +327,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>260</y>
+     <y>240</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -379,7 +385,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>290</y>
+     <y>270</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -434,7 +440,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>350</y>
+     <y>330</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -489,7 +495,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>380</y>
+     <y>360</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -544,7 +550,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>410</y>
+     <y>390</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -599,7 +605,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>440</y>
+     <y>420</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -654,7 +660,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>470</y>
+     <y>450</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -709,7 +715,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>560</y>
+     <y>540</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -764,7 +770,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>530</y>
+     <y>510</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -819,7 +825,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>620</y>
+     <y>600</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -874,7 +880,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>590</y>
+     <y>570</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -929,7 +935,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>650</y>
+     <y>630</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -984,7 +990,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>680</y>
+     <y>660</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1039,7 +1045,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>710</y>
+     <y>690</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1094,7 +1100,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>740</y>
+     <y>720</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1149,7 +1155,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>230</y>
+     <y>210</y>
      <width>314</width>
      <height>30</height>
     </rect>
@@ -1205,7 +1211,7 @@
     <rect>
      <x>140</x>
      <y>60</y>
-     <width>451</width>
+     <width>351</width>
      <height>21</height>
     </rect>
    </property>
@@ -1223,7 +1229,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>500</y>
+     <y>480</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1333,7 +1339,7 @@
    <property name="geometry">
     <rect>
      <x>230</x>
-     <y>320</y>
+     <y>300</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1406,6 +1412,9 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="blastWithGrid">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -1419,6 +1428,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="setupGrids">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>460</x>
@@ -1429,6 +1441,9 @@
    </property>
    <property name="text">
     <string>Setup Grids</string>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QCheckBox" name="overwrite">
@@ -1442,6 +1457,53 @@
    </property>
    <property name="text">
     <string>Purge and overwrite existing data</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="outputFolder">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Output Folder : </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="outputFolderName">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>90</y>
+     <width>341</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>13</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:red;</string>
+   </property>
+   <property name="text">
+    <string>Please select a folder for your output.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="outputFolderBrowser">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>90</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Browse</string>
    </property>
   </widget>
   <zorder>tableWidget</zorder>
@@ -1476,6 +1538,9 @@
   <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
   <zorder>overwrite</zorder>
+  <zorder>outputFolder</zorder>
+  <zorder>outputFolderName</zorder>
+  <zorder>outputFolderBrowser</zorder>
  </widget>
  <tabstops>
   <tabstop>fileBrowseButton</tabstop>

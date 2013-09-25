@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QString>
 #include <QHash>
+#include <QLineEdit>
 
 namespace Ui {
 class Setup;
@@ -18,8 +19,6 @@ class Setup : public QWidget
     
 public:
     explicit Setup( QWidget *parent,MainWindow *mw);
-    void canSave();
-
     ~Setup();
 
 public slots:
@@ -29,6 +28,7 @@ public slots:
     void saveSetup();
     void cancelSetup();
     void databaseBrowse();
+    void canSave(QString a="");
 
 signals:
 
@@ -52,6 +52,11 @@ private:
     QPushButton *saveButton;
     QPushButton *cancelButton;
     QPushButton *databaseButton;
+
+    QLineEdit *perlExecTxt;
+    QLineEdit *pythonExecTxt;
+    QLineEdit *dbDirectoryTxt;
+    QLineEdit *pathMetaPathwaysTxt;
 
 };
 

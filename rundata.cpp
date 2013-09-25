@@ -4,15 +4,39 @@
  * about this instance of MetaPathways running.
  */
 
-RunData::RunData(QHash<QString,QString> *PARAMS,
-                 QHash<QString,QString> *CONFIG,
-                 QHash<QString,QString> *CONFIG_MAPPING,
-                 QProcess* run)
-{
+RunData* RunData::runData = 0;
+
+RunData::RunData(){}
+
+RunData* RunData::getRunData(){
+    if (runData ==0)
+        runData = new RunData();
+
+    return runData;
+}
+
+void RunData::setParams(QHash<QString,QString>* PARAMS){
     this->PARAMS = PARAMS;
+}
+
+void RunData::setConfig(QHash<QString,QString>* CONFIG){
     this->CONFIG = CONFIG;
-    this->CONFIG_MAPPING = CONFIG_MAPPING;
+}
+
+void RunData::setConfigMapping(QHash<QString,QString>* CONFIG_MAPPING){
+    this->CONFIG_MAPPING =  CONFIG_MAPPING;
+}
+
+void RunData::setProcess(QProcess* run){
     this->run = run;
+}
+
+void RunData::setRRNADBS(QStringList* rrnaDBS){
+    this->rrnaDBS = rrnaDBS;
+}
+
+void RunData::setAnnotationDBS(QStringList* annotationDBS){
+    this->annotationDBS = annotationDBS;
 }
 
 QHash<QString,QString>* RunData::getParams(){
@@ -27,33 +51,10 @@ QHash<QString,QString>* RunData::getConfigMapping(){
     return this->CONFIG_MAPPING;
 }
 
-QHash<QString,QString>* RunData::getRunResults(){
-    return this->RUN_RESULTS;
-}
-
 QProcess* RunData::getProcess(){
     return this->run;
 }
 
-void RunData::setRRNADBS(QStringList* rrnaDBS){
-    this->rrnaDBS = rrnaDBS;
-}
-
-void RunData::setAnnotationDBS(QStringList* annotationDBS){
-    this->annotationDBS = annotationDBS;
-}
-
-QStringList* RunData::getRRNADBS(){
-    return this->rrnaDBS;
-}
-
-QStringList* RunData::getAnnotationDBS(){
-    return this->annotationDBS;
-}
-
-void RunData::setProcess(QProcess* run){
-    this->run = run;
-}
 
 
 

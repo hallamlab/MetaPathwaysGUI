@@ -257,11 +257,18 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
 }
 
 
+void LargeTable::getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & selectrows, QString searchItem, unsigned int col, enum TYPE type) {
+    for (unsigned int i = 0;  i < sourcerows.length(); i++){
+       if( sourcerows.at(i)->strVar.at(this->index[col]).indexOf(searchItem, 0, Qt::CaseSensitive) > -1 && searchItem.length() == sourcerows.at(i)->strVar.at(this->index[col]).length() ) {
+           selectrows.append(sourcerows[i]);
+       }
+    }
+}
+
 void LargeTable::markRowsSearch(SEARCH &searchFilter) {
     enum DECISION hit;
     unsigned int k=0;
     tableData.clear();
-
     Qt::CaseSensitivity caseSensitive =  searchFilter.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
    // Qt::CaseInsensitive

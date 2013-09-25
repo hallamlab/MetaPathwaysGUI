@@ -10,6 +10,11 @@ DisplayInfo::DisplayInfo(QWidget *parent) :
 
     textOut = this->findChild<QTextEdit *>("textOut");
     okAndCancel = this->findChild<QDialogButtonBox *>("okAndCancel");
+
+    orfMap = this->findChild<QPushButton *>("orfMap");
+    connect(orfMap, SIGNAL(clicked()), this, SLOT(openGenomeView()));
+
+
     sourceFile = "";
     sourceType = FASTA;
 }
@@ -55,3 +60,22 @@ void DisplayInfo::itemDoubleClicked(QTableWidgetItem * item) {
     this->textOut->setText(result);
     this->show();
 }
+
+
+void DisplayInfo::receiveSequenceData( QTableWidgetItem *item, GeneBrowserData gbdata) {
+     this->itemDoubleClicked(item);
+     this->gbdata = gbdata;
+}
+
+void DisplayInfo::openGenomeView() {
+    qDebug() << "geonem view " << this->gbdata.seq.length;
+    qDebug() << " data num " << this->gbdata.orfData.size();
+    GenomeView *gv = new GenomeView;
+    gv->showData(this->gbdata);
+    gv->show();
+//    t->setPopupListener(gv);
+
+}
+
+
+

@@ -109,6 +109,8 @@ void SettingsTab::initWidgetValues(){
         QString configName = MainWindow::CONFIG_MAPPING->key(objectName);
         QString value = MainWindow::PARAMS->value(configName);
 
+
+
         if (qobject_cast<QComboBox *>(widget)!=NULL){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             temp->setCurrentIndex(temp->findText(value));

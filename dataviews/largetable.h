@@ -56,7 +56,7 @@ public:
     void setPivot(int pivot);
     void markRowsSearch(SEARCH &searchFilter);
     void reRank();
-//
+    void getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & selectrows, QString search, unsigned int col, enum TYPE type);
 
     QList< ROW *> tableData;
     QList<ROW *>  wholeTableData;

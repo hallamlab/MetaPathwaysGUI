@@ -33,9 +33,10 @@ TableData::TableData(  QWidget *parent) :
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->hide();
 
-    this->exportBox = new ExportBox(this);
-    this->exportBox->hide();
+   // this->exportBox = new ExportBox(this);
+    //this->exportBox->hide();
     this->p =0;
+    this->g =0;
 }
 
 
@@ -58,10 +59,69 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
 
 }
 
+
+void TableData::createGeneViewData(QTableWidgetItem *item) {
+
+    unsigned int col = item->column();
+
+    QString key  = item->text();
+
+    QList< ROW *> rows;
+    this->largeTable->getSelectRows(largeTable->wholeTableData, rows, key, col, STRING);
+
+    qDebug() << ' found ' << rows.size();
+    GeneBrowserData gbd;
+
+    SequenceData s;
+    ORFData orf;
+    bool ok;
+    s.length = 0;
+
+    foreach(ROW *row, rows) {
+
+        orf.start = row->intVar[largeTable->index[2]];
+        orf.end = row->intVar[largeTable->index[3]];
+        if(s.length < row->intVar[largeTable->index[5]] ) {
+            s.length = row->intVar[largeTable->index[5]];
+        }
+
+
+        if( row->strVar[largeTable->index[6]] == QString("+"))
+           orf.strand = FORWARD;
+        else
+           orf.strand = REVERSE;
+
+        orf.tax_annot = row->strVar[largeTable->index[8]];
+        orf.func_annot = row->strVar[largeTable->index[9]];
+        orf.note = "";
+
+        gbd.orfData.append(orf);
+    }
+
+    s.start =0;
+    s.end = s.length-1;
+
+    gbd.seq =s;
+    emit transmitSequenceData(item, gbd);
+
+}
+
 void TableData::setPopupListener(DisplayInfo *p) {
     if( this->p==0 ) {
-      connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), p, SLOT(itemDoubleClicked(QTableWidgetItem *)));
+     // connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), p, SLOT(itemDoubleClicked(QTableWidgetItem *)));
+
+      connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( createGeneViewData(QTableWidgetItem *) ));
+
+      connect(this, SIGNAL( transmitSequenceData( QTableWidgetItem *, GeneBrowserData )), p, SLOT( receiveSequenceData(QTableWidgetItem *, GeneBrowserData ) ) );
+
       this->p= p;
+    }
+}
+
+void TableData::setPopupListener(GenomeView *g) {
+    if( this->g==0 ) {
+      connect(tableWidget, SIGNAL(itemClicked(QTableWidgetItem *)), g, SLOT(itemGenomeDisplay(QTableWidgetItem *)));
+      this->g= g;
     }
 }
 
@@ -179,13 +239,15 @@ void TableData::setupFromFile(const QString &file){
         tableWidget->setColumnCount(largeTable->colNames.length());
         headers = largeTable->colNames;
 
-        titleLabel->setText(file);
+    //    titleLabel->setText(file);
 
 
 
         if(!bigdata.empty() ) {
            this->populateTable(*tableWidget, bigdata, headers, top);
         }
+
+        this->exportBox = new ExportBox(this);
     //    qDebug() << "Done";
 
 }

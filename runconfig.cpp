@@ -19,8 +19,13 @@ RunConfig::RunConfig(QWidget *parent) :
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
     filesSelected = this->findChild<QLabel *>("fileInput");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
+
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
+
+    folderSelected= this->findChild<QLabel *>("outputFolderName");
+    folderBrowseButton = this->findChild<QPushButton *>("outputFolderBrowser");
+
     sampleWarning = this->findChild<QLabel *>("sampleWarning");
     gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
@@ -28,6 +33,7 @@ RunConfig::RunConfig(QWidget *parent) :
 
     gridSetup = 0;
     selectedFiles = 0;
+    selectedFolder =0;
 
     setStyling();
     loadRunParams();
@@ -36,6 +42,7 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
+    connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
     connect(this, SIGNAL(fileSet()), this->parent(), SLOT(enableContinueButton()));
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 }
@@ -87,10 +94,22 @@ void RunConfig::browseFile(){
 
     //send a signal to the parent to enable the continue button
     if (selectedFiles){
-        emit fileSet();
+        if( selectedFolder != 0 ) emit fileSet();
         sampleWarning->hide();
     }
 }
+
+void RunConfig::browseFolder(){
+    selectedFolder = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory for your output.")));
+    folderSelected->setText(*selectedFolder);
+
+    //send a signal to the parent to enable the continue button
+    if (selectedFolder){
+        if(selectedFiles!=0) emit fileSet();
+        sampleWarning->hide();
+    }
+}
+
 
 void RunConfig::toggleAllRun(){
     QList<QGroupBox *>::iterator i;
