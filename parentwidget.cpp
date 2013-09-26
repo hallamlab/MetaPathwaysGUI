@@ -98,6 +98,27 @@ void ParentWidget::continueButtonPressed(){
                 QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
                 value = temp->toPlainText();
             }
+            else if (qobject_cast<QListWidget *>(widget)){
+                QListWidget *temp = qobject_cast<QListWidget *>(widget);
+                for (int i=0;i<temp->count();i++){
+                    if (temp->item(i)->checkState() == Qt::Checked){
+                        if (temp->objectName() == "annotationDBS"){
+                            value = MainWindow::PARAMS->operator [](configName);
+                            if (value.isEmpty()) value = temp->item(i)->text();
+                            else value = value + "," + temp->item(i)->text();
+                            MainWindow::PARAMS->operator [](configName) = value;
+                        }
+
+                        else if(temp->objectName() == "rrnaREFDBS"){
+                            value = MainWindow::PARAMS->operator [](configName);
+                            if (value.isEmpty()) value = temp->item(i)->text();
+                            else value = value + "," + temp->item(i)->text();
+                            MainWindow::PARAMS->operator [](configName) = value;
+                        }
+                        qDebug() << value;
+                    }
+                }
+            }
             MainWindow::PARAMS->operator [](configName) = value;
             Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value, false, false);
         }

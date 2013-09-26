@@ -5,6 +5,9 @@
 #include <qlist>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QListWidget>
+#include <QSettings>
+#include <QDir>
 
 namespace Ui {
 class SettingsTab;
@@ -22,16 +25,16 @@ public:
     QLabel *annotationDBSWarning;
     QLabel *rrnaREFDBSWarning;
 
-    QTextEdit *annotationDBS;
-    QTextEdit *rrnaREFDBS;
+    QListWidget *annotationDBS;
+    QListWidget *rrnaREFDBS;
 
     ~SettingsTab();
 
 private slots:
     void closeWindow();
     void openParameterSetup();
-    void annotationDBSPressed();
-    void rrnaREFDBSPressed();
+    void annotationClicked(QModelIndex index);
+    void rrnaClicked(QModelIndex index);
 
 signals:
     void setContinueButton();
@@ -40,12 +43,14 @@ private:
     bool writeOutToFile();
     void getAllWidgets();
     void initWidgetValues();
+    void showORFDBS();
+    void showRRNADBS();
+    bool findFiles(QString path, QStringList *fileListing);
+    void isBothDBSSet();
+
 
     QStringList *annotationFiles;
     QStringList *rrnaFiles;
-
-    QString *annotationFileList;
-    QString *rrnaFileList;
 
     QPushButton *annotationDBSButton;
     QPushButton *rrnaREFDBSButton;
@@ -56,6 +61,9 @@ private:
     QList<QWidget *> *annotationWidgets;
     QList<QWidget *> *rrnaWidgets;
     QList<QWidget *> *pathwaysWidgets;
+
+    QStringList* RRNADBS;
+    QStringList* ORFDBS;
 
     Ui::SettingsTab *ui;
 };
