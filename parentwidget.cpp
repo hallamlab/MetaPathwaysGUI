@@ -115,7 +115,6 @@ void ParentWidget::continueButtonPressed(){
                             else value = value + "," + temp->item(i)->text();
                             MainWindow::PARAMS->operator [](configName) = value;
                         }
-                        qDebug() << value;
                     }
                 }
             }
