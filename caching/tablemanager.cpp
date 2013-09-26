@@ -52,7 +52,6 @@ bool TableManager::setTable(QString fileName, LargeTable *table) {
     s.table = table;
     s.accessed = timeAccessed;
 
-    qDebug() << "Inserting table " << fileName;
    /* foreach( TABLEACCESSINFO t, tables) {
         qDebug() << "------" << t.fileName << "++++ " << sizeof(t.table);
     }
@@ -61,7 +60,6 @@ bool TableManager::setTable(QString fileName, LargeTable *table) {
     if(tables.size() > maxSize) {
         QString tableToDelete = getTableToDelete();
         LargeTable *table = tables[tableToDelete].table;
-        qDebug() << " deleting the old table " << tableToDelete;
         delete table;
         tables.remove(tableToDelete);
     }
@@ -89,7 +87,6 @@ bool TableManager::setGraphData(QString fileName, GRAPHDATA *graphData) {
     if(this->graphData.size() > maxSize) {
         QString dataToDelete = getGraphDataToDelete();
         GRAPHDATA *data = this->graphData[dataToDelete];
-        qDebug() << " deleting the old table " << dataToDelete;
         delete data;
         tables.remove(dataToDelete);
     }

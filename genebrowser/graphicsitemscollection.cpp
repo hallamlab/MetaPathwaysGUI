@@ -113,7 +113,6 @@ GraphicsConnectorLines::~GraphicsConnectorLines() {
    QList<QGraphicsLineItem *>::iterator it;
    for(it  = this->segments.begin(); it!=this->segments.end(); it++) {
        delete  *it;
-       qDebug() << "deleting ";
    }
 }
 

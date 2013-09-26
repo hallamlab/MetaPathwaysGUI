@@ -32,6 +32,8 @@ public:
     explicit TableData(QWidget *parent = 0 );
     //explicit TableData(bool LARGE, bool HAS_COMMENT, const QString &file, QList<enum TYPE> types = QList<enum TYPE>(),   QWidget *parent = 0 );
     virtual void setupFromFile(const QString &file);
+    void setupFromFile(const QString &file, QList<unsigned int> & columns, QRegExp filter);
+
     void parseFile(const QString &file, QList<QStringList> &data, const QChar &DELIM, bool HAS_COMMENT);
     void populateTable(QTableWidget &table,  QList<ROW *>  &bigdata, const QStringList &headers, int from = 0);
     void setNumCols(unsigned int numCols);
@@ -39,6 +41,8 @@ public:
     QString getHeader(unsigned int i);
 
     bool setParameters(bool HAS_COMMENT, const QString &file, QList<enum TYPE> _types,bool CACHE=false);
+
+    bool setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter);
 
     void setPopupListener(DisplayInfo *p);
     void setPopupListener(GenomeView *g);

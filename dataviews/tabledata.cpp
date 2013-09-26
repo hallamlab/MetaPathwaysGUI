@@ -59,6 +59,26 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
 
 }
 
+// with select columns
+bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter) {
+
+    top = 0;
+    bottom = 0;
+
+    this->CACHE = CACHE;
+
+    this->setNumCols(_types.size());
+    foreach(enum TYPE type, _types) {
+        types.append(type);
+    }
+
+    this->file = file;
+    this->HAS_COMMENT = HAS_COMMENT;
+
+    this->setupFromFile(file, _columns, filter);
+
+}
+
 
 void TableData::createGeneViewData(QTableWidgetItem *item) {
 
@@ -223,7 +243,6 @@ void TableData::updateData(double top, bool reload){
 
 
 void TableData::setupFromFile(const QString &file){
-       QChar tableDELIM = '#';
 
         TableManager *tableManager = TableManager::getTableManager();
 
@@ -239,18 +258,43 @@ void TableData::setupFromFile(const QString &file){
         tableWidget->setColumnCount(largeTable->colNames.length());
         headers = largeTable->colNames;
 
-    //    titleLabel->setText(file);
+        if(!bigdata.empty() ) {
+           this->populateTable(*tableWidget, bigdata, headers, top);
+        }
+
+        this->exportBox = new ExportBox(this);
+}
 
 
+//select columns variant
+void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns, QRegExp filter){
+
+        TableManager *tableManager = TableManager::getTableManager();
+
+        largeTable = tableManager->getTable(file);
+
+        if( largeTable ==0 ) {
+           largeTable = new LargeTable(file, '\t', true, true, types, columns, filter);
+           if (CACHE) tableManager->setTable(file, largeTable);
+        }
+
+        largeTable->getData(bigdata, 0,dw);
+        tableWidget->setRowCount(largeTable->tableData.length());
+        tableWidget->setColumnCount(largeTable->colNames.length());
+        headers = largeTable->colNames;
 
         if(!bigdata.empty() ) {
            this->populateTable(*tableWidget, bigdata, headers, top);
         }
 
         this->exportBox = new ExportBox(this);
-    //    qDebug() << "Done";
-
 }
+
+
+
+
+
+
 
 /*
  * Creates the actual table widget the data given to it, and populates the table with data and headers given with

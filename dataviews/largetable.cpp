@@ -30,6 +30,26 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
 
 }
 
+// read select columns
+LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> &_types, QList<unsigned int> &columns, QRegExp filter){
+    this->types = new enum TYPE[ _types.length()];
+
+    this->numCols = _types.size();
+    unsigned int i =0;
+    foreach(enum TYPE type, _types) {
+        *(this->types + i) = type;
+        i++;
+    }
+
+    int read = this->readDataFile(fileName, delim, columns, filter, firstRowAsHeaders);
+
+    pivotPointer = 0.0;
+    lastUsedField = 1000000;
+    sortingDirectionForward = true;
+
+
+}
+
 LargeTable::~LargeTable() {
     foreach(ROW *r, wholeTableData ){
         delete r;
@@ -125,7 +145,94 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
 
 }
 
+//selected columns read data file
 
+int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments, const bool firstRowAsHeaders ){
+    QFile inputFile(fileName);
+    QList<QString> fields;
+    bool ok;
+
+    this->numCols = columns.size();
+    index = new unsigned int[numCols];
+    unsigned int lastColumn = columns.last();
+
+    unsigned int intCounter=0, doubleCounter=0, strCounter=0;
+    for(unsigned int i =0; i < numCols; i++ ) {
+    //    qDebug() << numCols ;
+        if( types[i] == INT)  {index[i] = intCounter; intCounter++;};
+        if( types[i] == DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
+        if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
+    }
+
+    colNames.clear();
+
+    unsigned int i = -1;
+    QRegExp comment("#[^\"\\n\\r]*");
+
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QString line = in.readLine().trimmed();
+
+
+            if(i== -1 && firstRowAsHeaders ) {
+                fields = line.split(QRegExp(delim));
+                if(fields.size() <= lastColumn) continue;
+
+                for(unsigned int j=0; j < numCols; j++){
+                    colNames << fields[columns[j]] ;
+                }
+                i++;
+                continue;
+            }
+            if (ignoreComments && comment.exactMatch(line)) continue;
+            if(filter.indexIn(line,0)==-1) continue;
+
+            ROW *list = new ROW;
+
+            QStringList qlist = line.split(QRegExp(delim));
+
+            if( qlist.size() >  lastColumn) {
+                for(unsigned int k = 0; k < numCols; k++){
+                    unsigned int _k = columns[k];
+
+                   if( types[k]== INT) {
+                       qlist[_k].toInt(&ok);
+
+                       if (ok)
+                           list->intVar.append(qlist.at(_k).toInt());
+                       else
+                           list->intVar.append(-1);
+                   }
+                   else if( types[k]==DOUBLE) {
+                      qlist[_k].toDouble(&ok);
+
+
+                      if(ok)
+                          list->doubleVar.append(qlist.at(_k).toDouble());
+                      else
+                          list->doubleVar.append(-1);
+
+                   }
+                   else if( types[k]==STRING){
+
+                       if( qlist[_k].isEmpty()) qlist[_k]="-";
+                       list->strVar.append(QString(qlist[_k]));
+                   }
+                 }
+
+                 tableData.append(list);
+                 wholeTableData.append(list);
+                 list->rank = i;
+            }
+            i++;
+        }
+    }else return 0;
+
+    inputFile.close();
+
+    return 0;
+}
 
 class CompareIntField {
   public:

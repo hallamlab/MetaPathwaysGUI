@@ -163,13 +163,13 @@ void ParentWidget::continueButtonPressed(){
         //trim off commas on refdbs for rRNA and annotation
         QString rRNArefdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
         qDebug() << rRNArefdbs;
-        rRNArefdbs = rRNArefdbs.remove(QRegExp("[\s,]*$"));
+        rRNArefdbs = rRNArefdbs.remove(QRegExp("[\\s,]*$"));
         MainWindow::PARAMS->operator []("rRNA:refdbs") = rRNArefdbs;
 
         QString annotationDBS = MainWindow::PARAMS->operator []("annotation:dbs");
-        qDebug() << " cleaning it " << annotationDBS;
-        annotationDBS = annotationDBS.remove(QRegExp("[\s,]*$"));
-          qDebug() << " clead it " << annotationDBS;
+
+        annotationDBS = annotationDBS.remove(QRegExp("[\\s,]*$"));
+
         MainWindow::PARAMS->operator []("annotationDBS") = annotationDBS;
 
         Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);

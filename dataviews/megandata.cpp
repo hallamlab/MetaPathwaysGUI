@@ -183,7 +183,6 @@ void MeganData::computeCoordinates(double deltaX, double deltaY) {
     int leafcounter =0;
     this->treeTraversal(root, leafcounter, 0 );
     this->adjustDepth(root, root->depth);
-    qDebug() << " Root depth " << root->depth;
 }
 
 double MeganData::_spanAtDepth(TREENODE *node, unsigned int depth, double *Yup, double *Ydown) {
@@ -389,7 +388,6 @@ TREENODE *MeganData::createTree(QStringList &tokens) {
         prev = *t;
 
     }
-    qDebug() << "node " << node->name;
     return node;
 }
 

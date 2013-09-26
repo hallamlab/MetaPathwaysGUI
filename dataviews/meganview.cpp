@@ -40,7 +40,6 @@ MeganView::MeganView(QWidget *parent):
     if(zoomInButton) {
         connect(zoomInButton, SIGNAL(clicked()), this,  SLOT(zoomIn()));
         connect(zoomOutButton, SIGNAL(clicked()), this,  SLOT(zoomOut()));
-        qDebug() << " Connecting buttons ";
     }
     if( lineType ) {
         connect(lineType, SIGNAL(toggled(bool)), this, SLOT(switchStyle(bool)) );
@@ -98,7 +97,7 @@ void MeganView::setDataFromFile(const QString &fileName) {
           QTextStream in(&file);
           QString  data = in.readAll();
           meganData->setData(data);
-          qDebug() << "b4 create treeview";
+
           meganData->createTreeView();
           meganData->setInitLineLength(INIT_LINE_LENGTH);
 
@@ -113,7 +112,7 @@ void MeganView::setDataFromFile(const QString &fileName) {
 
           this->computePositions();
           scene->setSceneRect(scene->itemsBoundingRect());
-          qDebug() << "bounding rect" << scene->itemsBoundingRect();
+
           scene->update();
           file.close();
       }

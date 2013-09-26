@@ -122,10 +122,6 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     }
     gdata->ymax = _ymax;
 
-    qDebug() << "y"<< gdata->y.size();
-    qDebug() <<  "x" <<gdata->x.size();
-    qDebug() << " bucketSize " << gdata->bucketSize;
-
 }
 
 
@@ -148,7 +144,7 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
     customPlot->xAxis->setLabel("x");
     customPlot->yAxis->setLabel("y");
     // set axes ranges, so we see all data:
-    qDebug() << "yaxis range " << customPlot->yAxis->range().maxRange << " xaxis range " << customPlot->xAxis->range().minRange << " - " << customPlot->xAxis->range().maxRange;
+ //   qDebug() << "yaxis range " << customPlot->yAxis->range().maxRange << " xaxis range " << customPlot->xAxis->range().minRange << " - " << customPlot->xAxis->range().maxRange;
     customPlot->yAxis->setRange(0,gdata->ymax);
     customPlot->xAxis->setRange(gdata->xmin -1 , gdata->xmax + 1);
 

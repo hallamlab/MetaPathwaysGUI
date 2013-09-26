@@ -56,7 +56,6 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, QWidget *parent) : QWidget(pare
 
 void ProgressDialog::readStepsLog(){
     QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
-    qDebug() << "OUTPUT " << OUTPUTPATH;
     QString pathToLog = OUTPUTPATH + "/" + currentFile + "/metapathways_steps_log.txt";
 
     QFile inputFile(pathToLog);
@@ -328,13 +327,10 @@ void ProgressDialog::checkFiles(){
         QString temp = *entry;
         QStringList file = temp.split(".");
 
-
-        qDebug() << "file " <<  temp;
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
                if(temp.indexOf(reg,0) > -1 ) {
                    filesDetected->append( temp.remove(reg).replace('.','_') );
-                   qDebug() << " file  short " << temp.remove(reg).replace('.','_');
                    break;
                }
             }

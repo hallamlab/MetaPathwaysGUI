@@ -21,6 +21,8 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
     connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
 
+    tables["PATHWAYS"] = new TableData();
+    tables["REACTIONS"] = new TableData();
     tables["FUNC & TAX"] = new TableData();
     tables["FUNC SRC"] = new TableData();
     tables["FUNC KEGG 1"] = new TableData();
@@ -72,10 +74,11 @@ void ResultWindow::updateFileNames(){
 
 
 void ResultWindow::sampleChanged(QString changed){
+    TableData *t;
+
     QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
     QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
 
-    qDebug() << "Input path " << METAPATH;
     const QString nucFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".nuc.stats";
     const QString aminoFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".amino.stats";
 
@@ -89,12 +92,20 @@ void ResultWindow::sampleChanged(QString changed){
     const QString meganTre = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "megan_tree.tre";
     const QString functionalSource1 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + changed + ".1.txt";
 
+    QString pgdbname = changed.toLower().replace(QRegExp("[.]"), "_");
+    pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
+    const QString pathwaysTable = OUTPUTPATH + "/" + changed + "/results/pgdb/" + pgdbname + ".pathway.txt";
+
     resultTabs->clear();
     for (unsigned int i=0; i< resultTabs->count(); i++){
         delete resultTabs->widget(i);
     }
 
     QList<enum TYPE> types;
+    QList<unsigned int> columns;
+
+
+
     types.clear();
     types << INT << INT << DOUBLE << INT;
 
@@ -105,7 +116,6 @@ void ResultWindow::sampleChanged(QString changed){
     GraphData *g;
     g = graphs["CONT LEN HIST"];
 
-    qDebug() << " contig length file " << contigLengthFile;
     g->setFile(contigLengthFile);
     g->prepareInput();
     resultTabs->addTab(g,"CONT LEN HIST");
@@ -115,7 +125,29 @@ void ResultWindow::sampleChanged(QString changed){
     g->prepareInput();
     resultTabs->addTab(g,"ORF LEN HIST");
 
+    // PATHWAY TABLE
+     types.clear();
+     types << STRING << STRING<< INT << INT<< INT;
+     columns.clear();
+     columns << 1 << 2 << 3 << 4<<  5;
 
+     t = this->tables["PATHWAYS"];
+     t->setParameters(false, pathwaysTable, types, columns, false,  QRegExp("^PWY:"));
+     resultTabs->addTab(t, "PATHwAYS");
+
+     // REACTION TABLE
+     types.clear();
+     types << STRING << STRING<< INT;
+     columns.clear();
+     columns << 1 << 2 << 5;
+
+     t = this->tables["REACTIONS"];
+     t->setParameters(false, pathwaysTable, types, columns, false, QRegExp("^RXN:"));
+     resultTabs->addTab(t, "REACTIONS");
+
+
+
+    //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
     p->removeFileIndexes();
     FileIndexManager *indexManager = FileIndexManager::getFileIndexManager();
@@ -128,10 +160,15 @@ void ResultWindow::sampleChanged(QString changed){
 
     types.clear();
     types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
-    TableData *t = this->tables["FUNC & TAX"];
+    t = this->tables["FUNC & TAX"];
     t->setParameters(false, funAndTax, types, true);
     t->setPopupListener(p);
     resultTabs->addTab(t, "FUNC & TAX");
+
+
+
+
+    // MEGAN VIEW
 
 
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
@@ -161,7 +198,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING  <<  INT;
     t=  this->tables["FUNC KEGG 1"];
-    t->setParameters(false, functionalKegg1, types, true);
+    t->setParameters(false, functionalKegg1, types, false);
   //  t =  new TableData(true, false, functionalKegg1, types);
     resultTabs->addTab(t, "FUNC KEGG 1");
 
@@ -170,7 +207,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING << STRING <<  INT;
     t=  this->tables["FUNC KEGG 2"];
-    t->setParameters(false, functionalKegg2, types, true);
+    t->setParameters(false, functionalKegg2, types, false);
     resultTabs->addTab(t, "FUNC KEGG 2");
 
 
@@ -178,7 +215,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING << STRING <<  INT;
     t=  this->tables["FUNC KEGG 3"];
-    t->setParameters(false, functionalKegg3, types, true);
+    t->setParameters(false, functionalKegg3, types, false);
     resultTabs->addTab(t, "FUNC KEGG 3");
 
 
@@ -186,7 +223,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING << STRING <<  INT;
     t=  this->tables["FUNC KEGG 4"];
-    t->setParameters(false, functionalKegg4, types, true);
+    t->setParameters(false, functionalKegg4, types, false);
     resultTabs->addTab(t, "FUNC KEGG 4");
 
     // add the annotation sources table COG 1
@@ -194,7 +231,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING  <<  INT;
     t =  this->tables["FUNC COG 1"];
-    t->setParameters(true, functionalCOG1, types, true);
+    t->setParameters(true, functionalCOG1, types, false) ;
     resultTabs->addTab(t, "FUNC COG 1");
 
     // add the annotation sources table COG 2
@@ -202,7 +239,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING  << STRING <<  INT;
     t =  this->tables["FUNC COG 2"];
-    t->setParameters(true, functionalCOG2, types, true);
+    t->setParameters(true, functionalCOG2, types, false);
     resultTabs->addTab(t, "FUNC COG 2");
 
     // add the annotation sources table COG 3
@@ -210,7 +247,7 @@ void ResultWindow::sampleChanged(QString changed){
     types.clear();
     types << STRING  <<  STRING << INT;
     t =  this->tables["FUNC COG 3"];
-    t->setParameters(true, functionalCOG3, types, true);
+    t->setParameters(true, functionalCOG3, types, false);
     resultTabs->addTab(t, "FUNC COG 3");
 
     emit fileChanged(changed);
