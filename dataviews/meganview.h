@@ -49,7 +49,7 @@ private:
 
     bool eventFilter(QObject *object, QEvent *event);
     void setStyleVisible(bool visible);
-    void unscaleVertically(double unscale);
+    void unscale();
 
 
     Ui::MeganBrowser *ui;

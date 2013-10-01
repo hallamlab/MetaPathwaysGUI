@@ -12,6 +12,8 @@
 #include "genebrowser/graphicsitemscollection.h"
 #include "types.h"
 
+#include <QGraphicsView>
+
 
 typedef struct _TREENODE  TREENODE;
 
@@ -63,6 +65,8 @@ public:
 
     void setStyleVisible(GraphicsTaxonItem *taxon, LineStyle style, bool visible, unsigned int currDepth, unsigned int maxDepth);
 
+    void unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth);
+
 private:
     void setLines(GraphicsConnectorLines *lines, LineStyle style, GraphicsTaxonItem *a, GraphicsTaxonItem *b);
 
@@ -82,8 +86,9 @@ private:
     void computeCoordinates(double deltaX, double deltaY);
     unsigned int treeTraversal(TREENODE *node, int &leafcounter, unsigned int currDepth, unsigned int maxDepth = 100);
     void _createTaxonItems(TREENODE *node,  QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush taxonBrush);
-
     void _deleteNode(TREENODE *t);
+
+
     QString data;
     TREENODE *root;
 

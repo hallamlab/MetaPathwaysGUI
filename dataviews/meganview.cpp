@@ -186,8 +186,9 @@ void MeganView::scaleDeltaY(double scaleFactor) {
 }
 
 
-void MeganView::unscaleVertically(double unscale) {
-    meganData->unscaleVertically(taxons[0][0], unscale, 0, this->depth);
+void MeganView::unscale() {
+
+    meganData->unscale(taxons[0][0], this->graphicsView, 0, this->depth);
     scene->update();
 }
 
@@ -241,13 +242,14 @@ bool MeganView::eventFilter(QObject *object, QEvent *event){
             //this->scaleDeltaY(scaleFactor);
             graphicsView->scale(1, scaleFactor);
             this->yscale *= scaleFactor;
-            //this->unscaleVertically(1/this->yscale);
+            this->unscale();
         } else {
            // this->scaleDeltaY(1 /scaleFactor);
             graphicsView->scale(1, 1/scaleFactor);
             this->yscale /= scaleFactor;
-            //this->unscaleVertically(this->yscale);
+            this->unscale();
         }
+
         event->accept();
 
         return true;

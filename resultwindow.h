@@ -21,6 +21,8 @@
 
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
+#include "datamodel/datamanager.h"
+
 
 
 namespace Ui {
@@ -35,7 +37,6 @@ public:
     explicit ResultWindow(ProgressDialog *prog = 0, QWidget *parent = 0);
     RunData* getRunData();
     ~ResultWindow();
-
 
 public slots:
     void sampleChanged(QString changed);
@@ -62,6 +63,10 @@ private:
     QHash<QString, DisplayInfo *> displayInfos;
  //   QHash<QString, GraphicsRepresentation *> graphicsRepresentation;
     QHash<QString, MeganView *> meganviews;
+
+    DataManager *datamanager;
+
+
 };
 
 #endif // RESULTWINDOW_H

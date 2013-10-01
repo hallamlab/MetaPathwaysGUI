@@ -80,18 +80,6 @@ void GeneBrowser::drawGenomeBrowser() {
     nparams.notchHeight = 2 + 1*basePairToPixelRatio;
     nparams.basePairToPixelRatio = basePairToPixelRatio;
 
-/*
-
-     qDebug() << " Before drawing 3";
-     qDebug() << "x " << nparams.x;
-     qDebug() << "y " << nparams.y;
-     qDebug() << "height " << nparams.height;
-     qDebug() << "width " << nparams.width ;
-     qDebug() << "pixinterval  " << nparams.pixInterval;
-     qDebug() << "nomwidth " << nparams.nomWidth;
-     qDebug() << "notch height " << nparams.notchHeight;
-     qDebug() << "baseparitopixel " << nparams.basePairToPixelRatio;
-*/
 
     this->line = itemCreator->getNotchedLine(nparams);
     gscene->addItem(this->line);
@@ -107,29 +95,7 @@ void GeneBrowser::drawGenomeBrowser() {
 
 
 }
-/*
-void GeneBrowser::addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen)  {
-    GraphicsItemsCollection *itemCreator  = GraphicsItemsCollection::getGraphicsItemsCollection();
 
-    QGraphicsPolygonItem *p;
-
-
-    foreach( ORFData orf, orfs) {
-        if( orf.strand != strand ) continue;
-            geneProp.x = pen.xstart + orf.start*geneProp.basePairToPixelRatio ;
-            geneProp.y = pen.ystart +  orf._level*(geneProp.spaceAbove + geneProp.height + geneProp.spaceBelow) + geneProp.spaceAbove;
-            geneProp.width = (orf.end - orf.start)*geneProp.basePairToPixelRatio;
-            geneProp.width = geneProp.width*this->scale;
-            p = itemCreator->getGeneShape(geneProp, strand);
-
-            p->setToolTip(QString("hello"));
-            qDebug() << "this is my tooltip " << p->toolTip();
-            //p->setToolTip( "Function : " + orf.func_annot + "<br>" \
-              //             + "Taxonomy : " + orf.tax_annot);
-            gscene->addItem(p);
-    }
-}
-*/
 
 bool GeneBrowser::sortRankBeginPair(const RANK_BEGIN_PAIR &a, const RANK_BEGIN_PAIR &b) {
     if( a.begin < b.begin )
@@ -205,14 +171,13 @@ void GeneBrowser::wheelEvent(QWheelEvent* event) {
 
     // Scale the view / do the zoom
     double scaleFactor = 1.05;
-   // qDebug() << " scale value before " << this->scale;
+
     if(event->delta() > 0) {
         this->scale = this->scale*scaleFactor;
     } else {
         this->scale = this->scale/scaleFactor;
     }
 
-   // qDebug() << " scale value " << this->scale;
     line->clearMarkers();
     line->insertMarkers(this->scale);;
 

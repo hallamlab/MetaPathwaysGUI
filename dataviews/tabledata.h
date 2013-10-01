@@ -15,7 +15,7 @@
 
 #include <QStringList>
 namespace Ui {
-class TableData;
+   class TableData;
 }
 
 

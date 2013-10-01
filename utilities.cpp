@@ -356,3 +356,32 @@ QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
     inputFile.close();
     return configs;
 }
+
+
+QString Utilities::createToolTipTable(  QList< QList<QString> > tableData ) {
+
+    QString text = "<table border="" frame=void>";
+    QList< QList< QString > >::Iterator it;
+
+    for( it = tableData.begin(); it!= tableData.end(); ++it) {
+        text.append("<tr>\n");
+        unsigned int i=0;
+        for(QList<QString>::const_iterator it2 = it->begin();  it2 != it->end(); ++it2) {
+            text.append("<td>\n");
+
+            if(i==0) {
+                text.append( QString("<b>") +  *it2  +  QString("</b>")  +  "\n");
+               i++;
+            }
+            else
+               text.append( *it2  + "\n");
+
+            text.append("</td>\n");
+        }
+        text.append("</tr>\n");
+    }
+    text.append("</table>");
+    return text;
+
+}
+

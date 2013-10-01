@@ -13,6 +13,7 @@
 #include <QHash>
 #include "genebrowser/genebrowser.h"
 #include "dataviews/megandata.h"
+#include "utilities.h"
 
 
 

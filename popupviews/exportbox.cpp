@@ -18,6 +18,24 @@ ExportBox::ExportBox(TableData* td, QWidget *parent)
  }
 
 
+
+ExportBox::ExportBox(HTableData* td, QWidget *parent)
+    // : QWidget(parent)
+ {
+     QGridLayout *grid = new QGridLayout;
+     this->htd = td;
+
+     createNonExclusiveGroup(grid);
+
+     setLayout(grid);
+
+     setWindowTitle(tr("Group Boxes"));
+     resize(480, 200);
+
+     this->setAttribute(Qt::WA_DeleteOnClose, true);
+ }
+
+
 bool compareColumns(const EXPORT_SELECT a, const EXPORT_SELECT b) {
     //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
     return a.rank < b.rank;
@@ -34,6 +52,8 @@ void ExportBox::setTableData(TableData *td) {
     resize(480, 320);
 
 }
+
+
 
  void ExportBox::clickedChoice() {
 

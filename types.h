@@ -5,7 +5,9 @@
 #include <QList>
 #include <QGraphicsItem>
 
-
+enum TYPE {INT, DOUBLE, STRING, UNKNOWN};
+enum OPTYPE{ OR, AND};
+enum DECISION { YES, NO, MAYBE};
 typedef enum { MANHATTAN, STRAIGHT } LineStyle;
 
 enum SOURCETYPE {FASTA, TABTABLE};

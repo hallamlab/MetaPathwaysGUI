@@ -8,12 +8,15 @@ QT       += core gui
 QT += declarative
 
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = MetaPathways2
 TEMPLATE = app
 
-CONFIG += console
+#CONFIG += console
+
+
 
 SOURCES += main.cpp\
         parentwidget.cpp \
@@ -51,7 +54,11 @@ SOURCES += main.cpp\
     genebrowser/genebrowser.cpp \
     genebrowser/genomeview.cpp \
     dataviews/megandata.cpp \
-    dataviews/meganview.cpp
+    dataviews/meganview.cpp \
+    datamodel/datamanager.cpp \
+    datamodel/htree.cpp \
+    datamodel/connector.cpp \
+    datamodel/htabledata.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -90,7 +97,14 @@ HEADERS  += mainwindow.h \
     genebrowser/genebrowser.h \
     genebrowser/genomeview.h \
     dataviews/megandata.h \
-    dataviews/meganview.h
+    dataviews/meganview.h \
+    datamodel/datamanager.h \
+    datamodel/htree.h \
+    datamodel/connector.h \
+    datamodel/datamodeltypes.h\
+    datamodel/htabledata.h
+
+
 
 FORMS    += mainwindow.ui \
             Setup.ui \
@@ -113,7 +127,8 @@ FORMS    += mainwindow.ui \
     displayText.ui \
     popupviews/displayinfo.ui \
     graphicsrepresentation.ui \
-    dataviews/meganbrowser.ui
+    dataviews/meganbrowser.ui \
+    datamodel/htabledata.ui
 
 
 RESOURCES += \

@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include "dataviews/tabledata.h"
 #include <QList>
+#include "datamodel/htabledata.h"
 
 typedef struct _export {
     QString name;
@@ -15,13 +16,14 @@ typedef struct _export {
     QCheckBox *checkbox;
 } EXPORT_SELECT;
 
-
+class HTableData;
 class ExportBox : public QWidget
 {
     Q_OBJECT
 public:
     void setTableData(TableData *td);
-    explicit ExportBox(TableData *td = 0, QWidget *parent = 0);
+     ExportBox(TableData *td = 0, QWidget *parent = 0);
+     ExportBox(HTableData *htd = 0, QWidget *parent = 0);
     ~ExportBox() ;
 signals:
     
@@ -31,6 +33,7 @@ public slots:
 private:
     QGroupBox *createNonExclusiveGroup(QGridLayout *grid);
     TableData *td;
+    HTableData *htd;
 
     QGroupBox *exportFormat;
     QRadioButton *tsvRadio, *csvRadio;

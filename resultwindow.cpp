@@ -51,6 +51,9 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
 
    // graphicsRepresentation["MEGAN"] = new GraphicsRepresentation();
 
+    DataManager *datamanager = DataManager::getDataManager();
+
+    datamanager->createDataModel();
 
 
 }
@@ -92,6 +95,9 @@ void ResultWindow::sampleChanged(QString changed){
     const QString meganTre = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "megan_tree.tre";
     const QString functionalSource1 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + changed + ".1.txt";
 
+    const QString orfTableName = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "ORF_annotation_table.txt";
+
+
     QString pgdbname = changed.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
     const QString pathwaysTable = OUTPUTPATH + "/" + changed + "/results/pgdb/" + pgdbname + ".pathway.txt";
@@ -104,7 +110,42 @@ void ResultWindow::sampleChanged(QString changed){
     QList<enum TYPE> types;
     QList<unsigned int> columns;
 
+    DataManager *datamanager = DataManager::getDataManager();
+    datamanager->createORFs(changed, orfTableName);
+    Connector *connect;
+    connect = datamanager->createConnector(changed, datamanager->getHTree(KEGG), KEGG);
 
+    HTableData *htable = new HTableData;
+    types.clear();
+    types << STRING << STRING << INT;
+    htable->setParameters(datamanager->getHTree(KEGG), connect, types);
+    htable->setMaxSpinBoxDepth(3);
+    htable->setShowHierarchy(true);
+    htable->showTableData();
+    resultTabs->addTab(htable, "KEGG");
+
+    htable = new HTableData;
+    types.clear();
+    types << STRING << STRING << INT;
+    connect = datamanager->createConnector(changed, datamanager->getHTree(COG), COG);
+    htable->setParameters(datamanager->getHTree(COG), connect, types);
+    htable->setMaxSpinBoxDepth(3);
+    htable->setShowHierarchy(true);
+    htable->showTableData();
+    resultTabs->addTab(htable, "COG");
+
+
+    /*
+    qDebug() << " connected ";
+    foreach( ATTRIBUTE *attr, connect->connected.keys()) {
+        qDebug() << attr->name ;
+        foreach(ORF *o, connect->connected[attr]) {
+            qDebug() << "     " << o->name;
+        }
+
+    }
+*/
+    return;
 
     types.clear();
     types << INT << INT << DOUBLE << INT;
@@ -262,3 +303,5 @@ ResultWindow::~ResultWindow()
 {
     delete ui;
 }
+
+

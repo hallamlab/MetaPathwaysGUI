@@ -4,6 +4,7 @@
 #include <QString>
 #include <QLabel>
 #include <QTableWidget>
+#include <QList>
 
 class TableNumberItem : public QTableWidgetItem{
 
@@ -25,6 +26,7 @@ public:
     static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
     static void getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS);
+    static QString createToolTipTable(  QList< QList<QString> > tableData );
 };
 
 #endif // UTILITIES_H

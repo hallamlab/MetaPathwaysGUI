@@ -203,18 +203,16 @@ double MeganData::_spanAtDepth(TREENODE *node, unsigned int depth, double *Yup, 
 
 
 
-void MeganData::unscaleVertically(GraphicsTaxonItem *taxon, double unscale, unsigned int currDepth, unsigned int maxDepth) {
+void MeganData::unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth) {
     if(currDepth > maxDepth ) {
         return;
     }
 
-  //  qDebug() << " unscaling " << unscale;
-    taxon->Name->setScale(unscale);
+    taxon->Name->setTransform(view->transform().inverted());
 
     for(unsigned int i=0; i < taxon->Children.size(); i++) {
-        synchronizeTaxonNames( taxon->Children[i], currDepth + 1, maxDepth);
+        this->unscale( taxon->Children[i], view,  currDepth + 1, maxDepth);
     }
-
 
 }
 

@@ -11,6 +11,7 @@
 #include <QMessageBox>
 #include <QtCore>
 #include <QChar>
+#include "types.h"
 
 
 typedef struct row{
@@ -24,9 +25,7 @@ typedef struct row{
 } ROW;
 
 
-enum TYPE {INT, DOUBLE, STRING, UNKNOWN};
-enum OPTYPE{ OR, AND};
-enum DECISION { YES, NO, MAYBE};
+
 
 
 typedef struct _SEARCH {

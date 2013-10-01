@@ -154,8 +154,26 @@ void GraphicsGeneItems::drawORFDiagrams()  {
         this->geneProp.width = (orf.end - orf.start)*this->geneProp.basePairToPixelRatio;
         this->geneProp.width = this->geneProp.width*this->scale;
         p = itemCreator->getGeneShape(this->geneProp, strand);
-        p->setToolTip("Function : " + orf.func_annot + "<br>" \
-                + "Taxonomy : " + orf.tax_annot);
+        QList<QString> list2;
+        QList< QList< QString > > list1;
+
+        list2.append("Function");
+        list2.append(orf.func_annot);
+        list1.append(list2);
+        list2.clear();
+        list2.append("Taxonomy");
+        list2.append(orf.tax_annot);
+        list1.append(list2);
+
+        list2.clear();
+        list2.append("(Start, End)");
+        list2.append(QString("(") + QString::number(orf.start) + ", " + QString::number(orf.end) + QString(")"));
+        list1.append(list2);
+
+        p->setToolTip( Utilities::createToolTipTable(list1));
+
+       // p->setToolTip("Function : " + orf.func_annot + "<br>" \
+         //       + "Taxonomy : " + orf.tax_annot);
         orfs.push_back(p);
         this->addToGroup(p);
     }
@@ -202,12 +220,27 @@ QGraphicsPolygonItem *GraphicsItemsCollection::getGeneShape(GENEPROPERTY &gene, 
 GraphicsTaxonItem *GraphicsItemsCollection::getTaxonNode(TREENODE *node, double STARTX, double STARTY) {
     GraphicsTaxonItem *taxon;
     taxon = new GraphicsTaxonItem();
-    taxon->radius = node->count > 1 ? log(node->count)*5 + 2 : 2 ;
+    taxon->radius = node->count > 1 ? log10(node->count)*5 + 5 : 5 ;
     taxon->setRect(STARTX + node->depth + taxon->radius/2, STARTY + (node->Ydown + node->Yup)/2 + taxon->radius/2, taxon->radius, taxon->radius );
     taxon->name = node->name;
     taxon->depth = node->depth;
    // qDebug() << " Setting depth item " << taxon->depth << " from " << node->depth;
-    taxon->setToolTip(taxon->name + " " + QString::number(node->depth + taxon->radius/2) + " " + QString::number((node->Ydown + node->Yup)/2 + taxon->radius/2) + " depth = " + QString::number(node->depth));
+   // taxon->setToolTip(taxon->name + " " + QString::number(node->depth + taxon->radius/2) + " " + QString::number((node->Ydown + node->Yup)/2 + taxon->radius/2) + " depth = " + QString::number(node->depth));
+
+    QString string;
+    string = "<table border=\"\" frame=void> \
+            <tr> \
+            <td>row 1, cell 1</td> \
+            <td>row 1, cell 2</td> \
+            </tr> \
+            <tr> \
+            <td>row 2, cell 1</td> \
+            <td>row 2, cell 2</td> \
+            </tr> \
+            </table>";
+
+
+    taxon->setToolTip(string);
     return taxon;
 }
 

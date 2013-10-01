@@ -75,9 +75,11 @@ void SettingsTab::showRRNADBS(){
     QString dbPath = settings.value("REFDBS").toString() + "/taxonomic";
     QStringList *filesInDir = new QStringList();
 
+    QRegExp reg("^[.]");
     if (this->findFiles(dbPath,filesInDir)){
         if (filesInDir->length()>0){
             foreach (QString db, *filesInDir){
+                if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
                 item->setCheckState(Qt::Unchecked);
@@ -98,9 +100,12 @@ void SettingsTab::showORFDBS(){
     QString dbPath = settings.value("REFDBS").toString() + "/functional";
     QStringList *filesInDir = new QStringList();
 
+    QRegExp reg("^[.]");
+
     if (this->findFiles(dbPath,filesInDir)){
         if (filesInDir->length()>0)
             foreach (QString db, *filesInDir){
+                if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
                 item->setCheckState(Qt::Unchecked);
