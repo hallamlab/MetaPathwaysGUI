@@ -23,7 +23,9 @@ class HTableData : public QDialog
 public:
     explicit HTableData(QWidget *parent = 0);
     ~HTableData();
-    bool setParameters(HTree *htree, Connector  *connector, QList<enum TYPE> _types);
+    bool setParameters(HTree *htree, QList<enum TYPE> _types);
+    void addConnector(Connector *connector);
+    void clearConnectors();
     void setNumCols(unsigned int numCols);
     void fillData(unsigned int maxDepth, int state);
 
@@ -31,11 +33,13 @@ public:
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
+    void setHeaders(QStringList &headers);
     void showTableData();
     QTableWidget* tableWidget;
     unsigned int numCols;
     QList<enum TYPE> types;
     Connector *connector;
+    QList<Connector *> connectors;
     HTree *htree;
 
 
@@ -52,6 +56,8 @@ private:
     QList<QFont> fonts;
     QCheckBox *showHierarchy;
     QSpinBox *showDepth;
+
+    QStringList headers;
     unsigned int maxSpinBoxDepth;
 
     Ui::HTableData *ui;

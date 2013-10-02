@@ -26,7 +26,7 @@ typedef struct _HNODE {
     short int depth;
 } HNODE;
 
-typedef enum _ATTRTYPE{ KEGG, COG, RXN, TAXON, METAPWY}  ATTRTYPE;
+typedef enum _ATTRTYPE{ KEGG, COG, TAXON, METACYC}  ATTRTYPE;
 typedef struct _ORF {
     QHash<ATTRTYPE, ATTRIBUTE*> attributes;
     CONTIG *contig;

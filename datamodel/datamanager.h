@@ -23,9 +23,12 @@ public:
     void setIndexFileFaa(QString sampleName, QString fileName);
     void setIndexFileFna(QString sampleName, QString fileName);
     void setIndexFileFasta(QString sampleName, QString fileName);
-    Connector *getConnector(QString source, QString sink, QString sampleName);
+    Connector *getConnector(QString sampleName, ATTRTYPE type);
     Connector *createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType);
     void createORFs(QString sampleName, QString fileName);
+
+    void addNewAnnotationToORFs(QString sampleName, QString fileName);
+
     ORF* _createAnORF(QStringList &attributes);
 
 

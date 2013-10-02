@@ -6,14 +6,11 @@ ExportBox::ExportBox(TableData* td, QWidget *parent)
  {
      QGridLayout *grid = new QGridLayout;
      this->td = td;
-
      createNonExclusiveGroup(grid);
-
      setLayout(grid);
 
      setWindowTitle(tr("Group Boxes"));
      resize(480, 200);
-
      this->setAttribute(Qt::WA_DeleteOnClose, true);
  }
 

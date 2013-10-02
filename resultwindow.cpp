@@ -12,6 +12,12 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
+    checkComparativeMode = this->findChild<QCheckBox *>("checkComparativeMode");
+    selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
+    currentSampleLabel = this->findChild<QLabel *>("currentSampleLabel");
+    selectSamplesButton->setEnabled(false);
+
+
     resultTabs->clear();
 
     getFileNames = new QTimer();
@@ -20,6 +26,8 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
     connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
     connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
+    connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
+    connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
 
     tables["PATHWAYS"] = new TableData();
     tables["REACTIONS"] = new TableData();
@@ -54,14 +62,32 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
     DataManager *datamanager = DataManager::getDataManager();
 
     datamanager->createDataModel();
+}
+
+void ResultWindow::clickedSelectSample(){
+    this->selectWindow = new SelectSamples;
+    this->selectWindow->setReceiver(this);
+    this->selectWindow->addSamples(files);
+    this->selectWindow->show();
+}
 
 
+void ResultWindow::setVisible(int i) {
+    if( i ) {
+        this->selectSamplesButton->setEnabled(true);
+        sampleSelect->setEnabled(false);
+    }
+    else {
+        this->selectSamplesButton->setEnabled(false);
+        sampleSelect->setEnabled(true);
+    }
 }
 
 void ResultWindow::updateFileNames(){
     files = *this->run->files;
 
     QStringList existing;
+
     for (int i=0;i<sampleSelect->count();i++){
         existing.append(sampleSelect->itemText(i));
     }
@@ -73,34 +99,50 @@ void ResultWindow::updateFileNames(){
     }
 }
 
+ void ResultWindow::receiveSelection(QList<bool> &selection) {
+     this->selectedSamples = selection;
+
+     this->switchToComparativeMode();
+
+ }
 
 
-
-void ResultWindow::sampleChanged(QString changed){
+void ResultWindow::sampleChanged(QString sampleName){
     TableData *t;
 
     QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
     QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
 
-    const QString nucFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".nuc.stats";
-    const QString aminoFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".amino.stats";
+    const QString nucFile = this->getFilePath(sampleName, OUTPUTPATH, NUCSTATS);
+    const QString aminoFile = this->getFilePath(sampleName, OUTPUTPATH, AMINOSTATS);
 
-    const QString contigLengthFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".contig.lengths.txt";
-    const QString orfLengthFile = OUTPUTPATH + "/" + changed + "/run_statistics/" + changed + ".orf.lengths.txt";
+    const QString contigLengthFile = this->getFilePath(sampleName, OUTPUTPATH, CONTIGLENGTH);
 
-    const QString nucFasta = OUTPUTPATH  +  "/" + changed + "/preprocessed/" + changed + ".fasta";
-    const QString aminoFasta = OUTPUTPATH + "/" + changed + "/orf_prediction/" + changed + ".faa";
-    const QString funAndTax = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "functional_and_taxonomic_table.txt";
-
-    const QString meganTre = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "megan_tree.tre";
-    const QString functionalSource1 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + changed + ".1.txt";
-
-    const QString orfTableName = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "ORF_annotation_table.txt";
+    const QString orfLengthFile = this->getFilePath(sampleName, OUTPUTPATH,ORFLENGTH);
 
 
-    QString pgdbname = changed.toLower().replace(QRegExp("[.]"), "_");
+    const QString nucFasta = this->getFilePath(sampleName, OUTPUTPATH, NUCFASTA);
+
+    const QString aminoFasta = this->getFilePath(sampleName, OUTPUTPATH, AMINOFAA);
+
+    const QString funAndTax = this->getFilePath(sampleName, OUTPUTPATH, FUNCTIONALTABLE);
+
+
+
+    const QString meganTre = this->getFilePath(sampleName, OUTPUTPATH, MEGANTREE);
+
+
+    const QString functionalSource1 = this->getFilePath(sampleName, OUTPUTPATH, FUNCTIONAL_SRC1);
+
+
+    QString orfTableName = this->getFilePath(sampleName, OUTPUTPATH, ORFTABLE);
+
+
+    const QString orfMetaCycTableName = this->getFilePath(sampleName, OUTPUTPATH, ORFMETACYC);
+
+    QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
-    const QString pathwaysTable = OUTPUTPATH + "/" + changed + "/results/pgdb/" + pgdbname + ".pathway.txt";
+    const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
 
     resultTabs->clear();
     for (unsigned int i=0; i< resultTabs->count(); i++){
@@ -110,41 +152,91 @@ void ResultWindow::sampleChanged(QString changed){
     QList<enum TYPE> types;
     QList<unsigned int> columns;
 
+    QStringList headers;
+
     DataManager *datamanager = DataManager::getDataManager();
-    datamanager->createORFs(changed, orfTableName);
+
+
+    orfTableName = this->getFilePath(sampleName, OUTPUTPATH, ORFTABLE);
+    datamanager->createORFs(sampleName, orfTableName);
+    datamanager->addNewAnnotationToORFs(sampleName, orfMetaCycTableName);
+
+
+
     Connector *connect;
-    connect = datamanager->createConnector(changed, datamanager->getHTree(KEGG), KEGG);
+
 
     HTableData *htable = new HTableData;
     types.clear();
     types << STRING << STRING << INT;
-    htable->setParameters(datamanager->getHTree(KEGG), connect, types);
-    htable->setMaxSpinBoxDepth(3);
+    headers.clear();
+    headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
+    htable->clearConnectors();
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(KEGG), KEGG);
+    htable->setParameters(datamanager->getHTree(KEGG), types);
+    htable->addConnector(connect);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
     htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
     htable->showTableData();
     resultTabs->addTab(htable, "KEGG");
+
+
 
     htable = new HTableData;
     types.clear();
     types << STRING << STRING << INT;
-    connect = datamanager->createConnector(changed, datamanager->getHTree(COG), COG);
-    htable->setParameters(datamanager->getHTree(COG), connect, types);
-    htable->setMaxSpinBoxDepth(3);
+    headers.clear();
+    headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
+    htable->clearConnectors();
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(COG), COG);
+    htable->setParameters(datamanager->getHTree(COG),  types);
+    htable->addConnector(connect);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
     htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
     htable->showTableData();
     resultTabs->addTab(htable, "COG");
 
 
-    /*
-    qDebug() << " connected ";
-    foreach( ATTRIBUTE *attr, connect->connected.keys()) {
-        qDebug() << attr->name ;
-        foreach(ORF *o, connect->connected[attr]) {
-            qDebug() << "     " << o->name;
-        }
+    htable = new HTableData;
+    types.clear();
+    types << STRING << STRING << INT;
+    headers.clear();
+    headers << "Pathway/Reaction" << "Common name" << "ORF Count";
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC);
+    htable->setParameters(datamanager->getHTree(METACYC),  types);
+    htable->addConnector(connect);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
+    htable->showTableData();
+    resultTabs->addTab(htable, "METACYC");
 
-    }
-*/
+
+    DisplayInfo *p = displayInfos["FUNC & TAX"];
+    p->removeFileIndexes();
+    FileIndexManager *indexManager = FileIndexManager::getFileIndexManager();
+
+
+    FileIndex *fileIndex = indexManager->getFileIndex(nucFasta, FASTA);
+    p->addFileIndex(fileIndex,4);
+    fileIndex = indexManager->getFileIndex(aminoFasta, FASTA);
+    p->addFileIndex(fileIndex,0);
+
+    types.clear();
+    types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
+    t = this->tables["FUNC & TAX"];
+    t->setParameters(false, funAndTax, types, true);
+    t->setPopupListener(p);
+    resultTabs->addTab(t, "FUNC & TAX");
+
+
+
+    MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
+    m->clearExistingTree();
+    m->setDataFromFile(meganTre);
+    resultTabs->addTab(m, "TAXONOMIC");
     return;
 
     types.clear();
@@ -186,7 +278,7 @@ void ResultWindow::sampleChanged(QString changed){
      t->setParameters(false, pathwaysTable, types, columns, false, QRegExp("^RXN:"));
      resultTabs->addTab(t, "REACTIONS");
 
-
+/*
 
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
@@ -205,14 +297,14 @@ void ResultWindow::sampleChanged(QString changed){
     t->setParameters(false, funAndTax, types, true);
     t->setPopupListener(p);
     resultTabs->addTab(t, "FUNC & TAX");
-
+*/
 
 
 
     // MEGAN VIEW
 
 
-    MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
+    m = this->meganviews["MEGAN_TAXONOMIC"];
     m->clearExistingTree();
     m->setDataFromFile(meganTre);
     resultTabs->addTab(m, "TAXONOMIC");
@@ -234,64 +326,155 @@ void ResultWindow::sampleChanged(QString changed){
 
 
 
-    // add the annotation sources table KEGG 1
-    const QString functionalKegg1 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "KEGG_stats_1.txt";
+
+
+    emit fileChanged(sampleName);
+}
+
+QString ResultWindow::getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) {
+    QString path;
+    switch(type) {
+        case NUCSTATS:
+           path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".nuc.stats";
+           break;
+        case AMINOSTATS:
+           path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".amino.stats";
+           break;
+        case CONTIGLENGTH:
+           path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".contig.lengths.txt";
+           break;
+        case ORFLENGTH:
+           path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".orf.lengths.txt";
+           break;
+        case NUCFASTA:
+           path = OUTPUTPATH  +  "/" + sampleName + "/preprocessed/" + sampleName + ".fasta";
+           break;
+        case AMINOFAA:
+           path = OUTPUTPATH + "/" + sampleName + "/orf_prediction/" + sampleName + ".faa";
+           break;
+        case FUNCTIONALTABLE:
+           path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "functional_and_taxonomic_table.txt";
+           break;
+        case MEGANTREE:
+           path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "megan_tree.tre";
+           break;
+        case FUNCTIONAL_SRC1:
+           path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + sampleName + ".1.txt";
+           break;
+        case ORFTABLE:
+           path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_table.txt";
+           break;
+        case ORFMETACYC:
+           path =OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_metacyc_table.txt";
+           break;
+        default:
+           path = "";
+           break;
+    }
+    return path;
+
+}
+
+void ResultWindow::switchToComparativeMode() {
+    resultTabs->clear();
+    QString METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
+    QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
+
+    QString orfTableName;
+    QString orfMetaCycTableName;
+
+    qDebug() << "comparative mode";
+
+    QList<enum TYPE> types;
+    QList<unsigned int> columns;
+
+    QStringList headers;
+
+    DataManager *datamanager = DataManager::getDataManager();
+   //// datamanager->createORFs(changed, orfTableName);
+
+   //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
+
+    Connector *connect;
+    ///connect = datamanager->createConnector(changed, datamanager->getHTree(KEGG), KEGG);
+
+    for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+        orfTableName = this->getFilePath(files[i], OUTPUTPATH, ORFTABLE);
+        datamanager->createORFs(files[i], orfTableName);
+        orfMetaCycTableName = this->getFilePath(files[i], OUTPUTPATH, ORFMETACYC);
+        datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
+    }
+
+
+    HTableData *htable = new HTableData;
     types.clear();
-    types << STRING  <<  INT;
-    t=  this->tables["FUNC KEGG 1"];
-    t->setParameters(false, functionalKegg1, types, false);
-  //  t =  new TableData(true, false, functionalKegg1, types);
-    resultTabs->addTab(t, "FUNC KEGG 1");
+    types << STRING << STRING;
+    headers.clear();
+    headers << "COG Category" << "COG Category (Alias) ";
+    htable->clearConnectors();
 
-    // add the annotation sources table KEGG 2
-    const QString functionalKegg2 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "KEGG_stats_2.txt";
+    for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG);
+       htable->addConnector(connect);
+       headers << files[i];
+       types << INT;
+    }
+    htable->setParameters(datamanager->getHTree(COG),  types);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
+    htable->showTableData();
+    resultTabs->addTab(htable, "COG");
+
+
+    htable = new HTableData;
     types.clear();
-    types << STRING << STRING <<  INT;
-    t=  this->tables["FUNC KEGG 2"];
-    t->setParameters(false, functionalKegg2, types, false);
-    resultTabs->addTab(t, "FUNC KEGG 2");
+    types << STRING << STRING;
+    headers.clear();
+    headers << "KEGG Function" << "KEGG function (alias) " ;
+    htable->clearConnectors();
 
+    for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG);
+       htable->addConnector(connect);
+       headers << files[i];
+       types << INT;
+    }
+    htable->setParameters(datamanager->getHTree(KEGG),  types);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
+    htable->showTableData();
+    resultTabs->addTab(htable, "KEGG");
 
-    const QString functionalKegg3 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "KEGG_stats_3.txt";
+    // METACYC
+    htable = new HTableData;
     types.clear();
-    types << STRING << STRING <<  INT;
-    t=  this->tables["FUNC KEGG 3"];
-    t->setParameters(false, functionalKegg3, types, false);
-    resultTabs->addTab(t, "FUNC KEGG 3");
+    types << STRING << STRING;
+    headers.clear();
+    headers << "Pathway/Reaction" << "Common name" ;
+    htable->clearConnectors();
+
+    for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC);
+       htable->addConnector(connect);
+       headers << files[i];
+       types << INT;
+    }
+    htable->setParameters(datamanager->getHTree(METACYC),  types);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
+    htable->showTableData();
+    resultTabs->addTab(htable, "METACYC");
 
 
-    const QString functionalKegg4 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "KEGG_stats_4.txt";
-    types.clear();
-    types << STRING << STRING <<  INT;
-    t=  this->tables["FUNC KEGG 4"];
-    t->setParameters(false, functionalKegg4, types, false);
-    resultTabs->addTab(t, "FUNC KEGG 4");
 
-    // add the annotation sources table COG 1
-    const QString functionalCOG1 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "COG_stats_1.txt";
-    types.clear();
-    types << STRING  <<  INT;
-    t =  this->tables["FUNC COG 1"];
-    t->setParameters(true, functionalCOG1, types, false) ;
-    resultTabs->addTab(t, "FUNC COG 1");
 
-    // add the annotation sources table COG 2
-    const QString functionalCOG2 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "COG_stats_2.txt";
-    types.clear();
-    types << STRING  << STRING <<  INT;
-    t =  this->tables["FUNC COG 2"];
-    t->setParameters(true, functionalCOG2, types, false);
-    resultTabs->addTab(t, "FUNC COG 2");
-
-    // add the annotation sources table COG 3
-    const QString functionalCOG3 = OUTPUTPATH + "/" + changed + "/results/annotation_table/" + "COG_stats_3.txt";
-    types.clear();
-    types << STRING  <<  STRING << INT;
-    t =  this->tables["FUNC COG 3"];
-    t->setParameters(true, functionalCOG3, types, false);
-    resultTabs->addTab(t, "FUNC COG 3");
-
-    emit fileChanged(changed);
 }
 
 RunData* ResultWindow::getRunData(){

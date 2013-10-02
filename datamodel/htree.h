@@ -11,7 +11,7 @@
 typedef struct _ROWDATA {
     QString name;
     QString alias;
-    unsigned int count;
+    QVector<unsigned int> counts;
     unsigned int depth;
 } ROWDATA;
 
@@ -22,16 +22,18 @@ public:
     HTree();
     void loadFromFile(QString fileName);
     void hashNodes(HNODE *hnode);
+    short getTreeDepth();
     QList<HNODE *> getChildrenOf(QString name);
     void printTree(HNODE *hnode);
-    unsigned int countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data);
+    QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data);
 
-    QList<ROWDATA *> getRows(unsigned int maxDepth, int showHierarchy, Connector *connector);
+    QList<ROWDATA *> getRows(unsigned int maxDepth, int showHierarchy, QList< Connector *> &connectors);
     HNODE *getHNODE(QString name);
     HNODE *root;
 private:
+    short _getTreeDepth(HNODE *hnode, short currDepth) ;
     QHash<QString, HNODE *> nodes;
-    Connector *connector;
+    QList<Connector *> connectors;
 };
 
 #endif // HTREE_H

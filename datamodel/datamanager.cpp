@@ -59,28 +59,51 @@ void DataManager::setIndexFileFasta(QString sampleName, QString fileName) {
 
 }
 
-Connector *DataManager::getConnector(QString source, QString sink, QString sampleName) {
-
-
-
-
+Connector *DataManager::getConnector( QString sampleName, ATTRTYPE type) {
+    if(this->connectors.contains(sampleName) && this->connectors[sampleName].contains(type) ) {
+        this->connectors[sampleName][type];
+    }
+    return 0;
 }
 
 
 
 CATEGORYNODE DataManager::createCategoryNode(QString line) {
     QRegExp d1("^[\\t]");
-        QRegExp d2("^[\\t][\\t]");
-            QRegExp d3("^[\\t][\\t][\\t]");
-                QRegExp d4("^[\\t][\\t][\\t][\\t]");
-                    QRegExp d5("^[\\t][\\t][\\t][\\t][\\t]");
-                        QRegExp d6("^[\\t][\\t][\\t][\\t][\\t][\\t]");
-                            QRegExp d7("^[\\t][\\t][\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d2("^[\\t][\\t]");
+    QRegExp d3("^[\\t][\\t][\\t]");
+    QRegExp d4("^[\\t][\\t][\\t][\\t]");
+    QRegExp d5("^[\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d6("^[\\t][\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d7("^[\\t][\\t][\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d8("^[\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d9("^[\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t]");
+    QRegExp d10("^[\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t][\\t]");
 
     QString name;
     unsigned int depth;
 
-    if( line.indexOf(d5) > -1 ) {
+    if( line.indexOf(d10) > -1 ) {
+        depth = 10;
+        name = line.replace(d10,"");
+    }
+    else if( line.indexOf(d9) > -1 ) {
+        depth = 9;
+        name = line.replace(d9,"");
+    }
+    else if( line.indexOf(d8) > -1 ) {
+        depth = 8;
+        name = line.replace(d8,"");
+    }
+    else if( line.indexOf(d7) > -1 ) {
+        depth = 7;
+        name = line.replace(d7,"");
+    }
+    else if( line.indexOf(d6) > -1 ) {
+        depth = 6;
+        name = line.replace(d6,"");
+    }
+    else if( line.indexOf(d5) > -1 ) {
         depth = 5;
         name = line.replace(d5,"");
     }
@@ -135,7 +158,11 @@ void DataManager::createDataModel() {
     this->htrees[KEGG] = htree;
 
 
-    //htree->printTree(htree->root);
+    QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
+    htree = createHTree(MetaCyc_hierarchy);
+    htree->hashNodes(htree->root);
+    this->htrees[METACYC] = htree;
+   // htree->printTree(htree->root);
 
 }
 
@@ -199,7 +226,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
     else {
         orf->attributes[COG] = new ATTRIBUTE;
         orf->attributes[COG]->name = attributes[2];
-        this->attributes[COG][orf->name] = orf->attributes[COG];
+        this->attributes[COG][attributes[2]] = orf->attributes[COG];
     }
 
     if(this->attributes[KEGG].contains(attributes[3]))
@@ -207,7 +234,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
     else {
         orf->attributes[KEGG] = new ATTRIBUTE;
         orf->attributes[KEGG]->name = attributes[3];
-        this->attributes[KEGG][orf->name] = orf->attributes[KEGG];
+        this->attributes[KEGG][attributes[3]] = orf->attributes[KEGG];
     }
 
     return orf;
@@ -215,6 +242,10 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
 
 
 void DataManager::createORFs(QString sampleName, QString fileName) {
+
+    //return if already created;
+    if(this->ORFList.contains(sampleName)) return;
+
     QFile inputFile(fileName);
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
@@ -225,22 +256,82 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
         }
         inputFile.close();
     }
+
     this->attributes[COG].clear();
     this->attributes[KEGG].clear();
 }
 
+
+void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
+
+
+    QFile inputFile(fileName);
+    QHash<QString, ORF *> orfHash;
+    foreach(ORF *orf, this->ORFList[sampleName]) {
+        orfHash[orf->name] = orf;
+    }
+
+    ORF *temporf;
+    QString name, alias;
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
+
+            if(line.size() < 2) continue;
+            name = line[0];
+            alias = line[1];
+
+            line.removeFirst();
+            line.removeFirst();
+            foreach(QString orfName, line) {
+
+                if( orfHash.contains(orfName)) {
+                   temporf = orfHash[orfName];
+               }
+               else {
+                  temporf = new ORF;
+                  this->ORFList[sampleName].append(temporf);
+               }
+
+               temporf->name = orfName;
+               if( this->attributes[METACYC].contains(name)) {
+                   temporf->attributes[METACYC] = this->attributes[METACYC][name];
+               }
+               else {
+                   temporf->attributes[METACYC]= new ATTRIBUTE;
+                   temporf->attributes[METACYC]->name = name;
+                   temporf->attributes[METACYC]->alias = alias;
+                   this->attributes[METACYC][name] = temporf->attributes[METACYC];
+               }
+
+            }
+
+        }
+        inputFile.close();
+    }
+    this->attributes[METACYC].clear();
+}
+
+
+
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType) {
+    if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(atrType)) {
+        return this->connectors[sampleName][atrType];
+    }
+
     if(htree==0) return 0;
     QList<ORF *>::const_iterator it;
     Connector *connector = new Connector;
     HNODE *hnode;
-
     for(it = this->ORFList[sampleName].begin(); it!= this->ORFList[sampleName].end(); ++it ) {
+        if( !(*it)->attributes.contains(atrType) ) continue;
+
         hnode = htree->getHNODE((*it)->attributes[atrType]->name);
-          if(hnode!=0) {
+        if(hnode!=0) {
               //qDebug() << hnode->attribute->name;
               connector->addToList(hnode->attribute, *it);
-          }
+       }
     }
 
     this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();

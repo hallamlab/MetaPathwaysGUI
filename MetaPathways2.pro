@@ -58,7 +58,8 @@ SOURCES += main.cpp\
     datamodel/datamanager.cpp \
     datamodel/htree.cpp \
     datamodel/connector.cpp \
-    datamodel/htabledata.cpp
+    datamodel/htabledata.cpp \
+    popupviews/selectsamples.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -102,7 +103,8 @@ HEADERS  += mainwindow.h \
     datamodel/htree.h \
     datamodel/connector.h \
     datamodel/datamodeltypes.h\
-    datamodel/htabledata.h
+    datamodel/htabledata.h \
+    popupviews/selectsamples.h
 
 
 
@@ -128,7 +130,8 @@ FORMS    += mainwindow.ui \
     popupviews/displayinfo.ui \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \
-    datamodel/htabledata.ui
+    datamodel/htabledata.ui \
+    popupviews/selectsamples.ui
 
 
 RESOURCES += \

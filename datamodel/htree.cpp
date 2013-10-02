@@ -12,6 +12,27 @@ void HTree::loadFromFile(QString fileName) {
 }
 
 
+
+short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
+    short int depth = currDepth;
+
+    short int tempDepth;
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+       tempDepth = this->_getTreeDepth(*it, currDepth+1);
+       if( tempDepth > depth)
+           depth = tempDepth;
+    }
+
+    return depth;
+
+}
+
+short int HTree::getTreeDepth() {
+    short int depth;
+    depth = this->_getTreeDepth(this->root, -1);
+    return depth;
+}
+
 void HTree::hashNodes(HNODE *hnode) {
     this->nodes[hnode->attribute->name] = hnode;
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
@@ -47,14 +68,19 @@ HNODE *HTree::getHNODE(QString name) {
 }
 
 
-unsigned int HTree::countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
-    unsigned int count =0;
+QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
+    QVector<unsigned int> vcount;
+    QVector<unsigned int> tempcount;
+
+    for(unsigned int j=0; j < this->connectors.size(); j++) {
+        vcount.push_back(0);
+    }
 
     if(hnode->children.size()==0) {
-        if( this->connector->connected.contains(hnode->attribute))
-           count = this->connector->connected[hnode->attribute].size();
-        else
-           count =0;
+        for(unsigned int j=0; j < this->connectors.size(); j++) {
+           if( this->connectors[j]->connected.contains(hnode->attribute))
+               vcount[j] = this->connectors[j]->connected[hnode->attribute].size();
+        }
     }
 
     ROWDATA *r = new ROWDATA;
@@ -67,16 +93,17 @@ unsigned int HTree::countTree(HNODE *hnode, unsigned int maxDepth, int showHiera
     }
 
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
-        count += this->countTree(*it, maxDepth, showHierarchy, currDepth + 1, data);
+        tempcount = this->countTree(*it, maxDepth, showHierarchy, currDepth + 1, data);
+        for(unsigned int j=0; j < this->connectors.size(); j++) vcount[j] += tempcount[j];
     }
 
-    r->count = count;
-    return count;
+    r->counts = vcount;
+    return vcount;
 }
 
-QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, int showHierarchy, Connector *connector) {
+QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, int showHierarchy, QList<Connector *> &connectors) {
    QList<ROWDATA *> data;
-   this->connector = connector;
+   this->connectors = connectors;
    this->countTree(this->root, maxDepth, showHierarchy, -1, data);
    return data;
 }

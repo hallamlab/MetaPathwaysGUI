@@ -22,8 +22,13 @@
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
 #include "datamodel/datamanager.h"
+#include "popupviews/selectsamples.h"
 
+typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, CONTIGLENGTH, ORFLENGTH, \
+                             NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
+                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC } INPUTFILETYPE;
 
+class SelectSamples;
 
 namespace Ui {
 class ResultWindow;
@@ -41,22 +46,36 @@ public:
 public slots:
     void sampleChanged(QString changed);
     void updateFileNames();
+    void setVisible(int);
+    void receiveSelection(QList<bool> &selection);
 
+private slots:
+    void clickedSelectSample();
 
 signals:
     void fileChanged(QString file);
+
+private:
+    void switchToComparativeMode();
+    QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
+
 
 private:
     Ui::ResultWindow *ui;
     QWidget* parent;
     RunData *run;
     QComboBox* sampleSelect;
+    QPushButton *selectSamplesButton;
+    QCheckBox *checkComparativeMode;
+    QLabel *currentSampleLabel;
+
     QTabWidget *resultTabs;
     QSignalMapper *signal;
     QTimer *getFileNames;
     QStringList files;
     ProgressDialog *progress;
 
+    SelectSamples *selectWindow;
 
     QHash<QString, TableData *> tables;
     QHash<QString, GraphData *> graphs;
@@ -64,7 +83,10 @@ private:
  //   QHash<QString, GraphicsRepresentation *> graphicsRepresentation;
     QHash<QString, MeganView *> meganviews;
 
+    QList<bool> selectedSamples;
+
     DataManager *datamanager;
+
 
 
 };
