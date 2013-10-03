@@ -315,6 +315,13 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
 
 
+Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector* connector) {
+      Connector *newConnector = new Connector;
+      htree->copyDataToSubConnector(hnode, connector, newConnector);
+      return newConnector;
+}
+
+
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType) {
     if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(atrType)) {
         return this->connectors[sampleName][atrType];

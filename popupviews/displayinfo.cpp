@@ -68,8 +68,7 @@ void DisplayInfo::receiveSequenceData( QTableWidgetItem *item, GeneBrowserData g
 }
 
 void DisplayInfo::openGenomeView() {
-    qDebug() << "geonem view " << this->gbdata.seq.length;
-    qDebug() << " data num " << this->gbdata.orfData.size();
+
     GenomeView *gv = new GenomeView;
     gv->showData(this->gbdata);
     gv->show();

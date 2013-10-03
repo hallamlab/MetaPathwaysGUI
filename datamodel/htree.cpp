@@ -12,7 +12,6 @@ void HTree::loadFromFile(QString fileName) {
 }
 
 
-
 short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
     short int depth = currDepth;
 
@@ -42,11 +41,7 @@ void HTree::hashNodes(HNODE *hnode) {
 
 QList<HNODE *> HTree::getChildrenOf(QString name) {
    QList<HNODE *> results;
-
-
-
    return results;
-
 }
 
 
@@ -66,6 +61,7 @@ HNODE *HTree::getHNODE(QString name) {
     else
         return 0;
 }
+
 
 
 QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
@@ -96,8 +92,8 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, int 
         tempcount = this->countTree(*it, maxDepth, showHierarchy, currDepth + 1, data);
         for(unsigned int j=0; j < this->connectors.size(); j++) vcount[j] += tempcount[j];
     }
+    r->counts= vcount;
 
-    r->counts = vcount;
     return vcount;
 }
 
@@ -105,5 +101,29 @@ QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, int showHierarchy, QList<
    QList<ROWDATA *> data;
    this->connectors = connectors;
    this->countTree(this->root, maxDepth, showHierarchy, -1, data);
+   return data;
+}
+
+
+void HTree::copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector) {
+
+    if(hnode->children.size()==0) {
+        targetConnector->connected[hnode->attribute]=srcConnector->connected[hnode->attribute];
+    }
+
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+         this->copyDataToSubConnector(*it, srcConnector, targetConnector);
+    }
+
+}
+
+
+
+QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, int showHierarchy, QList<Connector *> &connectors) {
+   QList<ROWDATA *> data;
+   this->connectors = connectors;
+   HNODE *node = this->getHNODE(category);
+   if(node!=0)
+      this->countTree(node, maxDepth, showHierarchy, -1, data);
    return data;
 }

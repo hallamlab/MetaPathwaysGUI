@@ -25,6 +25,9 @@ public:
     void setIndexFileFasta(QString sampleName, QString fileName);
     Connector *getConnector(QString sampleName, ATTRTYPE type);
     Connector *createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType);
+
+    Connector *createSubConnector(HTree *tree, HNODE *hnode, Connector* connector);
+
     void createORFs(QString sampleName, QString fileName);
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);

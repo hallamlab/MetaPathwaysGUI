@@ -178,6 +178,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity(sampleName,KEGG);
     htable->showTableData();
     resultTabs->addTab(htable, "KEGG");
 
@@ -195,6 +196,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity(sampleName,COG);
     htable->showTableData();
     resultTabs->addTab(htable, "COG");
 
@@ -210,10 +212,11 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity(sampleName,METACYC);
     htable->showTableData();
     resultTabs->addTab(htable, "METACYC");
 
-
+/*
     DisplayInfo *p = displayInfos["FUNC & TAX"];
     p->removeFileIndexes();
     FileIndexManager *indexManager = FileIndexManager::getFileIndexManager();
@@ -230,7 +233,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     t->setParameters(false, funAndTax, types, true);
     t->setPopupListener(p);
     resultTabs->addTab(t, "FUNC & TAX");
-
+*/
 
 
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
@@ -425,6 +428,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity("COG", COG);
     htable->showTableData();
     resultTabs->addTab(htable, "COG");
 
@@ -447,6 +451,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity("KEGG",KEGG);
     htable->showTableData();
     resultTabs->addTab(htable, "KEGG");
 
@@ -469,6 +474,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
+    htable->setTableIdentity("METACYC",METACYC);
     htable->showTableData();
     resultTabs->addTab(htable, "METACYC");
 

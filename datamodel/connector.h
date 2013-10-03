@@ -9,7 +9,7 @@ class Connector
 public:
     Connector();
     void addToList(ATTRIBUTE *attribute, ORF *orf);
-        QHash<ATTRIBUTE *, QList<ORF *> > connected;
+    QHash<ATTRIBUTE *, QList<ORF *> > connected;
 private:
     QString source, sink;
   //  QHash<ATTRIBUTE *, QList<ORF *> > connected;

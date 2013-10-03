@@ -28,9 +28,13 @@ public:
     QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data);
 
     QList<ROWDATA *> getRows(unsigned int maxDepth, int showHierarchy, QList< Connector *> &connectors);
+    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, int showHierarchy, QList< Connector *> &connectors);
     HNODE *getHNODE(QString name);
+    void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
+
     HNODE *root;
 private:
+
     short _getTreeDepth(HNODE *hnode, short currDepth) ;
     QHash<QString, HNODE *> nodes;
     QList<Connector *> connectors;

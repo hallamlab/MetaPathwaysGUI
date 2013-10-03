@@ -11,17 +11,43 @@ HTableData::HTableData(QWidget *parent) :
     tableWidget = this->findChild<QTableWidget *>("tableWidget");
     showHierarchy  = this->findChild<QCheckBox *>("showHierarchy");
     showDepth = this->findChild<QSpinBox *>("showDepth");
+    viewToggleBox  = this->findChild<QCheckBox *>("viewToggleBox");
+    categorySelector = this->findChild<QComboBox *>("categorySelector");
+    subCategoryName = this->findChild<QLabel *>("subCategoryName");
+    depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
+    hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
 
+    HTABLEIDENTITY a;
+   // order is important
+    a.attrType = KEGG; a.sampleName="KEGG";
+    htableIdentities << a;
+    a.attrType = COG; a.sampleName="COG";
+    htableIdentities << a;
+    a.attrType = METACYC; a.sampleName="METACYC";
+    htableIdentities << a;
+
+    foreach(HTABLEIDENTITY identity, htableIdentities) {
+       categorySelector->addItem(identity.sampleName);   ///sample name is a short cut and wrong
+    }
+
+    depthLabelValue->hide();
+    subCategoryName->hide();
+    viewToggleBox->hide();
+    categorySelector->hide();
+
+    this->subWindow = false;
+
+    this->level = 0;
 
     connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT(spinBoxChanged(int) ) );
     connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyChanged(int) ) );
-
+    connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(hideZeroRowsChanged(int) ) );
+    connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
+    connect(categorySelector, SIGNAL(currentIndexChanged(int)), this, SLOT(switchCategory(int)) );
 
 
     colors  << QBrush(Qt::black) <<  QBrush(Qt::red) << QBrush(Qt::blue) << QBrush(QColor(0,153,0)) << QBrush(QColor(255,128,0)) <<  QBrush(QColor(102,0,102)) << QBrush(QColor(76,0,183)) << QBrush(QColor(204,0,102))   << QBrush(Qt::gray);
     indents << QString("")       << QString("\t")    << QString("\t\t")  << QString("\t\t\t")       << QString("\t\t\t\t")       <<  QString("\t\t\t\t\t")     << QString("\t\t\t\t\t\t")  << QString("\t\t\t\t\t\t\t")   << QString("\t\t\t\t\t\t\t\t")   ;
-
-
 }
 
 HTableData::~HTableData()
@@ -62,35 +88,87 @@ void HTableData::setNumCols(unsigned int numCols) {
 
 void HTableData::setHeaders(QStringList &headers) {
   this->headers = headers;
-
  }
 
-void HTableData::spinBoxChanged(int depth) {
+void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
+   this->id.attrType = attrType;
+   this->id.sampleName = sampleName;
+}
 
-    this->showTableData();
-    // this->fillData(depth, (this->showHierarchy->checkState()==Qt::Checked) );
+void HTableData::spinBoxChanged(int depth) {
+    if(this->subWindow)
+        this->showSelectedTableData(this->category);
+    else
+        this->showTableData();
 }
 
 
-void HTableData::showTableData() {
-    this->fillData(this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked) );
+void HTableData::showTableData(bool hideZeroRows) {
+    this->fillData(this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows);
 
 }
 
 void HTableData::showHierarchyChanged(int state) {
-    this->showTableData();
-    //this->fillData(this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked) );
-
+    if(this->subWindow)
+        this->showSelectedTableData(this->category);
+    else
+        this->showTableData();
 }
 
-void HTableData::fillData(unsigned int maxDepth, int state) {
+void HTableData::hideZeroRowsChanged(int state) {
+    if(this->subWindow)
+        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
+    else
+        this->showTableData( (this->hideZeroRows->checkState()==Qt::Checked));
+}
+
+
+void HTableData::fillData(unsigned int maxDepth, int state, bool hideZeroRows) {
      QList<ROWDATA *> data;
      data =  this->htree->getRows(maxDepth, state, this->connectors);
      this->populateTable(data, this->headers, state );
+     QList<ROWDATA *> newdata;
+     if(hideZeroRows) {
+        foreach(ROWDATA *r, data) {
+            if( isNonZero(r)) newdata.append(r);
+        }
+        this->populateTable(newdata, this->headers, state );
 
+     }
+     else {
+        this->populateTable(data, this->headers, state );
+
+     }
 }
 
+unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
+     return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
+}
 
+bool HTableData::isNonZero(ROWDATA *r) {
+    QVector<unsigned int>::const_iterator  it;
+    for(it = r->counts.begin(); it!=r->counts.end(); it++) {
+        if(*it > 0) return true;
+    }
+    return false;
+}
+
+unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth, int state, bool hideZeroRows) {
+     QList<ROWDATA *> data;
+     data =  this->htree->getRows(categoryName, maxDepth, state, this->connectors);
+     QList<ROWDATA *> newdata;
+     if(hideZeroRows) {
+        foreach(ROWDATA *r, data) {
+            if( isNonZero(r)) newdata.append(r);
+        }
+        this->populateTable(newdata, this->headers, state );
+        return newdata.size();
+     }
+     else {
+        this->populateTable(data, this->headers, state );
+        return data.size();
+     }
+}
 
 void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, int hierarchyEnabled){
 
@@ -99,6 +177,8 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     tableWidget->setHorizontalHeaderLabels(headers);
     tableWidget->setRowCount(data.size());
     tableWidget->setColumnCount(types.size());
+    tableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 
     if( hierarchyEnabled)
        tableWidget->setSortingEnabled(false);
@@ -130,4 +210,154 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
+/*
+void HTableData::showInformativeTable(QTableWidgetItem *item) {
+    unsigned int column = item->column();
+    unsigned int row = item->row();
+
+
+//    qDebug() << " You clicked on sample " << this->id.sampleName << " " << this->id.attrType \
+             << "  " <<  row << " " <<  column << " " << tableWidget->item(row,0)->text().trimmed();
+
+
+    DataManager *datamanager = DataManager::getDataManager();
+    HTableData *htable = new HTableData;
+    htable->clearConnectors();
+
+    htable->viewToggleBox->setVisible(true);
+    htable->categorySelector->setVisible(true);
+    htable->subWindow = true;
+    htable->category = tableWidget->item(row,0)->text().trimmed();
+    htable->level = this->level +1;
+
+    htable->setWindowTitle(htable->category);
+    HTree *htree = datamanager->getHTree(this->id.attrType);
+
+
+    HNODE *hnode = htree->getHNODE(htable->category);
+
+    htable->subCategoryName->setVisible(true);
+    if(hnode != 0)
+       htable->subCategoryName->setText(hnode->attribute->alias);
+    else
+       htable->subCategoryName->setText(htable->category);
+
+    htable->depthLabelValue->setText(QString::number(htable->level));
+    htable->depthLabelValue->setVisible(true);
+  //  htable->connectors = this->connectors;
+
+    htable->connectors.clear();
+    Connector *modConnector ;
+    foreach(Connector *connector, this->connectors) {
+        modConnector = datamanager->createSubConnector(datamanager->getHTree(this->id.attrType), hnode, connector);
+        htable->allConnectors[this->id.attrType].append(modConnector);
+    }
+
+    htable->headers = this->headers;
+    htable->setTableIdentity(this->id.sampleName, this->id.attrType);
+
+
+//    htable->setParameters(datamanager->getHTree(id.attrType), this->types);
+//    htable->setMaxSpinBoxDepth(datamanager->getHTree(id.attrType)->getTreeDepth());
+//    htable->setShowHierarchy(true);
+//    htable->setHeaders(this->headers);
+
+//    htable->setTableIdentity(id.sampleName, id.attrType);
+//    if( htable->showSelectedTableData(htable->category) ==0 )
+//        htable->hide();
+//    else
+//        htable->show();
+
+    htable->switchCategory(this->id.attrType);
+
+}
+
+    */
+
+void HTableData::switchCategory(int index) {
+
+    return ;
+    qDebug()<< "index " << index;
+    DataManager *datamanager = DataManager::getDataManager();
+
+    this->connectors = this->allConnectors[this->htableIdentities[index].attrType];
+
+    this->setParameters(datamanager->getHTree(htableIdentities[index].attrType), this->types);
+    this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
+    this->setShowHierarchy(true);
+    this->setHeaders(this->headers);
+
+    qDebug() <<  this->id.attrType << "  " << this->htableIdentities[index].attrType;
+    if(this->id.attrType==this->htableIdentities[index].attrType) {
+        if( this->showSelectedTableData(this->category) !=0 )
+           this->show();
+        else
+            this->hide();
+    }
+    else {
+
+        qDebug() << "it is index i would like to show;";
+    }
+
+
+}
+
+
+
+
+void HTableData::showInformativeTable(QTableWidgetItem *item) {
+    unsigned int column = item->column();
+    unsigned int row = item->row();
+
+
+    //qDebug() << " You clicked on sample " << this->id.sampleName << " " << this->id.attrType \
+      //       << "  " <<  row << " " <<  column << " " << tableWidget->item(row,0)->text().trimmed();/
+
+    DataManager *datamanager = DataManager::getDataManager();
+    HTableData *htable = new HTableData;
+    htable->clearConnectors();
+
+    htable->viewToggleBox->setVisible(true);
+    htable->categorySelector->setVisible(true);
+    htable->subWindow = true;
+    htable->category = tableWidget->item(row,0)->text().trimmed();
+    htable->level = this->level +1;
+
+    htable->setWindowTitle(htable->category);
+    HTree *htree = datamanager->getHTree(id.attrType);
+
+
+    HNODE *hnode = htree->getHNODE(htable->category);
+
+    htable->subCategoryName->setVisible(true);
+    if(hnode != 0)
+       htable->subCategoryName->setText(hnode->attribute->alias);
+    else
+       htable->subCategoryName->setText(htable->category);
+
+    htable->depthLabelValue->setText(QString::number(htable->level));
+    htable->depthLabelValue->setVisible(true);
+  //  htable->connectors = this->connectors;
+
+    htable->connectors.clear();
+    Connector *modConnector ;
+    foreach(Connector *connector, this->connectors) {
+        modConnector = datamanager->createSubConnector(datamanager->getHTree(id.attrType), hnode, connector);
+        htable->addConnector(modConnector);
+        htable->allConnectors[id.attrType].append(modConnector);
+    }
+
+    htable->headers = this->headers;
+    htable->setParameters(datamanager->getHTree(id.attrType), this->types);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(id.attrType)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(this->headers);
+
+    htable->setTableIdentity(id.sampleName, id.attrType);
+    if( htable->showSelectedTableData(htable->category) ==0 )
+        htable->hide();
+    else
+        htable->show();
+
+}
 
