@@ -7,7 +7,6 @@ Welcome::Welcome(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Welcome)
 {
-    this->setWindowFlags( Qt::CustomizeWindowHint );
 
     ui->setupUi(this);
     QLabel *logo = this->findChild<QLabel *>("logo");

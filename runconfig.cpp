@@ -1,6 +1,6 @@
 #include "RunConfig.h"
 #include "ui_RunConfig.h"
-#include "mainwindow.h"
+#include "mainframe.h"
 #include <QRegExp>
 #include <QObject>
 #include "QDebug"
@@ -48,8 +48,8 @@ RunConfig::RunConfig(QWidget *parent) :
 }
 
 void RunConfig::loadRunParams(){
-    QString key = MainWindow::CONFIG_MAPPING->key(fileInputFormat->objectName());
-    QString value = MainWindow::PARAMS->value(key);
+    QString key = MainFrame::CONFIG_MAPPING->key(fileInputFormat->objectName());
+    QString value = MainFrame::PARAMS->value(key);
     fileInputFormat->setCurrentIndex(fileInputFormat->findText(value));
 
     QList<QGroupBox *>::iterator i;
@@ -57,8 +57,8 @@ void RunConfig::loadRunParams(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainWindow::PARAMS->value(configKey);
+        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainFrame::PARAMS->value(configKey);
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -117,8 +117,8 @@ void RunConfig::toggleAllRun(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainWindow::CONFIG->value(configKey);
+        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainFrame::CONFIG->value(configKey);
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -137,8 +137,8 @@ void RunConfig::toggleAllSkip(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainWindow::CONFIG->value(configKey);
+        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainFrame::CONFIG->value(configKey);
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -157,8 +157,8 @@ void RunConfig::toggleAllRedo(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainWindow::CONFIG->value(configKey);
+        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
+        QString configValue = MainFrame::CONFIG->value(configKey);
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -191,7 +191,7 @@ void RunConfig::setStyling(){
     table->setHorizontalHeaderLabels(QString("run,skip,redo,").split(","));
 
     //set grid checkbox
-    if (MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB")=="grid"){
+    if (MainFrame::PARAMS->operator []("metapaths_steps:BLAST_REFDB")=="grid"){
         gridBlastChoice->setChecked(true);
     }
 

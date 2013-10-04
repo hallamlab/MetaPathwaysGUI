@@ -6,12 +6,9 @@
 #include <QFileDialog>
 #include <QSettings>
 
-Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setup)
+Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
 {
     ui->setupUi(this);
-    this->mw = mw;
-
-    this->setWindowTitle("MetaPathways - Setup");
 
     pythonLabel = this->findChild<QLabel *>("PYTHON_EXECUTABLE");
     perlLabel = this->findChild<QLabel *>("PERL_EXECUTABLE");
@@ -22,7 +19,6 @@ Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setu
     perlBrowseButton = this->findChild<QPushButton *>("perlBrowseButton");
     metapathwaysBrowseButton = this->findChild<QPushButton *>("metapathwaysBrowseButton");
     saveButton = this->findChild<QPushButton *>("saveButton");
-    cancelButton = this->findChild<QPushButton *>("cancelButton");
     databaseButton = this->findChild<QPushButton *>("databaseButton");
 
     pythonExecTxt = this->findChild<QLineEdit *>("pythonExecTxt");
@@ -30,13 +26,12 @@ Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setu
     dbDirectoryTxt = this->findChild<QLineEdit *>("dbDirectoryTxt");
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
 
-    pythonPath = MainWindow::CONFIG->value("PYTHON_EXECUTABLE");
-    perlPath = MainWindow::CONFIG->value("PERL_EXECUTABLE");
-    mpPath = MainWindow::CONFIG->value("METAPATHWAYS_PATH");
-    databasePath = MainWindow::CONFIG->value("REFDBS");
+    pythonPath = MainFrame::CONFIG->value("PYTHON_EXECUTABLE");
+    perlPath = MainFrame::CONFIG->value("PERL_EXECUTABLE");
+    mpPath = MainFrame::CONFIG->value("METAPATHWAYS_PATH");
+    databasePath = MainFrame::CONFIG->value("REFDBS");
 
-
-    if(!MainWindow::settingsAvailable()) this->canSave();
+    if(!MainFrame::settingsAvailable()) this->canSave();
 
     if (pythonPath.isEmpty()) { pythonLabel->setText("Please select the path to your Python executable."); }
     else pythonLabel->setText(pythonPath);
@@ -47,17 +42,16 @@ Setup::Setup(QWidget *parent, MainWindow *mw) : QWidget(parent), ui(new Ui::Setu
     if (databasePath.isEmpty()) databaseLabel->setText("Please select the path to your database directory.");
     else databaseLabel->setText(databasePath);
 
+
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
     connect(metapathwaysBrowseButton, SIGNAL(clicked()), this, SLOT(metapathwaysBrowse()));
     connect(databaseButton, SIGNAL(clicked()), this, SLOT(databaseBrowse()));
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSetup()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelSetup()));
     connect(pythonExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(perlExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
-
 
      QSettings settings("HallamLab", "MetaPathways");
      pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
@@ -134,28 +128,26 @@ void Setup::saveSetup(){
 
     //write to file only if the user has provided input
     if (!pythonPath.isEmpty()) {
-        MainWindow::CONFIG->operator []("PYTHON_EXECUTABLE") = pythonPath;
+        MainFrame::CONFIG->operator []("PYTHON_EXECUTABLE") = pythonPath;
         settings.setValue("PYTHON_EXECUTABLE", pythonPath);
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath, false, false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath, false, false);
     }
     if (!perlPath.isEmpty()) {
-        MainWindow::CONFIG->operator []("PERL_EXECUTABLE") = perlPath;
+        MainFrame::CONFIG->operator []("PERL_EXECUTABLE") = perlPath;
         settings.setValue("PERL_EXECUTABLE", perlPath);
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath, false, false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath, false, false);
     }
     if (!mpPath.isEmpty()) {
-        MainWindow::CONFIG->operator []("METAPATHWAYS_PATH") = mpPath;
+        MainFrame::CONFIG->operator []("METAPATHWAYS_PATH") = mpPath;
         settings.setValue("METAPATHWAYS_PATH", mpPath);
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath, false, false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath, false, false);
     }
     if (!databasePath.isEmpty()) {
-        MainWindow::CONFIG->operator []("REFDBS") = databasePath;
+        MainFrame::CONFIG->operator []("REFDBS") = databasePath;
         settings.setValue("REFDBS", databasePath);
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_CONFIG, "REFDBS", databasePath, false, false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "REFDBS", databasePath, false, false);
     }
-    close();
-    this->mw->startRun();
-
+    emit continueFromSetup();
 }
 
 void Setup::cancelSetup(){

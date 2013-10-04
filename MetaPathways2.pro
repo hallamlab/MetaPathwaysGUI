@@ -20,7 +20,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         parentwidget.cpp \
-        mainwindow.cpp \
         Setup.cpp \
         SettingsTab.cpp \
         RunConfig.cpp \
@@ -31,7 +30,6 @@ SOURCES += main.cpp\
     resultwindow.cpp \
     dataviews/tabledata.cpp \
     welcome.cpp \
-    parentsettingsmainwindow.cpp \
     grid/gridchoice.cpp \
     grid/gridsetup.cpp \
     grid/grid.cpp \
@@ -59,10 +57,11 @@ SOURCES += main.cpp\
     datamodel/htree.cpp \
     datamodel/connector.cpp \
     datamodel/htabledata.cpp \
+    mainframe.cpp
 
 
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
             parentwidget.h \
             Setup.h \
             SettingsTab.h \
@@ -74,7 +73,6 @@ HEADERS  += mainwindow.h \
     resultwindow.h \
     dataviews/tabledata.h \
     welcome.h \
-    parentsettingsmainwindow.h \
     grid/gridchoice.h \
     grid/gridsetup.h \
     grid/grid.h \
@@ -103,11 +101,12 @@ HEADERS  += mainwindow.h \
     datamodel/htree.h \
     datamodel/connector.h \
     datamodel/datamodeltypes.h\
-    datamodel/htabledata.h
+    datamodel/htabledata.h \
+    mainframe.h
 
 
 
-FORMS    += mainwindow.ui \
+FORMS    += \
             Setup.ui \
             SettingsTab.ui \
             RunConfig.ui \
@@ -116,7 +115,6 @@ FORMS    += mainwindow.ui \
     resultwindow.ui \
     dataviews/tabledata.ui \
     welcome.ui \
-    parentsettingsmainwindow.ui \
     grid/gridchoice.ui \
     grid/gridsetup.ui \
     grid/nonec2.ui \
@@ -129,7 +127,8 @@ FORMS    += mainwindow.ui \
     popupviews/displayinfo.ui \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \
-    datamodel/htabledata.ui
+    datamodel/htabledata.ui \
+    mainframe.ui
 
 
 RESOURCES += \

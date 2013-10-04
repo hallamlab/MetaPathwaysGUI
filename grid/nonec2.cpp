@@ -1,7 +1,7 @@
 #include "nonec2.h"
 #include "ui_nonec2.h"
 #include <QDebug>
-#include "mainwindow.h"
+#include "mainframe.h"
 
 NonEC2::NonEC2(QWidget *parent) : QWidget(parent), ui(new Ui::NonEC2)
 {

@@ -39,7 +39,7 @@ class ResultWindow : public QWidget
     Q_OBJECT
     
 public:
-    explicit ResultWindow(ProgressDialog *prog = 0, QWidget *parent = 0);
+    explicit ResultWindow(QWidget *parent = 0);
     RunData* getRunData();
     ~ResultWindow();
 
@@ -73,7 +73,6 @@ private:
     QSignalMapper *signal;
     QTimer *getFileNames;
     QStringList files;
-    ProgressDialog *progress;
 
     SelectSamples *selectWindow;
 

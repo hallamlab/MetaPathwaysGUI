@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainframe.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(Resources);
 
     QApplication a(argc, argv);
-    MainWindow *w = new MainWindow();
+    MainFrame *w = new MainFrame();
+    w->show();
     a.exec();
 }

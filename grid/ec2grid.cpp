@@ -1,6 +1,6 @@
 #include "ec2grid.h"
 #include "ui_ec2grid.h"
-#include "mainwindow.h"
+#include "mainframe.h"
 #include <QDebug>
 
 EC2Grid::EC2Grid(QWidget *parent) :

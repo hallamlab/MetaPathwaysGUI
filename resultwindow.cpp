@@ -1,14 +1,13 @@
 #include "resultwindow.h"
 
 
-ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
+ResultWindow::ResultWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ResultWindow)
 {
     ui->setupUi(this);
     this->setWindowTitle("MetaPathways - Results and Data");
     this->run = RunData::getRunData();
-    this->progress = prog;
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
@@ -25,7 +24,7 @@ ResultWindow::ResultWindow(ProgressDialog *prog, QWidget *parent) :
 
     connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
     connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
-    connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
+    //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
     connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
 

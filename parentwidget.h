@@ -5,6 +5,7 @@
 #include "RunConfig.h"
 #include "qtabwidget.h"
 #include "rundata.h"
+#include "mainframe.h"
 #include <QWidget>
 
 namespace Ui {
@@ -31,6 +32,10 @@ private slots:
     void backButtonPressed();
     void tabChanged();
     void enableContinueButton();
+
+signals:
+    void continueFromParentSettings();
+    void showResultsFromParentSettings();
 
 private:
     void executionPrep();

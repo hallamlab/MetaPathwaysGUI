@@ -9956,7 +9956,7 @@ void QCustomPlot::rescaleAxes(bool onlyVisible)
   Inkscape, it is advised to set \a noCosmeticPen to true to avoid losing those cosmetic lines
   (which might be quite many, because cosmetic pens are the default for e.g. axes and tick marks).
   \li If calling this function inside the constructor of the parent of the QCustomPlot widget
-  (i.e. the MainWindow constructor, if QCustomPlot is inside the MainWindow), always provide
+  (i.e. the MainFrame constructor, if QCustomPlot is inside the MainFrame), always provide
   explicit non-zero widths and heights. If you leave \a width or \a height as 0 (default), this
   function uses the current width and height of the QCustomPlot widget. However, in Qt, these
   aren't defined yet inside the constructor, so you would get an image that has strange
@@ -10021,7 +10021,7 @@ bool QCustomPlot::savePdf(const QString &fileName, bool noCosmeticPen, int width
   QCustomPlot to place objects with sub-pixel accuracy.
 
   \warning If calling this function inside the constructor of the parent of the QCustomPlot widget
-  (i.e. the MainWindow constructor, if QCustomPlot is inside the MainWindow), always provide
+  (i.e. the MainFrame constructor, if QCustomPlot is inside the MainFrame), always provide
   explicit non-zero widths and heights. If you leave \a width or \a height as 0 (default), this
   function uses the current width and height of the QCustomPlot widget. However, in Qt, these
   aren't defined yet inside the constructor, so you would get an image that has strange
@@ -10063,7 +10063,7 @@ bool QCustomPlot::savePng(const QString &fileName, int width, int height, double
   QCustomPlot to place objects with sub-pixel accuracy.
 
   \warning If calling this function inside the constructor of the parent of the QCustomPlot widget
-  (i.e. the MainWindow constructor, if QCustomPlot is inside the MainWindow), always provide
+  (i.e. the MainFrame constructor, if QCustomPlot is inside the MainFrame), always provide
   explicit non-zero widths and heights. If you leave \a width or \a height as 0 (default), this
   function uses the current width and height of the QCustomPlot widget. However, in Qt, these
   aren't defined yet inside the constructor, so you would get an image that has strange
@@ -10102,7 +10102,7 @@ bool QCustomPlot::saveJpg(const QString &fileName, int width, int height, double
   QCustomPlot to place objects with sub-pixel accuracy.
 
   \warning If calling this function inside the constructor of the parent of the QCustomPlot widget
-  (i.e. the MainWindow constructor, if QCustomPlot is inside the MainWindow), always provide
+  (i.e. the MainFrame constructor, if QCustomPlot is inside the MainFrame), always provide
   explicit non-zero widths and heights. If you leave \a width or \a height as 0 (default), this
   function uses the current width and height of the QCustomPlot widget. However, in Qt, these
   aren't defined yet inside the constructor, so you would get an image that has strange

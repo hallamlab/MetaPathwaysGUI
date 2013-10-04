@@ -1,7 +1,6 @@
 #include "parentwidget.h"
 #include "ui_parentwidget.h"
 #include "utilities.h"
-#include "mainwindow.h"
 #include "ProgressDialog.h"
 #include "resultwindow.h"
 #include "resultpage.h"
@@ -26,8 +25,12 @@ ParentWidget::ParentWidget(QWidget *parent) :
     continueButton->setEnabled(false);
     backButton->hide();
 
+    qDebug() << "new settings";
     settingsTab = new SettingsTab(this);
+    qDebug() << "new settings 2";
+
     runConfigTab = new RunConfig(this);
+    qDebug() << "new settings3 ";
 
     tab = ui->parentTabWidget;
     tab->clear();
@@ -79,7 +82,7 @@ void ParentWidget::continueButtonPressed(){
             QWidget *widget = *i;
 
             QString objectName = widget->objectName();
-            QString configName = MainWindow::CONFIG_MAPPING->key(objectName);
+            QString configName = MainFrame::CONFIG_MAPPING->key(objectName);
             QString value;
 
             if (qobject_cast<QComboBox *>(widget)){
@@ -103,23 +106,23 @@ void ParentWidget::continueButtonPressed(){
                 for (int i=0;i<temp->count();i++){
                     if (temp->item(i)->checkState() == Qt::Checked){
                         if (temp->objectName() == "annotationDBS"){
-                            value = MainWindow::PARAMS->operator [](configName);
+                            value = MainFrame::PARAMS->operator [](configName);
                             if (value.isEmpty()) value = temp->item(i)->text();
                             else value = value + "," + temp->item(i)->text();
-                            MainWindow::PARAMS->operator [](configName) = value;
+                            MainFrame::PARAMS->operator [](configName) = value;
                         }
 
                         else if(temp->objectName() == "rrnaREFDBS"){
-                            value = MainWindow::PARAMS->operator [](configName);
+                            value = MainFrame::PARAMS->operator [](configName);
                             if (value.isEmpty()) value = temp->item(i)->text();
                             else value = value + "," + temp->item(i)->text();
-                            MainWindow::PARAMS->operator [](configName) = value;
+                            MainFrame::PARAMS->operator [](configName) = value;
                         }
                     }
                 }
             }
-            MainWindow::PARAMS->operator [](configName) = value;
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configName, value, false, false);
+            MainFrame::PARAMS->operator [](configName) = value;
+            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, configName, value, false, false);
         }
     }
     else{
@@ -131,8 +134,8 @@ void ParentWidget::continueButtonPressed(){
             QGroupBox *temp = *i;
             QString stepName = temp->objectName();
             //get the name, look up in the hash the corresponding setting key value pair
-            QString configKey = MainWindow::CONFIG_MAPPING->key(stepName);
-            QString configValue = MainWindow::PARAMS->value(configKey);
+            QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
+            QString configValue = MainFrame::PARAMS->value(configKey);
 
             //get the name of the radiobutton on the form by isolating for caps from the step,
             //taking the step name, to lower
@@ -144,12 +147,12 @@ void ParentWidget::continueButtonPressed(){
             QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
 
             //write to hash the changes
-            if (yesRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "yes";
-            else if (redoRadioButton->isChecked()) MainWindow::PARAMS->operator [](configKey) = "redo";
-            else MainWindow::PARAMS->operator [](configKey) = "skip";
+            if (yesRadioButton->isChecked()) MainFrame::PARAMS->operator [](configKey) = "yes";
+            else if (redoRadioButton->isChecked()) MainFrame::PARAMS->operator [](configKey) = "redo";
+            else MainFrame::PARAMS->operator [](configKey) = "skip";
 
             //write to file the changes
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, configKey, MainWindow::PARAMS->operator [](configKey), false, false);
+            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, configKey, MainFrame::PARAMS->operator [](configKey), false, false);
 
             //disable all buttons now for the run
             yesRadioButton->setEnabled(false);
@@ -166,39 +169,39 @@ void ParentWidget::continueButtonPressed(){
         cancelButton->setEnabled(false);
 
         //write file format
-        QString inputTypeKey = MainWindow::CONFIG_MAPPING->key(runConfigTab->fileInputFormat->objectName());
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText(), false, false);
-        MainWindow::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
+        QString inputTypeKey = MainFrame::CONFIG_MAPPING->key(runConfigTab->fileInputFormat->objectName());
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, inputTypeKey, runConfigTab->fileInputFormat->currentText(), false, false);
+        MainFrame::PARAMS->operator [](inputTypeKey) = runConfigTab->fileInputFormat->currentText();
 
         //save file selected
-        MainWindow::PARAMS->operator []("fileInput") = runConfigTab->filesSelected->text();
-        MainWindow::PARAMS->operator []("folderOutput") = runConfigTab->folderSelected->text();
+        MainFrame::PARAMS->operator []("fileInput") = runConfigTab->filesSelected->text();
+        MainFrame::PARAMS->operator []("folderOutput") = runConfigTab->folderSelected->text();
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
-        if (runConfigTab->gridBlastChoice->isChecked() && MainWindow::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
-            MainWindow::PARAMS->operator []("metapaths_steps:BLAST_REFDB") = "grid";
-            Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
+        if (runConfigTab->gridBlastChoice->isChecked() && MainFrame::PARAMS->value("metapaths_steps:BLAST_REFDB")!="skip"){
+            MainFrame::PARAMS->operator []("metapaths_steps:BLAST_REFDB") = "grid";
+            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
         }
 
         //trim off commas on refdbs for rRNA and annotation
-        QString rRNArefdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
+        QString rRNArefdbs = MainFrame::PARAMS->operator []("rRNA:refdbs");
         qDebug() << rRNArefdbs;
         rRNArefdbs = rRNArefdbs.remove(QRegExp("[\\s,]*$"));
-        MainWindow::PARAMS->operator []("rRNA:refdbs") = rRNArefdbs;
+        MainFrame::PARAMS->operator []("rRNA:refdbs") = rRNArefdbs;
 
-        QString annotationDBS = MainWindow::PARAMS->operator []("annotation:dbs");
+        QString annotationDBS = MainFrame::PARAMS->operator []("annotation:dbs");
 
         annotationDBS = annotationDBS.remove(QRegExp("[\\s,]*$"));
 
-        MainWindow::PARAMS->operator []("annotationDBS") = annotationDBS;
+        MainFrame::PARAMS->operator []("annotationDBS") = annotationDBS;
 
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
-        Utilities::writeSettingToFile(MainWindow::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
+        Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
 
         //use overwrite settings?
         if (runConfigTab->overwrite->isChecked()){
-            MainWindow::PARAMS->operator []("overwrite") = "overwrite";
-        }else MainWindow::PARAMS->operator []("overwrite") = "overlay";
+            MainFrame::PARAMS->operator []("overwrite") = "overwrite";
+        }else MainFrame::PARAMS->operator []("overwrite") = "overlay";
 
         executionPrep();
     }
@@ -207,18 +210,18 @@ void ParentWidget::continueButtonPressed(){
 void ParentWidget::executionPrep(){
     //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
     run = RunData::getRunData();
-    run->setParams(MainWindow::PARAMS);
-    run->setConfig(MainWindow::CONFIG);
-    run->setConfigMapping(MainWindow::CONFIG_MAPPING);
+    run->setParams(MainFrame::PARAMS);
+    run->setConfig(MainFrame::CONFIG);
+    run->setConfigMapping(MainFrame::CONFIG_MAPPING);
 
     //set the rrnaDB and annotationDBS so we know how many to look for in the log
     QStringList* rrnaDBS;
-    QString rdbs = MainWindow::PARAMS->operator []("rRNA:refdbs");
+    QString rdbs = MainFrame::PARAMS->operator []("rRNA:refdbs");
     rrnaDBS = new QStringList(rdbs.split(","));
     rrnaDBS->removeAll("");
 
     QStringList* annotationDBS;
-    QString adbs = MainWindow::PARAMS->operator []("annotation:dbs");
+    QString adbs = MainFrame::PARAMS->operator []("annotation:dbs");
     annotationDBS = new QStringList(adbs.split(","));
     annotationDBS->removeAll("");
 
@@ -237,23 +240,20 @@ void ParentWidget::executionPrep(){
     run->setAnnotationDBS(annotationDBS);
     run->setRRNADBS(rrnaDBS);
 
-    ProgressDialog *progress = new ProgressDialog(this);
-    ResultWindow *rw = new ResultWindow(progress);
+    emit continueFromParentSettings();
+    emit showResultsFromParentSettings();
 
-    rw->show();
-    progress->show();
+//    ProgressDialog *progress = new ProgressDialog(this);
+//    ResultWindow *rw = new ResultWindow(progress);
 
-    close();
-    this->parentWidget()->close();
-
-    //reset MainWindow static instances
-    MainWindow::CONFIG = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_CONFIG);
-    MainWindow::PARAMS = Utilities::parseFile(MainWindow::DEFAULT_TEMPLATE_PARAM);
+    //reset MainFrame static instances
+    MainFrame::CONFIG = Utilities::parseFile(MainFrame::DEFAULT_TEMPLATE_CONFIG);
+    MainFrame::PARAMS = Utilities::parseFile(MainFrame::DEFAULT_TEMPLATE_PARAM);
 }
 
 void ParentWidget::cancelButtonPressed(){
-    close();
-    this->parentWidget()->close();
+//    close();
+//    this->parentWidget()->close();
 }
 
 ParentWidget::~ParentWidget()

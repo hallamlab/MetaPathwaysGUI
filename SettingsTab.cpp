@@ -1,6 +1,6 @@
 #include "SettingsTab.h"
 #include "ui_SettingsTab.h"
-#include "mainwindow.h"
+#include "mainframe.h"
 #include <QObject>
 #include <QDebug>
 #include <QString>
@@ -30,8 +30,8 @@ SettingsTab::SettingsTab(QWidget *parent) :
     showORFDBS();
     showRRNADBS();
 
-    annotationFiles = new QStringList((MainWindow::PARAMS->operator []("annotation:dbs")).split(",", QString::SkipEmptyParts));
-    rrnaFiles = new QStringList((MainWindow::PARAMS->operator []("rRNA:refdbs")).split(",", QString::SkipEmptyParts));
+    annotationFiles = new QStringList((MainFrame::PARAMS->operator []("annotation:dbs")).split(",", QString::SkipEmptyParts));
+    rrnaFiles = new QStringList((MainFrame::PARAMS->operator []("rRNA:refdbs")).split(",", QString::SkipEmptyParts));
 
     connect(this, SIGNAL(setContinueButton()), this->parent(), SLOT(enableContinueButton()));
     connect(annotationDBS,SIGNAL(clicked(QModelIndex)), this, SLOT(annotationClicked(QModelIndex)));
@@ -142,12 +142,13 @@ void SettingsTab::openParameterSetup(){
 
 void SettingsTab::initWidgetValues(){
     QList<QWidget *>::iterator i;
+
     for (i = SettingsTab::allWidgets->begin();i != SettingsTab::allWidgets->end(); ++i){
         QWidget *widget = *i;
 
         QString objectName = widget->objectName();
-        QString configName = MainWindow::CONFIG_MAPPING->key(objectName);
-        QString value = MainWindow::PARAMS->value(configName);
+        QString configName = MainFrame::CONFIG_MAPPING->key(objectName);
+        QString value = MainFrame::PARAMS->value(configName);
 
         if (qobject_cast<QComboBox *>(widget)!=NULL){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
