@@ -82,6 +82,9 @@ private:
     QAction* actionSetupMenu;
     QAction* actionAbout;
 
+    QToolBar* toolBar;
+    QToolBar* leftToolBar;
+
     QMenu* menuSetup;
     QMenu* menuAbout;
 

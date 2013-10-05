@@ -20,13 +20,15 @@ public:
     QString getORFFna(QString sampleName);
     QString getORFFasta(QString sampleName);
 
+    QList<ORF *> *getORFList(QString sampleName);
+
     void setIndexFileFaa(QString sampleName, QString fileName);
     void setIndexFileFna(QString sampleName, QString fileName);
     void setIndexFileFasta(QString sampleName, QString fileName);
     Connector *getConnector(QString sampleName, ATTRTYPE type);
-    Connector *createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType);
+    Connector *createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList);
 
-    Connector *createSubConnector(HTree *tree, HNODE *hnode, Connector* connector);
+    Connector *createSubConnector(HTree *tree, HNODE *hnode, Connector* connector, ATTRTYPE attrType);
 
     void createORFs(QString sampleName, QString fileName);
 
@@ -41,7 +43,7 @@ public:
 
 private:
     DataManager();
-    QHash<QString, QList<ORF *> > ORFList;
+    QHash<QString, QList<ORF *> *> *ORFList;
     QHash<QString, QHash<ATTRTYPE, Connector *> > connectors;
     QHash<ATTRTYPE, HTree *>  htrees;
 

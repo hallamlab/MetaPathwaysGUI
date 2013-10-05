@@ -6,12 +6,14 @@ DataManager *DataManager::datamanager = 0;
 DataManager *DataManager::getDataManager() {
     if( datamanager==0)
         datamanager = new DataManager;
+
     return datamanager;
 
 }
 
 DataManager::DataManager()
 {
+    ORFList = new QHash<QString, QList<ORF *>*>();
 }
 
 
@@ -244,7 +246,8 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
 void DataManager::createORFs(QString sampleName, QString fileName) {
 
     //return if already created;
-    if(this->ORFList.contains(sampleName)) return;
+    if(this->ORFList->contains(sampleName)) return;
+    this->ORFList->insert(sampleName, new QList<ORF *>);
 
     QFile inputFile(fileName);
     if (inputFile.open(QIODevice::ReadOnly)) {
@@ -252,7 +255,7 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
             if(line.size() < 4) continue;
-            this->ORFList[sampleName].append(this->_createAnORF(line));
+            (this->ORFList->value(sampleName))->append(this->_createAnORF(line));
         }
         inputFile.close();
     }
@@ -267,7 +270,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
     QFile inputFile(fileName);
     QHash<QString, ORF *> orfHash;
-    foreach(ORF *orf, this->ORFList[sampleName]) {
+    foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
         orfHash[orf->name] = orf;
     }
 
@@ -291,7 +294,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
                }
                else {
                   temporf = new ORF;
-                  this->ORFList[sampleName].append(temporf);
+                  this->ORFList->value(sampleName)->append(temporf);
                }
 
                temporf->name = orfName;
@@ -315,34 +318,57 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
 
 
-Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector* connector) {
+Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector* connector, ATTRTYPE attrType) {
       Connector *newConnector = new Connector;
-      htree->copyDataToSubConnector(hnode, connector, newConnector);
+      newConnector->setAttrType(attrType);
+
+      if( connector->getAttrType() == newConnector->getAttrType())
+         htree->copyDataToSubConnector(hnode, connector, newConnector);
+      else {
+          QHash<ORF *, bool> orfHash;
+          foreach(ATTRIBUTE *attrib, connector->connected.keys()) {
+              foreach(ORF *orf, connector->connected[attrib]) {
+                  orfHash[orf]=true;
+              }
+          }
+          qDebug() << "ORF hash size " << orfHash.size();
+          DataManager *datamanager = DataManager::getDataManager();
+
+          HTree* targetTree= datamanager->getHTree(attrType) ;
+          htree->copyDataToSubConnector(targetTree->root, newConnector, targetTree, orfHash);
+      }
       return newConnector;
 }
 
+QList<ORF *> * DataManager::getORFList(QString sampleName) {
+    if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) return this->ORFList->value(sampleName);
+    return 0;
+}
 
-Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE atrType) {
-    if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(atrType)) {
-        return this->connectors[sampleName][atrType];
+Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {
+    if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(attrType)) {
+        return this->connectors[sampleName][attrType];
     }
 
     if(htree==0) return 0;
     QList<ORF *>::const_iterator it;
     Connector *connector = new Connector;
+    connector->setAttrType(attrType);
     HNODE *hnode;
-    for(it = this->ORFList[sampleName].begin(); it!= this->ORFList[sampleName].end(); ++it ) {
-        if( !(*it)->attributes.contains(atrType) ) continue;
+    for(it = orfList->begin(); it!= orfList->end(); ++it ) {
+        if( !(*it)->attributes.contains(attrType) ) continue;
 
-        hnode = htree->getHNODE((*it)->attributes[atrType]->name);
+        hnode = htree->getHNODE((*it)->attributes[attrType]->name);
         if(hnode!=0) {
               //qDebug() << hnode->attribute->name;
               connector->addToList(hnode->attribute, *it);
        }
     }
 
-    this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
-    this->connectors[sampleName][atrType] = connector;
 
+    if( sampleName!=QString("temp") ) {
+       this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
+       this->connectors[sampleName][attrType] = connector;
+     }
     return connector;
 }

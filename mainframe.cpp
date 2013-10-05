@@ -24,9 +24,15 @@ MainFrame::MainFrame(QWidget *parent) :
     actionProgress = this->findChild<QAction *>("actionProgress");
     actionGridProgress = this->findChild<QAction *>("actionGridProgress");
     actionResults = this->findChild<QAction *>("actionResults");
+    toolBar = this->findChild<QToolBar *>("toolBar");
+    leftToolBar = this->findChild<QToolBar *>("leftToolBar");
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
+
+
+
+    toolBar->addAction("new action",0,0);
 
     actionProgress->setDisabled(true);
     actionGridProgress->setDisabled(true);

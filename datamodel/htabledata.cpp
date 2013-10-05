@@ -67,9 +67,9 @@ void HTableData::setShowHierarchy(bool flag) {
 bool HTableData::setParameters(HTree *htree,  QList<TYPE> _types) {
 
     this->setNumCols(_types.size());
-    foreach(enum TYPE type, _types) {
-        types.append(type);
-    }
+
+    this->types = _types;
+
     this->htree = htree;
 }
 
@@ -126,14 +126,13 @@ void HTableData::hideZeroRowsChanged(int state) {
 void HTableData::fillData(unsigned int maxDepth, int state, bool hideZeroRows) {
      QList<ROWDATA *> data;
      data =  this->htree->getRows(maxDepth, state, this->connectors);
-     this->populateTable(data, this->headers, state );
+
      QList<ROWDATA *> newdata;
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
         this->populateTable(newdata, this->headers, state );
-
      }
      else {
         this->populateTable(data, this->headers, state );
@@ -159,6 +158,7 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
      QList<ROWDATA *> newdata;
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
+            qDebug() <<r->name <<"  " <<  r->counts;
             if( isNonZero(r)) newdata.append(r);
         }
         this->populateTable(newdata, this->headers, state );
@@ -189,7 +189,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     QTableWidgetItem *item;
     int k = 0;
 
-
+    qDebug() << "Data size " << data.size();
     foreach( ROWDATA * datum,  data) {
         if(hierarchyEnabled)
             item = new QTableWidgetItem(this->indents[datum->depth] + QString(datum->name));
@@ -208,17 +208,13 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     tableWidget->resizeColumnsToContents();
     //table.resizeRowsToContents();
     tableWidget->horizontalHeader()->setStretchLastSection(true);
+//    tableWidget->resize(tableWidget->sizeHint());
 }
 
-/*
+
 void HTableData::showInformativeTable(QTableWidgetItem *item) {
     unsigned int column = item->column();
     unsigned int row = item->row();
-
-
-//    qDebug() << " You clicked on sample " << this->id.sampleName << " " << this->id.attrType \
-             << "  " <<  row << " " <<  column << " " << tableWidget->item(row,0)->text().trimmed();
-
 
     DataManager *datamanager = DataManager::getDataManager();
     HTableData *htable = new HTableData;
@@ -230,11 +226,14 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->category = tableWidget->item(row,0)->text().trimmed();
     htable->level = this->level +1;
 
+    htable->types = this->types;
+
+
     htable->setWindowTitle(htable->category);
     HTree *htree = datamanager->getHTree(this->id.attrType);
-
-
     HNODE *hnode = htree->getHNODE(htable->category);
+
+
 
     htable->subCategoryName->setVisible(true);
     if(hnode != 0)
@@ -248,116 +247,60 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     htable->connectors.clear();
     Connector *modConnector ;
+
+
     foreach(Connector *connector, this->connectors) {
-        modConnector = datamanager->createSubConnector(datamanager->getHTree(this->id.attrType), hnode, connector);
+        modConnector = datamanager->createSubConnector(datamanager->getHTree(this->id.attrType), hnode, connector, this->id.attrType);
         htable->allConnectors[this->id.attrType].append(modConnector);
     }
 
-    htable->headers = this->headers;
+    QList<ORF *>orfList;
+    qDebug() << " done with the attribute";
+    for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
+        if( this->id.attrType== this->htableIdentities[i].attrType) continue;
+        qDebug() << "attribute " << hnode->attribute->name;
+        foreach(Connector *connector, this->connectors) {
+           orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+           qDebug() << "going ot insert the no orfs " << orfList.size();
+           modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
+           htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
+           qDebug() << "inserted the orfs of num " << modConnector->getORFList().size();
+        }
+    }
+
+
+    htable->setHeaders( this->headers);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
-
-
-//    htable->setParameters(datamanager->getHTree(id.attrType), this->types);
-//    htable->setMaxSpinBoxDepth(datamanager->getHTree(id.attrType)->getTreeDepth());
-//    htable->setShowHierarchy(true);
-//    htable->setHeaders(this->headers);
-
-//    htable->setTableIdentity(id.sampleName, id.attrType);
-//    if( htable->showSelectedTableData(htable->category) ==0 )
-//        htable->hide();
-//    else
-//        htable->show();
-
     htable->switchCategory(this->id.attrType);
 
 }
 
-    */
+
 
 void HTableData::switchCategory(int index) {
 
-    return ;
-    qDebug()<< "index " << index;
     DataManager *datamanager = DataManager::getDataManager();
 
     this->connectors = this->allConnectors[this->htableIdentities[index].attrType];
 
+    this-
     this->setParameters(datamanager->getHTree(htableIdentities[index].attrType), this->types);
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
     this->setShowHierarchy(true);
-    this->setHeaders(this->headers);
 
-    qDebug() <<  this->id.attrType << "  " << this->htableIdentities[index].attrType;
     if(this->id.attrType==this->htableIdentities[index].attrType) {
-        if( this->showSelectedTableData(this->category) !=0 )
-           this->show();
+        if( this->showSelectedTableData(this->category) !=0 ) {
+            this->show();
+        }
         else
             this->hide();
     }
     else {
-
-        qDebug() << "it is index i would like to show;";
+        this->showTableData();
     }
 
 
 }
 
 
-
-
-void HTableData::showInformativeTable(QTableWidgetItem *item) {
-    unsigned int column = item->column();
-    unsigned int row = item->row();
-
-
-    //qDebug() << " You clicked on sample " << this->id.sampleName << " " << this->id.attrType \
-      //       << "  " <<  row << " " <<  column << " " << tableWidget->item(row,0)->text().trimmed();/
-
-    DataManager *datamanager = DataManager::getDataManager();
-    HTableData *htable = new HTableData;
-    htable->clearConnectors();
-
-    htable->viewToggleBox->setVisible(true);
-    htable->categorySelector->setVisible(true);
-    htable->subWindow = true;
-    htable->category = tableWidget->item(row,0)->text().trimmed();
-    htable->level = this->level +1;
-
-    htable->setWindowTitle(htable->category);
-    HTree *htree = datamanager->getHTree(id.attrType);
-
-
-    HNODE *hnode = htree->getHNODE(htable->category);
-
-    htable->subCategoryName->setVisible(true);
-    if(hnode != 0)
-       htable->subCategoryName->setText(hnode->attribute->alias);
-    else
-       htable->subCategoryName->setText(htable->category);
-
-    htable->depthLabelValue->setText(QString::number(htable->level));
-    htable->depthLabelValue->setVisible(true);
-  //  htable->connectors = this->connectors;
-
-    htable->connectors.clear();
-    Connector *modConnector ;
-    foreach(Connector *connector, this->connectors) {
-        modConnector = datamanager->createSubConnector(datamanager->getHTree(id.attrType), hnode, connector);
-        htable->addConnector(modConnector);
-        htable->allConnectors[id.attrType].append(modConnector);
-    }
-
-    htable->headers = this->headers;
-    htable->setParameters(datamanager->getHTree(id.attrType), this->types);
-    htable->setMaxSpinBoxDepth(datamanager->getHTree(id.attrType)->getTreeDepth());
-    htable->setShowHierarchy(true);
-    htable->setHeaders(this->headers);
-
-    htable->setTableIdentity(id.sampleName, id.attrType);
-    if( htable->showSelectedTableData(htable->category) ==0 )
-        htable->hide();
-    else
-        htable->show();
-
-}
 

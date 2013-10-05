@@ -171,7 +171,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
     htable->clearConnectors();
-    connect = datamanager->createConnector(sampleName, datamanager->getHTree(KEGG), KEGG);
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(sampleName));
     htable->setParameters(datamanager->getHTree(KEGG), types);
     htable->addConnector(connect);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
@@ -189,7 +189,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
     htable->clearConnectors();
-    connect = datamanager->createConnector(sampleName, datamanager->getHTree(COG), COG);
+   // connect = datamanager->createConnector(sampleName, datamanager->getHTree(COG), COG, datamanager->getORFList(sampleName) );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ;));
     htable->setParameters(datamanager->getHTree(COG),  types);
     htable->addConnector(connect);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
@@ -205,7 +205,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     types << STRING << STRING << INT;
     headers.clear();
     headers << "Pathway/Reaction" << "Common name" << "ORF Count";
-    connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC);
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(sampleName));
     htable->setParameters(datamanager->getHTree(METACYC),  types);
     htable->addConnector(connect);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
@@ -417,8 +417,8 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
 
     for(unsigned int i=0; i < files.size(); i++) {
-       if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG);
+       if( !this->selectedSamples[i])  continue; 
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
        htable->addConnector(connect);
        headers << files[i];
        types << INT;
@@ -441,7 +441,7 @@ void ResultWindow::switchToComparativeMode() {
 
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG);
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
        headers << files[i];
        types << INT;
@@ -464,7 +464,7 @@ void ResultWindow::switchToComparativeMode() {
 
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC);
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
        headers << files[i];
        types << INT;

@@ -45,6 +45,26 @@ QList<HNODE *> HTree::getChildrenOf(QString name) {
 }
 
 
+QList<ATTRIBUTE *> HTree::getLeafAttributesOf(HNODE *hnode) {
+    QList<ATTRIBUTE *> attrList;
+    qDebug() << "getting leaf attriburtes";
+
+    this->_getLeafAttributesOf(hnode, attrList);
+    qDebug() << "Done getting attributes";
+    return attrList;
+}
+
+void HTree::_getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList) {
+    if(hnode->children.size()==0) {
+        qDebug() << "attr " << hnode->attribute->name;
+        attrList.append(hnode->attribute);
+    }
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+        this->_getLeafAttributesOf(*it, attrList);
+    }
+}
+
+
 void HTree::printTree(HNODE *hnode) {
     qDebug() << hnode->attribute->name << " " << hnode->depth;
 
@@ -118,6 +138,22 @@ void HTree::copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connec
 }
 
 
+
+void HTree::copyDataToSubConnector(HNODE *hnode,  Connector *targetConnector, HTree* targetTree, QHash<ORF *,bool> &orfHash) {
+
+    if(hnode->children.size()==0) {
+       foreach(ORF *orf, targetConnector->connected[hnode->attribute] ) {
+           if( orfHash.contains(orf)) {
+                targetConnector->connected[hnode->attribute].append(orf);
+           }
+       }
+    }
+
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+         this->copyDataToSubConnector(*it, targetConnector, targetTree,  orfHash);
+    }
+
+}
 
 QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, int showHierarchy, QList<Connector *> &connectors) {
    QList<ROWDATA *> data;
