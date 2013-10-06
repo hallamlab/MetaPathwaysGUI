@@ -97,7 +97,8 @@ void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
 
 void HTableData::spinBoxChanged(int depth) {
     if(this->subWindow)
-        this->showSelectedTableData(this->category);
+       // this->showSelectedTableData(this->category);
+    this->showTableData();
     else
         this->showTableData();
 }
@@ -111,13 +112,17 @@ void HTableData::showTableData(bool hideZeroRows) {
 void HTableData::showHierarchyChanged(int state) {
     if(this->subWindow)
         this->showSelectedTableData(this->category);
+//    this->showTableData();
+
     else
         this->showTableData();
 }
 
 void HTableData::hideZeroRowsChanged(int state) {
     if(this->subWindow)
-        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
+//        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
+    this->showTableData( (this->hideZeroRows->checkState()==Qt::Checked));
+
     else
         this->showTableData( (this->hideZeroRows->checkState()==Qt::Checked));
 }
@@ -189,7 +194,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     QTableWidgetItem *item;
     int k = 0;
 
-    qDebug() << "Data size " << data.size();
+
     foreach( ROWDATA * datum,  data) {
         if(hierarchyEnabled)
             item = new QTableWidgetItem(this->indents[datum->depth] + QString(datum->name));
@@ -222,10 +227,10 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     htable->viewToggleBox->setVisible(true);
     htable->categorySelector->setVisible(true);
+    htable->categorySelector->setCurrentIndex(this->id.attrType);
     htable->subWindow = true;
     htable->category = tableWidget->item(row,0)->text().trimmed();
     htable->level = this->level +1;
-
     htable->types = this->types;
 
 
@@ -283,7 +288,6 @@ void HTableData::switchCategory(int index) {
 
     this->connectors = this->allConnectors[this->htableIdentities[index].attrType];
 
-    this-
     this->setParameters(datamanager->getHTree(htableIdentities[index].attrType), this->types);
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
     this->setShowHierarchy(true);
@@ -298,6 +302,7 @@ void HTableData::switchCategory(int index) {
     else {
         this->showTableData();
     }
+    this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
 
 
 }

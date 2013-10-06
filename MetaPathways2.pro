@@ -57,7 +57,8 @@ SOURCES += main.cpp\
     datamodel/htree.cpp \
     datamodel/connector.cpp \
     datamodel/htabledata.cpp \
-    mainframe.cpp
+    mainframe.cpp \
+    displaywidgets/toolbarwidgets.cpp
 
 
 
@@ -102,7 +103,9 @@ HEADERS  += \
     datamodel/connector.h \
     datamodel/datamodeltypes.h\
     datamodel/htabledata.h \
-    mainframe.h
+    mainframe.h \
+    displaywidgets/toolbarwidgets.h
+
 
 
 

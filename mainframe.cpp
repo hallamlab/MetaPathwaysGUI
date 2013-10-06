@@ -4,6 +4,8 @@
 #include <iostream>
 #include <QSettings>
 
+#include <QStylePainter>
+
 const QString MainFrame::TEMPLATE_PARAM = "template_param.txt";
 const QString MainFrame::DEFAULT_TEMPLATE_PARAM = "default_template_param.txt";
 const QString MainFrame::TEMPLATE_CONFIG = "template_config.txt";
@@ -11,6 +13,52 @@ const QString MainFrame::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt"
 QHash<QString, QString> *MainFrame::CONFIG = NULL;
 QHash<QString, QString> *MainFrame::PARAMS = NULL;
 QHash<QString, QString> *MainFrame::CONFIG_MAPPING = NULL;
+#include <QtGui>
+
+class CustomTabStyle : public QProxyStyle
+{
+public:
+
+
+    QSize sizeFromContents(ContentsType type, const QStyleOption *option,
+                           const QSize &size, const QWidget *widget) const
+    {
+        QSize s = QProxyStyle::sizeFromContents(type, option, size, widget);
+        if (type == QStyle::CT_TabBarTab)
+            s.transpose();
+        return s;
+    }
+
+/*
+
+    void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+    {
+        if (element == CE_TabBarTabLabel)
+        {
+            if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option))
+            {
+                QStyleOptionTab opt(*tab);
+                opt.shape = QTabBar::RoundedNorth;
+               // opt.text = "whatever";
+                QProxyStyle::drawControl(element, &opt, painter, widget);
+                return;
+            }
+        }
+        QProxyStyle::drawControl(element, option, painter, widget);
+    }
+*/
+    void drawItemText ( QPainter * painter, const QRect & rectangle, int alignment, const QPalette & palette, bool enabled, const QString & text, QPalette::ColorRole textRole) const{
+      painter->save();
+    //  painter->translate(160,50);
+      painter->rotate(90);
+      QCommonStyle::drawItemText(painter,rectangle, alignment , palette, enabled, text, textRole);
+
+      qDebug() << "Draw item " << text;
+      painter->restore();
+    }
+};
+
+
 
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),
@@ -30,13 +78,17 @@ MainFrame::MainFrame(QWidget *parent) :
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
 
+     leftToolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-
-    toolBar->addAction("new action",0,0);
+    leftToolBar->addWidget(new HTabWidget("htabwidget", ":images/cross.png"));
+    leftToolBar->addWidget(new HTabWidget("htabwidget", ":images/cross.png"));
+    leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
 
     actionProgress->setDisabled(true);
     actionGridProgress->setDisabled(true);
     actionResults->setDisabled(true);
+
+
 
     setupWidget = 0;
     parentWidget = 0;
@@ -102,6 +154,10 @@ void MainFrame::continueFromParentSettingsWidget(){
 void MainFrame::displayResults(){
     resultWindow = new ResultWindow(progress);
     stackedWidget->addWidget(resultWindow);
+
+   // QMdiArea *mdi = new QMdiArea(progress);
+    //stackedWidget->addWidget(mdi);
+
 }
 
 void MainFrame::showResults(){

@@ -8,6 +8,7 @@
 #include "utilities.h"
 #include "ProgressDialog.h"
 #include "welcome.h"
+#include "displaywidgets/toolbarwidgets.h"
 
 namespace Ui {
 class MainFrame;
@@ -87,6 +88,8 @@ private:
 
     QMenu* menuSetup;
     QMenu* menuAbout;
+
+
 
 
 };
