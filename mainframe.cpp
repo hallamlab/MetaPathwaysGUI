@@ -78,16 +78,18 @@ MainFrame::MainFrame(QWidget *parent) :
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
 
-     leftToolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ;
+    leftToolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    leftToolBar->addWidget(new HTabWidget("htabwidget", ":images/cross.png"));
-    leftToolBar->addWidget(new HTabWidget("htabwidget", ":images/cross.png"));
+    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
+    toolbarManager->setToolBar(leftToolBar);
+
     leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
+
 
     actionProgress->setDisabled(true);
     actionGridProgress->setDisabled(true);
     actionResults->setDisabled(true);
-
 
 
     setupWidget = 0;

@@ -18,11 +18,14 @@
 #include <QDebug>
 #include "dataviews/meganview.h"
 #include "genebrowser/genomeview.h"
+#include <QMdiArea>
 
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
 #include "datamodel/datamanager.h"
 #include "popupviews/selectsamples.h"
+
+#include "displaywidgets/mdiareawidget.h"
 
 typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, CONTIGLENGTH, ORFLENGTH, \
                              NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\

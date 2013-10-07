@@ -9,6 +9,7 @@
 #include "ProgressDialog.h"
 #include "welcome.h"
 #include "displaywidgets/toolbarwidgets.h"
+#include "displaywidgets/toolbarmanager.h"
 
 namespace Ui {
 class MainFrame;

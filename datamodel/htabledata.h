@@ -15,6 +15,9 @@
 #include <QPalette>
 #include <QTableWidgetItem>
 #include "datamodel/datamanager.h"
+#include "displaywidgets/toolbarmanager.h"
+#include "displaywidgets/toolbarwidgets.h"
+#include "displaywidgets/mdiareawidget.h"
 
 
 typedef struct _HTABLE_IDENTITY {

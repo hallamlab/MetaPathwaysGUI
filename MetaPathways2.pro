@@ -58,7 +58,9 @@ SOURCES += main.cpp\
     datamodel/connector.cpp \
     datamodel/htabledata.cpp \
     mainframe.cpp \
-    displaywidgets/toolbarwidgets.cpp
+    displaywidgets/toolbarwidgets.cpp \
+    displaywidgets/toolbarmanager.cpp \
+    displaywidgets/mdiareawidget.cpp
 
 
 
@@ -104,8 +106,9 @@ HEADERS  += \
     datamodel/datamodeltypes.h\
     datamodel/htabledata.h \
     mainframe.h \
-    displaywidgets/toolbarwidgets.h
-
+    displaywidgets/toolbarwidgets.h \
+    displaywidgets/toolbarmanager.h \
+    displaywidgets/mdiareawidget.h
 
 
 

@@ -239,6 +239,14 @@ void ResultWindow::sampleChanged(QString sampleName){
     m->clearExistingTree();
     m->setDataFromFile(meganTre);
     resultTabs->addTab(m, "TAXONOMIC");
+
+
+    MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
+    QMdiArea *mdi = new QMdiArea;
+    mdiAreaWidget->setMdiArea(mdi);
+    resultTabs->addTab(mdi,"MDI");
+
+
     return;
 
     types.clear();
@@ -476,7 +484,6 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("METACYC",METACYC);
     htable->showTableData();
     resultTabs->addTab(htable, "METACYC");
-
 
 
 

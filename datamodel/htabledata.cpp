@@ -278,6 +278,17 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
     htable->switchCategory(this->id.attrType);
 
+
+    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
+    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
+    toolbarManager->addTab(htab,  htable);
+
+    MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
+    mdiAreaWidget->addWidget(htable);
+
+
+  //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();
+
 }
 
 
