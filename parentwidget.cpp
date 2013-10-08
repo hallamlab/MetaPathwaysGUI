@@ -46,6 +46,10 @@ ParentWidget::ParentWidget(QWidget *parent) :
     connect(tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
 }
 
+void ParentWidget::hideContinueButton(){
+    continueButton->setDisabled(true);
+}
+
 void ParentWidget::enableContinueButton(){
     continueButton->setEnabled(true);
 }
@@ -163,6 +167,7 @@ void ParentWidget::continueButtonPressed(){
         //set all applicable buttons to be disabled
         runConfigTab->runOptionsGroupBox->setEnabled(false);
         runConfigTab->fileBrowseButton->setEnabled(false);
+        runConfigTab->folderBrowseButton->setEnabled(false);
         runConfigTab->fileInputFormat->setEnabled(false);
         continueButton->setEnabled(false);
         backButton->setEnabled(false);

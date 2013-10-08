@@ -34,6 +34,7 @@ SettingsTab::SettingsTab(QWidget *parent) :
     rrnaFiles = new QStringList((MainFrame::PARAMS->operator []("rRNA:refdbs")).split(",", QString::SkipEmptyParts));
 
     connect(this, SIGNAL(setContinueButton()), this->parent(), SLOT(enableContinueButton()));
+    connect(this,SIGNAL(hideContinueButton()), this->parent(),SLOT(hideContinueButton()));
     connect(annotationDBS,SIGNAL(clicked(QModelIndex)), this, SLOT(annotationClicked(QModelIndex)));
     connect(rrnaREFDBS, SIGNAL(clicked(QModelIndex)), this, SLOT(rrnaClicked(QModelIndex)));
 
@@ -41,11 +42,38 @@ SettingsTab::SettingsTab(QWidget *parent) :
 }
 
 void SettingsTab::annotationClicked(QModelIndex index){
+    bool oneChecked = false;
+    for (int i=0;i<annotationDBS->count();i++){
+        if(annotationDBS->item(i)->checkState()==Qt::Checked){
+            oneChecked = true;
+            qDebug() << annotationDBS->item(i)->text() << "ischecked";
+        }
+    }
+
+    if (!oneChecked){
+        annotationDBSWarning->show();
+        isBothDBSSet();
+        return;
+    }
     annotationDBSWarning->hide();
     isBothDBSSet();
+
 }
 
 void SettingsTab::rrnaClicked(QModelIndex index){
+    bool oneChecked = false;
+    for (int i=0; i<rrnaREFDBS->count(); i++) {
+        if(rrnaREFDBS->item(i)->checkState()==Qt::Checked){
+            oneChecked = true;
+            qDebug() << rrnaREFDBS->item(i)->text() << "ischecked";
+        }
+    }
+
+    if (!oneChecked) {
+        rrnaREFDBSWarning->show();
+        isBothDBSSet();
+        return;
+    }
     rrnaREFDBSWarning->hide();
     isBothDBSSet();
 }
@@ -53,6 +81,10 @@ void SettingsTab::rrnaClicked(QModelIndex index){
 void SettingsTab::isBothDBSSet(){
     if (annotationDBSWarning->isHidden() && rrnaREFDBSWarning->isHidden()){
         emit setContinueButton();
+        qDebug() <<"setting cont button to go";
+    }else{
+        qDebug() << "hiding cont button";
+        emit hideContinueButton();
     }
 }
 

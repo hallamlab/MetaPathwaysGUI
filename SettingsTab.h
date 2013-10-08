@@ -38,6 +38,7 @@ private slots:
 
 signals:
     void setContinueButton();
+    void hideContinueButton();
 
 private:
     bool writeOutToFile();
