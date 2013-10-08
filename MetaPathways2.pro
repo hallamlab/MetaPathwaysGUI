@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     mainframe.cpp \
     displaywidgets/toolbarwidgets.cpp \
     displaywidgets/toolbarmanager.cpp \
-    displaywidgets/mdiareawidget.cpp
+    displaywidgets/mdiareawidget.cpp \
+    displaywidgets/widgetstacker.cpp
 
 
 
@@ -108,7 +109,8 @@ HEADERS  += \
     mainframe.h \
     displaywidgets/toolbarwidgets.h \
     displaywidgets/toolbarmanager.h \
-    displaywidgets/mdiareawidget.h
+    displaywidgets/mdiareawidget.h \
+    displaywidgets/widgetstacker.h
 
 
 

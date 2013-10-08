@@ -18,6 +18,7 @@
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/mdiareawidget.h"
+#include "displaywidgets/widgetstacker.h"
 
 
 typedef struct _HTABLE_IDENTITY {

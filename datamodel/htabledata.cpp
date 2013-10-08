@@ -282,11 +282,13 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
     ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
     toolbarManager->addTab(htab,  htable);
-
+/*
     MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
     mdiAreaWidget->addWidget(htable);
     htable->show();
-
+*/
+    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
+    wStacker->stackWidget(htable);
 
   //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();
 

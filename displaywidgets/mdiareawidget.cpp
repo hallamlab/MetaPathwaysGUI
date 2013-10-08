@@ -29,6 +29,7 @@ QMdiArea *MdiAreaWidget::getMdiArea() {
 void MdiAreaWidget::addWidget(HTableData *w) {
     this->mdiArea->addSubWindow(w);
     subWindows[w] = true;
+    this->mdiArea->cascadeSubWindows();
 }
 
 

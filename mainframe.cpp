@@ -15,49 +15,6 @@ QHash<QString, QString> *MainFrame::PARAMS = NULL;
 QHash<QString, QString> *MainFrame::CONFIG_MAPPING = NULL;
 #include <QtGui>
 
-class CustomTabStyle : public QProxyStyle
-{
-public:
-
-
-    QSize sizeFromContents(ContentsType type, const QStyleOption *option,
-                           const QSize &size, const QWidget *widget) const
-    {
-        QSize s = QProxyStyle::sizeFromContents(type, option, size, widget);
-        if (type == QStyle::CT_TabBarTab)
-            s.transpose();
-        return s;
-    }
-
-/*
-
-    void drawControl(ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
-    {
-        if (element == CE_TabBarTabLabel)
-        {
-            if (const QStyleOptionTab *tab = qstyleoption_cast<const QStyleOptionTab *>(option))
-            {
-                QStyleOptionTab opt(*tab);
-                opt.shape = QTabBar::RoundedNorth;
-               // opt.text = "whatever";
-                QProxyStyle::drawControl(element, &opt, painter, widget);
-                return;
-            }
-        }
-        QProxyStyle::drawControl(element, option, painter, widget);
-    }
-*/
-    void drawItemText ( QPainter * painter, const QRect & rectangle, int alignment, const QPalette & palette, bool enabled, const QString & text, QPalette::ColorRole textRole) const{
-      painter->save();
-    //  painter->translate(160,50);
-      painter->rotate(90);
-      QCommonStyle::drawItemText(painter,rectangle, alignment , palette, enabled, text, textRole);
-
-      qDebug() << "Draw item " << text;
-      painter->restore();
-    }
-};
-
 
 
 MainFrame::MainFrame(QWidget *parent) :
@@ -138,6 +95,10 @@ MainFrame::MainFrame(QWidget *parent) :
     connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(continueFromSetupWidget()));
     connect(parentWidget, SIGNAL(continueFromParentSettings()), this, SLOT(continueFromParentSettingsWidget()));
     connect(parentWidget, SIGNAL(showResultsFromParentSettings()), this, SLOT(displayResults()));
+
+
+    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
+    wStacker->setReferenceCoordinate(this->pos());
 }
 
 void MainFrame::continueFromSetupWidget(){
