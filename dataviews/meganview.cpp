@@ -35,7 +35,7 @@ MeganView::MeganView(QWidget *parent):
     this->zoomScale = 1;
     this->depth = 3;
     this->yscale=1;
-    meganData = 0;
+    this->meganData = 0;
 
     if(zoomInButton) {
         connect(zoomInButton, SIGNAL(clicked()), this,  SLOT(zoomIn()));
@@ -79,11 +79,11 @@ void MeganView::_deleteGraphicsItems(GraphicsTaxonItem *pitem) {
 
 void MeganView::clearExistingTree() {
 
-    if(meganData ==0) {
+    if(meganData==0) {
         return;
      }
     delete meganData;
-    meganData =0;
+    this->meganData =0;
 
     this->_deleteGraphicsItems(taxons[0][0]) ;
     scene->clear();
@@ -92,8 +92,8 @@ void MeganView::clearExistingTree() {
 
 void MeganView::setDataFromFile(const QString &fileName) {
       QFile file(fileName);
-      meganData = new MeganData;
       if(file.open(QIODevice::ReadOnly)) {
+          meganData = new MeganData;
           QTextStream in(&file);
           QString  data = in.readAll();
           meganData->setData(data);

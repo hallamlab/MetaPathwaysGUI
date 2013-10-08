@@ -56,7 +56,6 @@ QList<ATTRIBUTE *> HTree::getLeafAttributesOf(HNODE *hnode) {
 
 void HTree::_getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList) {
     if(hnode->children.size()==0) {
-        qDebug() << "attr " << hnode->attribute->name;
         attrList.append(hnode->attribute);
     }
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {

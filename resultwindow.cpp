@@ -188,8 +188,9 @@ void ResultWindow::sampleChanged(QString sampleName){
     types << STRING << STRING << INT;
     headers.clear();
     headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
-    htable->clearConnectors();
-   // connect = datamanager->createConnector(sampleName, datamanager->getHTree(COG), COG, datamanager->getORFList(sampleName) );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ;));
+  //  htable->clearConnectors();
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(COG), COG, datamanager->getORFList(sampleName) );
+   // connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(sampleName) );
     htable->setParameters(datamanager->getHTree(COG),  types);
     htable->addConnector(connect);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
@@ -205,7 +206,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     types << STRING << STRING << INT;
     headers.clear();
     headers << "Pathway/Reaction" << "Common name" << "ORF Count";
-    connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(sampleName));
+    connect = datamanager->createConnector(sampleName, datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(sampleName) );
     htable->setParameters(datamanager->getHTree(METACYC),  types);
     htable->addConnector(connect);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());

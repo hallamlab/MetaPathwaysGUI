@@ -285,6 +285,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
     mdiAreaWidget->addWidget(htable);
+    htable->show();
 
 
   //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();

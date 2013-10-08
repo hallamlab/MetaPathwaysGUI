@@ -32,14 +32,18 @@ HTabWidget::HTabWidget(QString text, QString imageFile) {
     lab1->setAlignment(Qt::AlignVCenter);
     lab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+
     connect( lab1, SIGNAL( clicked(SIGNALTYPE) ), this, SLOT( slotClicked(SIGNALTYPE) ) );
 
     layout->addWidget(lab1);
+
     ToolBarQLabel* lab2 = new ToolBarQLabel(text, ACTIVE);
     //lab2->resize(60,10);
     lab2->setAlignment(Qt::AlignLeft);
-    lab1->setAlignment(Qt::AlignVCenter);
+    //lab1->setAlignment(Qt::AlignVCenter);
     layout->addWidget(lab2);
+    layout->addStretch();
+
 
     this->setStyleSheet("QWidget {padding:0px; margin-left:0px;  border:1px grey; border-style:ridge}");
     this->setContentsMargins(0,0,0,0);

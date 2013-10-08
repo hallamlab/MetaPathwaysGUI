@@ -8,6 +8,7 @@ MeganData::MeganData()
     this->STARTY = 0;
     this->INIT_LINE_LENGTH = 20;
     this->scale = 1;
+    this->root =0;
 }
 void MeganData::setOffset(double startX, double startY) {
     this->STARTX = startX;
@@ -424,5 +425,5 @@ void MeganData::_deleteNode(TREENODE *t) {
 }
 
 MeganData::~MeganData() {
-    this->_deleteNode(root);    
+    if(this->root)  this->_deleteNode(root);
 }
