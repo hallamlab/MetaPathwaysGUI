@@ -164,6 +164,14 @@ void DataManager::createDataModel() {
     htree = createHTree(MetaCyc_hierarchy);
     htree->hashNodes(htree->root);
     this->htrees[METACYC] = htree;
+
+        qDebug() << "Data Model created in";
+    QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
+    htree = createHTree(Seed_subsystems);
+    htree->hashNodes(htree->root);
+    this->htrees[SEED] = htree;
+    qDebug() << "Data Model created";
+
    // htree->printTree(htree->root);
 
 }
@@ -239,6 +247,13 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
         this->attributes[KEGG][attributes[3]] = orf->attributes[KEGG];
     }
 
+    if(this->attributes[SEED].contains(attributes[4]))
+        orf->attributes[SEED] = this->attributes[SEED][attributes[4]];
+    else {
+        orf->attributes[SEED] = new ATTRIBUTE;
+        orf->attributes[SEED]->name = attributes[4];
+        this->attributes[SEED][attributes[4]] = orf->attributes[SEED];
+    }
     return orf;
 }
 
@@ -262,6 +277,7 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
 
     this->attributes[COG].clear();
     this->attributes[KEGG].clear();
+    this->attributes[SEED].clear();
 }
 
 

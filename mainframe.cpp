@@ -31,17 +31,36 @@ MainFrame::MainFrame(QWidget *parent) :
     actionResults = this->findChild<QAction *>("actionResults");
     toolBar = this->findChild<QToolBar *>("toolBar");
     leftToolBar = this->findChild<QToolBar *>("leftToolBar");
+    //leftToolBar->setVisible(false);
+    //leftToolBar = new MQToolBar();
+
+
+    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
+    leftToolBar->setGeometry(0, toolBar->height(),4,10);
+    leftToolBar->setLayoutDirection(Qt::LeftToRight);
+    leftToolBar->setOrientation(Qt::Vertical);
+    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    leftToolBar->setMinimumSize(QSize(0,0));
+ //   leftToolBar->setMaximumSize(QSize(100000,100000));
+    leftToolBar->setBaseSize(QSize(0,0));
+    leftToolBar->setSizeIncrement(0,0);
+    leftToolBar->setFloatable(true);
+    leftToolBar->setMovable(true);
+    leftToolBar->setAutoFillBackground(false);
+    leftToolBar->setParent(this);
+
+
+
+ //   leftToolBar = this->findChild<QToolBar *>("leftToolBar");
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
 
-    ;
-    leftToolBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
     toolbarManager->setToolBar(leftToolBar);
-
     leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
+
 
 
     actionProgress->setDisabled(true);

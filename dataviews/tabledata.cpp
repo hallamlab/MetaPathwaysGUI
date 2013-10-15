@@ -33,8 +33,8 @@ TableData::TableData(  QWidget *parent) :
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->hide();
 
-   // this->exportBox = new ExportBox(this);
-    //this->exportBox->hide();
+    this->exportBox = new ExportBox(this);
+    this->exportBox->hide();
     this->p =0;
     this->g =0;
 }
@@ -206,6 +206,7 @@ void TableData::initializeSearchFilter(QString query, int column, bool caseSensi
 }
 
 void TableData::searchButtonPressed(){
+    qDebug() << " search button";
     this->searchWidget->show();
 }
 
@@ -236,7 +237,6 @@ void TableData::updateData(double top, bool reload){
          largeTable->setPivot(pivot);
          int from = pivot > dw ? pivot -dw : 0;
          largeTable->getData(bigdata, from, dw);
-     //    qDebug() << " Update from " << from << " size " << bigdata.size();
          this->populateTable(*tableWidget, bigdata, headers, from );
     }
 }
@@ -289,12 +289,6 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
 
         this->exportBox = new ExportBox(this);
 }
-
-
-
-
-
-
 
 /*
  * Creates the actual table widget the data given to it, and populates the table with data and headers given with
@@ -376,6 +370,51 @@ void  TableData::parseFile(const QString &file, QList<QStringList> &data, const 
     }
 
 }
+
+
+bool TableData::saveTableToFile(QString fileName, QChar delim) {
+
+    QFile outFile(fileName);
+
+    if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outFile);
+        QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while the file is being written!");
+        QProgressBar progressBar;
+        progressBar.setRange(0, this->largeTable->tableData.size());
+        progressBar.show();
+
+        unsigned int interval = this->largeTable->tableData.size()/100;
+
+
+        for(int i =0; i < this->largeTable->tableData.size();  i++) {
+            for(int j =0; j < this->tableWidget->columnCount(); j++)  {
+                 if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
+                 if(j!=0)  out << delim;
+                 switch( this->types[j] ) {
+                     case STRING:
+                          out << this->largeTable->tableData[i]->strVar[ this->largeTable->index[j]];
+                          break;
+                     case INT:
+                          out << QString::number(this->largeTable->tableData[i]->intVar[ this->largeTable->index[j]]);
+                          break;
+                     case DOUBLE:
+                          break;
+                     default:
+                          break;
+                 }
+
+             }
+             out << "\n";
+        }
+        waitScreen->hide();
+        progressBar.hide();
+
+        outFile.close();
+    }
+    return true;
+
+}
+
 
 TableData::~TableData()
 {

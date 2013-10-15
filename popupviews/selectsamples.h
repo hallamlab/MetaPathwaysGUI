@@ -26,8 +26,13 @@ public:
     void addSamples(QStringList samples);
     void setReceiver(ResultWindow *resultWindow  );
 
+
 private slots:
     void sendSelection();
+
+public slots:
+    void selectAllSlot();
+    void clearAllSlot();
     
 private:
     Ui::SelectSamples *ui;
@@ -35,6 +40,7 @@ private:
     QDialogButtonBox *decisionBox;
     ResultWindow *resultWindow;
     QList<QCheckBox *> checkboxes;
+    QPushButton *selectAll, *clearAll;
 };
 
 #endif // SELECTSAMPLES_H

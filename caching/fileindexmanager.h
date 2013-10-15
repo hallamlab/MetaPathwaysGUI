@@ -1,19 +1,24 @@
 #ifndef __FILEINDEXMANAGER_H
 #define __FILEINDEXMANAGER_H
 #include "fileindex.h"
-
+#include "types.h"
 
 class FileIndexManager
 {
 public:
     static FileIndexManager *getFileIndexManager();
 
-    FileIndex *getFileIndex(QString fileName, enum SOURCETYPE type);
+    FileIndex *getFileIndex(QString sampleName, QString fileName, RESOURCE type);
+
+    bool hasFileIndex(QString fileName, RESOURCE type);
+
+    bool writeFileIndex(FileIndex *fileindex, QString filePath);
+    FileIndex* readFileIndex( QString sampleName, QString filePath,  RESOURCE type) ;
 
 private:
     FileIndexManager();
     static FileIndexManager *indexManager;
-    QHash<QString, FileIndex *> indexedFiles;
+    QHash<QString, QHash<RESOURCE, FileIndex *> > indexedFiles;
 };
 
 

@@ -26,6 +26,9 @@ HTableData::HTableData(QWidget *parent) :
     a.attrType = METACYC; a.sampleName="METACYC";
     htableIdentities << a;
 
+    a.attrType = SEED; a.sampleName="SEED";
+    htableIdentities << a;
+
     foreach(HTABLEIDENTITY identity, htableIdentities) {
        categorySelector->addItem(identity.sampleName);   ///sample name is a short cut and wrong
     }
@@ -48,6 +51,14 @@ HTableData::HTableData(QWidget *parent) :
 
     colors  << QBrush(Qt::black) <<  QBrush(Qt::red) << QBrush(Qt::blue) << QBrush(QColor(0,153,0)) << QBrush(QColor(255,128,0)) <<  QBrush(QColor(102,0,102)) << QBrush(QColor(76,0,183)) << QBrush(QColor(204,0,102))   << QBrush(Qt::gray);
     indents << QString("")       << QString("\t")    << QString("\t\t")  << QString("\t\t\t")       << QString("\t\t\t\t")       <<  QString("\t\t\t\t\t")     << QString("\t\t\t\t\t\t")  << QString("\t\t\t\t\t\t\t")   << QString("\t\t\t\t\t\t\t\t")   ;
+
+    searchButton = this->findChild<QPushButton *>("searchButton");
+    exportButton = this->findChild<QPushButton *>("exportButton");
+
+
+    connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
+    connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
+
 }
 
 HTableData::~HTableData()
@@ -63,6 +74,18 @@ void HTableData::setMaxSpinBoxDepth(unsigned int maxDepth) {
 void HTableData::setShowHierarchy(bool flag) {
     this->showHierarchy->setChecked(flag);
 }
+
+
+void HTableData::searchButtonPressed(){
+    this->searchWidget = new SearchWidget(this);
+    this->searchWidget->show();
+}
+
+void HTableData::exportButtonPressed(){
+    this->exportBox = new ExportBox(this);
+    this->exportBox->show();
+}
+
 
 bool HTableData::setParameters(HTree *htree,  QList<TYPE> _types) {
 
@@ -85,10 +108,24 @@ void HTableData::setNumCols(unsigned int numCols) {
     this->numCols = numCols;
 }
 
+QStringList HTableData::getHeaders(){
+    return this->headers;
+}
+
+QString HTableData::getHeader(unsigned int i){
+    if(i >= this->headers.size()) return QString();
+    return this->headers.at(i);
+}
+
+enum TYPE HTableData::getFieldType(unsigned int i) {
+    if( i >= this->types.size() )
+        return UNKNOWN;
+    return this->types.at(i);
+}
 
 void HTableData::setHeaders(QStringList &headers) {
-  this->headers = headers;
- }
+    this->headers = headers;
+}
 
 void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
    this->id.attrType = attrType;
@@ -260,16 +297,12 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     }
 
     QList<ORF *>orfList;
-    qDebug() << " done with the attribute";
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
         if( this->id.attrType== this->htableIdentities[i].attrType) continue;
-        qDebug() << "attribute " << hnode->attribute->name;
         foreach(Connector *connector, this->connectors) {
            orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
-           qDebug() << "going ot insert the no orfs " << orfList.size();
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
-           qDebug() << "inserted the orfs of num " << modConnector->getORFList().size();
         }
     }
 
@@ -293,7 +326,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
   //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();
 
 }
-
 
 
 void HTableData::switchCategory(int index) {
@@ -321,5 +353,20 @@ void HTableData::switchCategory(int index) {
 
 }
 
+bool HTableData::saveTableToFile(QString fileName, QChar delim) {
+    QFile outFile(fileName);
+    if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outFile);
+        for(int i =0; i < this->tableWidget->rowCount(); i++) {
+             for(int j =0; j < this->tableWidget->columnCount(); j++)  {
+                 if(j!=0)  out << delim;
+                 out << this->tableWidget->item(i,j)->text();
+             }
+             out << "\n";
+        }
+        outFile.close();
+    }
+    return true;
+}
 
 

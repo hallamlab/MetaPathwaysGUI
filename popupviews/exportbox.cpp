@@ -1,35 +1,29 @@
 #include "exportbox.h"
 
-
 ExportBox::ExportBox(TableData* td, QWidget *parent)
     // : QWidget(parent)
- {
-     QGridLayout *grid = new QGridLayout;
-     this->td = td;
-     createNonExclusiveGroup(grid);
-     setLayout(grid);
-
-     setWindowTitle(tr("Group Boxes"));
-     resize(480, 200);
-     this->setAttribute(Qt::WA_DeleteOnClose, true);
- }
-
-
+{
+    this->td = new ExportSource(td);
+    this->createWidget();
+}
 
 ExportBox::ExportBox(HTableData* td, QWidget *parent)
     // : QWidget(parent)
- {
+{
+    this->td = new ExportSource(td);
+    this->createWidget();
+}
+
+void ExportBox::createWidget() {
      QGridLayout *grid = new QGridLayout;
-     this->htd = td;
-
      createNonExclusiveGroup(grid);
-
      setLayout(grid);
 
-     setWindowTitle(tr("Group Boxes"));
+     setWindowTitle(tr("Export"));
      resize(480, 200);
-
      this->setAttribute(Qt::WA_DeleteOnClose, true);
+     connect(exportButton, SIGNAL(clicked()), this, SLOT(saveAs()) );
+
  }
 
 
@@ -38,23 +32,8 @@ bool compareColumns(const EXPORT_SELECT a, const EXPORT_SELECT b) {
     return a.rank < b.rank;
 }
 
-void ExportBox::setTableData(TableData *td) {
-    this->td = td;
-    QGridLayout *grid = new QGridLayout;
-    createNonExclusiveGroup(grid);
 
-    setLayout(grid);
-
-    setWindowTitle(tr("Group Boxes"));
-    resize(480, 320);
-
-}
-
-
-
- void ExportBox::clickedChoice() {
-
-     qDebug() << " You clicked ";
+void ExportBox::clickedChoice() {
      QList<EXPORT_SELECT> cols;
 
      unsigned int numSel =0;
@@ -93,7 +72,7 @@ void ExportBox::setTableData(TableData *td) {
      for(unsigned int i=0; i < this->td->getHeaders().size(); i++ ) {
          QCheckBox *checkBox1 = new QCheckBox(this->td->getHeader(i));
          connect(checkBox1, SIGNAL( clicked()), this, SLOT(clickedChoice()) );
-         grid->addWidget(checkBox1,(int)i/1, i%1);
+         grid->addWidget(checkBox1,(int)i/5, i%5);
          EXPORT_SELECT s;
          s.checkbox=checkBox1;
          s.rank = -1;
@@ -120,14 +99,11 @@ void ExportBox::setTableData(TableData *td) {
      vbox->addWidget(cancelButton);
      vbox->addWidget(exportButton);
 
-
-
     // grid->addWidget(cancelButton, this->td->getHeaders().size() +1, 0 );
     // grid->addWidget(exportButton, this->td->getHeaders().size() +1, 1 );
-
-
      return groupBox;
  }
+
 
  ExportBox::~ExportBox()
 {
@@ -142,6 +118,24 @@ void ExportBox::setTableData(TableData *td) {
      */
      qDebug() << " Export box closed ";
 
+ }
+
+
+
+ bool ExportBox::saveAs()
+ {
+     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"));
+     if (fileName.isEmpty())
+         return false;
+
+     QChar delim('\t');
+     if( csvRadio->isChecked()) {
+         delim=QChar(',');
+     }
+
+
+     this->td->saveTableToFile(fileName, delim);
+     return true;
  }
 
 

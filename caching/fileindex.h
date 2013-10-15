@@ -19,6 +19,9 @@ public:
     FileIndex();
     FileIndex(QString intputFilePath, enum SOURCETYPE type);
     QString getDataToDisplay(QString &key);
+    void setSourceFile(QString sourceFile);
+    bool loadFileIndex(QString filePath, enum SOURCETYPE type);
+    bool writeFileIndex(QString filePath, enum SOURCETYPE type);
 
 private:
     void indexFastaFile(QTextStream &inputFile);

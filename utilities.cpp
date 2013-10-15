@@ -385,3 +385,47 @@ QString Utilities::createToolTipTable(  QList< QList<QString> > tableData ) {
 
 }
 
+
+
+QLabel *Utilities::ShowWaitScreen( QString msg) {
+    class SleeperThread : public QThread
+    {
+          public:
+             static void msleep(unsigned long msecs) {QThread::msleep(msecs);}
+
+    };
+
+    QLabel *aWidget = new QLabel(0, Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
+
+    aWidget->setAttribute(Qt::WA_TranslucentBackground);
+    aWidget->setAlignment(Qt::AlignCenter );
+
+    aWidget->setTextFormat(Qt::RichText);
+    aWidget->setText( QString("<FONT COLOR='#ff0000' FONT SIZE = 10>") +  msg  + QString("</>"));
+
+    aWidget->show();
+    aWidget->repaint();
+    return aWidget;
+}
+
+
+QLabel *Utilities::ShowWaitScreen(QString pngFile, QString msg) {
+    class SleeperThread : public QThread
+    {
+          public:
+             static void msleep(unsigned long msecs) {QThread::msleep(msecs);}
+
+    };
+
+    QPixmap aPixmap(pngFile);
+    QLabel *aWidget = new QLabel(0, Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
+
+    aWidget->setAttribute(Qt::WA_TranslucentBackground);
+
+    aWidget->setAlignment(Qt::AlignCenter );
+    aWidget->setPixmap(aPixmap);
+    aWidget->show();
+    aWidget->repaint();
+    return aWidget;
+}
+

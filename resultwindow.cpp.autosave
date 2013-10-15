@@ -284,19 +284,6 @@ void ResultWindow::sampleChanged(QString sampleName){
      resultTabs->addTab(t, "REACTIONS");
 
 
-    //resultTabs->addTab(this->graphicsRepresentation["MEGAN"], "MEGAN");
-
-    // add the annotation sources table
-   // types.clear();
- //   types << STRING << STRING << STRING << STRING << DOUBLE;
-  //  t->setParameters(true, functionalSource1, types, true);
-  //  t= this->tables["FUNC SRC"];
- //   p = new DisplayInfo();
-  //  t->setPopupListener(p);
-  //  resultTabs->addTab(t, "FUNC SRC");
-  //  fileIndex = indexManager->getFileIndex(aminoFasta, FASTA);
-   // p->addFileIndex(fileIndex,0);
-    //return;
 
     emit fileChanged(sampleName);
 }

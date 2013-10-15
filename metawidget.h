@@ -14,6 +14,7 @@ public:
     QLabel* titleLabel;
     QLabel* statsLabel;
     QString file;
+
 };
 
 #endif // METAWIDGET_H

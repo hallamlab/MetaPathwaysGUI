@@ -19,6 +19,8 @@
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/mdiareawidget.h"
 #include "displaywidgets/widgetstacker.h"
+#include "popupviews/exportbox.h"
+#include "popupviews/searchwidget.h"
 
 
 typedef struct _HTABLE_IDENTITY {
@@ -30,6 +32,8 @@ typedef struct _HTABLE_IDENTITY {
 namespace Ui {
 class HTableData;
 }
+class ExportBox;
+class SearchWidget;
 
 class HTableData : public QDialog
 {
@@ -49,10 +53,16 @@ public:
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
     void setHeaders(QStringList &headers);
+    QStringList getHeaders();
+    QString getHeader(unsigned int i);
+    enum TYPE getFieldType(unsigned int i);
+
     void showTableData(bool hideZeroRows = false);
     unsigned int  showSelectedTableData(QString categoryName, bool hideZeroRows = false);
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
     unsigned int fillSelectedData(QString category, unsigned int maxDepth, int state, bool hideZeroRows);
+
+    bool saveTableToFile(QString fileName, QChar delim);
 
     QTableWidget* tableWidget;
     unsigned int numCols;
@@ -74,16 +84,23 @@ private:
      bool isNonZero(ROWDATA *r);
 
 private slots:
-  //  void searchButtonPressed();
-  //  void exportButtonPressed();
+
     void spinBoxChanged(int depth);
     void showHierarchyChanged(int state);
     void hideZeroRowsChanged(int state);
     void showInformativeTable(QTableWidgetItem *item);
     void switchCategory(int);
+    void searchButtonPressed();
+    void exportButtonPressed();
 
 private:
+
+    SearchWidget * searchWidget;
     QPushButton* searchButton;
+
+    ExportBox * exportBox;
+    QPushButton* exportButton;
+
     QList<QBrush> colors;
     QList<QString> indents;
     QList<QFont> fonts;

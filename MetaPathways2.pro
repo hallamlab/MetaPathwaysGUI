@@ -8,15 +8,12 @@ QT       += core gui
 QT += declarative
 
 
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = MetaPathways2
 TEMPLATE = app
 
 #CONFIG += console
-
-
 
 SOURCES += main.cpp\
         parentwidget.cpp \
@@ -61,7 +58,10 @@ SOURCES += main.cpp\
     displaywidgets/toolbarwidgets.cpp \
     displaywidgets/toolbarmanager.cpp \
     displaywidgets/mdiareawidget.cpp \
-    displaywidgets/widgetstacker.cpp
+    displaywidgets/widgetstacker.cpp \
+    displaywidgets/mqtoolbar.cpp \
+    popupviews/exportsource.cpp \
+    datamodel/samplercmanager.cpp
 
 
 
@@ -110,7 +110,10 @@ HEADERS  += \
     displaywidgets/toolbarwidgets.h \
     displaywidgets/toolbarmanager.h \
     displaywidgets/mdiareawidget.h \
-    displaywidgets/widgetstacker.h
+    displaywidgets/widgetstacker.h \
+    displaywidgets/mqtoolbar.h \
+    popupviews/exportsource.h \
+    datamodel/samplercmanager.h
 
 
 

@@ -11,6 +11,9 @@ enum DECISION { YES, NO, MAYBE};
 typedef enum { MANHATTAN, STRAIGHT } LineStyle;
 
 enum SOURCETYPE {FASTA, TABTABLE};
+typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, CONTIGLENGTH, ORFLENGTH, \
+                             NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
+                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC } RESOURCE;
 
 typedef struct _RANK_BEGIN_PAIR {
     unsigned int rank, begin;

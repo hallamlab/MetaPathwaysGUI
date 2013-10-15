@@ -3,6 +3,7 @@
 #include "displaywidgets/toolbarwidgets.h"
 #include "datamodel/htabledata.h"
 #include <QToolBar>
+#include <QAction>
 
 class HTableData;
 

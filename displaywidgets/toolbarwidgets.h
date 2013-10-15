@@ -27,12 +27,14 @@ class HTabWidget: public QWidget {
    Q_OBJECT
 public:
     HTabWidget(QString text, QString imageFile);
-
+    int getWidth();
 public slots:
     void slotClicked(SIGNALTYPE type);
 
 signals:
     void tabClicked(HTabWidget *tab, SIGNALTYPE type);
+private:
+    int _width;
 
 };
 

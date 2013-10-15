@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QTableWidget>
 #include <QList>
+#include <QThread>
+#include <QTextFormat>
 
 class TableNumberItem : public QTableWidgetItem{
 
@@ -27,6 +29,8 @@ public:
     static int countRunSteps(QHash<QString,QString>* PARAMS);
     static void getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS);
     static QString createToolTipTable(  QList< QList<QString> > tableData );
+    static QLabel *ShowWaitScreen(QString pngFile, QString msg ) ;
+    static QLabel *ShowWaitScreen(QString msg) ;
 };
 
 #endif // UTILITIES_H

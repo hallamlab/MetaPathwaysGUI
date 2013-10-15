@@ -6,6 +6,6 @@
         <file>images/cross.png</file>
         <file>images/check.png</file>
         <file>images/cross1.jpg</file>
-
+        <file>images/wait.png</file>
     </qresource>
 </RCC>

@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-    <horstretch>0</horstretch>
-    <verstretch>1</verstretch>
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>1</horstretch>
+    <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
@@ -32,6 +32,15 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
       <widget class="QWidget" name="page_3"/>
       <widget class="QWidget" name="page_4"/>
      </widget>
@@ -93,7 +102,7 @@
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>toolBar</string>
+    <string>Settings</string>
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
@@ -119,10 +128,7 @@
   </widget>
   <widget class="QToolBar" name="leftToolBar">
    <property name="windowTitle">
-    <string>toolBar_2</string>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::LeftToolBarArea</set>
+    <string>Sub Windows</string>
    </property>
    <attribute name="toolBarArea">
     <enum>LeftToolBarArea</enum>
@@ -130,7 +136,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
   </widget>
   <action name="actionSetup">
    <property name="text">

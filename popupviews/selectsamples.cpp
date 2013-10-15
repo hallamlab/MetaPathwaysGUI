@@ -8,6 +8,12 @@ SelectSamples::SelectSamples(QWidget *parent) :
     ui->setupUi(this);
     sampleGrid = this->findChild<QGridLayout *>("sampleGrid");
     decisionBox = this->findChild<QDialogButtonBox *>("decisionBox");
+
+    selectAll = this->findChild<QPushButton *>("selectAll");
+    clearAll = this->findChild<QPushButton *>("clearAll");
+
+    connect(selectAll, SIGNAL(clicked()), this, SLOT(selectAllSlot()));
+    connect(clearAll, SIGNAL(clicked()), this, SLOT(clearAllSlot()));
     connect(decisionBox, SIGNAL(accepted()), this, SLOT(sendSelection()) );
 
 }
@@ -22,11 +28,23 @@ void SelectSamples::addSamples(QStringList samples) {
    checkboxes.clear();
    for(unsigned int i=0; i < samples.size(); i++ ) {
         QCheckBox *checkBox = new QCheckBox(samples.at(i));
-        sampleGrid->addWidget(checkBox,(int)i/1, i%1);
+        sampleGrid->addWidget(checkBox,(int)i/5, i%5);
         checkboxes.append(checkBox);
    }
 }
 
+void SelectSamples::selectAllSlot() {
+    foreach(QCheckBox *decision, checkboxes) {
+       decision->setChecked(true);
+    }
+}
+
+void SelectSamples::clearAllSlot() {
+    foreach(QCheckBox *decision, checkboxes) {
+       decision->setChecked(false);
+    }
+
+}
 
 void SelectSamples::setReceiver(ResultWindow *resultWindow  ) {
     this->resultWindow = resultWindow;

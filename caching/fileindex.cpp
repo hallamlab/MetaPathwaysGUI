@@ -92,3 +92,57 @@ QString FileIndex::getDataToDisplay(QString &key) {
     return result;
 }
 
+
+bool FileIndex::writeFileIndex(QString filePath, SOURCETYPE type) {
+    QFile outputFile(filePath);
+
+    QHash<QString, FILELOCSPAN>::const_iterator it;
+    QString line;
+    if (outputFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream outstream(&outputFile);
+        for(it = this->locations.begin(); it!= this->locations.end(); it++) {
+            line = it.key() + "\t" + QString::number(it.value().beg) + "\t" + QString::number(it.value().end);
+            outstream << line << endl;
+        }
+        outputFile.close();
+       return true;
+    }
+    return false;
+
+}
+
+
+void FileIndex::setSourceFile(QString sourceFile) {
+    this->sourceFile = sourceFile;
+}
+
+bool FileIndex::loadFileIndex(QString filePath, SOURCETYPE type) {
+    QFile inputFile(filePath);
+    if (! QFile::exists(filePath) )
+    {
+        // warn that the file doesn't exist
+        return false;
+    }
+    else if (!inputFile.open(QIODevice::ReadOnly))
+    {
+        // warn that the file couldn't be read
+        return  false;
+    }
+
+
+    if(type==FASTA) {
+       FILELOCSPAN s;
+       while( !inputFile.atEnd()) {
+           QString line  = inputFile.readLine().trimmed();
+           QStringList fields = line.split(QChar('\t'));
+           if( fields.size() !=3 ) continue;
+           s.beg =  fields[1].trimmed().toInt();
+           s.end =  fields[2].trimmed().toInt();
+           this->locations.insert(fields[0].trimmed(), s);
+       }
+       inputFile.close();
+    }
+    return true;
+}
+

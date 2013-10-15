@@ -2,6 +2,7 @@
 #define MAINFRAME_H
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QRect>
 #include "parentwidget.h"
 #include "Setup.h"
 #include "resultwindow.h"
@@ -10,6 +11,7 @@
 #include "welcome.h"
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/toolbarmanager.h"
+#include "displaywidgets/mqtoolbar.h"
 
 namespace Ui {
 class MainFrame;

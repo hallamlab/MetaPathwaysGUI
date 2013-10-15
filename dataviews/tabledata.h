@@ -12,6 +12,7 @@
 #include "popupviews/displayinfo.h"
 #include "genebrowser/genomeview.h"
 #include "caching/tablemanager.h"
+#include <QProgressBar>
 
 #include <QStringList>
 namespace Ui {
@@ -20,8 +21,7 @@ namespace Ui {
 
 
 
-class SearchWidget;
-class ExportWidget;
+ class SearchWidget;
 class ExportBox;
 
 class TableData : public QWidget, public MetaWidget
@@ -49,6 +49,7 @@ public:
     void initializeSearchFilter(QString query, int column=0, bool caseSensitive = true) ;
     enum TYPE getFieldType(unsigned int i);
 
+    bool saveTableToFile(QString fileName, QChar delim);
     QList<enum TYPE> types;
 
     QList<ROW *> bigdata; //table data
@@ -86,16 +87,16 @@ private:
     int dw;
     QStringList headers; //table headers
 
-    SearchWidget* searchWidget;
+    SearchWidget * searchWidget;
     QPushButton* searchButton;
 
-    ExportWidget* exportWidget;
+   // ExportWidget* exportWidget;
     QPushButton* exportButton;
     DisplayInfo *p;
     GenomeView *g;
 
 
-    ExportBox* exportBox;
+    ExportBox * exportBox;
 
     SEARCH searchFilter;
 

@@ -26,10 +26,9 @@
 #include "popupviews/selectsamples.h"
 
 #include "displaywidgets/mdiareawidget.h"
+#include "datamodel/samplercmanager.h"
 
-typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, CONTIGLENGTH, ORFLENGTH, \
-                             NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
-                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC } INPUTFILETYPE;
+
 
 class SelectSamples;
 
@@ -44,6 +43,7 @@ class ResultWindow : public QWidget
 public:
     explicit ResultWindow(QWidget *parent = 0);
     RunData* getRunData();
+    HTableData *getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers, Connector *connect, DataManager *datamanager);
     ~ResultWindow();
 
 public slots:
@@ -60,7 +60,8 @@ signals:
 
 private:
     void switchToComparativeMode();
-    QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
+    void indexSamples(bool useResourceFolder);
+  //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
 
 
 private:

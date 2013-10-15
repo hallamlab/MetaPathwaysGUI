@@ -18,6 +18,9 @@ ToolBarManager::ToolBarManager()
 
 void ToolBarManager::setToolBar(QToolBar *toolbar ) {
    this->toolbar = toolbar;
+ /*  QAction *toggle = this->toolbar->toggleViewAction();
+   toggle->setCheckable(true);
+   this->toolbar->addAction(toggle);*/
 }
 
 void ToolBarManager::addTab(HTabWidget *htab, HTableData *htable ) {
@@ -27,6 +30,9 @@ void ToolBarManager::addTab(HTabWidget *htab, HTableData *htable ) {
 
     widgets.insert(htab, a);
     tables.insert(htab, htable);
+
+    toolbar->setGeometry(toolbar->x(),toolbar->y(), htab->getWidth(), htab->height()*tables.size());
+    //toolbar->resize(toolbar->minimumWidth(), toolbar->sizeHint().height());
 }
 
 void ToolBarManager::removeTab(HTabWidget *htab) {
@@ -34,6 +40,7 @@ void ToolBarManager::removeTab(HTabWidget *htab) {
        this->toolbar->removeAction( widgets[htab]);
        this->widgets.remove(htab);
      }
+     toolbar->repaint();
 }
 
 

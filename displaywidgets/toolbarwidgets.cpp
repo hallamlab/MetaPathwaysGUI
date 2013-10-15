@@ -18,6 +18,10 @@ void ToolBarQLabel::slotClicked( SIGNALTYPE type)
     qDebug()<<"Clicked " << this->type;
 }
 
+int HTabWidget::getWidth() {
+
+    return this->_width;
+}
 
 HTabWidget::HTabWidget(QString text, QString imageFile) {
 
@@ -49,7 +53,8 @@ HTabWidget::HTabWidget(QString text, QString imageFile) {
     this->setContentsMargins(0,0,0,0);
     layout->setMargin(0);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-//    this->show();
+
+    this->_width = lab1->width()  + lab2->width();
 }
 
 

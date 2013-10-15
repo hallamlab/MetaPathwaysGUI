@@ -15,6 +15,7 @@ private:
 
     QPoint refPoint ;
     double deltaX, deltaY;
+    QWidget *lastw;
     WidgetStacker();
 };
 
