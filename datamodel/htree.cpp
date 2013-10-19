@@ -2,6 +2,7 @@
 
 HTree::HTree()
 {
+    this->root = 0;
 }
 
 
@@ -11,8 +12,9 @@ void HTree::loadFromFile(QString fileName) {
 
 }
 
-
 short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
+    if( hnode==0 ) return currDepth;
+
     short int depth = currDepth;
 
     short int tempDepth;
@@ -28,6 +30,7 @@ short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
 
 short int HTree::getTreeDepth() {
     short int depth;
+
     depth = this->_getTreeDepth(this->root, -1);
     return depth;
 }
@@ -47,10 +50,7 @@ QList<HNODE *> HTree::getChildrenOf(QString name) {
 
 QList<ATTRIBUTE *> HTree::getLeafAttributesOf(HNODE *hnode) {
     QList<ATTRIBUTE *> attrList;
-    qDebug() << "getting leaf attriburtes";
-
     this->_getLeafAttributesOf(hnode, attrList);
-    qDebug() << "Done getting attributes";
     return attrList;
 }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>775</width>
-    <height>1025</height>
+    <height>672</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,11 +25,11 @@
     <widget class="QLabel" name="progressLabel_2">
      <property name="font">
       <font>
-       <pointsize>24</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Global Progress</string>
+      <string>Progress (all samples)</string>
      </property>
     </widget>
    </item>
@@ -238,11 +238,11 @@
     <widget class="QLabel" name="progressLabel">
      <property name="font">
       <font>
-       <pointsize>24</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Progress</string>
+      <string>Progress (current sample)</string>
      </property>
     </widget>
    </item>

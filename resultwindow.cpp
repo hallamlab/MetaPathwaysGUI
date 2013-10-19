@@ -1,5 +1,16 @@
 #include "resultwindow.h"
 
+ResultWindow *ResultWindow::resultWindow=0;
+
+ResultWindow *ResultWindow::getResultWindow() {
+    if( ResultWindow::resultWindow == 0 ) {
+        ResultWindow::resultWindow = new ResultWindow();
+    }
+
+    return ResultWindow::resultWindow;
+
+
+}
 
 ResultWindow::ResultWindow(QWidget *parent) :
     QWidget(parent),
@@ -7,18 +18,32 @@ ResultWindow::ResultWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("MetaPathways - Results and Data");
+
+
     this->run = RunData::getRunData();
+
+    qDebug() << "rundata";
+    qDebug() << run->getConfig();
+    qDebug() << run->getParams();
+
+    if( this->run->getConfig().isEmpty() || this->run->getParams().isEmpty()  ) {
+        QMessageBox warning;
+        warning.warning(0, "Configuration Invalid!","Ooops! \nYou appear to have a configuration file for me, but parameters may be missing! Please check that all required executables and folders are specified through setup.", QMessageBox::Ok);
+        return ;
+    }
+
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     checkComparativeMode = this->findChild<QCheckBox *>("checkComparativeMode");
     selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
     currentSampleLabel = this->findChild<QLabel *>("currentSampleLabel");
+    loadResults = this->findChild<QPushButton *>("loadResults");
+
     selectSamplesButton->setEnabled(false);
 
 
     resultTabs->clear();
-
     getFileNames = new QTimer();
     getFileNames->start(500);
 
@@ -27,6 +52,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
     //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
     connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
+    connect(loadResults, SIGNAL(clicked()), this, SLOT(_loadResults()) );
 
     tables["PATHWAYS"] = new TableData();
     tables["REACTIONS"] = new TableData();
@@ -59,16 +85,13 @@ ResultWindow::ResultWindow(QWidget *parent) :
    // graphicsRepresentation["MEGAN"] = new GraphicsRepresentation();
 
     DataManager *datamanager = DataManager::getDataManager();
-
     datamanager->createDataModel();
+}
 
-
-    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
-
-    QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
-    sampleResourceManager->setOutPutPath(OUTPUTPATH);
-
-
+void ResultWindow::_loadResults() {
+    this->disableSampleChanged = true;
+    this->updateFileNames();
+    this->disableSampleChanged = false;
 }
 
 
@@ -83,7 +106,7 @@ void ResultWindow::indexSamples(bool userResourceFolder) {
     samplercmgr->setUseResourceFolder(userResourceFolder);
 
     unsigned int i =0;
-    foreach(QString file , files ) {
+    foreach(QString file, files ) {
         samplercmgr->getFileIndex(file, NUCFASTA);
         samplercmgr->getFileIndex(file, AMINOFAA);
         progressBar.setValue(++i); qApp->processEvents();  progressBar.update();
@@ -112,8 +135,7 @@ void ResultWindow::setVisible(int i) {
 }
 
 void ResultWindow::updateFileNames(){
-    files = *this->run->files;
-
+    files = this->run->files;
     QStringList existing;
 
     for (int i=0;i<sampleSelect->count();i++){
@@ -136,29 +158,25 @@ void ResultWindow::updateFileNames(){
 
 
 void ResultWindow::sampleChanged(QString sampleName){
+
+    if( disableSampleChanged==true) return;
+
     TableData *t;
 
-    QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
+    QString OUTPUTPATH = this->run->getParams()["folderOutput"];
 
-  //  const QString nucFile = this->getFilePath(sampleName, OUTPUTPATH, NUCSTATS);
-   // const QString aminoFile = this->getFilePath(sampleName, OUTPUTPATH, AMINOSTATS);
-
-  //  const QString contigLengthFile = this->getFilePath(sampleName, OUTPUTPATH, CONTIGLENGTH);
-
-  //  const QString orfLengthFile = this->getFilePath(sampleName, OUTPUTPATH,ORFLENGTH);
-
-
-   // const QString nucFasta = this->getFilePath(sampleName, OUTPUTPATH, NUCFASTA);
-
-  //  const QString aminoFasta = this->getFilePath(sampleName, OUTPUTPATH, AMINOFAA);
-
- //   const QString funAndTax = this->getFilePath(sampleName, OUTPUTPATH, FUNCTIONALTABLE);
-
+    qDebug() << "before data model";
+    DataManager *datamanager = DataManager::getDataManager();
+    qDebug() << "after dtamanager ";
+    datamanager->createDataModel();
 
 
    // const QString meganTre = this->getFilePath(sampleName, OUTPUTPATH, MEGANTREE);
 
+    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
+    sampleResourceManager->setOutPutPath(OUTPUTPATH);
     this->indexSamples(true);
+
 
     QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while we load the sample!");
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
@@ -175,7 +193,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     QStringList headers;
 
-    DataManager *datamanager = DataManager::getDataManager();
+
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
@@ -191,7 +209,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, KEGG, types, headers, connect, datamanager);
     resultTabs->addTab(htable, "KEGG");
-
+    qDebug() << "done kegg";
 
     htable = new HTableData;
     types.clear();
@@ -307,7 +325,10 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
     connect = datamanager->createConnector(sampleName, datamanager->getHTree(attr), attr, datamanager->getORFList(sampleName));
     htable->setParameters(datamanager->getHTree(attr), types);
     htable->addConnector(connect);
+
     htable->setMaxSpinBoxDepth(datamanager->getHTree(attr)->getTreeDepth());
+
+
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
     htable->setTableIdentity(sampleName,attr);

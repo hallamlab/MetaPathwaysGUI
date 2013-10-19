@@ -7,5 +7,7 @@
         <file>images/check.png</file>
         <file>images/cross1.jpg</file>
         <file>images/wait.png</file>
+        <file>text/default_template_param.txt</file>
+        <file>text/default_template_config.txt</file>
     </qresource>
 </RCC>

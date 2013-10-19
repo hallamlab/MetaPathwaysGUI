@@ -20,7 +20,6 @@ SettingsTab::SettingsTab(QWidget *parent) :
     RunConfigWindow = NULL;
 
     getAllWidgets();
-    initWidgetValues();
 
     annotationDBSWarning = this->findChild<QLabel *>("annotationDBSWarning");
     annotationDBS = this->findChild<QListWidget *>("annotationDBS");
@@ -30,8 +29,9 @@ SettingsTab::SettingsTab(QWidget *parent) :
     showORFDBS();
     showRRNADBS();
 
-    annotationFiles = new QStringList((MainFrame::PARAMS->operator []("annotation:dbs")).split(",", QString::SkipEmptyParts));
-    rrnaFiles = new QStringList((MainFrame::PARAMS->operator []("rRNA:refdbs")).split(",", QString::SkipEmptyParts));
+    RunData *run = RunData::getRunData();
+    annotationFiles = new QStringList((run->getValueFromHash("annotation:dbs",_PARAMS)).split(",", QString::SkipEmptyParts));
+    rrnaFiles = new QStringList((run->getValueFromHash("rRNA:refdbs",_PARAMS)).split(",", QString::SkipEmptyParts));
 
     connect(this, SIGNAL(setContinueButton()), this->parent(), SLOT(enableContinueButton()));
     connect(this,SIGNAL(hideContinueButton()), this->parent(),SLOT(hideContinueButton()));
@@ -81,9 +81,7 @@ void SettingsTab::rrnaClicked(QModelIndex index){
 void SettingsTab::isBothDBSSet(){
     if (annotationDBSWarning->isHidden() && rrnaREFDBSWarning->isHidden()){
         emit setContinueButton();
-        qDebug() <<"setting cont button to go";
     }else{
-        qDebug() << "hiding cont button";
         emit hideContinueButton();
     }
 }
@@ -175,13 +173,17 @@ void SettingsTab::openParameterSetup(){
 void SettingsTab::initWidgetValues(){
     QList<QWidget *>::iterator i;
 
+
+    RunData *rundata = RunData::getRunData();
+
     for (i = SettingsTab::allWidgets->begin();i != SettingsTab::allWidgets->end(); ++i){
         QWidget *widget = *i;
 
         QString objectName = widget->objectName();
-        QString configName = MainFrame::CONFIG_MAPPING->key(objectName);
-        QString value = MainFrame::PARAMS->value(configName);
 
+        QString configName = rundata->getConfigMapping().key(objectName);
+
+        QString value = rundata->getValueFromHash(configName,_PARAMS);
         if (qobject_cast<QComboBox *>(widget)!=NULL){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             temp->setCurrentIndex(temp->findText(value));
@@ -201,6 +203,8 @@ void SettingsTab::initWidgetValues(){
             QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
             temp->setText(value);
         }
+
+        qDebug() << "Got them all";
     }
 }
 

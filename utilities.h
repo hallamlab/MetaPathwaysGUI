@@ -23,11 +23,11 @@ public:
     static QList<QLabel *>* createLabels(const QString &FILE_NAME,const QChar &DELIM);
     static QTableWidget* createTable(const QString &FILE_NAME, const QChar &DELIM);
     static QList<QString>* parseResults(const QString &FILE_NAME, const QChar &DELIM);
-    static QHash<QString,QString>* createMapping();
-    static QHash<QString,QString>* parseFile(const QString &TEMPLATE_FILE);
+    static QHash<QString,QString> createMapping();
+    static QHash<QString,QString> parseFile(const QString &TEMPLATE_FILE);
     static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
-    static void getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS);
+    static QStringList getUniqueDBS(QStringList dbs);
     static QString createToolTipTable(  QList< QList<QString> > tableData );
     static QLabel *ShowWaitScreen(QString pngFile, QString msg ) ;
     static QLabel *ShowWaitScreen(QString msg) ;

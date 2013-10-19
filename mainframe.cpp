@@ -10,9 +10,6 @@ const QString MainFrame::TEMPLATE_PARAM = "template_param.txt";
 const QString MainFrame::DEFAULT_TEMPLATE_PARAM = "default_template_param.txt";
 const QString MainFrame::TEMPLATE_CONFIG = "template_config.txt";
 const QString MainFrame::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
-QHash<QString, QString> *MainFrame::CONFIG = NULL;
-QHash<QString, QString> *MainFrame::PARAMS = NULL;
-QHash<QString, QString> *MainFrame::CONFIG_MAPPING = NULL;
 #include <QtGui>
 
 
@@ -29,10 +26,11 @@ MainFrame::MainFrame(QWidget *parent) :
     actionProgress = this->findChild<QAction *>("actionProgress");
     actionGridProgress = this->findChild<QAction *>("actionGridProgress");
     actionResults = this->findChild<QAction *>("actionResults");
+    actionRunParams = this->findChild<QAction *>("actionRunParams");
+    actionRunStages = this->findChild<QAction *>("actionStages");
+
     toolBar = this->findChild<QToolBar *>("toolBar");
     leftToolBar = this->findChild<QToolBar *>("leftToolBar");
-    //leftToolBar->setVisible(false);
-    //leftToolBar = new MQToolBar();
 
 
     leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
@@ -61,180 +59,297 @@ MainFrame::MainFrame(QWidget *parent) :
     toolbarManager->setToolBar(leftToolBar);
     leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
 
-
-
-    actionProgress->setDisabled(true);
-    actionGridProgress->setDisabled(true);
-    actionResults->setDisabled(true);
-
-
     setupWidget = 0;
     parentWidget = 0;
     resultWindow = 0;
     welcomeWindow = 0;
+    stages = 0;
+    settings = 0;
 
     this->setWindowTitle("MetaPathways 2.0");
-    this->loadPathVariables();
+    welcomeWindow = new Welcome();
+    stackedWidget->addWidget(welcomeWindow);
 
-    if (checkParams() && checkConfig()){
-        MainFrame::CONFIG_MAPPING = Utilities::createMapping();
-        MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/"+ TEMPLATE_CONFIG);
-        MainFrame::PARAMS = Utilities::parseFile(this->pathMetaPathways + "/"+ TEMPLATE_PARAM);
+    rundata = RunData::getRunData();
 
-        if(  !MainFrame::settingsAvailable() /*!Utilities::validateConfig(this->CONFIG)*/){
-            warning->warning(0,"Configuration Invalid!","Ooops! \nYou appear to have a configuration file for me, but parameters may be missing! Please check that all required executables and folders are specified through setup.", QMessageBox::Ok);
-            this->openSetup();
-        }
+    if( !rundata->checkParams() )
+        rundata->setupDefaultConfig();
+
+    if( !rundata->checkParams() )
+        rundata->setupDefaultParams();
+
+    QString warningStr;
+    setupWidget = new Setup();
+    stackedWidget->addWidget(setupWidget);
+    connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(validateSetup()));
+
+    if( !rundata->validate(warningStr) ) {
+       this->showSetupError(warningStr);
     }else{
-
-        this->setupConfig();
-        this->setupParams();
-        this->openSetup();
+        validateSetup();
     }
 
-    setupWidget = new Setup();
-    parentWidget = new ParentWidget();
-//    resultWindow = new ResultWindow();
-    welcomeWindow = new Welcome();
-
-    stackedWidget->addWidget(welcomeWindow);
-    stackedWidget->addWidget(setupWidget);
-    stackedWidget->addWidget(parentWidget);
-
-    stackedWidget->setCurrentWidget(welcomeWindow);
-
-    connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
-    connect(actionRunSettings, SIGNAL(triggered()), this, SLOT(openParentWidget()));
-    connect(actionProgress, SIGNAL(triggered()), this, SLOT(openResultWindow()));
-    connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
-    connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
-    connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
-    connect(actionResults, SIGNAL(triggered()), this, SLOT(showResults()));
-
-    connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(continueFromSetupWidget()));
-    connect(parentWidget, SIGNAL(continueFromParentSettings()), this, SLOT(continueFromParentSettingsWidget()));
-    connect(parentWidget, SIGNAL(showResultsFromParentSettings()), this, SLOT(displayResults()));
 
 
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
 }
 
-void MainFrame::continueFromSetupWidget(){
-    this->openParentWidget();
+void MainFrame::showSetupError(QString warningStr) {
+
+    warning->warning(0,"Configuration Invalid!\n", QString("You are missing the following:\n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
+    greyTabs(false);
+    this->openSetup();
+
 }
 
-void MainFrame::continueFromParentSettingsWidget(){
-    progress = new ProgressDialog(parentWidget);
-    stackedWidget->addWidget(progress);
-    stackedWidget->setCurrentWidget(progress);
+void MainFrame::validateSetup() {
 
-    actionProgress->setDisabled(false);
-    actionResults->setDisabled(false);
+     RunData *rundata= RunData::getRunData();
+
+     QString warningStr;
+     if( rundata->validate(warningStr)) {
+         //pass
+         addRemainingTabs();
+         greyTabs(true);
+     }
+     else {
+         //fails
+         showSetupError(warningStr);
+         greyTabs(false);
+     }
 }
 
-void MainFrame::displayResults(){
-    resultWindow = new ResultWindow(progress);
+void MainFrame::greyTabs(bool enabled){
+    actionProgress->setEnabled(enabled);
+    actionGridProgress->setEnabled(enabled);
+    actionResults->setEnabled(enabled);
+    actionRunParams->setEnabled(enabled);
+    actionRunStages->setEnabled(enabled);
+}
+
+void MainFrame::addRemainingTabs() {
+
+
+
+    stages = new RunConfig();
+    settings = new SettingsTab();
+    resultWindow = ResultWindow::getResultWindow();
+    progress = new ProgressDialog();
+
+
+    stackedWidget->addWidget(stages);
+    stackedWidget->addWidget(settings);
+
     stackedWidget->addWidget(resultWindow);
 
-   // QMdiArea *mdi = new QMdiArea(progress);
-    //stackedWidget->addWidget(mdi);
+    stackedWidget->setCurrentWidget(welcomeWindow);
+    stackedWidget->addWidget(progress);
+
+    connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
+
+    connect(actionProgress, SIGNAL(triggered()), this, SLOT(openResultWindow()));
+    connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
+    connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
+    connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
+    connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
+    connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
+    connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
+
 
 }
 
-void MainFrame::showResults(){
-    stackedWidget->setCurrentWidget(resultWindow);
+
+void MainFrame::displayStages(){
+    stackedWidget->setCurrentWidget(stages);
+    updateWidgets();
+}
+
+void MainFrame::displayParams(){
+    stackedWidget->setCurrentWidget(settings);
+    updateWidgets();
+}
+
+
+void MainFrame::updateWidgets(){
+
+    if(stackedWidget->currentWidget() == settings){
+
+        //write SettingsTab changes to file
+        QList<QWidget *>::iterator i;
+        QList<QWidget *> *allWidgets = SettingsTab::allWidgets;
+        for (i = allWidgets->begin(); i != allWidgets->end(); ++i){
+            QWidget *widget = *i;
+
+            QString objectName = widget->objectName();
+            QString configName = rundata->getConfigMapping().key(objectName);
+            QString value;
+
+            if (qobject_cast<QComboBox *>(widget)){
+                QComboBox *temp = qobject_cast<QComboBox *>(widget);
+                value = temp->currentText();
+            }
+            else if (qobject_cast<QSpinBox *>(widget)){
+                QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
+                value = QString::number(temp->value());
+            }
+            else if (qobject_cast<QDoubleSpinBox *>(widget)){
+                QDoubleSpinBox *temp = qobject_cast<QDoubleSpinBox *>(widget);
+                value = QString::number(temp->value());
+            }
+            else if (qobject_cast<QTextEdit *>(widget)){
+                QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
+                value = temp->toPlainText();
+            }
+            else if (qobject_cast<QListWidget *>(widget)){
+                QListWidget *temp = qobject_cast<QListWidget *>(widget);
+                for (int i=0;i<temp->count();i++){
+                    if (temp->item(i)->checkState() == Qt::Checked){
+                        if (temp->objectName() == "annotationDBS"){
+                            value = rundata->getValueFromHash(configName,_PARAMS);
+                            if (value.isEmpty()) value = temp->item(i)->text();
+                            else value = value + "," + temp->item(i)->text();
+                            rundata->setValue(configName,value,_PARAMS);
+                        }
+
+                        else if(temp->objectName() == "rrnaREFDBS"){
+                            value = rundata->getValueFromHash(configName,_PARAMS);
+                            if (value.isEmpty()) value = temp->item(i)->text();
+                            else value = value + "," + temp->item(i)->text();
+                            rundata->setValue(configName,value,_PARAMS);
+                        }
+                    }
+                }
+            }
+            rundata->setValue(configName,value,_PARAMS);
+            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, configName, value, false, false);
+        }
+    }
+    else if(stackedWidget->currentWidget()==stages){
+        QList<QGroupBox *> *groupBoxes = stages->groupBoxes;
+
+        QList<QGroupBox *>::iterator i;
+        //write radio button changes to file
+        for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
+
+            QGroupBox *temp = *i;
+            QString stepName = temp->objectName();
+            //get the name, look up in the hash the corresponding setting key value pair
+          //  qDebug() <<  "stepName " << MainFrame::CONFIG_MAPPING;
+            QString configKey = rundata->getConfigMapping().key(stepName);
+
+            //get the name of the radiobutton on the form by isolating for caps from the step,
+            //taking the step name, to lower
+            QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
+            QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
+
+            QRadioButton *yesRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"YES");
+            QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
+            QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
+
+            //write to hash the changes
+            if (yesRadioButton->isChecked()) rundata->setValue(configKey,"yes",_PARAMS);
+
+            else if (redoRadioButton->isChecked()) rundata->setValue(configKey,"redo",_PARAMS);
+            else rundata->setValue(configKey,"skip",_PARAMS);
+
+            //write to file the changes
+            Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
+
+            //disable all buttons now for the run
+            yesRadioButton->setEnabled(false);
+            redoRadioButton->setEnabled(false);
+            skipRadioButton->setEnabled(false);
+        }
+
+        //write file format
+        QString inputTypeKey = rundata->getConfigMapping().key(stages->fileInputFormat->objectName());
+        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, inputTypeKey, stages->fileInputFormat->currentText(), false, false);
+        rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
+
+        //save file selected
+        rundata->setValue("fileInput", stages->filesSelected->text(),_PARAMS);
+        rundata->setValue("folderOutput", stages->folderSelected->text(),_PARAMS);
+
+        //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
+//        if (stages->gridBlastChoice->isChecked() && MainFrame::PARAMS.value("metapaths_steps:BLAST_REFDB")!="skip"){
+//            MainFrame::PARAMS["metapaths_steps:BLAST_REFDB"] = "grid";
+//            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
+//        }
+
+        //trim off commas on refdbs for rRNA and annotation
+        QString rRNArefdbs = rundata->getValueFromHash("rRNA:refdbs", _PARAMS);
+
+        rRNArefdbs = rRNArefdbs.remove(QRegExp("[\\s,]*$"));
+        rundata->setValue("rRNA:refdbs", rRNArefdbs, _PARAMS);
+
+        QString annotationDBS = rundata->getValueFromHash("annotation:dbs", _PARAMS);
+
+        annotationDBS = annotationDBS.remove(QRegExp("[\\s,]*$"));
+
+        rundata->setValue("annotationDBS", annotationDBS, _PARAMS);
+
+        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
+        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
+
+        //use overwrite settings?
+        if (stages->overwrite->isChecked()){
+            rundata->setValue("overwrite", "overwrite", _PARAMS);
+        }else rundata->setValue("overwrite", "overlay", _PARAMS);
+
+        executionPrep();
+    }
+}
+
+void MainFrame::executionPrep(){
+    //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
+
+    //set the rrnaDB and annotationDBS so we know how many to look for in the log
+    QStringList rrnaDBS;
+    QString rdbs = rundata->getValueFromHash("rRNA:refdbs", _PARAMS);
+    rrnaDBS = rdbs.split(",");
+    rrnaDBS.removeAll("");
+
+
+    QString adbs = rundata->getValueFromHash("annotation:dbs", _PARAMS);
+
+    QStringList annotationDBS = adbs.split(",");
+    annotationDBS.removeAll("");
+
+    rrnaDBS  = Utilities::getUniqueDBS(rrnaDBS);
+    annotationDBS = Utilities::getUniqueDBS(annotationDBS);
+
+
+    if( annotationDBS.size() > 0) {
+        rundata->nADB = annotationDBS.size();
+        rundata->nRRNADB = rrnaDBS.size();
+        rundata->setAnnotationDBS(annotationDBS);
+        rundata->setRRNADBS(rrnaDBS);
+    }
+
 }
 
 void MainFrame::displayProgress(){
+    updateWidgets();
     stackedWidget->setCurrentWidget(progress);
 }
 
 void MainFrame::displayWelcome(){
+    updateWidgets();
     stackedWidget->setCurrentWidget(welcomeWindow);
 }
 
 void MainFrame::openSetup(){
+    updateWidgets();
     stackedWidget->setCurrentWidget(setupWidget);
 }
 
-void MainFrame::openParentWidget(){
-    stackedWidget->setCurrentWidget(parentWidget);
-}
 
-void MainFrame::openResultWindow(){
+void MainFrame::displayResults(){
+    updateWidgets();
     stackedWidget->setCurrentWidget(resultWindow);
 }
 
-void MainFrame::loadPathVariables(){
-    QSettings settings("HallamLab", "MetaPathways");
-    pathMetaPathways =  settings.value("METAPATHWAYS_PATH").toString();
-}
-
-/*
- * Should setup settings.
- * Usually this lives in a template_config file. So if it doesn't exist, we'll have to create it.
- */
-void MainFrame::setupConfig(){
-    std::ifstream config_file((this->pathMetaPathways + "/" +TEMPLATE_CONFIG).toStdString().c_str());
-    if (!config_file){
-        qDebug() << "no config file, copying";
-        std::ifstream defaultConfig((this->pathMetaPathways + "/" +DEFAULT_TEMPLATE_CONFIG).toStdString().c_str());
-        std::ofstream configFile;
-
-        configFile.open((this->pathMetaPathways + "/" +TEMPLATE_CONFIG).toStdString().c_str());
-        configFile << defaultConfig.rdbuf();
-        configFile.close();
-    }
-    qDebug() << "loading param file";
-    MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_CONFIG);
-}
-
-/*
- * Should setup config file.
- * If it doesn't exist, it will copy over a default template.
- * In both instances, a default parameter settings list will be loaded.
- */
-
-void MainFrame::setupParams(){
-    std::ifstream ifile((this->pathMetaPathways + "/" + TEMPLATE_PARAM).toStdString().c_str());
-    if (!ifile){
-        qDebug() << "param file doesnt exist, copying template file to param";
-        std::ofstream param_config;
-        std::ifstream defaultConfig((this->pathMetaPathways + "/" +DEFAULT_TEMPLATE_PARAM).toStdString().c_str());
-
-        param_config.open((this->pathMetaPathways + "/" +TEMPLATE_PARAM).toStdString().c_str());
-        param_config << defaultConfig.rdbuf();
-        param_config.close();
-    }
-    qDebug() << "loading param file";
-    MainFrame::PARAMS = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_PARAM);
-}
-
-
-bool MainFrame::settingsAvailable() {
-    QSettings settings("HallamLab", "MetaPathways");
-    if(
-         settings.value("PYTHON_EXECUTABLE").toString().isEmpty()  || settings.value("PERL_EXECUTABLE").toString().isEmpty()\
-        || settings.value("METAPATHWAYS_PATH").toString().isEmpty()  || settings.value("REFDBS").toString().isEmpty()
-      ) {
-        return false;
-    }
-    return true;
-
-}
-
-bool MainFrame::checkParams(){
-    std::ifstream param_file( (this->pathMetaPathways + "/" + TEMPLATE_PARAM).toStdString().c_str());
-    if (param_file) return true;
-    else return false;
-}
-
-bool MainFrame::checkConfig(){
-    std::ifstream config_file( (this->pathMetaPathways + "/" +TEMPLATE_CONFIG).toStdString().c_str());
-    if (config_file) return true;
-    else return false;
-}
 
 MainFrame::~MainFrame()
 {

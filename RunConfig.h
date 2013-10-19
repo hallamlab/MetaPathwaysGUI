@@ -10,6 +10,8 @@
 #include <QComboBox>
 #include <QTableWidget>
 #include "grid/gridsetup.h"
+#include "types.h"
+#include "rundata.h"
 
 class ParentWidget;
 class GridSetup;
@@ -63,6 +65,8 @@ private:
     QRadioButton *runAll;
     QRadioButton *redoAll;
     QRadioButton *skipAll;
+
+    RunData *rundata;
 
 };
 

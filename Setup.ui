@@ -7,17 +7,68 @@
     <x>0</x>
     <y>0</y>
     <width>784</width>
-    <height>962</height>
+    <height>438</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="14" column="3">
-    <widget class="QPushButton" name="metapathwaysBrowseButton">
+   <item row="7" column="0" colspan="4">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <widget class="QPushButton" name="perlBrowseButton">
      <property name="text">
       <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0" colspan="4">
+    <widget class="Line" name="line_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="perlLabel">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Perl Executable</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1" colspan="2">
+    <widget class="QLineEdit" name="pathMetaPathwaysTxt"/>
+   </item>
+   <item row="14" column="1" colspan="2">
+    <widget class="QLineEdit" name="dbDirectoryTxt"/>
+   </item>
+   <item row="14" column="3">
+    <widget class="QPushButton" name="databaseButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="metapathwaysLabel">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>MetaPathways Directory</string>
      </property>
     </widget>
    </item>
@@ -31,147 +82,8 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="4">
-    <widget class="QLabel" name="PYTHON_EXECUTABLE">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="0">
-    <widget class="QLabel" name="metapathwaysLabel">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>MetaPathways Directory</string>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="1" colspan="2">
-    <widget class="QLineEdit" name="pathMetaPathwaysTxt"/>
-   </item>
-   <item row="8" column="0" colspan="4">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="3">
-    <widget class="QPushButton" name="perlBrowseButton">
-     <property name="text">
-      <string>Browse</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="perlLabel">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Perl Executable</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="0" colspan="4">
-    <widget class="QLabel" name="METAPATHWAYS_PATH">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="16" column="0" colspan="4">
-    <widget class="Line" name="line_4">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="17" column="3">
-    <widget class="QPushButton" name="databaseButton">
-     <property name="text">
-      <string>Browse</string>
-     </property>
-    </widget>
-   </item>
-   <item row="17" column="0">
-    <widget class="QLabel" name="metapathwaysLabel_2">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Database Directory</string>
-     </property>
-    </widget>
-   </item>
-   <item row="17" column="1" colspan="2">
-    <widget class="QLineEdit" name="dbDirectoryTxt"/>
-   </item>
-   <item row="19" column="0" colspan="4">
-    <widget class="QLabel" name="REFDBS">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="20" column="0" colspan="4">
-    <widget class="Line" name="line_5">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="21" column="3">
-    <widget class="QPushButton" name="saveButton">
-     <property name="text">
-      <string>Continue</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="4">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QPushButton" name="pythonBrowseButton">
+   <item row="12" column="3">
+    <widget class="QPushButton" name="metapathwaysBrowseButton">
      <property name="text">
       <string>Browse</string>
      </property>
@@ -189,29 +101,46 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1" colspan="2">
-    <widget class="QLineEdit" name="perlExecTxt"/>
-   </item>
-   <item row="11" column="0" colspan="4">
-    <widget class="QLabel" name="PERL_EXECUTABLE">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="17" column="3">
+    <widget class="QPushButton" name="saveButton">
      <property name="text">
-      <string>TextLabel</string>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+      <string>Proceed</string>
      </property>
     </widget>
    </item>
-   <item row="12" column="0" colspan="4">
-    <widget class="Line" name="line_3">
+   <item row="8" column="1" colspan="2">
+    <widget class="QLineEdit" name="perlExecTxt"/>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="pythonBrowseButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="4">
+    <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0" colspan="4">
+    <widget class="Line" name="line_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
+    <widget class="QLabel" name="metapathwaysLabel_2">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Database Directory</string>
      </property>
     </widget>
    </item>
@@ -267,9 +196,24 @@
      </property>
     </widget>
    </item>
+   <item row="10" column="0" colspan="4">
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
+  <tabstop>pythonExecTxt</tabstop>
+  <tabstop>pythonBrowseButton</tabstop>
+  <tabstop>perlExecTxt</tabstop>
+  <tabstop>perlBrowseButton</tabstop>
+  <tabstop>pathMetaPathwaysTxt</tabstop>
+  <tabstop>metapathwaysBrowseButton</tabstop>
+  <tabstop>dbDirectoryTxt</tabstop>
+  <tabstop>databaseButton</tabstop>
   <tabstop>saveButton</tabstop>
  </tabstops>
  <resources/>

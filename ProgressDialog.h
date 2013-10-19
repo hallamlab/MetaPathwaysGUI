@@ -28,7 +28,7 @@ public:
     RunData *run;
     ParentWidget *pw;
     QString METAPATH;
-    QStringList *filesDetected;
+    QStringList filesDetected;
     QHash<int,QString> *TABLE_MAPPING;
     QHash<QString, QString> previousStatus;
 

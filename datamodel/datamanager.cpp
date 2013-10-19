@@ -14,6 +14,7 @@ DataManager *DataManager::getDataManager() {
 DataManager::DataManager()
 {
     ORFList = new QHash<QString, QList<ORF *>*>();
+    dataModelCreated = false;
 }
 
 
@@ -147,9 +148,16 @@ CATEGORYNODE DataManager::createCategoryNode(QString line) {
 
 void DataManager::createDataModel() {
 
-    QSettings settings("HallamLab", "MetaPathways");
-    QString refDBFolder = settings.value("REFDBS").toString();
+    qDebug() << " CREATE DATA MODEL";
+    if( dataModelCreated ) return;
+
+    RunData *rundata = RunData::getRunData();
+
+
+    QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
+    qDebug() << refDBFolder;
     QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
+    qDebug() << COG_categories;
     HTree *htree = createHTree(COG_categories);
     htree->hashNodes(htree->root);
     this->htrees[COG] = htree;
@@ -165,13 +173,14 @@ void DataManager::createDataModel() {
     htree->hashNodes(htree->root);
     this->htrees[METACYC] = htree;
 
-        qDebug() << "Data Model created in";
+
     QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
     htree = createHTree(Seed_subsystems);
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;
-    qDebug() << "Data Model created";
 
+
+    dataModelCreated==true;
    // htree->printTree(htree->root);
 
 }

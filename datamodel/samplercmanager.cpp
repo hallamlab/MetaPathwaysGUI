@@ -79,7 +79,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
      resNames[NUCFASTA] = "NUCFASTAT";
      resNames[AMINOFAA] = "AMINOFAA";
 
-
+     qDebug() << " output file  " << this->OUTPUTPATH;
      if( this->useResourceFolder ) {
 
          QDir resSampleDir( this->OUTPUTPATH + "/" + SampleResourceManager::resourceFolderName + "/" + sampleName );

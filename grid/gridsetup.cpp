@@ -25,7 +25,7 @@ GridSetup::GridSetup(QWidget *parent) :
 
     gc = 0;
 
-    MainFrame::PARAMS = Utilities::parseFile("template_param.txt");
+//    MainFrame::PARAMS = Utilities::parseFile("template_param.txt");
 
     Grids = new QHash<QString, Grid*>();
     //keeps track of the names of our grids and our grids
@@ -225,7 +225,8 @@ void GridSetup::initSelectChoices(){
  * Initialize grids if they don't exist, adding in values into the values hash as we go.
  */
 void GridSetup::initGridValues(){
-    QHashIterator<QString,QString> it(*MainFrame::PARAMS);
+    RunData *rundata = RunData::getRunData();
+    QHashIterator<QString,QString> it(rundata->getParams());
 
     while(it.hasNext()){
         it.next();

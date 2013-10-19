@@ -7,12 +7,12 @@
     <x>0</x>
     <y>0</y>
     <width>889</width>
-    <height>1068</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-    <horstretch>1</horstretch>
+    <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
@@ -24,6 +24,9 @@
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
   </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
@@ -120,7 +123,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionSetup"/>
-   <addaction name="actionRunSettings"/>
+   <addaction name="actionRunParams"/>
+   <addaction name="actionStages"/>
    <addaction name="actionProgress"/>
    <addaction name="actionGridProgress"/>
    <addaction name="actionResults"/>
@@ -140,11 +144,6 @@
   <action name="actionSetup">
    <property name="text">
     <string>Setup</string>
-   </property>
-  </action>
-  <action name="actionRunSettings">
-   <property name="text">
-    <string>Run Settings</string>
    </property>
   </action>
   <action name="actionProgress">
@@ -186,6 +185,16 @@
    </property>
    <property name="text">
     <string>HUMAN GENOME</string>
+   </property>
+  </action>
+  <action name="actionRunParams">
+   <property name="text">
+    <string>Parameters</string>
+   </property>
+  </action>
+  <action name="actionStages">
+   <property name="text">
+    <string>Stages</string>
    </property>
   </action>
  </widget>

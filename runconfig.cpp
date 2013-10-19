@@ -35,8 +35,11 @@ RunConfig::RunConfig(QWidget *parent) :
     selectedFiles = 0;
     selectedFolder =0;
 
+    rundata = RunData::getRunData();
+
+
     setStyling();
-    loadRunParams();
+   // loadRunParams();
 
     connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
@@ -48,8 +51,9 @@ RunConfig::RunConfig(QWidget *parent) :
 }
 
 void RunConfig::loadRunParams(){
-    QString key = MainFrame::CONFIG_MAPPING->key(fileInputFormat->objectName());
-    QString value = MainFrame::PARAMS->value(key);
+    RunData *run = RunData::getRunData();
+    QString key = run->getConfigMapping().key(fileInputFormat->objectName());
+    QString value =run->getValueFromHash(key, _PARAMS);
     fileInputFormat->setCurrentIndex(fileInputFormat->findText(value));
 
     QList<QGroupBox *>::iterator i;
@@ -57,8 +61,8 @@ void RunConfig::loadRunParams(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainFrame::PARAMS->value(configKey);
+        QString configKey = run->getConfigMapping().key(stepName);
+        QString configValue = run->getValueFromHash(configKey,_PARAMS);
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -116,10 +120,6 @@ void RunConfig::toggleAllRun(){
     for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
-        //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainFrame::CONFIG->value(configKey);
-
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
         QRegExp lowerCaseRegex("[a-z]+_?[a-z]+");
@@ -132,13 +132,13 @@ void RunConfig::toggleAllRun(){
 }
 
 void RunConfig::toggleAllSkip(){
+
     QList<QGroupBox *>::iterator i;
     for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainFrame::CONFIG->value(configKey);
+
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -157,8 +157,7 @@ void RunConfig::toggleAllRedo(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-        QString configKey = MainFrame::CONFIG_MAPPING->key(stepName);
-        QString configValue = MainFrame::CONFIG->value(configKey);
+
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
@@ -191,7 +190,8 @@ void RunConfig::setStyling(){
     table->setHorizontalHeaderLabels(QString("run,skip,redo,").split(","));
 
     //set grid checkbox
-    if (MainFrame::PARAMS->operator []("metapaths_steps:BLAST_REFDB")=="grid"){
+    RunData *rundata = RunData::getRunData();
+    if (rundata->getValueFromHash("metapaths_steps:BLAST_REFDB",_PARAMS)=="grid"){
         gridBlastChoice->setChecked(true);
     }
 

@@ -41,10 +41,11 @@ class ResultWindow : public QWidget
     Q_OBJECT
     
 public:
-    explicit ResultWindow(QWidget *parent = 0);
     RunData* getRunData();
     HTableData *getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers, Connector *connect, DataManager *datamanager);
     ~ResultWindow();
+
+    static ResultWindow *getResultWindow();
 
 public slots:
     void sampleChanged(QString changed);
@@ -54,22 +55,27 @@ public slots:
 
 private slots:
     void clickedSelectSample();
+    void _loadResults();
 
 signals:
     void fileChanged(QString file);
 
 private:
+    explicit ResultWindow(QWidget *parent = 0);
     void switchToComparativeMode();
     void indexSamples(bool useResourceFolder);
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
 
 
 private:
+    static ResultWindow *resultWindow;
+
     Ui::ResultWindow *ui;
     QWidget* parent;
     RunData *run;
     QComboBox* sampleSelect;
     QPushButton *selectSamplesButton;
+    QPushButton *loadResults;
     QCheckBox *checkComparativeMode;
     QLabel *currentSampleLabel;
 
@@ -89,6 +95,7 @@ private:
     QList<bool> selectedSamples;
 
     DataManager *datamanager;
+    bool disableSampleChanged;
 
 
 

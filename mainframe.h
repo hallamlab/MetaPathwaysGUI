@@ -36,16 +36,12 @@ public:
     static const QString TEMPLATE_CONFIG;
     static const QString DEFAULT_TEMPLATE_CONFIG;
 
-    static QHash<QString,QString> *CONFIG;
-    static QHash<QString,QString> *PARAMS;
-    static QHash<QString,QString> *CONFIG_MAPPING;
+    static QHash<QString,QString> CONFIG;
+    static QHash<QString,QString> PARAMS;
+    static QHash<QString,QString> CONFIG_MAPPING;
 
-    bool checkParams();
-    bool checkConfig();
-    void setupParams();
-    void setupConfig();
     void createMapping();
-    static bool settingsAvailable();
+   // static bool settingsAvailable();
     void loadPathVariables();
 
     QMessageBox *warning;
@@ -56,24 +52,29 @@ public:
 
 private slots:
     void openSetup();
-    void openParentWidget();
-    void openResultWindow();
 
+    void validateSetup();
     void displayProgress();
     void displayWelcome();
     void displayResults();
-    void showResults();
-
-    void continueFromSetupWidget();
-    void continueFromParentSettingsWidget();
+    void displayStages();
+    void displayParams();
 
 private:
+    void showSetupError(QString warningStr);
+    void addRemainingTabs();
+    void updateWidgets();
+    void executionPrep();
+    void greyTabs(bool enabled);
+
     Ui::MainFrame *ui;
     ParentWidget *parentWidget;
     Setup *setupWidget;
     ResultWindow *resultWindow;
     ProgressDialog *progress;
     Welcome* welcomeWindow;
+    RunConfig* stages;
+    SettingsTab* settings;
 
     QWidget *centralWidget;
     QStackedWidget* stackedWidget;
@@ -85,6 +86,8 @@ private:
     QAction* actionResults;
     QAction* actionSetupMenu;
     QAction* actionAbout;
+    QAction* actionRunParams;
+    QAction* actionRunStages;
 
     QToolBar* toolBar;
     QToolBar* leftToolBar;
@@ -92,7 +95,7 @@ private:
     QMenu* menuSetup;
     QMenu* menuAbout;
 
-
+    RunData* rundata;
 
 
 };

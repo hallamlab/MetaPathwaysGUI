@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1141</width>
-    <height>1001</height>
+    <width>979</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -69,14 +69,14 @@
        <item>
         <widget class="QLabel" name="currentSampleLabel">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="font">
           <font>
-           <pointsize>16</pointsize>
+           <pointsize>13</pointsize>
           </font>
          </property>
          <property name="text">
@@ -103,12 +103,22 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="loadResults">
+         <property name="text">
+          <string>Load Results</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QTabWidget" name="resultTabs">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="currentIndex">
       <number>1</number>
      </property>
@@ -117,7 +127,7 @@
      </property>
      <widget class="QWidget" name="tab">
       <property name="enabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <attribute name="title">
        <string>Tab 1</string>

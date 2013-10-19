@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QStringList>
+#include "rundata.h"
 
 class DataManager
 {
@@ -50,6 +51,8 @@ private:
     static DataManager *datamanager;
 
     QHash<ATTRTYPE, QHash<QString, ATTRIBUTE *> > attributes;
+
+    bool dataModelCreated;
 
 };
 

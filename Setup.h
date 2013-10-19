@@ -6,6 +6,8 @@
 #include <QString>
 #include <QHash>
 #include <QLineEdit>
+#include "rundata.h"
+#include "types.h"
 
 namespace Ui {
 class Setup;
@@ -19,6 +21,9 @@ public:
     explicit Setup( QWidget *parent = 0);
     ~Setup();
 
+public:
+    void loadPathVariables();
+    void savePathVariables();
 public slots:
     void pythonBrowse();
     void perlBrowse();
@@ -31,6 +36,7 @@ public slots:
 signals:
     void continueFromSetup();
 
+
 private:
     Ui::Setup *ui;
 
@@ -38,11 +44,6 @@ private:
     QString perlPath;
     QString mpPath;
     QString databasePath;
-
-    QLabel *pythonLabel;
-    QLabel *perlLabel;
-    QLabel *metapathwaysLabel;
-    QLabel *databaseLabel;
 
     QPushButton *pythonBrowseButton;
     QPushButton *perlBrowseButton;

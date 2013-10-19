@@ -55,7 +55,11 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, QWidget *parent) : QWidget(pare
 }
 
 void ProgressDialog::readStepsLog(){
-    QString OUTPUTPATH = this->run->getParams()->operator []("folderOutput");
+
+
+    this->checkFiles();
+
+    QString OUTPUTPATH = this->run->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + "/" + currentFile + "/metapathways_steps_log.txt";
 
     QFile inputFile(pathToLog);
@@ -98,6 +102,10 @@ void ProgressDialog::readStepsLog(){
 
     QByteArray read = myProcess->readAll();
     if (!read.isEmpty()) standardOut->append(QString(read));
+
+
+
+
 }
 
 /*
@@ -255,19 +263,19 @@ void ProgressDialog::toggleDetails(){
 }
 
 void ProgressDialog::initProcess(){
-    QString program = run->getConfig()->operator []("PYTHON_EXECUTABLE");
+    QString program = run->getConfig()["PYTHON_EXECUTABLE"];
     QStringList arguments;
-    METAPATH = this->run->getConfig()->operator []("METAPATHWAYS_PATH");
+    METAPATH = this->run->getConfig()["METAPATHWAYS_PATH"];
 
     arguments <<  METAPATH + "/MetaPathways.py";
-    arguments << "-i" << this->run->getParams()->operator []("fileInput");
+    arguments << "-i" << this->run->getParams()["fileInput"];
 
   //  if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
-    arguments << "-o" << this->run->getParams()->operator []("folderOutput");
+    arguments << "-o" << this->run->getParams()["folderOutput"];
 
     arguments << "-p" << METAPATH + "/template_param.txt";
     arguments << "-c" << METAPATH + "/template_config.txt";
-    arguments << "-r" << this->run->getParams()->operator []("overwrite");
+    arguments << "-r" << this->run->getParams()["overwrite"];
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
@@ -289,6 +297,7 @@ void ProgressDialog::initProcess(){
 }
 
 void ProgressDialog::initProgressBar(){
+ /*
     progressBar->setMaximum(Utilities::countRunSteps(run->getParams()) + run->nADB + run->nRRNADB);
     progressBar->setValue(stepsPassed->value(currentFile));
     progressBar->setMinimum(0);
@@ -298,10 +307,10 @@ void ProgressDialog::initProgressBar(){
         globalSum += stepsPassed->values().at(i);
     }
 
-    globalProgressBar->setMaximum(progressBar->maximum() * this->run->files->length());
+    globalProgressBar->setMaximum(progressBar->maximum() * this->run->files.length());
     globalProgressBar->setValue(globalSum);
     globalProgressBar->setMinimum(0);
-
+*/
     //qDebug() << *stepsPassed << globalSum << globalProgressBar->maximum() << progressBar->value() << progressBar->maximum();
 }
 
@@ -311,9 +320,8 @@ void ProgressDialog::selectedFileChanged(QString file){
 }
 
 void ProgressDialog::checkFiles(){
-    QDir currentDir(this->run->getParams()->operator []("fileInput"));
-    QString fileType = this->run->getParams()->operator []("INPUT:format");
-    filesDetected = new QStringList();
+    QDir currentDir(this->run->getParams()["fileInput"]);
+    QString fileType = this->run->getParams()["INPUT:format"];
 
     currentDir.setFilter(QDir::Files);
     QStringList entries = currentDir.entryList();
@@ -330,19 +338,19 @@ void ProgressDialog::checkFiles(){
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
                if(temp.indexOf(reg,0) > -1 ) {
-                   filesDetected->append( temp.remove(reg).replace('.','_') );
+                   filesDetected.append( temp.remove(reg).replace('.','_') );
                    break;
                }
             }
         }
         else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
             if (file.last() == "gbk"){
-                filesDetected->append(file.first());
+                filesDetected.append(file.first());
             }
         }
         else if (fileType == "gff-annotated" || fileType == "gff-unannotated"){
             if (file.last() == "gff"){
-                filesDetected->append(file.first());
+                filesDetected.append(file.first());
             }
         }
     }

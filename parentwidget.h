@@ -27,7 +27,7 @@ public:
     ~ParentWidget();
     
 private slots:
-    void continueButtonPressed();
+   // void continueButtonPressed();
     void cancelButtonPressed();
     void backButtonPressed();
     void tabChanged();
@@ -39,7 +39,7 @@ signals:
     void showResultsFromParentSettings();
 
 private:
-    void executionPrep();
+   // void executionPrep();
     Ui::ParentWidget *ui;
 
     RunData *run;

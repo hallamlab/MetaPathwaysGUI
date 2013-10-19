@@ -10,11 +10,6 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
 {
     ui->setupUi(this);
 
-    pythonLabel = this->findChild<QLabel *>("PYTHON_EXECUTABLE");
-    perlLabel = this->findChild<QLabel *>("PERL_EXECUTABLE");
-    metapathwaysLabel = this->findChild<QLabel *>("METAPATHWAYS_PATH");
-    databaseLabel = this->findChild<QLabel *>("REFDBS");
-
     pythonBrowseButton = this->findChild<QPushButton *>("pythonBrowseButton");
     perlBrowseButton = this->findChild<QPushButton *>("perlBrowseButton");
     metapathwaysBrowseButton = this->findChild<QPushButton *>("metapathwaysBrowseButton");
@@ -26,22 +21,19 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     dbDirectoryTxt = this->findChild<QLineEdit *>("dbDirectoryTxt");
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
 
-    pythonPath = MainFrame::CONFIG->value("PYTHON_EXECUTABLE");
-    perlPath = MainFrame::CONFIG->value("PERL_EXECUTABLE");
-    mpPath = MainFrame::CONFIG->value("METAPATHWAYS_PATH");
-    databasePath = MainFrame::CONFIG->value("REFDBS");
+  //  if(!MainFrame::settingsAvailable()) this->canSave();
 
-    if(!MainFrame::settingsAvailable()) this->canSave();
+    RunData *rundata = RunData::getRunData();
+    this->loadPathVariables();
 
-    if (pythonPath.isEmpty()) { pythonLabel->setText("Please select the path to your Python executable."); }
-    else pythonLabel->setText(pythonPath);
-    if (perlPath.isEmpty()) perlLabel->setText("Please select the path to your Perl executable.");
-    else perlLabel->setText(perlPath);
-    if (mpPath.isEmpty()) metapathwaysLabel->setText("Please select the path to your MetaPathways directory.");
-    else metapathwaysLabel->setText(mpPath);
-    if (databasePath.isEmpty()) databaseLabel->setText("Please select the path to your database directory.");
-    else databaseLabel->setText(databasePath);
 
+
+    if( !rundata->getConfig().isEmpty() ){
+        pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
+        perlExecTxt->setText(rundata->getValueFromHash("PERL_EXECUTABLE",_CONFIG));
+        dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
+        pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
+    }
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
@@ -53,21 +45,16 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
 
-     QSettings settings("HallamLab", "MetaPathways");
-     pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
-     perlExecTxt->setText(settings.value("PERL_EXECUTABLE").toString());
-     pathMetaPathwaysTxt->setText(settings.value("METAPATHWAYS_PATH").toString());
-     dbDirectoryTxt->setText(settings.value("REFDBS").toString());
      canSave();
 
 }
 
 void Setup::canSave(QString a){
     if (
-          !(pythonPath.isEmpty() && pythonExecTxt->text().isEmpty()) \
-       && !(perlPath.isEmpty() && perlExecTxt->text().isEmpty()) \
-       && !(mpPath.isEmpty() && pathMetaPathwaysTxt->text().isEmpty()) \
-       && !(databasePath.isEmpty() && dbDirectoryTxt->text().isEmpty() )
+          !(pythonExecTxt->text().isEmpty()) \
+       && !(perlExecTxt->text().isEmpty()) \
+       && !(pathMetaPathwaysTxt->text().isEmpty()) \
+       && !(dbDirectoryTxt->text().isEmpty() )
     )
     {
         saveButton->setEnabled(true);
@@ -90,7 +77,6 @@ void Setup::databaseBrowse(){
 
     databasePath = QFileDialog::getExistingDirectory(this, tr("Select the directory where your databases are defined."));
     dbDirectoryTxt->setText(databasePath);
-    databaseLabel->setText(databasePath);
     canSave();
 
 }
@@ -99,7 +85,6 @@ void Setup::pythonBrowse(){
 
     pythonPath = QFileDialog::getOpenFileName(this,tr("Select Python Executable"));
     pythonExecTxt->setText(pythonPath);
-    pythonLabel->setText(pythonPath);
     canSave();
 
 }
@@ -108,7 +93,6 @@ void Setup::perlBrowse(){
 
     perlPath = QFileDialog::getOpenFileName(this,tr("Select Perl Executable"));
     perlExecTxt->setText(perlPath);
-    perlLabel->setText(perlPath);
     canSave();
 
 }
@@ -117,38 +101,84 @@ void Setup::metapathwaysBrowse(){
 
     mpPath = QFileDialog::getExistingDirectory(this,tr("Select MetaPathways Directory"));
     pathMetaPathwaysTxt->setText(mpPath);
-    metapathwaysLabel->setText(mpPath);
     canSave();
 
 }
 
 void Setup::saveSetup(){
 
-    QSettings settings("HallamLab", "MetaPathways");
+    RunData *rundata = RunData::getRunData();
+    QHash<QString,QString> temp = rundata->getConfig();
 
     //write to file only if the user has provided input
-    if (!pythonPath.isEmpty()) {
-        MainFrame::CONFIG->operator []("PYTHON_EXECUTABLE") = pythonPath;
-        settings.setValue("PYTHON_EXECUTABLE", pythonPath);
-        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonPath, false, false);
+    if (!pythonExecTxt->text().isEmpty()) {
+        temp["PYTHON_EXECUTABLE"] = pythonExecTxt->text();
+        Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
     }
-    if (!perlPath.isEmpty()) {
-        MainFrame::CONFIG->operator []("PERL_EXECUTABLE") = perlPath;
-        settings.setValue("PERL_EXECUTABLE", perlPath);
-        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlPath, false, false);
+    if (!perlExecTxt->text().isEmpty()) {
+        temp["PERL_EXECUTABLE"] = perlExecTxt->text();
+        Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
     }
-    if (!mpPath.isEmpty()) {
-        MainFrame::CONFIG->operator []("METAPATHWAYS_PATH") = mpPath;
-        settings.setValue("METAPATHWAYS_PATH", mpPath);
-        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", mpPath, false, false);
+    if (!pathMetaPathwaysTxt->text().isEmpty()) {
+        temp["METAPATHWAYS_PATH"] = pathMetaPathwaysTxt->text();
+        Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
     }
-    if (!databasePath.isEmpty()) {
-        MainFrame::CONFIG->operator []("REFDBS") = databasePath;
-        settings.setValue("REFDBS", databasePath);
-        Utilities::writeSettingToFile(MainFrame::TEMPLATE_CONFIG, "REFDBS", databasePath, false, false);
+    if (!dbDirectoryTxt->text().isEmpty()) {
+        temp["REFDBS"] = dbDirectoryTxt->text();
+        Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG, "REFDBS", dbDirectoryTxt->text(), false, false);
     }
+
+    rundata->setConfig(temp);
+    this->savePathVariables();
     emit continueFromSetup();
 }
+
+
+void Setup::loadPathVariables(){
+    RunData *rundata = RunData::getRunData();
+    QSettings settings("HallamLab", "MetaPathways");
+    if( settings.allKeys().contains("METAPATHWAYS_PATH") ) {
+        pathMetaPathwaysTxt->setText(settings.value("METAPATHWAYS_PATH").toString());
+        rundata->setValue("METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), _CONFIG);
+    }
+    if( settings.allKeys().contains("PYTHON_EXECUTABLE") ) {
+        pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
+        rundata->setValue("PYTHON_EXECUTABLE", pythonExecTxt->text(), _CONFIG);
+    }
+    if( settings.allKeys().contains("PERL_EXECUTABLE") ) {
+        perlExecTxt->setText(settings.value("PERL_EXECUTABLE").toString());
+        rundata->setValue("PERL_EXECUTABLE", perlExecTxt->text(), _CONFIG);
+    }
+    if( settings.allKeys().contains("REFDBS") ) {
+        dbDirectoryTxt->setText(settings.value("REFDBS").toString());
+        rundata->setValue("REFDBS", dbDirectoryTxt->text(), _CONFIG);
+    }
+
+    //rundata->setConfig(Utilities::parseFile(rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +  "/"+ MainFrame::TEMPLATE_CONFIG));
+  //  qDebug() << "param path " << rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG)  + "/"+ MainFrame::TEMPLATE_PARAM;
+    rundata->setParams(Utilities::parseFile(rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG)  + "/"+ MainFrame::TEMPLATE_PARAM));
+    rundata->setConfigMapping(Utilities::createMapping());
+
+
+}
+
+void Setup::savePathVariables(){
+    QSettings settings("HallamLab", "MetaPathways");
+    if( !pathMetaPathwaysTxt->text().isEmpty())
+    settings.setValue("METAPATHWAYS_PATH", pathMetaPathwaysTxt->text());
+
+    if( !pythonExecTxt->text().isEmpty())
+    settings.setValue("PYTHON_EXECUTABLE", pythonExecTxt->text());
+
+    if( !perlExecTxt->text().isEmpty())
+    settings.setValue("PERL_EXECUTABLE", perlExecTxt->text());
+
+    if( !dbDirectoryTxt->text().isEmpty()) {
+       settings.setValue("REFDBS",  dbDirectoryTxt->text());
+       qDebug() << " saving " << dbDirectoryTxt->text();
+    }
+}
+
 
 void Setup::cancelSetup(){
     close();

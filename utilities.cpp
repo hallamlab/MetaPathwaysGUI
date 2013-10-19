@@ -37,6 +37,7 @@ return str1.toDouble() < str2.toDouble();
 }
 
 
+
 /*
  * Validate the currently loaded run parameters.
  */
@@ -63,60 +64,60 @@ bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
  * the existing CONFIG key values to the form, because it contains invalid characters (like colon)
  * to assign to variables. So, we should create a hash to reflect an indirect mapping.
  */
-QHash<QString,QString>* Utilities::createMapping(){
-    QHash<QString,QString> *CONFIG_NAME_MAP = new QHash<QString,QString>();
+QHash<QString,QString> Utilities::createMapping(){
+    QHash<QString,QString> CONFIG_NAME_MAP ;
 
-    CONFIG_NAME_MAP->operator []("fileInput") = "fileInput";
-    CONFIG_NAME_MAP->operator []("REFDBS") = "REFDBS";
+    CONFIG_NAME_MAP["fileInput"] = "fileInput";
+    CONFIG_NAME_MAP["REFDBS"] = "REFDBS";
 
-    CONFIG_NAME_MAP->operator []("INPUT:format") = "fileInputFormat";
+    CONFIG_NAME_MAP["INPUT:format"] = "fileInputFormat";
 
-    CONFIG_NAME_MAP->operator []("quality_control:min_length") = "quality_controlMIN_LENGTH";
-    CONFIG_NAME_MAP->operator []("quality_control:delete_replicates") = "quality_controlDELETE_REPLICATES";
+    CONFIG_NAME_MAP["quality_control:min_length"] = "quality_controlMIN_LENGTH";
+    CONFIG_NAME_MAP["quality_control:delete_replicates"] = "quality_controlDELETE_REPLICATES";
 
-    CONFIG_NAME_MAP->operator []("orf_prediction:algorithm") = "orf_predictionALGORITHM";
-    CONFIG_NAME_MAP->operator []("orf_prediction:min_length") = "orf_predictionMIN_LENGTH";
+    CONFIG_NAME_MAP["orf_prediction:algorithm"] = "orf_predictionALGORITHM";
+    CONFIG_NAME_MAP["orf_prediction:min_length"] = "orf_predictionMIN_LENGTH";
 
-    CONFIG_NAME_MAP->operator []("annotation:algorithm") = "annotationALGORITHM";
-    CONFIG_NAME_MAP->operator []("annotation:dbs") = "annotationDBS";
-    CONFIG_NAME_MAP->operator []("annotation:min_bsr") = "annotationMIN_BSR";
-    CONFIG_NAME_MAP->operator []("annotation:max_evalue") = "annotationMAX_EVALUE";
-    CONFIG_NAME_MAP->operator []("annotation:min_score") = "annotationMIN_SCORE";
-    CONFIG_NAME_MAP->operator []("annotation:min_length") = "annotationMIN_LENGTH";
-    CONFIG_NAME_MAP->operator []("annotation:max_hits") = "annotationMAX_HITS";
+    CONFIG_NAME_MAP["annotation:algorithm"] = "annotationALGORITHM";
+    CONFIG_NAME_MAP["annotation:dbs"] = "annotationDBS";
+    CONFIG_NAME_MAP["annotation:min_bsr"] = "annotationMIN_BSR";
+    CONFIG_NAME_MAP["annotation:max_evalue"] = "annotationMAX_EVALUE";
+    CONFIG_NAME_MAP["annotation:min_score"] = "annotationMIN_SCORE";
+    CONFIG_NAME_MAP["annotation:min_length"] = "annotationMIN_LENGTH";
+    CONFIG_NAME_MAP["annotation:max_hits"] = "annotationMAX_HITS";
 
-    CONFIG_NAME_MAP->operator []("rRNA:refdbs") = "rrnaREFDBS";
-    CONFIG_NAME_MAP->operator []("rRNA:max_evalue") = "rrnaMAX_EVALUE";
-    CONFIG_NAME_MAP->operator []("rRNA:min_identity") = "rrnaMIN_IDENTITY";
-    CONFIG_NAME_MAP->operator []("rRNA:min_bitscore") = "rrnaMIN_BITSCORE";
+    CONFIG_NAME_MAP["rRNA:refdbs"] = "rrnaREFDBS";
+    CONFIG_NAME_MAP["rRNA:max_evalue"] = "rrnaMAX_EVALUE";
+    CONFIG_NAME_MAP["rRNA:min_identity"] = "rrnaMIN_IDENTITY";
+    CONFIG_NAME_MAP["rRNA:min_bitscore"] = "rrnaMIN_BITSCORE";
 
-    CONFIG_NAME_MAP->operator []("grid_engine:batch_size") = "grid_engineBATCH_SIZE";
-    CONFIG_NAME_MAP->operator []("grid_engine:max_concurrent_batches") = "grid_engineMAX_CONCURRENT_BATCHES";
-    CONFIG_NAME_MAP->operator []("grid_engine:walltime") = "grid_engineWALLTIME";
-    CONFIG_NAME_MAP->operator []("grid_engine:RAM") = "grid_engineRAM";
-    CONFIG_NAME_MAP->operator []("grid_engine:user") = "grid_engineUSER";
-    CONFIG_NAME_MAP->operator []("grid_engine:server") = "grid_engineSERVER";
+    CONFIG_NAME_MAP["grid_engine:batch_size"] = "grid_engineBATCH_SIZE";
+    CONFIG_NAME_MAP["grid_engine:max_concurrent_batches"] = "grid_engineMAX_CONCURRENT_BATCHES";
+    CONFIG_NAME_MAP["grid_engine:walltime"] = "grid_engineWALLTIME";
+    CONFIG_NAME_MAP["grid_engine:RAM"] = "grid_engineRAM";
+    CONFIG_NAME_MAP["grid_engine:user"] = "grid_engineUSER";
+    CONFIG_NAME_MAP["grid_engine:server"] = "grid_engineSERVER";
 
-    CONFIG_NAME_MAP->operator []("metapaths_steps:PREPROCESS_FASTA") = "metapaths_stepsPREPROCESS_FASTA";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:ORF_PREDICTION") = "metapaths_stepsORF_PREDICTION";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:GFF_TO_AMINO") = "metapaths_stepsGFF_TO_AMINO";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:FILTERED_FASTA") = "metapaths_stepsFILTERED_FASTA";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:COMPUTE_REFSCORE") = "metapaths_stepsCOMPUTE_REFSCORE";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:BLAST_REFDB") = "metapaths_stepsBLAST_REFDB";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:PARSE_BLAST") = "metapaths_stepsPARSE_BLAST";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:SCAN_tRNA") = "metapaths_stepsSCAN_TRNA";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:STATS_rRNA") = "metapaths_stepsSTATS_RRNA";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:SCAN_rRNA") = "metapaths_stepsSCAN_RRNA";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:ANNOTATE") = "metapaths_stepsANNOTATE";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:PATHOLOGIC_INPUT") = "metapaths_stepsPATHOLOGIC_INPUT";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:GENBANK_FILE") = "metapaths_stepsGENBANK_FILE";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:CREATE_SEQUIN_FILE") = "metapaths_stepsCREATE_SEQUIN_FILE";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:CREATE_REPORT_FILES") = "metapaths_stepsCREATE_REPORT_FILES";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:MLTREEMAP_CALCULATION") = "metapaths_stepsMLTREEMAP_CALCULATION";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:MLTREEMAP_IMAGEMAKER") = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
-    CONFIG_NAME_MAP->operator []("metapaths_steps:PATHOLOGIC") = "metapaths_stepsPATHOLOGIC";
+    CONFIG_NAME_MAP["metapaths_steps:PREPROCESS_FASTA"] = "metapaths_stepsPREPROCESS_FASTA";
+    CONFIG_NAME_MAP["metapaths_steps:ORF_PREDICTION"] = "metapaths_stepsORF_PREDICTION";
+    CONFIG_NAME_MAP["metapaths_steps:GFF_TO_AMINO"] = "metapaths_stepsGFF_TO_AMINO";
+    CONFIG_NAME_MAP["metapaths_steps:FILTERED_FASTA"] = "metapaths_stepsFILTERED_FASTA";
+    CONFIG_NAME_MAP["metapaths_steps:COMPUTE_REFSCORE"] = "metapaths_stepsCOMPUTE_REFSCORE";
+    CONFIG_NAME_MAP["metapaths_steps:BLAST_REFDB"] = "metapaths_stepsBLAST_REFDB";
+    CONFIG_NAME_MAP["metapaths_steps:PARSE_BLAST"] = "metapaths_stepsPARSE_BLAST";
+    CONFIG_NAME_MAP["metapaths_steps:SCAN_tRNA"] = "metapaths_stepsSCAN_TRNA";
+    CONFIG_NAME_MAP["metapaths_steps:STATS_rRNA"] = "metapaths_stepsSTATS_RRNA";
+    CONFIG_NAME_MAP["metapaths_steps:SCAN_rRNA"] = "metapaths_stepsSCAN_RRNA";
+    CONFIG_NAME_MAP["metapaths_steps:ANNOTATE"] = "metapaths_stepsANNOTATE";
+    CONFIG_NAME_MAP["metapaths_steps:PATHOLOGIC_INPUT"] = "metapaths_stepsPATHOLOGIC_INPUT";
+    CONFIG_NAME_MAP["metapaths_steps:GENBANK_FILE"] = "metapaths_stepsGENBANK_FILE";
+    CONFIG_NAME_MAP["metapaths_steps:CREATE_SEQUIN_FILE"] = "metapaths_stepsCREATE_SEQUIN_FILE";
+    CONFIG_NAME_MAP["metapaths_steps:CREATE_REPORT_FILES"] = "metapaths_stepsCREATE_REPORT_FILES";
+    CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_CALCULATION"] = "metapaths_stepsMLTREEMAP_CALCULATION";
+    CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_IMAGEMAKER"] = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
+    CONFIG_NAME_MAP["metapaths_steps:PATHOLOGIC"] = "metapaths_stepsPATHOLOGIC";
 
-    CONFIG_NAME_MAP->operator []("ptools_settings:taxonomic_pruning") = "ptools_settingsTAXONOMIC_PRUNING";
+    CONFIG_NAME_MAP["ptools_settings:taxonomic_pruning"] = "ptools_settingsTAXONOMIC_PRUNING";
 
     return CONFIG_NAME_MAP;
 }
@@ -134,53 +135,7 @@ QList<QLabel *>* Utilities::createLabels(const QString &FILE_NAME, const QChar &
     return labels;
 }
 
-///*
-// * Parses FILE_NAME given, constructs a table widget based on the file given. Uses "#" as a delim.
-// */
-//QTableWidget* Utilities::createTable(const QString &FILE_NAME, const QChar &DELIM){
-//    QTableWidget* table = new QTableWidget();
-//    table->setSortingEnabled(true);
-//    table->setColumnCount(4);
-//    table->setObjectName(FILE_NAME);
 
-//    QFile inputFile(FILE_NAME);
-
-//    QString headerDELIM;
-//    headerDELIM.append(DELIM);
-//    headerDELIM.append(DELIM);
-
-//    QStringList headers;
-//    int k = 0;
-
-//    if (inputFile.open(QIODevice::ReadOnly))
-//    {
-//       QTextStream in(&inputFile);
-//       while ( !in.atEnd() )
-//       {
-//           QString line = in.readLine().trimmed();
-//           QStringList lineSplit = line.split(QRegExp("\\s"));
-//           lineSplit.removeAll("");
-//           if (lineSplit.at(0)==headerDELIM){
-//               //found header, get the header line for the table
-//               lineSplit.removeAll(headerDELIM);
-//               headers = lineSplit;
-//           }
-//           else if (lineSplit.at(0)==DELIM){
-//               //found data, insert into table
-//               lineSplit.removeAll(DELIM);
-//               table->insertRow(table->rowCount());
-//               for (int i=0;i<lineSplit.length();i++){
-//                   table->setItem(k,i,new TableNumberItem(lineSplit.at(i)));
-//                   table->item(k,i)->setTextAlignment(Qt::AlignCenter);
-//               }
-//               k++;
-//           }
-//       }
-//    }
-//    table->setHorizontalHeaderLabels(headers);
-//    table->resizeColumnsToContents();
-//    return table;
-//}
 
 /*
  * Returns a list of strings which have the first character in each line matching DELIM.
@@ -293,29 +248,26 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
  * 1.) Sort all files alphabetically
  * 2.) Ensure that only strings that do not exist as substrings for other strings in the list are returned.
  */
-void Utilities::getUniqueDBS(QStringList dbs, QStringList* &uniqueDBS){
-    dbs.sort();
-    QString current = dbs.at(0);
-    uniqueDBS->append(current);
-    for (int i=1;i<dbs.length();i++){
-        if (dbs.at(i).indexOf(current)!=-1){
-            //if it exists as a substring
-            continue;
-        }
-        else{
-            current = dbs.at(i);
-            uniqueDBS->append(current);
-        }
+
+
+QStringList Utilities::getUniqueDBS(QStringList dbs){
+    QHash<QString, bool> unique;
+
+    for (int i=0;i<dbs.length();i++){
+        unique[dbs[i]] = true;
     }
+    return unique.keys();
 }
+
+
 
 /*
  * For parsing the template config or parameter file.
  * Returns a hash of String to Strings, denoting the settings key, value pairs.
  */
-QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
+QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
     QFile inputFile(TEMPLATE_FILE);
-    QHash<QString, QString> *configs = new QHash<QString,QString>();
+    QHash<QString, QString> configs;
 
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
     {
@@ -348,7 +300,7 @@ QHash<QString,QString>* Utilities::parseFile(const QString &TEMPLATE_FILE){
                         value.replace("'","");
                     }
                     else value = "";
-                    configs->insert(key,value);
+                    configs.insert(key,value);
                 }
             }
        }
