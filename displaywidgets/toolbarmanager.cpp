@@ -28,6 +28,7 @@ void ToolBarManager::addTab(HTabWidget *htab, HTableData *htable ) {
 
     connect(htab, SIGNAL(tabClicked(HTabWidget *,SIGNALTYPE)), this, SLOT(tabClicked(HTabWidget *, SIGNALTYPE)) );
 
+
     widgets.insert(htab, a);
     tables.insert(htab, htable);
 
@@ -50,6 +51,12 @@ void ToolBarManager::tabClicked(HTabWidget *htab, SIGNALTYPE type) {
        this->tables[htab]->hide();
        MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
        mdiAreaWidget->removeWidget(this->tables[htab]);
+   }
+   if(type==ACTIVE) {
+       qDebug() << "htab";
+       htab->activateWindow();
+       htab->show();
+       htab->repaint();
    }
 
 }

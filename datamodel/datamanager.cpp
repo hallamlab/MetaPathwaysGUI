@@ -62,9 +62,25 @@ void DataManager::setIndexFileFasta(QString sampleName, QString fileName) {
 
 }
 
+QStringList DataManager::getConnectorSamples() {
+
+    return this->connectors.keys();
+}
+
+
+QList<ATTRTYPE> DataManager::getConnectorSampleAttributes(QString sampleName) {
+    if( this->connectors.contains(sampleName) ) {
+        qDebug() << this->connectors[sampleName].keys();
+        qDebug() << this->connectors[sampleName].values();
+        return this->connectors[sampleName].keys();
+    }
+    return QList<ATTRTYPE>();
+
+}
+
 Connector *DataManager::getConnector( QString sampleName, ATTRTYPE type) {
     if(this->connectors.contains(sampleName) && this->connectors[sampleName].contains(type) ) {
-        this->connectors[sampleName][type];
+        return this->connectors[sampleName][type];
     }
     return 0;
 }
@@ -148,16 +164,13 @@ CATEGORYNODE DataManager::createCategoryNode(QString line) {
 
 void DataManager::createDataModel() {
 
-    qDebug() << " CREATE DATA MODEL";
     if( dataModelCreated ) return;
 
     RunData *rundata = RunData::getRunData();
 
 
     QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
-    qDebug() << refDBFolder;
     QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
-    qDebug() << COG_categories;
     HTree *htree = createHTree(COG_categories);
     htree->hashNodes(htree->root);
     this->htrees[COG] = htree;
@@ -178,18 +191,13 @@ void DataManager::createDataModel() {
     htree = createHTree(Seed_subsystems);
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;
-
-
-    dataModelCreated==true;
+    dataModelCreated=true;
    // htree->printTree(htree->root);
 
 }
 
 HTree *DataManager::createHTree(QString refDB) {
-
-
     HTree *htree = new HTree();
-
 
     QStack<HNODE *> S;
     QHash<QString, ATTRIBUTE *> created;
@@ -238,7 +246,17 @@ HTree *DataManager::createHTree(QString refDB) {
 
 ORF *DataManager::_createAnORF(QStringList &attributes) {
     ORF *orf = new ORF;
+    QHash<QString, CONTIG *> contigHash;
     orf->name = attributes[0];
+
+    if(contigHash.contains(attributes[1]))
+        orf->contig = contigHash[attributes[1]];
+    else {
+        CONTIG *contig = new CONTIG;
+        contig->name  = attributes[1];
+        contigHash[attributes[1]] = contig;
+        orf->contig = contig;
+    }
 
     if(this->attributes[COG].contains(attributes[2]))
         orf->attributes[COG] = this->attributes[COG][attributes[2]];
@@ -372,12 +390,15 @@ QList<ORF *> * DataManager::getORFList(QString sampleName) {
 
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {
     if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(attrType)) {
+     //   qDebug() << sampleName <<" retrieving  connector " << this->connectors[sampleName][attrType]->getORFList().size();
+
         return this->connectors[sampleName][attrType];
     }
 
-    if(htree==0) return 0;
+    if(htree==0) { qDebug() <<"return zero connector "; return 0; }
     QList<ORF *>::const_iterator it;
     Connector *connector = new Connector;
+
     connector->setAttrType(attrType);
     HNODE *hnode;
     for(it = orfList->begin(); it!= orfList->end(); ++it ) {
@@ -385,15 +406,16 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
 
         hnode = htree->getHNODE((*it)->attributes[attrType]->name);
         if(hnode!=0) {
-              //qDebug() << hnode->attribute->name;
-              connector->addToList(hnode->attribute, *it);
+            connector->addToList(hnode->attribute, *it);
        }
     }
 
 
     if( sampleName!=QString("temp") ) {
-       this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
+       if( !this->connectors.contains(sampleName))
+          this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
        this->connectors[sampleName][attrType] = connector;
      }
+ //   qDebug() << sampleName << "created connector " << connector->getORFList().size();
     return connector;
 }

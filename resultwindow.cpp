@@ -20,17 +20,9 @@ ResultWindow::ResultWindow(QWidget *parent) :
     this->setWindowTitle("MetaPathways - Results and Data");
 
 
-    this->run = RunData::getRunData();
+    this->rundata = RunData::getRunData();
 
-    qDebug() << "rundata";
-    qDebug() << run->getConfig();
-    qDebug() << run->getParams();
 
-    if( this->run->getConfig().isEmpty() || this->run->getParams().isEmpty()  ) {
-        QMessageBox warning;
-        warning.warning(0, "Configuration Invalid!","Ooops! \nYou appear to have a configuration file for me, but parameters may be missing! Please check that all required executables and folders are specified through setup.", QMessageBox::Ok);
-        return ;
-    }
 
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
@@ -48,7 +40,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
     getFileNames->start(500);
 
     connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
-    connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
+   // connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
     connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
@@ -82,13 +74,12 @@ ResultWindow::ResultWindow(QWidget *parent) :
     meganviews["MEGAN_TAXONOMIC"]= new MeganView();
 
 
-   // graphicsRepresentation["MEGAN"] = new GraphicsRepresentation();
-
     DataManager *datamanager = DataManager::getDataManager();
     datamanager->createDataModel();
 }
 
 void ResultWindow::_loadResults() {
+
     this->disableSampleChanged = true;
     this->updateFileNames();
     this->disableSampleChanged = false;
@@ -96,29 +87,28 @@ void ResultWindow::_loadResults() {
 
 
 void ResultWindow::indexSamples(bool userResourceFolder) {
-    QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while we index the FASTA files!");
-    QProgressBar progressBar;
-    progressBar.setRange(0, files.size());
-    progressBar.setWindowFlags(Qt::WindowStaysOnTopHint);
-    progressBar.show();
+    ProgressView progressBar("Please wait while we index the FASTA files!", 0, files.size());
+
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     samplercmgr->setUseResourceFolder(userResourceFolder);
 
     unsigned int i =0;
-    foreach(QString file, files ) {
+    foreach(QString file, this->rundata->getFileList() ) {
         samplercmgr->getFileIndex(file, NUCFASTA);
         samplercmgr->getFileIndex(file, AMINOFAA);
-        progressBar.setValue(++i); qApp->processEvents();  progressBar.update();
+        samplercmgr->getFileIndex(file, NUCFNA);
+        progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
     }
-    waitScreen->hide();
+
     progressBar.hide();
+
 }
 
 void ResultWindow::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-    this->selectWindow->addSamples(files);
+    this->selectWindow->addSamples(this->rundata->getFileList());
     this->selectWindow->show();
 }
 
@@ -135,7 +125,11 @@ void ResultWindow::setVisible(int i) {
 }
 
 void ResultWindow::updateFileNames(){
-    files = this->run->files;
+
+    qDebug() << this->rundata->getFileList();
+    files = this->rundata->getFileList();
+    if( files.isEmpty()) return;
+
     QStringList existing;
 
     for (int i=0;i<sampleSelect->count();i++){
@@ -147,6 +141,8 @@ void ResultWindow::updateFileNames(){
             sampleSelect->addItem(f);
         }
     }
+    rundata->setCurrentSample(files[0]);
+
 }
 
  void ResultWindow::receiveSelection(QList<bool> &selection) {
@@ -159,26 +155,23 @@ void ResultWindow::updateFileNames(){
 
 void ResultWindow::sampleChanged(QString sampleName){
 
-    if( disableSampleChanged==true) return;
+   // if( disableSampleChanged==true) return;
+    this->rundata->setCurrentSample(sampleName);
 
     TableData *t;
 
-    QString OUTPUTPATH = this->run->getParams()["folderOutput"];
+    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
 
-    qDebug() << "before data model";
     DataManager *datamanager = DataManager::getDataManager();
-    qDebug() << "after dtamanager ";
+
     datamanager->createDataModel();
-
-
-   // const QString meganTre = this->getFilePath(sampleName, OUTPUTPATH, MEGANTREE);
 
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     sampleResourceManager->setOutPutPath(OUTPUTPATH);
     this->indexSamples(true);
 
 
-    QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while we load the sample!");
+    ProgressView progressbar("Please wait while we load the sample!", 0, 0);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
     const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
@@ -193,55 +186,56 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     QStringList headers;
 
-
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
 
-    Connector *connect;
 
-
-    HTableData *htable = new HTableData;
+    HTableData *htable;
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
     headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
-    htable = this->getHTableData(sampleName, KEGG, types, headers, connect, datamanager);
+    htable = this->getHTableData(sampleName, KEGG, types, headers, datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "KEGG");
-    qDebug() << "done kegg";
 
-    htable = new HTableData;
+
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
     headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
-    htable = this->getHTableData(sampleName, COG, types, headers, connect, datamanager);
+    htable = this->getHTableData(sampleName, COG, types, headers,  datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
 
 
-    htable = new HTableData;
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
     headers << "Pathway/Reaction" << "Common name" << "ORF Count";
-    htable = this->getHTableData(sampleName, METACYC, types, headers, connect, datamanager);
+    htable = this->getHTableData(sampleName, METACYC, types, headers, datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
 
 
-    htable = new HTableData;
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
     headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) " << "ORF Count";
-    htable = this->getHTableData(sampleName, SEED, types, headers, connect, datamanager);
+    htable = this->getHTableData(sampleName, SEED, types, headers, datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
 
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
     m->clearExistingTree();
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
     resultTabs->addTab(m, "TAXONOMIC");
-
 
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
@@ -256,13 +250,14 @@ void ResultWindow::sampleChanged(QString sampleName){
     types.clear();
     types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
     t = this->tables["FUNC & TAX"];
+    t->setSampleName(sampleName);
     t->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
     t->setPopupListener(p);
     resultTabs->addTab(t, "FUNC & TAX");
 
 
-    waitScreen->hide();
-    delete waitScreen;
+    progressbar.hide();
+
 
     return;
 
@@ -319,19 +314,23 @@ void ResultWindow::sampleChanged(QString sampleName){
     emit fileChanged(sampleName);
 }
 
-HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers, Connector *connect, DataManager *datamanager) {
+HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers,  DataManager *datamanager) {
     HTableData *htable = new HTableData;
     htable->clearConnectors();
-    connect = datamanager->createConnector(sampleName, datamanager->getHTree(attr), attr, datamanager->getORFList(sampleName));
+
+    Connector *connect = datamanager->createConnector(sampleName, datamanager->getHTree(attr), attr, datamanager->getORFList(sampleName));
+
+
     htable->setParameters(datamanager->getHTree(attr), types);
     htable->addConnector(connect);
 
     htable->setMaxSpinBoxDepth(datamanager->getHTree(attr)->getTreeDepth());
 
-
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
-    htable->setTableIdentity(sampleName,attr);
+    htable->setTableIdentity(sampleName, attr);
     htable->showTableData();
     return htable;
 }
@@ -358,8 +357,7 @@ void ResultWindow::switchToComparativeMode() {
    //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
 
     Connector *connect;
-    ///connect = datamanager->createConnector(changed, datamanager->getHTree(KEGG), KEGG);
-
+    // create the orfs and add the metacyc annotation to the ORFs
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
@@ -381,6 +379,7 @@ void ResultWindow::switchToComparativeMode() {
        connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
        htable->addConnector(connect);
        headers << files[i];
+       htable->addSampleName(files[i]);
        types << INT;
     }
 
@@ -390,6 +389,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setHeaders(headers);
     htable->setTableIdentity("COG", COG);
     htable->showTableData();
+    htable->setMultiSampleMode(true);
     resultTabs->addTab(htable, "COG");
 
     htable = new HTableData;
@@ -404,6 +404,7 @@ void ResultWindow::switchToComparativeMode() {
        connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
        headers << files[i];
+       htable->addSampleName(files[i]);
        types << INT;
     }
     htable->setParameters(datamanager->getHTree(KEGG),  types);
@@ -412,6 +413,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setHeaders(headers);
     htable->setTableIdentity("KEGG", KEGG);
     htable->showTableData();
+    htable->setMultiSampleMode(true);
     resultTabs->addTab(htable, "KEGG");
 
     // METACYC
@@ -427,6 +429,7 @@ void ResultWindow::switchToComparativeMode() {
        connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
        headers << files[i];
+       htable->addSampleName(files[i]);
        types << INT;
     }
     htable->setParameters(datamanager->getHTree(METACYC),  types);
@@ -435,12 +438,14 @@ void ResultWindow::switchToComparativeMode() {
     htable->setHeaders(headers);
     htable->setTableIdentity("METACYC", METACYC);
     htable->showTableData();
+    htable->setMultiSampleMode(true);
     resultTabs->addTab(htable, "METACYC");
+
 
 }
 
 RunData* ResultWindow::getRunData(){
-    return this->run;
+    return this->rundata;
 }
 
 

@@ -25,6 +25,9 @@ SelectSamples::~SelectSamples()
 
 
 void SelectSamples::addSamples(QStringList samples) {
+   for(unsigned int i =0; i < checkboxes.size(); i++) {
+       sampleGrid->removeWidget(checkboxes[i]);
+   }
    checkboxes.clear();
    for(unsigned int i=0; i < samples.size(); i++ ) {
         QCheckBox *checkBox = new QCheckBox(samples.at(i));

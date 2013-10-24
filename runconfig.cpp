@@ -39,14 +39,15 @@ RunConfig::RunConfig(QWidget *parent) :
 
 
     setStyling();
-   // loadRunParams();
+    loadRunParams();
+
 
     connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
     connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
-    connect(this, SIGNAL(fileSet()), this->parent(), SLOT(enableContinueButton()));
+
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 }
 
@@ -96,6 +97,9 @@ void RunConfig::browseFile(){
     selectedFiles = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory with your files.")));
     filesSelected->setText(*selectedFiles);
 
+    this->rundata->setCurrentSample(QString());
+
+    this->rundata->setValue("fileInput", *selectedFiles, _PARAMS);
     //send a signal to the parent to enable the continue button
     if (selectedFiles){
         if( selectedFolder != 0 ) emit fileSet();
@@ -107,6 +111,7 @@ void RunConfig::browseFolder(){
     selectedFolder = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory for your output.")));
     folderSelected->setText(*selectedFolder);
 
+    this->rundata->setValue("folderOutput", *selectedFolder, _PARAMS);
     //send a signal to the parent to enable the continue button
     if (selectedFolder){
         if(selectedFiles!=0) emit fileSet();

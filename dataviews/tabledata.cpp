@@ -12,7 +12,7 @@ TableData::TableData(  QWidget *parent) :
     ui(new Ui::TableData)
 {
     ui->setupUi(this);
-
+    this->multiSampleMode =false;
     dw = 500;
     statsText = new QString();
 
@@ -89,12 +89,11 @@ void TableData::createGeneViewData(QTableWidgetItem *item) {
     QList< ROW *> rows;
     this->largeTable->getSelectRows(largeTable->wholeTableData, rows, key, col, STRING);
 
-    qDebug() << ' found ' << rows.size();
+
     GeneBrowserData gbd;
 
     SequenceData s;
     ORFData orf;
-    bool ok;
     s.length = 0;
 
     foreach(ROW *row, rows) {
@@ -154,6 +153,30 @@ QString TableData::getHeader(unsigned int i){
     if(i >= this->headers.size()) return QString();
 
     return this->headers.at(i);
+}
+void TableData::setMultiSampleMode(bool multisample) {
+    this->multiSampleMode = multisample;
+}
+
+bool TableData::isMultiSampleMode() {
+    return this->multiSampleMode;
+}
+
+QStringList TableData::getSampleNames() {
+    return this->sampleNames;
+}
+
+QString TableData::getSampleName(unsigned int i) {
+   if( this->sampleNames.size() > i )  {
+       return this->sampleNames[i];
+   }
+   else
+       return QString("");
+}
+
+
+void TableData::setSampleNames(QStringList sampleNames) {
+    this->sampleNames = sampleNames;
 }
 
 enum TYPE TableData::getFieldType(unsigned int i) {
@@ -415,6 +438,51 @@ bool TableData::saveTableToFile(QString fileName, QChar delim) {
 
 }
 
+
+bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
+    QFile outFile(fileName);
+
+    if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outFile);
+
+        QProgressBar progressBar;
+
+        progressBar.setRange(0, this->largeTable->tableData.size());
+        progressBar.show();
+
+        unsigned int interval = this->largeTable->tableData.size()/100;
+
+        SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
+        FileIndex *fileIndex = sampleResourceManager->getFileIndex(this->getSampleName(), type);
+
+        if( fileIndex !=0 ) {
+            unsigned int col;
+            if( type == NUCFNA || type == AMINOFAA ) col = 0;
+            if( type == NUCFASTA) col = 4;
+
+            QString name, resultStr;
+
+            for(int i =0; i < this->largeTable->tableData.size();  i++) {
+               if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
+               name = this->largeTable->tableData[i]->strVar[ this->largeTable->index[col]];
+               resultStr = fileIndex->getDataToDisplay(name);
+               if( !resultStr.isEmpty()) { out << resultStr; }
+            }
+        }
+
+        progressBar.hide();
+        outFile.close();
+    }
+    return true;
+}
+
+void TableData::setSampleName(QString sampleName){
+    this->sampleName = sampleName;
+}
+
+QString TableData::getSampleName() {
+    return this->sampleName;
+}
 
 TableData::~TableData()
 {

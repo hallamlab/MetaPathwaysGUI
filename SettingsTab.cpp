@@ -33,11 +33,10 @@ SettingsTab::SettingsTab(QWidget *parent) :
     annotationFiles = new QStringList((run->getValueFromHash("annotation:dbs",_PARAMS)).split(",", QString::SkipEmptyParts));
     rrnaFiles = new QStringList((run->getValueFromHash("rRNA:refdbs",_PARAMS)).split(",", QString::SkipEmptyParts));
 
-    connect(this, SIGNAL(setContinueButton()), this->parent(), SLOT(enableContinueButton()));
-    connect(this,SIGNAL(hideContinueButton()), this->parent(),SLOT(hideContinueButton()));
     connect(annotationDBS,SIGNAL(clicked(QModelIndex)), this, SLOT(annotationClicked(QModelIndex)));
     connect(rrnaREFDBS, SIGNAL(clicked(QModelIndex)), this, SLOT(rrnaClicked(QModelIndex)));
 
+    initWidgetValues();
     setStyling();
 }
 
@@ -173,7 +172,6 @@ void SettingsTab::openParameterSetup(){
 void SettingsTab::initWidgetValues(){
     QList<QWidget *>::iterator i;
 
-
     RunData *rundata = RunData::getRunData();
 
     for (i = SettingsTab::allWidgets->begin();i != SettingsTab::allWidgets->end(); ++i){
@@ -203,8 +201,6 @@ void SettingsTab::initWidgetValues(){
             QTextEdit *temp = qobject_cast<QTextEdit *>(widget);
             temp->setText(value);
         }
-
-        qDebug() << "Got them all";
     }
 }
 

@@ -16,7 +16,7 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, QWidget *parent) : QWidget(pare
 {
     ui->setupUi(this);
 
-    this->run = RunData::getRunData();
+    this->rundata = RunData::getRunData();
     this->pw = pw;
 
     this->setWindowTitle("MetaPathways - Run Progress");
@@ -38,29 +38,56 @@ ProgressDialog::ProgressDialog(ParentWidget *pw, QWidget *parent) : QWidget(pare
     scanRRNAFailed = false;
     statsFailed = false;
 
-    stepsPassed = new QHash<QString, int>();
-
-    initProcess();
     initMapping();
-    checkFiles();
-
-    currentFile = "";
 
     timer = new QTimer(this);
     timer->start(10000);
 
+    this->myProcess =0;
     connect(hideButton, SIGNAL(clicked()), this, SLOT(toggleDetails()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
 }
 
+
+bool ProgressDialog::checkInputOutPutLocations() {
+    QFileInfo input(this->rundata->getParams()["fileInput"]);
+    QFileInfo output(this->rundata->getParams()["folderOutput"]);
+    QFileInfo logFile(this->rundata->getParams()["folderOutput"]+ "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt");
+
+    if( !input.exists() || !output.exists() || !logFile.exists() ) {
+        if( !input.exists() )
+            standardOut->append("No input folder found named as  " + input.absoluteFilePath() +"\n");
+        if( !output.exists() )
+            standardOut->append("No output folder found named as " + input.absoluteFilePath() + "\n");
+        if(!logFile.exists()) {
+            standardOut->append("No log file found for sample  " + rundata->getCurrentSample() + "\n");
+            standardOut->append("Expected log file : " + logFile.absoluteFilePath());
+        }
+
+        return false;
+    }
+
+    standardOut->append("Input folder found : " + input.absoluteFilePath());
+    standardOut->append("Output folder found : " + output.absoluteFilePath());
+    standardOut->append("Log file found for sample  " + rundata->getCurrentSample() );
+
+    return true;
+}
+
 void ProgressDialog::readStepsLog(){
 
+    QFileInfo input(this->rundata->getParams()["fileInput"]);
 
-    this->checkFiles();
 
-    QString OUTPUTPATH = this->run->getParams()["folderOutput"];
-    QString pathToLog = OUTPUTPATH + "/" + currentFile + "/metapathways_steps_log.txt";
+    if(input.exists()) this->checkFiles();
+
+    if(!this->checkInputOutPutLocations()) return;
+
+    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
+    QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
+
+
 
     QFile inputFile(pathToLog);
     QHash<QString, QString> statusHash;
@@ -73,7 +100,8 @@ void ProgressDialog::readStepsLog(){
     parseBlastCount = 0;
     scanRRNACount = 0;
     statsCount = 0;
-    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
+
+    if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
     {
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
@@ -100,11 +128,10 @@ void ProgressDialog::readStepsLog(){
 
     initProgressBar();
 
-    QByteArray read = myProcess->readAll();
-    if (!read.isEmpty()) standardOut->append(QString(read));
-
-
-
+    if( myProcess !=0 ) {
+       QByteArray read = myProcess->readAll();
+       if (!read.isEmpty()) standardOut->append(QString(read));
+    }
 
 }
 
@@ -147,7 +174,7 @@ void ProgressDialog::multiStepCheck(QString *stepName, QString *status){
         if (blastFailed) *status == "FAILED";
         else *status == "RUNNING";
 
-        if (blastCount == run->nADB){
+        if (blastCount == rundata->nADB){
             *status = "SUCCESS";
         }
     }
@@ -161,7 +188,7 @@ void ProgressDialog::multiStepCheck(QString *stepName, QString *status){
         if (parseBlastFailed) *status == "FAILED";
         else *status == "RUNNING";
 
-        if (parseBlastCount == run->nADB){
+        if (parseBlastCount == rundata->nADB){
             *status = "SUCCESS";
         }
     }
@@ -175,7 +202,7 @@ void ProgressDialog::multiStepCheck(QString *stepName, QString *status){
         if (scanRRNAFailed) *status == "FAILED";
         else *status == "RUNNING";
 
-        if (scanRRNACount == run->nRRNADB){
+        if (scanRRNACount == rundata->nRRNADB){
             *status = "SUCCESS";
         }
     }
@@ -189,7 +216,7 @@ void ProgressDialog::multiStepCheck(QString *stepName, QString *status){
         if (statsFailed) *status == "FAILED";
         else *status == "RUNNING";
 
-        if (statsCount == run->nRRNADB){
+        if (statsCount == rundata->nRRNADB){
             *status = "SUCCESS";
         }
     }
@@ -230,15 +257,18 @@ void ProgressDialog::colorRunConfig(QString stepName, QString status){
     }
     this->previousStatus.insert(stepName,status);
 
-    if (!stepsPassed->contains(currentFile)){
-        stepsPassed->operator [](currentFile) = 0;
+    if (!stepsPassed.contains(rundata->getCurrentSample() )){
+        stepsPassed[rundata->getCurrentSample()] = 0;
     }
-
-    stepsPassed->operator [](currentFile) = stepsPassed->operator [](currentFile)++;
+    stepsPassed[rundata->getCurrentSample()]++;
 
 }
 
 void ProgressDialog::toggleDetails(){
+    this->checkFiles();
+    //this->initProcess();
+    return;
+
     if (!logBrowser->isHidden()) {
         logBrowser->hide();
     }else logBrowser->show();
@@ -263,19 +293,24 @@ void ProgressDialog::toggleDetails(){
 }
 
 void ProgressDialog::initProcess(){
-    QString program = run->getConfig()["PYTHON_EXECUTABLE"];
-    QStringList arguments;
-    METAPATH = this->run->getConfig()["METAPATHWAYS_PATH"];
 
+    if(!this->checkInputOutPutLocations()) return;
+
+    QFileInfo input(this->rundata->getParams()["fileInput"]);
+    QFileInfo output(this->rundata->getParams()["folderOutput"]);
+
+    QString program =  rundata->getConfig()["PYTHON_EXECUTABLE"];
+    QStringList arguments;
+    METAPATH = this->rundata->getConfig()["METAPATHWAYS_PATH"];
     arguments <<  METAPATH + "/MetaPathways.py";
-    arguments << "-i" << this->run->getParams()["fileInput"];
+    arguments << "-i" << this->rundata->getParams()["fileInput"];
 
   //  if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
-    arguments << "-o" << this->run->getParams()["folderOutput"];
+    arguments << "-o" << this->rundata->getParams()["folderOutput"];
 
     arguments << "-p" << METAPATH + "/template_param.txt";
     arguments << "-c" << METAPATH + "/template_config.txt";
-    arguments << "-r" << this->run->getParams()["overwrite"];
+    arguments << "-r" << this->rundata->getParams()["overwrite"];
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
@@ -285,19 +320,19 @@ void ProgressDialog::initProcess(){
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
     env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
-    myProcess = new QProcess();
+
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
 
-    run->setProcess(myProcess);
+    rundata->setProcess(myProcess);
 
     //qDebug() << env.toStringList();
     qDebug() << program << arguments;
 }
 
 void ProgressDialog::initProgressBar(){
- /*
+/*
     progressBar->setMaximum(Utilities::countRunSteps(run->getParams()) + run->nADB + run->nRRNADB);
     progressBar->setValue(stepsPassed->value(currentFile));
     progressBar->setMinimum(0);
@@ -315,13 +350,17 @@ void ProgressDialog::initProgressBar(){
 }
 
 void ProgressDialog::selectedFileChanged(QString file){
-    currentFile = file;
-    progressLabel->setText("Progress - " + currentFile);
+    rundata->setCurrentSample(file);
+    progressLabel->setText("Progress - " + rundata->getCurrentSample());
 }
 
 void ProgressDialog::checkFiles(){
-    QDir currentDir(this->run->getParams()["fileInput"]);
-    QString fileType = this->run->getParams()["INPUT:format"];
+
+
+    QDir currentDir(this->rundata->getParams()["fileInput"]);
+    QString fileType = this->rundata->getParams()["INPUT:format"];
+
+    if( !currentDir.exists() ) return;
 
     currentDir.setFilter(QDir::Files);
     QStringList entries = currentDir.entryList();
@@ -329,7 +368,7 @@ void ProgressDialog::checkFiles(){
     QList<QRegExp> regList;
     regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
 
-
+    filesDetected.clear();
     for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
     {
         QString temp = *entry;
@@ -354,7 +393,8 @@ void ProgressDialog::checkFiles(){
             }
         }
     }
-    this->run->files = filesDetected;
+
+    this->rundata->setFileList(filesDetected);
 
 }
 

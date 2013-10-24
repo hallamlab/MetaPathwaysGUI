@@ -39,10 +39,11 @@ GridSetup::GridSetup(QWidget *parent) :
     QHashIterator<QString, Grid*> it(*Grids);
     while(it.hasNext()){
         it.next();
-        initForm(it.key());
+       initForm(it.key());
     }
+    qDebug() << "asdf";
 
-    changeForm(Grids->keys().first());
+    //changeForm(Grids->keys().first());
 
     connect(gridSelection,SIGNAL(currentIndexChanged(QString)),this,SLOT(changeForm(QString)));
     connect(addGrid, SIGNAL(clicked()), this, SLOT(addNewGrid()));

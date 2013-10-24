@@ -112,6 +112,9 @@ bool FileIndex::writeFileIndex(QString filePath, SOURCETYPE type) {
 
 }
 
+QString FileIndex::getSourceFile() {
+    return this->sourceFile;
+}
 
 void FileIndex::setSourceFile(QString sourceFile) {
     this->sourceFile = sourceFile;

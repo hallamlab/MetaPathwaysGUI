@@ -11,6 +11,7 @@
 #include "popupviews/exportsource.h"
 #include <QRadioButton>
 #include <QFileDialog>
+#include "utilities.h"
 
 typedef struct _export {
     QString name;
@@ -30,7 +31,9 @@ public:
      void setTableData(TableData *td);
      ExportBox(TableData *td = 0, QWidget *parent = 0);
      ExportBox(HTableData *td = 0, QWidget *parent =0);
+
     ~ExportBox() ;
+
 signals:
     
 public slots:
@@ -40,13 +43,17 @@ public slots:
 private:
     void createWidget();
 private:
-    QGroupBox *createNonExclusiveGroup(QGridLayout *grid);
+    QGroupBox *createNonExclusiveGroup(QVBoxLayout *grid);
     ExportSource *td;
 
     QGroupBox *exportFormat;
-    QRadioButton *tsvRadio, *csvRadio;
+    QCheckBox *tsvRadio, *csvRadio;
     QHBoxLayout *vbox;
     QPushButton *cancelButton, *exportButton;
+
+    QCheckBox *fasta ;
+    QCheckBox *fna ;
+    QCheckBox *faa ;
 
     QList<EXPORT_SELECT> Columns;
 

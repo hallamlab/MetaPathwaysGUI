@@ -17,8 +17,8 @@ MeganView::MeganView(QWidget *parent):
 
 
     graphicsView->viewport()->installEventFilter(this);
-    connectorPen = new QPen( Qt::gray, 2, Qt::SolidLine );
-    taxonPen = new QPen( Qt::gray, 1, Qt::SolidLine );
+    connectorPen = new QPen( Qt::red, 0.5, Qt::SolidLine );
+    taxonPen = new QPen( Qt::green, 0.5, Qt::SolidLine);
     namePen = new QPen( Qt::blue, 1, Qt::SolidLine );
     taxonBrush = new QBrush(QColor(Qt::green));
 
@@ -53,6 +53,8 @@ MeganView::MeganView(QWidget *parent):
     qDebug() << graphicsView->x() << "  " << graphicsView->y();
 
     connect(spinBox,SIGNAL(valueChanged(int)),this,SLOT(setDepth(int)));
+    this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    this->repaint();
 
 }
 
@@ -94,6 +96,7 @@ void MeganView::setDataFromFile(const QString &fileName) {
       QFile file(fileName);
       if(file.open(QIODevice::ReadOnly)) {
           meganData = new MeganData;
+          meganData->setConnectorPen(this->connectorPen);
           QTextStream in(&file);
           QString  data = in.readAll();
           meganData->setData(data);
@@ -103,7 +106,7 @@ void MeganView::setDataFromFile(const QString &fileName) {
 
           this->lineStyle = MANHATTAN;
           GraphicsItemsCollection *itemCreator = GraphicsItemsCollection::getGraphicsItemsCollection();
-          meganData->createTaxonItems(taxons, itemCreator, this->deltaX, this->deltaY, *taxonBrush);
+          meganData->createTaxonItems(taxons, itemCreator, this->deltaX, this->deltaY, *taxonBrush, *taxonPen);
           meganData->createConnectingLines(taxons[0][0], itemCreator, *connectorPen);
           meganData->createTaxonNames(taxons[0][0], itemCreator, *namePen);
           this->XSIZE = this->deltaX*meganData->getDepth();
@@ -186,9 +189,11 @@ void MeganView::scaleDeltaY(double scaleFactor) {
 }
 
 
-void MeganView::unscale() {
+void MeganView::unscale(double scalefactor) {
 
-    meganData->unscale(taxons[0][0], this->graphicsView, 0, this->depth);
+    meganData->setLineStyle(this->lineStyle);
+
+    meganData->unscale(taxons[0][0], this->graphicsView, 0, this->depth, scalefactor);
     scene->update();
 }
 
@@ -242,12 +247,12 @@ bool MeganView::eventFilter(QObject *object, QEvent *event){
             //this->scaleDeltaY(scaleFactor);
             graphicsView->scale(1, scaleFactor);
             this->yscale *= scaleFactor;
-            this->unscale();
+            this->unscale(1/scaleFactor);
         } else {
            // this->scaleDeltaY(1 /scaleFactor);
             graphicsView->scale(1, 1/scaleFactor);
             this->yscale /= scaleFactor;
-            this->unscale();
+            this->unscale(scaleFactor);
         }
 
         event->accept();

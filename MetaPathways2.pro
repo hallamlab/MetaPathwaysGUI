@@ -36,7 +36,6 @@ SOURCES += main.cpp\
     dataviews/graphdata.cpp \
     dataviews/largetable.cpp \
     popupviews/searchwidget.cpp \
-    popupviews/exportwidget.cpp \
     popupviews/exportbox.cpp \
     popupviews/popuplistener.cpp \
     popupviews/displayinfo.cpp \
@@ -61,7 +60,8 @@ SOURCES += main.cpp\
     displaywidgets/widgetstacker.cpp \
     displaywidgets/mqtoolbar.cpp \
     popupviews/exportsource.cpp \
-    datamodel/samplercmanager.cpp
+    datamodel/samplercmanager.cpp \
+    displaywidgets/progressview.cpp
 
 
 
@@ -86,7 +86,6 @@ HEADERS  += \
     dataviews/graphdata.h \
     dataviews/largetable.h \
     popupviews/searchwidget.h \
-    popupviews/exportwidget.h \
     popupviews/exportbox.h \
     popupviews/popuplistener.h \
     popupviews/displayinfo.h \
@@ -113,7 +112,8 @@ HEADERS  += \
     displaywidgets/widgetstacker.h \
     displaywidgets/mqtoolbar.h \
     popupviews/exportsource.h \
-    datamodel/samplercmanager.h
+    datamodel/samplercmanager.h \
+    displaywidgets/progressview.h
 
 
 

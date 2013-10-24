@@ -31,7 +31,7 @@ private slots:
     void cancelButtonPressed();
     void backButtonPressed();
     void tabChanged();
-    void enableContinueButton();
+
     void hideContinueButton();
 
 signals:

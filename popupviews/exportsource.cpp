@@ -9,8 +9,8 @@ ExportSource::ExportSource(HTableData *td) {
 ExportSource::ExportSource(TableData *td) {
     this->index=0;
     this->td0 = td;
-
 }
+
 
 QStringList ExportSource::getHeaders() {
     switch(this->index) {
@@ -25,6 +25,37 @@ QStringList ExportSource::getHeaders() {
     }
 
 }
+
+
+QStringList ExportSource::getSampleNames() {
+    switch(this->index) {
+        case 0:
+             return td0->getSampleNames();
+             break;
+        case 1:
+             return td1->getSampleNames();
+             break;
+        default:
+            return QStringList();
+    }
+
+}
+
+
+QString ExportSource::getSampleName(unsigned int i) {
+    switch(this->index) {
+        case 0:
+             return td0->getSampleName(i);
+             break;
+        case 1:
+             return td1->getSampleName(i);
+             break;
+        default:
+            return QString();
+    }
+
+}
+
 
 QString ExportSource::getHeader(unsigned int i) {
    switch(this->index) {
@@ -66,4 +97,32 @@ bool ExportSource::saveTableToFile(QString fileName, QChar delim) {
             return UNKNOWN;
     }
 
+}
+
+
+bool ExportSource::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
+    switch(this->index) {
+        case 0:
+             return td0->saveSequencesToFile(fileName, type);
+             break;
+        case 1:
+             return td1->saveSequencesToFile(sampleName, fileName, type);
+             break;
+        default:
+            return UNKNOWN;
+    }
+
+}
+
+bool ExportSource::isMultiSampleMode() {
+    switch(this->index) {
+        case 0:
+             return td0->isMultiSampleMode();
+             break;
+        case 1:
+             return td1->isMultiSampleMode();
+             break;
+        default:
+            return false;
+    }
 }

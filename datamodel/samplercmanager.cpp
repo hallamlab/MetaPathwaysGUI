@@ -48,6 +48,9 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case AMINOFAA:
             path = OUTPUTPATH + "/" + sampleName + "/orf_prediction/" + sampleName + ".faa";
             break;
+         case NUCFNA:
+            path = OUTPUTPATH + "/" + sampleName + "/orf_prediction/" + sampleName + ".fna";
+            break;
          case FUNCTIONALTABLE:
             path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "functional_and_taxonomic_table.txt";
             break;
@@ -76,10 +79,10 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
      FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
      FileIndex *fileIndex =0;
      QHash<RESOURCE, QString> resNames;
-     resNames[NUCFASTA] = "NUCFASTAT";
+     resNames[NUCFASTA] = "NUCFASTA";
      resNames[AMINOFAA] = "AMINOFAA";
+     resNames[NUCFNA] = "NUCFNA";
 
-     qDebug() << " output file  " << this->OUTPUTPATH;
      if( this->useResourceFolder ) {
 
          QDir resSampleDir( this->OUTPUTPATH + "/" + SampleResourceManager::resourceFolderName + "/" + sampleName );
@@ -94,7 +97,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
               fileIndex->setSourceFile(this->getFilePath(sampleName, resname));
          }
          else {
-             if( resname == AMINOFAA || resname == NUCFASTA)
+             if( resname == AMINOFAA || resname == NUCFASTA || resname == NUCFNA)
                 fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname);
 
              if(! resourceFile.exists() )
@@ -102,7 +105,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
          }
      }
      else {
-        if( resname == AMINOFAA || resname == NUCFASTA)
+        if( resname == AMINOFAA || resname == NUCFASTA || resname == NUCFNA)
            fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname);
      }
      return fileIndex;

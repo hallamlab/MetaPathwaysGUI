@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
-    <height>400</height>
+    <width>976</width>
+    <height>543</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,7 +77,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>889</width>
+     <width>976</width>
      <height>22</height>
     </rect>
    </property>
@@ -111,7 +111,7 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="movable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="floatable">
     <bool>false</bool>
@@ -122,20 +122,20 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="separator"/>
    <addaction name="actionSetup"/>
    <addaction name="actionRunParams"/>
    <addaction name="actionStages"/>
    <addaction name="actionProgress"/>
    <addaction name="actionGridProgress"/>
    <addaction name="actionResults"/>
-   <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="leftToolBar">
    <property name="windowTitle">
     <string>Sub Windows</string>
    </property>
    <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
+    <enum>BottomToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>

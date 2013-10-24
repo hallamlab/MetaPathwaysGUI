@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include "types.h"
+#include "utilities.h"
 
 class RunData
 {
@@ -28,7 +29,7 @@ public:
     void setParams(QHash<QString,QString> PARAMS);
     void setConfig(QHash<QString,QString> CONFIG);
     void setConfigMapping(QHash<QString,QString> CONFIG_MAPPING);
-    void setProcess(QProcess* run);
+    void setProcess(QProcess *process);
     void setRRNADBS(QStringList rrnaDBS);
     void setAnnotationDBS(QStringList annotationDBS);
 
@@ -45,10 +46,15 @@ public:
     bool validate(QString &warningMsg);
     bool checkConfig();
     bool checkParams();
+    void setCurrentSample(QString currentSample);
+    QString getCurrentSample();
 
     static RunData* getRunData();
 
-    QStringList files;
+    void addFileToList(QString file);
+    void setFileList(QStringList files);
+    QStringList getFileList();
+
     int nRRNADB;
     int nADB;
 
@@ -58,17 +64,14 @@ private:
 
     static RunData* runData;
 
-
+    QStringList files;
     QHash<QString,QString> PARAMS;
     QHash<QString,QString> CONFIG;
     QHash<QString,QString> CONFIG_MAPPING;
     QStringList rrnaDBS;
     QStringList annotationDBS;
-    QProcess* run;
-
-    QString pathMetaPathways;
-    QString perlPath, pythonPath;
-    QString databasePath;
+    QProcess *process;
+    QString currentSample;
 
 };
 

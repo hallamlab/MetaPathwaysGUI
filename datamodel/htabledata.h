@@ -63,6 +63,14 @@ public:
     unsigned int fillSelectedData(QString category, unsigned int maxDepth, int state, bool hideZeroRows);
 
     bool saveTableToFile(QString fileName, QChar delim);
+    bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
+
+    void setMultiSampleMode(bool multisample);
+    bool isMultiSampleMode();
+    QStringList getSampleNames();
+    void addSampleName(QString sampleName) ;
+    void setSampleNames(QStringList sampleNames);
+    QString getSampleName(unsigned int i);
 
     QTableWidget* tableWidget;
     unsigned int numCols;
@@ -70,6 +78,8 @@ public:
     Connector *connector;
     QList<Connector *> connectors;
     QHash<ATTRTYPE, QList<Connector *> > allConnectors;
+
+
     HTree *htree;
     bool subWindow;
     QString category;
@@ -93,6 +103,7 @@ private slots:
     void searchButtonPressed();
     void exportButtonPressed();
 
+
 private:
 
     SearchWidget * searchWidget;
@@ -110,8 +121,9 @@ private:
     QComboBox *categorySelector;
     QCheckBox *hideZeroRows;
 
-
+    bool multiSampleMode;
     QStringList headers;
+    QStringList sampleNames;
     unsigned int maxSpinBoxDepth;
 
     Ui::HTableData *ui;

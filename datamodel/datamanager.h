@@ -20,6 +20,8 @@ public:
     QString getORFFaa(QString sampleName);
     QString getORFFna(QString sampleName);
     QString getORFFasta(QString sampleName);
+    QStringList getConnectorSamples();
+    QList<ATTRTYPE> getConnectorSampleAttributes(QString sampleName);
 
     QList<ORF *> *getORFList(QString sampleName);
 

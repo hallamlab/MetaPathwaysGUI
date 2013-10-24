@@ -7,12 +7,12 @@
 #include "metawidget.h"
 #include "dataviews/largetable.h"
 #include "popupviews/searchwidget.h"
-#include "popupviews/exportwidget.h"
 #include "popupviews/exportbox.h"
 #include "popupviews/displayinfo.h"
 #include "genebrowser/genomeview.h"
 #include "caching/tablemanager.h"
 #include <QProgressBar>
+#include "datamodel/samplercmanager.h"
 
 #include <QStringList>
 namespace Ui {
@@ -50,6 +50,17 @@ public:
     enum TYPE getFieldType(unsigned int i);
 
     bool saveTableToFile(QString fileName, QChar delim);
+    bool saveSequencesToFile(QString fileName,  RESOURCE type);
+    void setSampleName(QString sampleName);
+    QString getSampleName();
+    void setMultiSampleMode(bool multisample);
+    bool isMultiSampleMode();
+
+    QStringList getSampleNames();
+    QString getSampleName(unsigned int i);
+    void setSampleNames(QStringList sampleNames);
+
+
     QList<enum TYPE> types;
 
     QList<ROW *> bigdata; //table data
@@ -94,11 +105,16 @@ private:
     QPushButton* exportButton;
     DisplayInfo *p;
     GenomeView *g;
-
+    QString sampleName;
 
     ExportBox * exportBox;
 
     SEARCH searchFilter;
+
+
+    bool multiSampleMode;
+    QStringList sampleNames;
+
 
     Ui::TableData *ui;
 

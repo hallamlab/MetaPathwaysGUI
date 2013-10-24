@@ -89,7 +89,6 @@ void GraphicsNotchedLine::clearMarkers() {
 
 /***********************   GRAPHICSTAXONITEM *********************/
 GraphicsTaxonItem::GraphicsTaxonItem() {
-
    this->inscene = false;
 
 }
@@ -224,6 +223,7 @@ GraphicsTaxonItem *GraphicsItemsCollection::getTaxonNode(TREENODE *node, double 
     taxon->setRect(STARTX + node->depth + taxon->radius/2, STARTY + (node->Ydown + node->Yup)/2 + taxon->radius/2, taxon->radius, taxon->radius );
     taxon->name = node->name;
     taxon->depth = node->depth;
+   // taxon->setPen();
    // qDebug() << " Setting depth item " << taxon->depth << " from " << node->depth;
    // taxon->setToolTip(taxon->name + " " + QString::number(node->depth + taxon->radius/2) + " " + QString::number((node->Ydown + node->Yup)/2 + taxon->radius/2) + " depth = " + QString::number(node->depth));
 

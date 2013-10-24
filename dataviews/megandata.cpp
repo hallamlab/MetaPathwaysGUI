@@ -55,11 +55,12 @@ void MeganData::createTreeView() {
 }
 
 
-void MeganData::_createTaxonItems(TREENODE *node, QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush taxonBrush) {
+void MeganData::_createTaxonItems(TREENODE *node, QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush &taxonBrush, QPen &taxonPen) {
 
     GraphicsTaxonItem *item = itemCreator->getTaxonNode(node);
 
     item->setBrush(taxonBrush);
+    item->setPen(taxonPen);
     if( !taxons.contains(node->depth) ) {
         taxons[node->depth] = QList<GraphicsTaxonItem *>();
     }
@@ -67,7 +68,7 @@ void MeganData::_createTaxonItems(TREENODE *node, QHash<unsigned int, QList< Gra
     if(parentItem!=0) parentItem->Children.append(item);
 
     foreach(TREENODE *child, node->children) {
-        _createTaxonItems(child, taxons, item, itemCreator, deltaX, deltaY, taxonBrush);
+        _createTaxonItems(child, taxons, item, itemCreator, deltaX, deltaY, taxonBrush, taxonPen);
     }
 }
 
@@ -137,8 +138,8 @@ void MeganData::synchronizeNodeAndTaxonItems(TREENODE *node, GraphicsTaxonItem *
     }
 }
 
-void MeganData::createTaxonItems(QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush taxonBrush) {
-    this->_createTaxonItems(this->root, taxons, 0, itemCreator, deltaX, deltaY, taxonBrush);
+void MeganData::createTaxonItems(QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush &taxonBrush, QPen &taxonPen) {
+    this->_createTaxonItems(this->root, taxons, 0, itemCreator, deltaX, deltaY, taxonBrush, taxonPen);
 }
 
 
@@ -202,18 +203,45 @@ double MeganData::_spanAtDepth(TREENODE *node, unsigned int depth, double *Yup, 
 
 }
 
+void MeganData::setLineStyle(LineStyle lineStyle) {
+    this->lineStyle = lineStyle;
+}
+
+void MeganData::setConnectorPen(QPen *qpen) {
+   this->connectorPen = *qpen;
+}
 
 
-void MeganData::unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth) {
+void MeganData::unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth, double scalefactor) {
     if(currDepth > maxDepth ) {
         return;
     }
 
+  //  taxon->setTransform(view->transform().inverted());
     taxon->Name->setTransform(view->transform().inverted());
 
     for(unsigned int i=0; i < taxon->Children.size(); i++) {
-        this->unscale( taxon->Children[i], view,  currDepth + 1, maxDepth);
+        this->unscale( taxon->Children[i], view,  currDepth + 1, maxDepth, scalefactor);
     }
+
+    foreach( GraphicsConnectorLines *line, taxon->Lines[this->lineStyle]) {
+        if( line->inscene)
+           foreach(QGraphicsLineItem *segment, line->segments) {
+              segment->setPen(this->connectorPen);
+           }
+
+    }
+
+
+    QRectF rect = taxon->rect();
+
+    double  height = rect.height();
+
+   // rect.setHeight(rect.height()*scalefactor);
+    rect.setHeight(height*scalefactor);
+    taxon->setRect(rect);
+    taxon->moveBy(0,0.5*height*(1 - scalefactor));
+   // taxon->scale(1, 1/view->transform().dy());
 
 }
 
@@ -222,9 +250,8 @@ double MeganData::spanAtDepth(unsigned int depth) {
     Yup = root->Ydown;
     Ydown = root->Yup;
 
-    qDebug() << " root span = " << root->Yup << "   " << root->Ydown;
     _spanAtDepth(root, depth, &Yup, &Ydown);
-    qDebug() << "  span = " << Yup << "   " << Ydown;
+
 
     return (Ydown-Yup)/(root->Ydown - root->Yup);
 }

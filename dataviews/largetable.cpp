@@ -314,7 +314,6 @@ bool compareStrRev(const  ROW *a, const ROW *b) {
 
 void LargeTable::sortByField(unsigned int fieldNum) {
 
-    qDebug() << " Sorting by field " << fieldNum;
     if(lastUsedField!=fieldNum) {
         copyDataToSort(fieldNum);
         lastUsedField = fieldNum;

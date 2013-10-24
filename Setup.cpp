@@ -24,8 +24,6 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
   //  if(!MainFrame::settingsAvailable()) this->canSave();
 
     RunData *rundata = RunData::getRunData();
-    this->loadPathVariables();
-
 
 
     if( !rundata->getConfig().isEmpty() ){
@@ -45,7 +43,7 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
 
-     canSave();
+    canSave();
 
 }
 
@@ -137,6 +135,7 @@ void Setup::saveSetup(){
 void Setup::loadPathVariables(){
     RunData *rundata = RunData::getRunData();
     QSettings settings("HallamLab", "MetaPathways");
+
     if( settings.allKeys().contains("METAPATHWAYS_PATH") ) {
         pathMetaPathwaysTxt->setText(settings.value("METAPATHWAYS_PATH").toString());
         rundata->setValue("METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), _CONFIG);
@@ -154,11 +153,6 @@ void Setup::loadPathVariables(){
         rundata->setValue("REFDBS", dbDirectoryTxt->text(), _CONFIG);
     }
 
-    //rundata->setConfig(Utilities::parseFile(rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +  "/"+ MainFrame::TEMPLATE_CONFIG));
-  //  qDebug() << "param path " << rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG)  + "/"+ MainFrame::TEMPLATE_PARAM;
-    rundata->setParams(Utilities::parseFile(rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG)  + "/"+ MainFrame::TEMPLATE_PARAM));
-    rundata->setConfigMapping(Utilities::createMapping());
-
 
 }
 
@@ -175,7 +169,6 @@ void Setup::savePathVariables(){
 
     if( !dbDirectoryTxt->text().isEmpty()) {
        settings.setValue("REFDBS",  dbDirectoryTxt->text());
-       qDebug() << " saving " << dbDirectoryTxt->text();
     }
 }
 

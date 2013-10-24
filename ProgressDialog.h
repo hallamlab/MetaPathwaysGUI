@@ -25,7 +25,7 @@ public:
     void initProgressBar();
     void initProcess();
 
-    RunData *run;
+    RunData *rundata;
     ParentWidget *pw;
     QString METAPATH;
     QStringList filesDetected;
@@ -42,13 +42,15 @@ public:
     bool scanRRNAFailed;
     bool statsFailed;
 
-    QHash<QString,int> *stepsPassed;
+    QHash<QString,int> stepsPassed;
 
     void colorRunConfig(QString stepName,  QString status);
     void multiStepCheck(QString *stepName, QString *status);
     void initMapping();
 
     ~ProgressDialog();
+private:
+    bool checkInputOutPutLocations() ;
 
 private slots:
     void terminateRun();
@@ -68,7 +70,6 @@ private:
     QLabel *summaryLabel;
     QProgressBar *progressBar;
     QProgressBar *globalProgressBar;
-    QString currentFile;
     QLabel* progressLabel;
     QProcess *myProcess;
     QTimer *timer;

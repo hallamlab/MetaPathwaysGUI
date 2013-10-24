@@ -48,7 +48,7 @@ public:
     void setDeltaY(double deltaY);
     QRect getGeometry(unsigned int depth);
     void createTreeView();
-    void createTaxonItems( QHash<unsigned int, QList< GraphicsTaxonItem *> > &txons, GraphicsItemsCollection *itemsCreator, double deltaX, double deltaY, QBrush taxonBrush);
+    void createTaxonItems( QHash<unsigned int, QList< GraphicsTaxonItem *> > &txons, GraphicsItemsCollection *itemsCreator, double deltaX, double deltaY, QBrush &taxonBrush, QPen &taxonPen);
     void createConnectingLines(GraphicsTaxonItem *root,  GraphicsItemsCollection* itemCreator, QPen connectorPen);
     void createTaxonNames(GraphicsTaxonItem *pitem, GraphicsItemsCollection* itemCreator, QPen namePen);
 
@@ -65,8 +65,10 @@ public:
 
     void setStyleVisible(GraphicsTaxonItem *taxon, LineStyle style, bool visible, unsigned int currDepth, unsigned int maxDepth);
 
-    void unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth);
+    void unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth, double scalefactor =1);
 
+    void setLineStyle(LineStyle lineStyle);
+    void setConnectorPen(QPen *qpen);
 private:
     void setLines(GraphicsConnectorLines *lines, LineStyle style, GraphicsTaxonItem *a, GraphicsTaxonItem *b);
 
@@ -85,7 +87,7 @@ private:
     void drawMeganTree();
     void computeCoordinates(double deltaX, double deltaY);
     unsigned int treeTraversal(TREENODE *node, int &leafcounter, unsigned int currDepth, unsigned int maxDepth = 100);
-    void _createTaxonItems(TREENODE *node,  QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush taxonBrush);
+    void _createTaxonItems(TREENODE *node,  QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush &taxonBrush, QPen &taxonPen);
     void _deleteNode(TREENODE *t);
 
 
@@ -96,6 +98,9 @@ private:
     double STARTX, STARTY;
     double INIT_LINE_LENGTH;
     double scale;
+    LineStyle lineStyle;
+    QPen connectorPen;
+
 
 
 };

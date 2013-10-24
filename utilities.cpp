@@ -42,10 +42,12 @@ return str1.toDouble() < str2.toDouble();
  * Validate the currently loaded run parameters.
  */
 bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
-    QString python = PARAMS->operator []("PYTHON_EXECUTABLE");
-    QString perl = PARAMS->operator []("PERL_EXECUTABLE");
-    QString mp = PARAMS->operator []("METAPATHWAYS_PATH");
-    QString blastdbs = PARAMS->operator []("REFDBS");
+    if( PARAMS ==0 ) return false;
+
+    QString python = PARAMS->value("PYTHON_EXECUTABLE");
+    QString perl = PARAMS->value("PERL_EXECUTABLE");
+    QString mp = PARAMS->value("METAPATHWAYS_PATH");
+    QString blastdbs = PARAMS->value("REFDBS");
 
     qDebug() << python;
     qDebug() << perl;

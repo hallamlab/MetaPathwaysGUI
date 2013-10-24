@@ -11,9 +11,13 @@ public:
     ExportSource(HTableData *td);
     ExportSource(TableData *td);
     QStringList getHeaders();
+    QStringList getSampleNames();
     QString getHeader(unsigned int i) ;
+    QString getSampleName(unsigned int i) ;
     enum TYPE getFieldType(unsigned int i);
     bool saveTableToFile(QString fileName, QChar delim);
+    bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
+    bool isMultiSampleMode();
 
 private:
     unsigned int index;

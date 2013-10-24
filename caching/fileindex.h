@@ -20,6 +20,7 @@ public:
     FileIndex(QString intputFilePath, enum SOURCETYPE type);
     QString getDataToDisplay(QString &key);
     void setSourceFile(QString sourceFile);
+    QString getSourceFile();
     bool loadFileIndex(QString filePath, enum SOURCETYPE type);
     bool writeFileIndex(QString filePath, enum SOURCETYPE type);
 

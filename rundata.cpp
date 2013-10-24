@@ -11,14 +11,17 @@ const QString RunData::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
 RunData* RunData::runData = 0;
 
 
-RunData::RunData(){}
+RunData::RunData(){
+
+}
 
 RunData* RunData::getRunData(){
     if (runData ==0){
         runData = new RunData();
-
+        runData->setCurrentSample(QString());
         runData->initVartoNULL();
     }
+
 
     return runData;
 }
@@ -31,17 +34,15 @@ QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
 }
 
 void RunData::setValue(QString key, QString value, SETTING_TYPE type){
-    if( type==_CONFIG)
+    if( type==_CONFIG) {
         this->CONFIG[key] = value;
+    }
     if(type==_PARAMS)
         this->PARAMS[key]=value;
 }
 
 void RunData::initVartoNULL() {
-
-    this->run =0;
-    //this->rrnaDBS =0;
-   // this->annotationDBS =0;
+   this->process = 0;
 
 }
 
@@ -58,8 +59,8 @@ void RunData::setConfigMapping(QHash<QString,QString> CONFIG_MAPPING){
     this->CONFIG_MAPPING =  CONFIG_MAPPING;
 }
 
-void RunData::setProcess(QProcess* run){
-    this->run = run;
+void RunData::setProcess(QProcess *process){
+    this->process = process;
 }
 
 void RunData::setRRNADBS(QStringList rrnaDBS){
@@ -82,26 +83,26 @@ QHash<QString,QString> RunData::getConfigMapping(){
     return this->CONFIG_MAPPING;
 }
 
-QProcess* RunData::getProcess(){
-    return this->run;
+QProcess *RunData::getProcess(){
+    return this->process;
 }
 
 
 
 void RunData::setPythonExecutablePath(QString pythonPath) {
-    this->pythonPath = pythonPath;
+    this->CONFIG["PYTHON_PATH"] = pythonPath;
 }
 
 void RunData::setPerlExecutablePath(QString perlPath) {
-    this->perlPath  = perlPath;
+    this->CONFIG["PERL_PATH"]  = perlPath;
 }
 
 void RunData::setMetaPathwaysPath(QString mpPath) {
-    this->pathMetaPathways = mpPath;
+    this->CONFIG["METAPATHWAYS_PATH"] = mpPath;
 }
 
 void RunData::setDatabasesPath(QString databasePath) {
-    this->databasePath  = databasePath;
+    this->CONFIG["REFDBS"] = databasePath;
 }
 
 /*
@@ -111,14 +112,49 @@ void RunData::setDatabasesPath(QString databasePath) {
 
 
 void RunData::setupDefaultConfig(){
-    std::ifstream config_file((this->pathMetaPathways + "/" + this->TEMPLATE_CONFIG).toStdString().c_str());
-    if (!config_file){
-        std::ifstream defaultConfig((QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG).toStdString().c_str());
-        std::ofstream configFile;
 
-        configFile.open((this->pathMetaPathways + "/" + this->TEMPLATE_CONFIG).toStdString().c_str());
-        configFile << defaultConfig.rdbuf();
-        configFile.close();
+    QRegExp pythonPath("PYTHON_EXECUTABLE");
+
+    bool reWriteConfig = false;
+    QFileInfo config_file( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
+    if (config_file.exists()){
+        QHash<QString, QString> config = Utilities::parseFile(config_file.filePath());
+        if(this->CONFIG["METAPATHWAYS_PATH"]!=config["METAPATHWAYS_PATH"] )
+            reWriteConfig = true;
+        if(this->CONFIG["PYTHON_EXECUTABLE"]!=config["PYTHON_EXECUTABLE"] )
+            reWriteConfig = true;
+        if(this->CONFIG["PERL_EXECUTABLE"]!=config["PERL_EXECUTABLE"] )
+            reWriteConfig = true;
+        if(this->CONFIG["REFDBS"]!=config["REFDBS"] )
+            reWriteConfig = true;
+    }
+    else {
+        reWriteConfig = true;
+    }
+
+    if( reWriteConfig ){
+        QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
+        QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG);
+
+
+        if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+            QTextStream out(&outFile);
+
+            if (inputFile.open(QIODevice::ReadOnly) ) {
+                QTextStream in(&inputFile);
+
+                while ( !in.atEnd() )  {
+                    QString line = in.readLine().trimmed();
+                    if( line.indexOf(pythonPath) != -1) {
+                        out << "PYTHON_EXECUTABLE" << "  " << this->CONFIG["PYTHON_EXECUTABLE"] <<"\n";
+                    }
+                    else
+                        out << line + "\n";
+                }
+                inputFile.close();
+            }
+            outFile.close();
+        }
     }
 
    // MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_CONFIG);
@@ -131,30 +167,66 @@ void RunData::setupDefaultConfig(){
  * In both instances, a default parameter settings list will be loaded.
  */
 void RunData::setupDefaultParams(){
-    std::ifstream ifile((this->pathMetaPathways + "/" + this->TEMPLATE_PARAM).toStdString().c_str());
-    if (!ifile){
-        std::ofstream param_config;
-        std::ifstream defaultConfig((QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM).toStdString().c_str());
 
-        param_config.open((this->pathMetaPathways + "/" + this->TEMPLATE_PARAM).toStdString().c_str());
-        param_config << defaultConfig.rdbuf();
-        param_config.close();
+    QFileInfo defaultParamFile( QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_PARAM);
+    QFileInfo paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+    bool reWriteParam = false;
+    if( paramFile.exists() ) {
+        QHash<QString, QString> params = Utilities::parseFile(paramFile.filePath());
+        QHash<QString, QString> defaultParams = Utilities::parseFile(defaultParamFile.filePath());
+
+        foreach( QString key, defaultParams.keys()) {
+            if( !params.contains(key))  reWriteParam = true;
+        }
+        this->setParams(params);
+    } else {
+        reWriteParam = true;
     }
 
+    if (reWriteParam){
+        QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+        QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_PARAM);
+
+        if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+            QTextStream out(&outFile);
+
+            if (inputFile.open(QIODevice::ReadOnly) ) {
+                QTextStream in(&inputFile);
+
+                while ( !in.atEnd() )  {
+                    QString line = in.readLine().trimmed();
+                    out << line + "\n";
+                }
+                inputFile.close();
+            }
+            outFile.close();
+        }
+        setupDefaultParams();
+    }
+
+
+}
+void RunData::setCurrentSample(QString currentSample) {
+    this->currentSample = currentSample;
 }
 
+QString RunData::getCurrentSample() {
+    return this->currentSample;
+}
+
+
 bool RunData::checkParams(){
-    std::ifstream param_file( (this->pathMetaPathways + "/" + this->TEMPLATE_PARAM).toStdString().c_str());
-//    qDebug() << "param file " << (this->pathMetaPathways + "/" + this->TEMPLATE_PARAM).toStdString().c_str();
-    if (param_file) return true;
+    QFileInfo paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+
+    if (paramFile.exists()) return true;
     else return false;
 }
 
 bool RunData::checkConfig(){
   //  qDebug() << " config file ";
-    std::ifstream config_file( (this->pathMetaPathways + "/" +this->TEMPLATE_CONFIG).toStdString().c_str());
+    QFileInfo configFile(  this->CONFIG["METAPATHWAYS_PATH"] + "/" +this->TEMPLATE_CONFIG);
 
-    if (config_file) return true;
+    if (configFile.exists()) return true;
     else return false;
 }
 
@@ -184,4 +256,20 @@ bool RunData::validate(QString &warningMsg) {
     }
 
     return correct;
+}
+
+
+void RunData::addFileToList(QString file) {
+    if(! this->files.contains(file))
+        this->files.append(file);
+}
+
+void RunData::setFileList(QStringList files) {
+    this->files  = files;
+
+}
+
+QStringList RunData::getFileList(){
+    return this->files;
+
 }

@@ -76,8 +76,12 @@ private:
     RunConfig* stages;
     SettingsTab* settings;
 
+    QScrollArea* stageScroll;
+    QScrollArea* settingsScroll;
+
     QWidget *centralWidget;
     QStackedWidget* stackedWidget;
+
 
     QAction* actionSetup;
     QAction* actionRunSettings;

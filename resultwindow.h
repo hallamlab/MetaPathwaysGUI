@@ -26,6 +26,7 @@
 #include "popupviews/selectsamples.h"
 
 #include "displaywidgets/mdiareawidget.h"
+#include "displaywidgets/progressview.h"
 #include "datamodel/samplercmanager.h"
 
 
@@ -42,7 +43,7 @@ class ResultWindow : public QWidget
     
 public:
     RunData* getRunData();
-    HTableData *getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers, Connector *connect, DataManager *datamanager);
+    HTableData *getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers,  DataManager *datamanager);
     ~ResultWindow();
 
     static ResultWindow *getResultWindow();
@@ -72,7 +73,7 @@ private:
 
     Ui::ResultWindow *ui;
     QWidget* parent;
-    RunData *run;
+    RunData *rundata;
     QComboBox* sampleSelect;
     QPushButton *selectSamplesButton;
     QPushButton *loadResults;

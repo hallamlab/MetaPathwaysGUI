@@ -12,8 +12,8 @@ WidgetStacker *WidgetStacker::getWidgetStacker() {
 
 WidgetStacker::WidgetStacker()
 {
-    this->deltaX = 20;
-    this->deltaY = 20;
+    this->deltaX = 35;
+    this->deltaY = 35;
     this->lastw =0;
 }
 
@@ -30,7 +30,7 @@ void WidgetStacker::stackWidget(QWidget *w) {
      }
 
      p.setX( this->refPoint.x() + deltaX);
-     p.setY( this->refPoint.y() + deltaY);
+     p.setY( this->refPoint.y() - deltaY);
      w->move(p.x(), p.y());
      this->refPoint = p;
      w->show();

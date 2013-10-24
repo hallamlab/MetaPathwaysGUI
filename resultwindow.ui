@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>979</width>
-    <height>400</height>
+    <width>980</width>
+    <height>718</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -40,14 +40,14 @@
        <item>
         <widget class="QPushButton" name="selectSamplesButton">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>289</width>
+           <width>50</width>
            <height>0</height>
           </size>
          </property>
@@ -90,14 +90,14 @@
        <item>
         <widget class="QComboBox" name="sampleSelect">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>282</width>
+           <width>200</width>
            <height>0</height>
           </size>
          </property>
@@ -118,6 +118,12 @@
     <widget class="QTabWidget" name="resultTabs">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="currentIndex">
       <number>1</number>

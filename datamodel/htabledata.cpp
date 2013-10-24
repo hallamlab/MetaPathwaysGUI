@@ -8,6 +8,8 @@ HTableData::HTableData(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->multiSampleMode = false;
+
     tableWidget = this->findChild<QTableWidget *>("tableWidget");
     showHierarchy  = this->findChild<QCheckBox *>("showHierarchy");
     showDepth = this->findChild<QSpinBox *>("showDepth");
@@ -25,7 +27,6 @@ HTableData::HTableData(QWidget *parent) :
     htableIdentities << a;
     a.attrType = METACYC; a.sampleName="METACYC";
     htableIdentities << a;
-
     a.attrType = SEED; a.sampleName="SEED";
     htableIdentities << a;
 
@@ -84,6 +85,37 @@ void HTableData::searchButtonPressed(){
 void HTableData::exportButtonPressed(){
     this->exportBox = new ExportBox(this);
     this->exportBox->show();
+}
+
+void HTableData::setMultiSampleMode(bool multisample) {
+    this->multiSampleMode = multisample;
+}
+
+void HTableData::addSampleName(QString sampleName) {
+    if( !this->sampleNames.contains(sampleName))
+        this->sampleNames.append(sampleName);
+}
+
+bool HTableData::isMultiSampleMode() {
+    return this->multiSampleMode;
+}
+
+
+QStringList HTableData::getSampleNames() {
+    return this->sampleNames;
+}
+
+void HTableData::setSampleNames(QStringList sampleNames) {
+    this->sampleNames = sampleNames;
+}
+
+
+QString HTableData::getSampleName(unsigned int i) {
+   if( this->sampleNames.size() > i )  {
+       return this->sampleNames[i];
+   }
+   else
+       return QString("");
 }
 
 
@@ -167,9 +199,10 @@ void HTableData::hideZeroRowsChanged(int state) {
 
 void HTableData::fillData(unsigned int maxDepth, int state, bool hideZeroRows) {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(maxDepth, state, this->connectors);
 
+     data =  this->htree->getRows(maxDepth, state, this->connectors);
      QList<ROWDATA *> newdata;
+
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
@@ -200,7 +233,6 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
      QList<ROWDATA *> newdata;
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
-            qDebug() <<r->name <<"  " <<  r->counts;
             if( isNonZero(r)) newdata.append(r);
         }
         this->populateTable(newdata, this->headers, state );
@@ -255,11 +287,12 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
 
 void HTableData::showInformativeTable(QTableWidgetItem *item) {
-    unsigned int column = item->column();
     unsigned int row = item->row();
 
     DataManager *datamanager = DataManager::getDataManager();
     HTableData *htable = new HTableData;
+    htable->setMultiSampleMode(this->isMultiSampleMode());
+    htable->setSampleNames(this->sampleNames);
     htable->clearConnectors();
 
     htable->viewToggleBox->setVisible(true);
@@ -303,8 +336,10 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
            orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
+
         }
     }
+
 
 
     htable->setHeaders( this->headers);
@@ -315,11 +350,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
     ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
     toolbarManager->addTab(htab,  htable);
-/*
-    MdiAreaWidget *mdiAreaWidget = MdiAreaWidget::getMdiAreaWidget();
-    mdiAreaWidget->addWidget(htable);
-    htable->show();
-*/
+
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->stackWidget(htable);
 
@@ -369,4 +400,43 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim) {
     return true;
 }
 
+
+
+bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
+    QFile outFile(fileName);
+    DataManager *datamanager = DataManager::getDataManager();
+    HTree *htree = datamanager->getHTree(this->id.attrType);
+
+    Connector *connector =  datamanager->getConnector(sampleName, this->id.attrType);
+  //  qDebug() << htree <<" " <<  datamanager << " " << connector ;
+    if( datamanager==0 || htree ==0 || connector == 0 ) return false;
+    QList<ORF *>orfList;
+
+    QHash<QString, bool> keyNames;
+
+
+    for(int i =0; i < this->tableWidget->rowCount(); i++) {
+         HNODE *hnode = htree->getHNODE(this->tableWidget->item(i,0)->text());
+         orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+         foreach(ORF *orf, orfList) {
+             if( type == NUCFNA || type == AMINOFAA)
+                 keyNames[orf->name] = true;
+             if( type==NUCFASTA)
+                 keyNames[orf->contig->name] = true;
+         }
+    }
+
+
+    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
+    FileIndex *fileIndex = sampleResourceManager->getFileIndex(sampleName, type);
+
+    if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outFile);
+        foreach(QString name, keyNames.keys()) {
+           out << fileIndex->getDataToDisplay(name);
+        }
+        outFile.close();
+    }
+    return true;
+}
 

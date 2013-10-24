@@ -65,7 +65,6 @@ void HTree::_getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList) {
 
 
 void HTree::printTree(HNODE *hnode) {
-    qDebug() << hnode->attribute->name << " " << hnode->depth;
 
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
         printTree(*it);
@@ -93,8 +92,11 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, int 
 
     if(hnode->children.size()==0) {
         for(unsigned int j=0; j < this->connectors.size(); j++) {
-           if( this->connectors[j]->connected.contains(hnode->attribute))
+
+           if( this->connectors[j]->connected.contains(hnode->attribute)) {
                vcount[j] = this->connectors[j]->connected[hnode->attribute].size();
+           }
+
         }
     }
 

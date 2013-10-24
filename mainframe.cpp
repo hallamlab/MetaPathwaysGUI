@@ -32,7 +32,6 @@ MainFrame::MainFrame(QWidget *parent) :
     toolBar = this->findChild<QToolBar *>("toolBar");
     leftToolBar = this->findChild<QToolBar *>("leftToolBar");
 
-
     leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
     leftToolBar->setGeometry(0, toolBar->height(),4,10);
     leftToolBar->setLayoutDirection(Qt::LeftToRight);
@@ -47,13 +46,9 @@ MainFrame::MainFrame(QWidget *parent) :
     leftToolBar->setAutoFillBackground(false);
     leftToolBar->setParent(this);
 
-
-
- //   leftToolBar = this->findChild<QToolBar *>("leftToolBar");
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
-
 
     ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
     toolbarManager->setToolBar(leftToolBar);
@@ -71,15 +66,15 @@ MainFrame::MainFrame(QWidget *parent) :
     stackedWidget->addWidget(welcomeWindow);
 
     rundata = RunData::getRunData();
+    rundata->setConfigMapping(Utilities::createMapping());
 
-    if( !rundata->checkParams() )
-        rundata->setupDefaultConfig();
+    setupWidget = new Setup();
+    setupWidget->loadPathVariables();
 
-    if( !rundata->checkParams() )
-        rundata->setupDefaultParams();
+    rundata->setupDefaultConfig();
+    rundata->setupDefaultParams();
 
     QString warningStr;
-    setupWidget = new Setup();
     stackedWidget->addWidget(setupWidget);
     connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(validateSetup()));
 
@@ -88,8 +83,6 @@ MainFrame::MainFrame(QWidget *parent) :
     }else{
         validateSetup();
     }
-
-
 
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
@@ -129,55 +122,50 @@ void MainFrame::greyTabs(bool enabled){
 }
 
 void MainFrame::addRemainingTabs() {
-
-
-
     stages = new RunConfig();
     settings = new SettingsTab();
     resultWindow = ResultWindow::getResultWindow();
     progress = new ProgressDialog();
 
+    stageScroll = new QScrollArea();
+    settingsScroll = new QScrollArea();
 
-    stackedWidget->addWidget(stages);
-    stackedWidget->addWidget(settings);
-
+    stageScroll->setWidget(stages);
+    settingsScroll->setWidget(settings);
+    stackedWidget->addWidget(stageScroll);
+    stackedWidget->addWidget(settingsScroll);
     stackedWidget->addWidget(resultWindow);
-
-    stackedWidget->setCurrentWidget(welcomeWindow);
     stackedWidget->addWidget(progress);
 
-    connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
+    stackedWidget->setCurrentWidget(welcomeWindow);
 
-    connect(actionProgress, SIGNAL(triggered()), this, SLOT(openResultWindow()));
+    connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
     connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
-
-
 }
 
 
 void MainFrame::displayStages(){
-    stackedWidget->setCurrentWidget(stages);
+    stackedWidget->setCurrentWidget(stageScroll);
     updateWidgets();
 }
 
 void MainFrame::displayParams(){
-    stackedWidget->setCurrentWidget(settings);
+    stackedWidget->setCurrentWidget(settingsScroll);
     updateWidgets();
 }
 
 
 void MainFrame::updateWidgets(){
-
-    if(stackedWidget->currentWidget() == settings){
-
+    if(stackedWidget->currentWidget() == settingsScroll){
         //write SettingsTab changes to file
         QList<QWidget *>::iterator i;
         QList<QWidget *> *allWidgets = SettingsTab::allWidgets;
+
         for (i = allWidgets->begin(); i != allWidgets->end(); ++i){
             QWidget *widget = *i;
 
@@ -222,10 +210,10 @@ void MainFrame::updateWidgets(){
                 }
             }
             rundata->setValue(configName,value,_PARAMS);
-            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, configName, value, false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configName, value, false, false);
         }
     }
-    else if(stackedWidget->currentWidget()==stages){
+    else if(stackedWidget->currentWidget()==stageScroll){
         QList<QGroupBox *> *groupBoxes = stages->groupBoxes;
 
         QList<QGroupBox *>::iterator i;
@@ -254,7 +242,7 @@ void MainFrame::updateWidgets(){
             else rundata->setValue(configKey,"skip",_PARAMS);
 
             //write to file the changes
-            Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
 
             //disable all buttons now for the run
             yesRadioButton->setEnabled(false);
@@ -264,7 +252,7 @@ void MainFrame::updateWidgets(){
 
         //write file format
         QString inputTypeKey = rundata->getConfigMapping().key(stages->fileInputFormat->objectName());
-        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, inputTypeKey, stages->fileInputFormat->currentText(), false, false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, inputTypeKey, stages->fileInputFormat->currentText(), false, false);
         rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
 
         //save file selected
@@ -289,8 +277,8 @@ void MainFrame::updateWidgets(){
 
         rundata->setValue("annotationDBS", annotationDBS, _PARAMS);
 
-        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
-        Utilities::writeSettingToFile(RunData::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
 
         //use overwrite settings?
         if (stages->overwrite->isChecked()){
