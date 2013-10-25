@@ -126,7 +126,7 @@
    <addaction name="actionSetup"/>
    <addaction name="actionRunParams"/>
    <addaction name="actionStages"/>
-   <addaction name="actionProgress"/>
+   <addaction name="actionRun"/>
    <addaction name="actionGridProgress"/>
    <addaction name="actionResults"/>
   </widget>
@@ -146,9 +146,9 @@
     <string>Setup</string>
    </property>
   </action>
-  <action name="actionProgress">
+  <action name="actionRun">
    <property name="text">
-    <string>Progress</string>
+    <string>Run</string>
    </property>
   </action>
   <action name="actionGridProgress">

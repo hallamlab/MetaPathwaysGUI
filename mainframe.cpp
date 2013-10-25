@@ -23,7 +23,7 @@ MainFrame::MainFrame(QWidget *parent) :
     centralWidget = this->findChild<QWidget *>("centralWidget");
     actionSetup = this->findChild<QAction *>("actionSetup");
     actionRunSettings = this->findChild<QAction *>("actionRunSettings");
-    actionProgress = this->findChild<QAction *>("actionProgress");
+    actionProgress = this->findChild<QAction *>("actionRun");
     actionGridProgress = this->findChild<QAction *>("actionGridProgress");
     actionResults = this->findChild<QAction *>("actionResults");
     actionRunParams = this->findChild<QAction *>("actionRunParams");
@@ -150,13 +150,13 @@ void MainFrame::addRemainingTabs() {
 
 
 void MainFrame::displayStages(){
+    this->updateWidgets();
     stackedWidget->setCurrentWidget(stageScroll);
-    updateWidgets();
 }
 
 void MainFrame::displayParams(){
+    this->updateWidgets();
     stackedWidget->setCurrentWidget(settingsScroll);
-    updateWidgets();
 }
 
 
@@ -191,25 +191,35 @@ void MainFrame::updateWidgets(){
             }
             else if (qobject_cast<QListWidget *>(widget)){
                 QListWidget *temp = qobject_cast<QListWidget *>(widget);
+                QHash<QString,QString> adbs;
+                QHash<QString,QString> rdbs;
+                //use the power of hashes to only get unique strings
+
+                adbs.clear();
+                rdbs.clear();
+
                 for (int i=0;i<temp->count();i++){
                     if (temp->item(i)->checkState() == Qt::Checked){
                         if (temp->objectName() == "annotationDBS"){
-                            value = rundata->getValueFromHash(configName,_PARAMS);
-                            if (value.isEmpty()) value = temp->item(i)->text();
-                            else value = value + "," + temp->item(i)->text();
-                            rundata->setValue(configName,value,_PARAMS);
+                            adbs[temp->item(i)->text()] = "";
                         }
-
                         else if(temp->objectName() == "rrnaREFDBS"){
-                            value = rundata->getValueFromHash(configName,_PARAMS);
-                            if (value.isEmpty()) value = temp->item(i)->text();
-                            else value = value + "," + temp->item(i)->text();
-                            rundata->setValue(configName,value,_PARAMS);
+                            rdbs[temp->item(i)->text()] = "";
                         }
                     }
                 }
+                if (temp->objectName()=="annotationDBS"){
+                    QStringList rt(adbs.keys());
+                    value = rt.join(",");
+                }
+                if (temp->objectName()=="rrnaREFDBS"){
+                    QStringList rt(rdbs.keys());
+                    value = rt.join(",");
+                }
+                //qDebug() << "keys " <<  adbs.keys() << rdbs.keys() << " value " << value << " cfname " << configName;
             }
-            rundata->setValue(configName,value,_PARAMS);
+            //qDebug() << " Setting the value " << configName << " val = " << value;
+            rundata->setValue(configName, value,_PARAMS);
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configName, value, false, false);
         }
     }
@@ -269,13 +279,14 @@ void MainFrame::updateWidgets(){
         QString rRNArefdbs = rundata->getValueFromHash("rRNA:refdbs", _PARAMS);
 
         rRNArefdbs = rRNArefdbs.remove(QRegExp("[\\s,]*$"));
-        rundata->setValue("rRNA:refdbs", rRNArefdbs, _PARAMS);
-
+        rundata->setValue("rRNA:refdbs", rRNArefdbs, _PARAMS); //trim ending comma
         QString annotationDBS = rundata->getValueFromHash("annotation:dbs", _PARAMS);
-
         annotationDBS = annotationDBS.remove(QRegExp("[\\s,]*$"));
-
         rundata->setValue("annotationDBS", annotationDBS, _PARAMS);
+
+        //number of each
+        rundata->setNumADB(annotationDBS.size());
+        rundata->setNumRRNADB(rRNArefdbs.size());
 
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
@@ -309,8 +320,8 @@ void MainFrame::executionPrep(){
 
 
     if( annotationDBS.size() > 0) {
-        rundata->nADB = annotationDBS.size();
-        rundata->nRRNADB = rrnaDBS.size();
+        rundata->setNumADB(annotationDBS.size());
+        rundata->setNumRRNADB(rrnaDBS.size());
         rundata->setAnnotationDBS(annotationDBS);
         rundata->setRRNADBS(rrnaDBS);
     }
@@ -318,23 +329,23 @@ void MainFrame::executionPrep(){
 }
 
 void MainFrame::displayProgress(){
-    updateWidgets();
+    this->updateWidgets();
     stackedWidget->setCurrentWidget(progress);
 }
 
 void MainFrame::displayWelcome(){
-    updateWidgets();
     stackedWidget->setCurrentWidget(welcomeWindow);
+    updateWidgets();
 }
 
 void MainFrame::openSetup(){
-    updateWidgets();
+    this->updateWidgets();
     stackedWidget->setCurrentWidget(setupWidget);
 }
 
 
 void MainFrame::displayResults(){
-    updateWidgets();
+    this->updateWidgets();
     stackedWidget->setCurrentWidget(resultWindow);
 }
 

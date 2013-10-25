@@ -41,6 +41,9 @@ public:
     QHash<QString,QString> getConfigMapping();
     QProcess* getProcess();
 
+    void setNumRRNADB(unsigned int n);
+    void setNumADB(unsigned int n);
+
     void setupDefaultParams();
     void setupDefaultConfig();
     bool validate(QString &warningMsg);
@@ -55,12 +58,15 @@ public:
     void setFileList(QStringList files);
     QStringList getFileList();
 
-    int nRRNADB;
-    int nADB;
+    unsigned int getNumRRNADB();
+    unsigned int getNumADB();
 
 private:
     RunData();
     void initVartoNULL();
+
+    int nRRNADB;
+    int nADB;
 
     static RunData* runData;
 
@@ -72,7 +78,6 @@ private:
     QStringList annotationDBS;
     QProcess *process;
     QString currentSample;
-
 };
 
 

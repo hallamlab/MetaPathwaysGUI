@@ -20,9 +20,9 @@ RunData* RunData::getRunData(){
         runData = new RunData();
         runData->setCurrentSample(QString());
         runData->initVartoNULL();
+        runData->nADB = 0;
+        runData->nRRNADB = 0;
     }
-
-
     return runData;
 }
 
@@ -34,7 +34,7 @@ QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
 }
 
 void RunData::setValue(QString key, QString value, SETTING_TYPE type){
-    if( type==_CONFIG) {
+    if(type==_CONFIG) {
         this->CONFIG[key] = value;
     }
     if(type==_PARAMS)
@@ -43,9 +43,7 @@ void RunData::setValue(QString key, QString value, SETTING_TYPE type){
 
 void RunData::initVartoNULL() {
    this->process = 0;
-
 }
-
 
 void RunData::setParams(QHash<QString,QString> PARAMS){
     this->PARAMS = PARAMS;
@@ -87,8 +85,6 @@ QProcess *RunData::getProcess(){
     return this->process;
 }
 
-
-
 void RunData::setPythonExecutablePath(QString pythonPath) {
     this->CONFIG["PYTHON_PATH"] = pythonPath;
 }
@@ -109,8 +105,6 @@ void RunData::setDatabasesPath(QString databasePath) {
  * Should setup settings.
  * Usually this lives in a template_config file. So if it doesn't exist, we'll have to create it.
  */
-
-
 void RunData::setupDefaultConfig(){
 
     QRegExp pythonPath("PYTHON_EXECUTABLE");
@@ -156,7 +150,6 @@ void RunData::setupDefaultConfig(){
             outFile.close();
         }
     }
-
    // MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_CONFIG);
 }
 
@@ -175,10 +168,12 @@ void RunData::setupDefaultParams(){
         QHash<QString, QString> params = Utilities::parseFile(paramFile.filePath());
         QHash<QString, QString> defaultParams = Utilities::parseFile(defaultParamFile.filePath());
 
+        this->PARAMS = params;
+
         foreach( QString key, defaultParams.keys()) {
             if( !params.contains(key))  reWriteParam = true;
         }
-        this->setParams(params);
+
     } else {
         reWriteParam = true;
     }
@@ -203,8 +198,6 @@ void RunData::setupDefaultParams(){
         }
         setupDefaultParams();
     }
-
-
 }
 void RunData::setCurrentSample(QString currentSample) {
     this->currentSample = currentSample;
@@ -220,6 +213,22 @@ bool RunData::checkParams(){
 
     if (paramFile.exists()) return true;
     else return false;
+}
+
+unsigned int RunData::getNumRRNADB(){
+    return this->nRRNADB;
+}
+
+unsigned int RunData::getNumADB(){
+    return this->nADB;
+}
+
+void RunData::setNumRRNADB(unsigned int n){
+    this->nRRNADB = n;
+}
+
+void RunData::setNumADB(unsigned int n){
+    this->nADB = n;
 }
 
 bool RunData::checkConfig(){

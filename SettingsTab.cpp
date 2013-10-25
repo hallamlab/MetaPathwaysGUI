@@ -45,7 +45,6 @@ void SettingsTab::annotationClicked(QModelIndex index){
     for (int i=0;i<annotationDBS->count();i++){
         if(annotationDBS->item(i)->checkState()==Qt::Checked){
             oneChecked = true;
-            qDebug() << annotationDBS->item(i)->text() << "ischecked";
         }
     }
 
@@ -56,7 +55,6 @@ void SettingsTab::annotationClicked(QModelIndex index){
     }
     annotationDBSWarning->hide();
     isBothDBSSet();
-
 }
 
 void SettingsTab::rrnaClicked(QModelIndex index){
@@ -64,7 +62,6 @@ void SettingsTab::rrnaClicked(QModelIndex index){
     for (int i=0; i<rrnaREFDBS->count(); i++) {
         if(rrnaREFDBS->item(i)->checkState()==Qt::Checked){
             oneChecked = true;
-            qDebug() << rrnaREFDBS->item(i)->text() << "ischecked";
         }
     }
 
@@ -141,7 +138,7 @@ void SettingsTab::showORFDBS(){
                 annotationDBS->addItem(item);
             }
         else{
-            annotationDBSWarning->setText("No functional databases found under your specified database path!");
+            annotationDBSWarning->setText("No functional databases found under your specified database path : " + dbPath );
         }
     }
     else{
@@ -176,9 +173,7 @@ void SettingsTab::initWidgetValues(){
 
     for (i = SettingsTab::allWidgets->begin();i != SettingsTab::allWidgets->end(); ++i){
         QWidget *widget = *i;
-
         QString objectName = widget->objectName();
-
         QString configName = rundata->getConfigMapping().key(objectName);
 
         QString value = rundata->getValueFromHash(configName,_PARAMS);

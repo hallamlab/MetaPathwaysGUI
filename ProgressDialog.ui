@@ -14,10 +14,32 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
+   <item row="0" column="0">
+    <widget class="QLabel" name="progressLabel">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Progress (sample selected)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="sampleSelect">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
     <widget class="QProgressBar" name="progressBar">
      <property name="value">
-      <number>24</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -33,45 +55,39 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="summaryLabel">
-     <property name="font">
-      <font>
-       <pointsize>24</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Execution Summary</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="2">
+   <item row="3" column="0" colspan="3">
     <widget class="QProgressBar" name="globalProgressBar">
      <property name="value">
-      <number>24</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
-    <widget class="QLabel" name="logLabel">
-     <property name="font">
-      <font>
-       <pointsize>24</pointsize>
-      </font>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="runButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>32</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>32</height>
+      </size>
      </property>
      <property name="text">
-      <string>Progress Log</string>
+      <string>Run</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1" alignment="Qt::AlignRight">
+   <item row="4" column="2">
     <widget class="QPushButton" name="cancelButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -96,7 +112,26 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="0" rowspan="2" colspan="3">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="0">
+    <widget class="QLabel" name="summaryLabel">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Execution Summary</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
     <widget class="QTableWidget" name="summaryTable">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
@@ -174,6 +209,11 @@
      </row>
      <row>
       <property name="text">
+       <string>CREATE_SEQUIN_FILES</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
        <string>CREATE_REPORT_FILES</string>
       </property>
      </row>
@@ -199,7 +239,23 @@
      </column>
     </widget>
    </item>
-   <item row="8" column="0" colspan="2">
+   <item row="8" column="1" colspan="2">
+    <widget class="QTextBrowser" name="logBrowser">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>400</width>
+       <height>228</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" colspan="3">
     <widget class="QTextEdit" name="standardOut">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -219,55 +275,14 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QTextBrowser" name="logBrowser">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>400</width>
-       <height>228</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="progressLabel">
+    <widget class="QLabel" name="logLabel">
      <property name="font">
       <font>
-       <pointsize>18</pointsize>
+       <pointsize>24</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Progress (current sample)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QPushButton" name="hideButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>32</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>300</width>
-       <height>32</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Show/Hide Advanced Details</string>
+      <string>Progress Log</string>
      </property>
     </widget>
    </item>

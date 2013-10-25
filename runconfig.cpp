@@ -37,10 +37,8 @@ RunConfig::RunConfig(QWidget *parent) :
 
     rundata = RunData::getRunData();
 
-
     setStyling();
     loadRunParams();
-
 
     connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));

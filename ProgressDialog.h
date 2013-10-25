@@ -21,8 +21,8 @@ class ProgressDialog : public QWidget
     Q_OBJECT
     
 public:
-    explicit ProgressDialog(ParentWidget *pw = NULL, QWidget *parent = 0);
-    void initProgressBar();
+    explicit ProgressDialog(QWidget *parent = 0);
+    void updateProgressBar();
     void initProcess();
 
     RunData *rundata;
@@ -32,20 +32,11 @@ public:
     QHash<int,QString> *TABLE_MAPPING;
     QHash<QString, QString> previousStatus;
 
-    int blastCount;
-    int parseBlastCount;
-    int scanRRNACount;
-    int statsCount;
-
-    bool blastFailed;
-    bool parseBlastFailed;
-    bool scanRRNAFailed;
-    bool statsFailed;
 
     QHash<QString,int> stepsPassed;
 
-    void colorRunConfig(QString stepName,  QString status);
-    void multiStepCheck(QString *stepName, QString *status);
+    void checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName);
+    void colorRunConfig(QHash<QString,QString> *statusHash);
     void initMapping();
 
     ~ProgressDialog();
@@ -55,15 +46,25 @@ private:
 private slots:
     void terminateRun();
     void checkFiles();
-    void toggleDetails();
     void selectedFileChanged(QString file);
     void readStepsLog();
+    void startRun();
 
 private:
     Ui::ProgressDialog *ui;
 
+    unsigned int _blastCount;
+    unsigned int _parseBlastCount;
+    unsigned int _scanCount;
+    unsigned int _statsCount;
+
+    unsigned int _totalStepsPerSample;
+    unsigned int _stepsCompletedSample;
+
     QPushButton *cancelButton;
     QPushButton *hideButton;
+    QPushButton *runButton;
+
     QTextBrowser *logBrowser;
     QLabel *logLabel;
     QTableWidget *summaryTable;
@@ -75,6 +76,7 @@ private:
     QTimer *timer;
     QTimer *fileCheckTimer;
     QTextEdit *standardOut;
+    QComboBox* sampleSelect;
 };
 
 #endif // ProgressDialog_H
