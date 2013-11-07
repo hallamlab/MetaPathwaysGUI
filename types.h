@@ -15,7 +15,7 @@ typedef enum _SETTING {_CONFIG, _PARAMS } SETTING_TYPE;
 enum SOURCETYPE {FASTA, TABTABLE};
 typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, NUCFNA, CONTIGLENGTH, ORFLENGTH, \
                              NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
-                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC } RESOURCE;
+                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, MEGANLASTFILE, MEGANBLASTFILE } RESOURCE;
 
 typedef struct _RANK_BEGIN_PAIR {
     unsigned int rank, begin;
@@ -38,6 +38,7 @@ typedef struct _ORFData {
 typedef struct _SEQUENCEDATA {
     unsigned int start, end;
     unsigned int length;
+    QString name;
 
 } SequenceData;
 

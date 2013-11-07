@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QString>
 #include <QWidget>
+#include <QApplication>
 
 
 class ProgressView:public QWidget {

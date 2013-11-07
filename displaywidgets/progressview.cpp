@@ -33,5 +33,7 @@ ProgressView::ProgressView(QString text, unsigned int i , unsigned int j) {
 
 void ProgressView::updateprogress(unsigned int i) {
     this->progressBar->setValue(i);
+    qApp->processEvents();
     this->progressBar->update();
+
 }

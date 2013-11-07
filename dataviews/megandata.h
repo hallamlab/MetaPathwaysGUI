@@ -45,6 +45,7 @@ public:
     void setOffset(double startX, double stattY);
     void setInitLineLength(double length);
     void setScale(double scale);
+    void setScaleY(double yscale);
     void setDeltaY(double deltaY);
     QRect getGeometry(unsigned int depth);
     void createTreeView();
@@ -69,6 +70,12 @@ public:
 
     void setLineStyle(LineStyle lineStyle);
     void setConnectorPen(QPen *qpen);
+
+    double getUpperBoundY();
+    double getLowerBoundY();
+    double getLeftBoundX();
+    double getRightBoundX();
+
 private:
     void setLines(GraphicsConnectorLines *lines, LineStyle style, GraphicsTaxonItem *a, GraphicsTaxonItem *b);
 
@@ -91,8 +98,10 @@ private:
     void _deleteNode(TREENODE *t);
 
 
+
     QString data;
     TREENODE *root;
+    double yscale;
 
     double deltaX, deltaY, YTOP, XRIGHT;
     double STARTX, STARTY;

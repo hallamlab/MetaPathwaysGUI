@@ -8,7 +8,9 @@ MeganData::MeganData()
     this->STARTY = 0;
     this->INIT_LINE_LENGTH = 20;
     this->scale = 1;
+    this->yscale = 1;
     this->root =0;
+
 }
 void MeganData::setOffset(double startX, double startY) {
     this->STARTX = startX;
@@ -24,6 +26,13 @@ void MeganData::setScale(double scale) {
     this->scale = scale;
 }
 
+
+void MeganData::setScaleY(double yscale) {
+
+    this->yscale = yscale;
+}
+
+
 void MeganData::setDeltaY(double deltaY) {
     this->deltaY = deltaY;
 }
@@ -33,6 +42,7 @@ void MeganData::setData(const QString &data) {
 }
 
 void MeganData::printTree(TREENODE *root, int i) {
+    if(root==0) return;
 
     QString space;
     for(unsigned int j =0; j < i; j++) space.append(' ');
@@ -57,6 +67,8 @@ void MeganData::createTreeView() {
 
 void MeganData::_createTaxonItems(TREENODE *node, QHash<unsigned int, QList< GraphicsTaxonItem *> > &taxons,  GraphicsTaxonItem *parentItem, GraphicsItemsCollection *itemCreator, double deltaX, double deltaY, QBrush &taxonBrush, QPen &taxonPen) {
 
+    if(node==0) return;
+
     GraphicsTaxonItem *item = itemCreator->getTaxonNode(node);
 
     item->setBrush(taxonBrush);
@@ -73,6 +85,8 @@ void MeganData::_createTaxonItems(TREENODE *node, QHash<unsigned int, QList< Gra
 }
 
 void MeganData::setLines(GraphicsConnectorLines *lines, LineStyle style, GraphicsTaxonItem *a, GraphicsTaxonItem *b) {
+    if(lines==0 || a==0) return;
+
     if( style == STRAIGHT) {
         lines->segments[0]->setLine(a->rect().left() + a->radius/2, a->rect().top() + a->radius/2, b->rect().left()+ b->radius/2, b->rect().top() + b->radius/2);
     }
@@ -85,6 +99,8 @@ void MeganData::setLines(GraphicsConnectorLines *lines, LineStyle style, Graphic
 }
 
 void MeganData::setStyleVisible(GraphicsTaxonItem *taxon, LineStyle style,  bool visible, unsigned int currDepth, unsigned int maxDepth) {
+
+    if(taxon==0) return;
     if( currDepth <= maxDepth && visible)
         taxon->inscene = true;
     else {
@@ -105,6 +121,9 @@ void MeganData::setStyleVisible(GraphicsTaxonItem *taxon, LineStyle style,  bool
 }
 
 void MeganData::synchronizeConnectingLines(GraphicsTaxonItem *taxon, unsigned int currDepth, unsigned int maxDepth, LineStyle style) {
+
+    if(taxon==0) return;
+
     if(currDepth > maxDepth ) {
         return;
     }
@@ -116,6 +135,8 @@ void MeganData::synchronizeConnectingLines(GraphicsTaxonItem *taxon, unsigned in
 }
 
 void MeganData::synchronizeTaxonNames(GraphicsTaxonItem *taxon, unsigned int currDepth, unsigned int maxDepth) {
+    if(taxon==0) return;
+
     if(currDepth > maxDepth ) {
         return;
     }
@@ -128,10 +149,14 @@ void MeganData::synchronizeTaxonNames(GraphicsTaxonItem *taxon, unsigned int cur
 
 
 void MeganData::synchronizeNodeAndTaxonItems(TREENODE *node, GraphicsTaxonItem *taxon, unsigned int currDepth, unsigned int maxDepth) {
+    if(node==0) return;
+
     if(currDepth > maxDepth ) {
         return;
     }
-    taxon->setRect(this->STARTX + (node->depth*this->deltaX -  taxon->radius/2)*this->scale, (this->STARTY + this->deltaY*(node->Ydown + node->Yup)/2 - taxon->radius/2)*this->scale, taxon->radius, taxon->radius);
+
+
+    taxon->setRect(this->STARTX + (node->depth*this->deltaX -  taxon->radius/2)*this->scale, (this->STARTY + this->deltaY*(node->Ydown + node->Yup)/2 - taxon->radius/2)*this->scale*this->yscale, taxon->radius, taxon->radius);
 
     for(unsigned int i=0; i < node->children.size(); i++) {
         synchronizeNodeAndTaxonItems(node->children[i], taxon->Children[i], currDepth + 1, maxDepth);
@@ -158,6 +183,7 @@ void MeganData::createConnectingLines(GraphicsTaxonItem *pitem, GraphicsItemsCol
 
 
 void MeganData::createTaxonNames(GraphicsTaxonItem *pitem, GraphicsItemsCollection* itemCreator, QPen namePen){
+    if(pitem==0) return;
     GraphicsNameItem *name;
     name = itemCreator->getNameNode(pitem);
     pitem->Name = name;
@@ -188,6 +214,8 @@ void MeganData::computeCoordinates(double deltaX, double deltaY) {
 }
 
 double MeganData::_spanAtDepth(TREENODE *node, unsigned int depth, double *Yup, double *Ydown) {
+    if(node==0) return 0;
+
     if( node->depth== depth) {
         if( *Yup  <   (node->Ydown+node->Yup)/2 ) *Yup = (node->Ydown+node->Yup)/2;
         if( *Ydown > (node->Ydown+node->Yup)/2 ) *Ydown =  (node->Ydown+node->Yup)/2;
@@ -213,6 +241,9 @@ void MeganData::setConnectorPen(QPen *qpen) {
 
 
 void MeganData::unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned int currDepth, unsigned int maxDepth, double scalefactor) {
+
+    if(taxon==0 || view==0) return;
+
     if(currDepth > maxDepth ) {
         return;
     }
@@ -234,14 +265,10 @@ void MeganData::unscale(GraphicsTaxonItem *taxon, QGraphicsView *view, unsigned 
 
 
     QRectF rect = taxon->rect();
-
     double  height = rect.height();
-
-   // rect.setHeight(rect.height()*scalefactor);
     rect.setHeight(height*scalefactor);
     taxon->setRect(rect);
     taxon->moveBy(0,0.5*height*(1 - scalefactor));
-   // taxon->scale(1, 1/view->transform().dy());
 
 }
 
@@ -258,11 +285,14 @@ double MeganData::spanAtDepth(unsigned int depth) {
 
 
 void MeganData::adjustDepth(TREENODE *node, unsigned int maxdepth) {
+    if(node==0) return;
     _adjustDepth(root, 0);
 }
 
 
 void MeganData::_adjustDepth(TREENODE *node,unsigned int depth) {
+    if(node==0) return;
+
     node->depth = depth;
     foreach(TREENODE *child, node->children) {
         _adjustDepth(child, depth +1  );
@@ -270,6 +300,7 @@ void MeganData::_adjustDepth(TREENODE *node,unsigned int depth) {
 }
 
 unsigned int MeganData::treeTraversal(TREENODE *node, int & leafcounter, unsigned int currDepth, unsigned int maxDepth) {
+    if( node==0) return 0;
 
     if(node->children.size()==0) {
         node->depth =0;
@@ -314,6 +345,32 @@ QRect MeganData::getGeometry(unsigned int depth) {
     return rect;
 }
 
+//get the top most vertically up ordinate of Y
+double MeganData::getUpperBoundY() {
+    if(this->root==0) return 0;
+    return this->root->Yup;
+}
+
+double MeganData::getLowerBoundY() {
+    if(this->root==0) return 0;
+    return this->root->Ydown;
+
+}
+
+
+//check for correctness
+double MeganData::getLeftBoundX() {
+    if(this->root==0) return 0;
+    return this->STARTX;
+}
+//check for correctness
+double MeganData::getRightBoundX() {
+    if(this->root==0) return 0;
+    return this->root->depth;
+}
+
+
+
 void MeganData::computeBounds(unsigned int maxDepth) {
     int leafcounter =0;
     this->_computeBounds(this->root, leafcounter, 0, maxDepth);
@@ -321,6 +378,7 @@ void MeganData::computeBounds(unsigned int maxDepth) {
 
 void MeganData::_computeBounds(TREENODE *node, int & leafcounter, unsigned int currDepth, unsigned int maxDepth) {
 
+    if( node ==0 ) return;
     if(node->children.size()==0 || currDepth == maxDepth) {
         node->Yup = leafcounter;
         node->Ydown = node->Yup;
@@ -368,6 +426,8 @@ void MeganData::tokenize(QStringList &tokens) {
 }
 
 void MeganData::addAttributes(TREENODE *p, QString str) {
+    if( p==0) return;
+
     QStringList tempTokens;
     tempTokens << str.split(QChar('}')) ;
     if( tempTokens.size() < 2 )
@@ -443,6 +503,8 @@ QStringList MeganData::splitByDelimiter(const QStringList &strlist, const QChar 
 
 
 void MeganData::_deleteNode(TREENODE *t) {
+    if( t==0) return;
+
     QList<TREENODE *>::iterator it;
     for(it = t->children.begin(); it!= t->children.end(); it++) {
         this->_deleteNode(*it);

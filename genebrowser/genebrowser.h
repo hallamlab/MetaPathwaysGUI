@@ -26,9 +26,10 @@ public:
     void setQGraphicsViewer(QGraphicsView *view);
     void setData(GeneBrowserData &data);
     void drawGenomeBrowser();
+    void sanitizeORFData() ;
    // void addORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen);
 
-    void eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event);
     void wheelEvent(QWheelEvent* event);
 
     static bool sortRankBeginPair(const RANK_BEGIN_PAIR &a, const RANK_BEGIN_PAIR &b);
@@ -36,7 +37,7 @@ private:
     unsigned int computeORFLevels(QList<ORFData> &orfs, STRAND strand);
     QGraphicsView *view;
     QGraphicsScene *gscene;
-    unsigned int XSIZE, YSIZE;
+    double  XSIZE, YSIZE;
     GeneBrowserData data;
     double scale, basePairToPixelRatio;
     double xstart, ystart;

@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="4">
+   <item row="2" column="13">
     <widget class="QPushButton" name="zoomIn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -33,36 +33,21 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QSpinBox" name="spinBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="value">
-      <number>5</number>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="6">
-    <widget class="QGraphicsView" name="graphicsView"/>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="2" column="12">
+    <widget class="QPushButton" name="exportToMegan">
      <property name="text">
-      <string>Tree depth :</string>
+      <string>Export to Megan</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="5">
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="LineType">
+     <property name="text">
+      <string>Line style</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="14">
     <widget class="QPushButton" name="zoomOut">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -81,10 +66,32 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="LineType">
+   <item row="0" column="0" colspan="15">
+    <widget class="QGraphicsView" name="graphicsView"/>
+   </item>
+   <item row="2" column="11">
+    <widget class="QSpinBox" name="spinBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="10">
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>Line style</string>
+      <string>Tree depth :</string>
      </property>
     </widget>
    </item>

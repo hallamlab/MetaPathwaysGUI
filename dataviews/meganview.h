@@ -3,8 +3,8 @@
 
 #include <QWidget>
 #include <QGraphicsView>
-#include "dataviews/megandata.h"
-#include "genebrowser/graphicsitemscollection.h"
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QHash>
 #include <QGraphicsLineItem>
 #include <QPushButton>
@@ -12,6 +12,13 @@
 #include <QSpinBox>
 #include <QCheckBox>
 
+
+#include "dataviews/megandata.h"
+#include "genebrowser/graphicsitemscollection.h"
+#include "datamodel/samplercmanager.h"
+#include "rundata.h"
+#include "popupviews/meganexportbox.h"
+#include "displaywidgets/progressview.h"
 namespace Ui {
 class MeganBrowser;
 }
@@ -41,10 +48,12 @@ private slots:
     void zoomOut();
     void setDepth(int depth);
     void switchStyle(bool value);
+    void exportMeganFile();
 
 private:
     void _deleteGraphicsItems(GraphicsTaxonItem *taxon);
     void _addInitLine();
+    void adjustScaleY() ;
     void addItemsToScene(GraphicsTaxonItem *pitem, QGraphicsScene *_scene, unsigned int currDepth);
 
     bool eventFilter(QObject *object, QEvent *event);
@@ -72,7 +81,7 @@ private:
     double zoomScale, yscale;
     double depth;
     LineStyle lineStyle;
-    QPushButton *zoomInButton, *zoomOutButton;
+    QPushButton *zoomInButton, *zoomOutButton, *exportToMegan;
 
     QPen *connectorPen, *taxonPen, *namePen;
     QBrush *taxonBrush;

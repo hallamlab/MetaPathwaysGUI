@@ -122,7 +122,7 @@ void ProgressDialog::readStepsLog(){
     colorRunConfig(statusHash);
     updateProgressBar();
 
-    qDebug() << _stepsCompletedSample << _totalStepsPerSample;
+//    qDebug() << _stepsCompletedSample << _totalStepsPerSample;
 
     if( myProcess !=0 ) {
        QByteArray read = myProcess->readAll();
@@ -308,7 +308,10 @@ void ProgressDialog::initProcess(){
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
     env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
-    //qDebug() << program << arguments << myProcess;
+    qDebug() <<  program <<" " << arguments.join(" ");
+
+   // qDebug() << program << arguments << myProcess;
+    qDebug() << env.toStringList();
 
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);

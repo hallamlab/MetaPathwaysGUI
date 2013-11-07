@@ -22,7 +22,25 @@ RunData* RunData::getRunData(){
         runData->initVartoNULL();
         runData->nADB = 0;
         runData->nRRNADB = 0;
+
+        runData->system = "UNKNOWN";
+
+
+
+#ifdef Q_OS_MAC64
+        runData->system = "mac";
+#endif
+
+#ifdef Q_OS_LINUX
+        runData->system = "linux";
+#endif
+
+
+#ifdef  Q_OS_WIN
+        runData->system = "win";
+#endif
     }
+
     return runData;
 }
 
@@ -101,13 +119,21 @@ void RunData::setDatabasesPath(QString databasePath) {
     this->CONFIG["REFDBS"] = databasePath;
 }
 
+
+
 /*
  * Should setup settings.
  * Usually this lives in a template_config file. So if it doesn't exist, we'll have to create it.
  */
+
+
 void RunData::setupDefaultConfig(){
 
     QRegExp pythonPath("PYTHON_EXECUTABLE");
+    QRegExp perlPath("PERL_EXECUTABLE");
+    QRegExp metaPathwaysPath("METAPATHWAYS_PATH");
+    QRegExp refDBSPath("REFDBS");
+    QRegExp systemType("SYSTEM");
 
     bool reWriteConfig = false;
     QFileInfo config_file( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
@@ -121,6 +147,12 @@ void RunData::setupDefaultConfig(){
             reWriteConfig = true;
         if(this->CONFIG["REFDBS"]!=config["REFDBS"] )
             reWriteConfig = true;
+
+        if(this->CONFIG["EXECUTABLES_DIR"] != "executables/SYSTEM/bit64/") {
+            reWriteConfig = true;
+        }
+
+
     }
     else {
         reWriteConfig = true;
@@ -141,6 +173,18 @@ void RunData::setupDefaultConfig(){
                     QString line = in.readLine().trimmed();
                     if( line.indexOf(pythonPath) != -1) {
                         out << "PYTHON_EXECUTABLE" << "  " << this->CONFIG["PYTHON_EXECUTABLE"] <<"\n";
+                    }
+                    else if( line.indexOf(perlPath) != -1) {
+                        out << "PERL_EXECUTABLE" << "  " <<  this->CONFIG["PERL_EXECUTABLE"] <<"\n";
+                    }
+                    else if( line.indexOf(metaPathwaysPath) != -1) {
+                        out << "METAPATHWAYS_PATH" << "  " <<  this->CONFIG["METAPATHWAYS_PATH"] <<"\n";
+                    }
+                    else if( line.indexOf(refDBSPath) != -1) {
+                        out << "REFDBS" << "  " <<  this->CONFIG["REFDBS"] <<"\n";
+                    }
+                    else if( line.indexOf(systemType) != -1) {
+                        out << line.replace( QRegExp("SYSTEM"), this->getSystem()) << "\n";
                     }
                     else
                         out << line + "\n";
@@ -279,6 +323,53 @@ void RunData::setFileList(QStringList files) {
 }
 
 QStringList RunData::getFileList(){
+    this->loadInputFiles();
     return this->files;
 
+}
+
+
+
+void RunData::loadInputFiles(){
+    QDir currentDir(this->getParams()["fileInput"]);
+    QString fileType = this->getParams()["INPUT:format"];
+
+    if( !currentDir.exists() ) return;
+
+    currentDir.setFilter(QDir::Files);
+    QStringList entries = currentDir.entryList();
+
+    QList<QRegExp> regList;
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+
+    QStringList filesDetected;
+    for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+    {
+        QString temp = *entry;
+        QStringList file = temp.split(".");
+
+        if (fileType == "fasta"){
+            foreach(QRegExp reg, regList ) {
+               if(temp.indexOf(reg,0) > -1 ) {
+                   filesDetected.append( temp.remove(reg).replace('.','_') );
+                   break;
+               }
+            }
+        }
+        else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
+            if (file.last() == "gbk"){
+                filesDetected.append(file.first());
+            }
+        }
+        else if (fileType == "gff-annotated" || fileType == "gff-unannotated"){
+            if (file.last() == "gff"){
+                filesDetected.append(file.first());
+            }
+        }
+    }
+    this->setFileList(filesDetected);
+}
+
+QString RunData::getSystem() {
+    return this->system;
 }

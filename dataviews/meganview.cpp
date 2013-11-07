@@ -10,6 +10,7 @@ MeganView::MeganView(QWidget *parent):
 //    this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     graphicsView = this->findChild<QGraphicsView *>("graphicsView");
+    exportToMegan = this->findChild<QPushButton *>("exportToMegan");
     zoomInButton = this->findChild<QPushButton *>("zoomIn");
     zoomOutButton = this->findChild<QPushButton *>("zoomOut");
     spinBox = this->findChild<QSpinBox *>("spinBox");
@@ -34,7 +35,7 @@ MeganView::MeganView(QWidget *parent):
     this->INIT_LINE_LENGTH = 20;
     this->zoomScale = 1;
     this->depth = 3;
-    this->yscale=1;
+    this->yscale=0.6;
     this->meganData = 0;
 
     if(zoomInButton) {
@@ -45,15 +46,18 @@ MeganView::MeganView(QWidget *parent):
         connect(lineType, SIGNAL(toggled(bool)), this, SLOT(switchStyle(bool)) );
     }
 
-    graphicsView->setGeometry(0,0,1000,1000);
+    scene = new QGraphicsScene;
 
-    scene = new QGraphicsScene(0, 0, 1000, 100);
     graphicsView->setScene(scene);
 
     qDebug() << graphicsView->x() << "  " << graphicsView->y();
 
     connect(spinBox,SIGNAL(valueChanged(int)),this,SLOT(setDepth(int)));
-    this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    connect(exportToMegan, SIGNAL(clicked()), this, SLOT(exportMeganFile()));
+
+
+    this->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+   //  this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     this->repaint();
 
 }
@@ -96,6 +100,7 @@ void MeganView::setDataFromFile(const QString &fileName) {
       QFile file(fileName);
       if(file.open(QIODevice::ReadOnly)) {
           meganData = new MeganData;
+          meganData->setDeltaY(this->deltaY);
           meganData->setConnectorPen(this->connectorPen);
           QTextStream in(&file);
           QString  data = in.readAll();
@@ -173,8 +178,27 @@ void MeganView::_addInitLine() {
     //taxons[0][0]->Lines.append(line);
 }
 
+
+void MeganView::adjustScaleY() {
+    /*
+    qDebug() << "viewport " << graphicsView->viewport()->geometry();
+    qDebug() << "megan view size " << graphicsView->size();
+    qDebug() << "size of the view " << this->size();
+    */
+    double yspan =  meganData->getLowerBoundY() - meganData->getUpperBoundY();
+    this->yscale = ((double)this->size().height())/(yspan*this->deltaY);
+    meganData->setScaleY(this->yscale);
+    /*
+    qDebug() << this->yscale;
+    qDebug() << "Ysapn " << yspan*this->deltaY;
+    qDebug() << "YSpan " << this->size().height();
+    */
+}
+
+
 void MeganView::computePositions(){
     meganData->computeBounds(this->depth );
+    this->adjustScaleY();
 
     meganData->synchronizeNodeAndTaxonItems(meganData->getRoot(),taxons[0][0], 0 ,this->depth);
     meganData->synchronizeConnectingLines(taxons[0][0], 0,  this->depth, this->lineStyle);
@@ -235,6 +259,14 @@ void MeganView::switchStyle(bool value) {
 
 void MeganView::setStyleVisible( bool visible) {
     meganData->setStyleVisible(taxons[0][0], this->lineStyle, visible, 0, this->depth);
+}
+
+
+
+void MeganView::exportMeganFile() {
+
+    MeganExportBox *meganExportBox = new MeganExportBox();
+
 }
 
 bool MeganView::eventFilter(QObject *object, QEvent *event){

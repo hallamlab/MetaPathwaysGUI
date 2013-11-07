@@ -66,6 +66,12 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case ORFMETACYC:
             path =OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_metacyc_table.txt";
             break;
+         case MEGANLASTFILE:
+            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/" + sampleName + ".refseq.LASTout";
+            break;
+         case MEGANBLASTFILE:
+            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/" + sampleName + ".refseq.BLASTout";
+            break;
          default:
             path = "";
             break;

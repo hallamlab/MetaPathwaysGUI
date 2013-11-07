@@ -33,6 +33,10 @@ TableData::TableData(  QWidget *parent) :
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->hide();
 
+    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+
+
     this->exportBox = new ExportBox(this);
     this->exportBox->hide();
     this->p =0;
@@ -95,6 +99,7 @@ void TableData::createGeneViewData(QTableWidgetItem *item) {
     SequenceData s;
     ORFData orf;
     s.length = 0;
+    s.name = key;
 
     foreach(ROW *row, rows) {
 

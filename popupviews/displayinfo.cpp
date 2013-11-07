@@ -69,7 +69,12 @@ void DisplayInfo::receiveSequenceData( QTableWidgetItem *item, GeneBrowserData g
 
 void DisplayInfo::openGenomeView() {
 
+
+    //QScrollArea *area = new QScrollArea;
+
     GenomeView *gv = new GenomeView;
+  //  area->setWidget(gv);
+   // area->show();
     gv->showData(this->gbdata);
     gv->show();
 //    t->setPopupListener(gv);

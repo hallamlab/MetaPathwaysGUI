@@ -18,10 +18,6 @@ void ToolBarQLabel::slotClicked( SIGNALTYPE type)
     qDebug()<<"Clicked " << this->type;
 }
 
-
-
-
-
 int HTabWidget::getWidth() {
 
     return this->_width;
@@ -40,9 +36,7 @@ HTabWidget::HTabWidget(QString text, QString imageFile) {
     lab1->setAlignment(Qt::AlignVCenter);
     lab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-
     connect( lab1, SIGNAL( clicked(SIGNALTYPE) ), this, SLOT( slotClicked(SIGNALTYPE) ) );
-
     layout->addWidget(lab1);
 
     ToolBarQLabel* lab2 = new ToolBarQLabel(text, ACTIVE);

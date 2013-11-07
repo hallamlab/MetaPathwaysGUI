@@ -9,6 +9,7 @@
 #include "utilities.h"
 #include "ProgressDialog.h"
 #include "welcome.h"
+#include "grid/gridprogress.h"
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/mqtoolbar.h"
@@ -59,6 +60,7 @@ private slots:
     void displayResults();
     void displayStages();
     void displayParams();
+    void displayGridProgress();
 
 private:
     void showSetupError(QString warningStr);
@@ -75,6 +77,8 @@ private:
     Welcome* welcomeWindow;
     RunConfig* stages;
     SettingsTab* settings;
+    GridProgress* gridProgress;
+
 
     QScrollArea* stageScroll;
     QScrollArea* settingsScroll;

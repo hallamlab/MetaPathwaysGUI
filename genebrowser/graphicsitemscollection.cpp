@@ -47,6 +47,8 @@ void  GraphicsNotchedLine::insertMarkers(double scale) {
     hline = GraphicsItemsCollection::getLineShape(lineSize);
     this->addToGroup(hline);
 
+
+    /*
     MARKER marker;
     double deltax;
     for(unsigned int i=0; i*adjNomInterval < this->params.nomWidth; i++) {
@@ -63,7 +65,7 @@ void  GraphicsNotchedLine::insertMarkers(double scale) {
         this->addToGroup(marker.notch);
         this->addToGroup(marker.text);
         this->addMarker(marker);
-    }
+    }*/
 
 }
 
@@ -194,18 +196,29 @@ GraphicsGeneItems *GraphicsItemsCollection::getORFDiagrams(QList<ORFData> &orfs,
 
 QGraphicsPolygonItem *GraphicsItemsCollection::getGeneShape(GENEPROPERTY &gene, STRAND strand) {
     QPolygonF dim;
-    if( strand == FORWARD)
-    dim << QPointF(gene.x, gene.y)\
-        << QPointF(gene.x + gene.width-gene.tipLen, gene.y)\
-        << QPointF(gene.x + gene.width, gene.y + gene.height/2)\
-        << QPointF(gene.x+ gene.width-gene.tipLen, gene.y + gene.height)\
-        << QPointF(gene.x, gene.y + gene.height)<< QPointF(gene.x, gene.y) ;
+    if( strand == FORWARD) {
+        if( gene.width > gene.tipLen)
+            dim << QPointF(gene.x, gene.y)\
+                << QPointF(gene.x + gene.width-gene.tipLen, gene.y)\
+                << QPointF(gene.x + gene.width, gene.y + gene.height/2)\
+                << QPointF(gene.x+ gene.width-gene.tipLen, gene.y + gene.height)\
+                << QPointF(gene.x, gene.y + gene.height)<< QPointF(gene.x, gene.y) ;
+        else
+            dim << QPointF(gene.x, gene.y)\
+                << QPointF(gene.x + gene.width, gene.y + gene.height/2)\
+                << QPointF(gene.x, gene.y + gene.height)<< QPointF(gene.x, gene.y) ;
+    }
     else
-        dim << QPointF(gene.x, gene.y + gene.height/2)\
-            << QPointF(gene.x+gene.tipLen, gene.y)\
-            << QPointF(gene.x + gene.width, gene.y)\
-            << QPointF(gene.x + gene.width, gene.y + gene.height)\
-            << QPointF(gene.x  + gene.tipLen, gene.y + gene.height);
+        if( gene.width > gene.tipLen)
+            dim << QPointF(gene.x, gene.y + gene.height/2)\
+                << QPointF(gene.x+gene.tipLen, gene.y)\
+                << QPointF(gene.x + gene.width, gene.y)\
+                << QPointF(gene.x + gene.width, gene.y + gene.height)\
+                << QPointF(gene.x  + gene.tipLen, gene.y + gene.height);
+        else
+            dim << QPointF(gene.x, gene.y + gene.height/2)\
+                << QPointF(gene.x + gene.width, gene.y)\
+                << QPointF(gene.x  + gene.width, gene.y + gene.height);
 
     QGraphicsPolygonItem *p = new QGraphicsPolygonItem(dim);
     p->setPen( QPen(gene.color));

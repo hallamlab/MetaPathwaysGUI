@@ -26,12 +26,25 @@ GeneBrowser::GeneBrowser(QGraphicsView *view)
 
 void GeneBrowser::setQGraphicsViewer(QGraphicsView *view) {
     this->view = view;
-    XSIZE = this->view->size().width()*10000;
-    YSIZE = this->view->size().height();
+    XSIZE = 800; //this->view->size().width()*10000;
+    YSIZE = 500; //this->view->size().height();
+}
+
+void GeneBrowser::sanitizeORFData() {
+    for(unsigned int i =0; i < this->data.orfData.size(); i++) {
+        if( this->data.orfData[i].start > this->data.orfData[i].end ) {
+            unsigned int temp;
+            temp = this->data.orfData[i].start;
+            this->data.orfData[i].start = this->data.orfData[i].end;
+            this->data.orfData[i].end = temp;
+        }
+    }
 }
 
 void GeneBrowser::setData(GeneBrowserData &data) {
     this->data = data;
+
+    this->sanitizeORFData();
 }
 
 
@@ -39,16 +52,23 @@ void GeneBrowser::drawGenomeBrowser() {
 
     //if( data.seq.length > 50000) basePairToPixelRatio = 5;
    // this->XSIZE = this->data.seq.length*basePairToPixelRatio*1.05;
-    unsigned int nomInterval = pow(10, (unsigned int) log10(this->data.seq.length/100));
 
-    if( gscene==0) gscene = new QGraphicsScene(0,0,this->data.seq.length*basePairToPixelRatio*1.05 , this->YSIZE, this->view);
+    this->basePairToPixelRatio = (double)this->XSIZE/(double)this->data.seq.length;
+
+    unsigned int nomInterval = 50; //pow(10, (unsigned int) log10(this->data.seq.length/100));
+
+   // if( gscene==0) gscene = new QGraphicsScene(0,0,this->data.seq.length*basePairToPixelRatio*1.05 , this->YSIZE, this->view);
+    if( gscene==0) gscene = new QGraphicsScene(0,0,this->XSIZE*1.2, this->YSIZE*1.2, this->view);
+    view->setStyleSheet("QWidget {padding:10px; margin-left:0px;}");
+
 
     view->setScene(gscene);
 
 
+
     PENPOSITION pen;
-    pen.xstart = this->xstart;
-    pen.ystart = this->xstart;
+    pen.xstart = this->XSIZE*0.1;
+    pen.ystart = this->ystart;
 
     GraphicsItemsCollection *itemCreator  = GraphicsItemsCollection::getGraphicsItemsCollection();
 
@@ -89,6 +109,7 @@ void GeneBrowser::drawGenomeBrowser() {
 
     this->revorfs = itemCreator->getORFDiagrams(data.orfData, REVERSE, geneProp, pen);
     gscene->addItem(this->revorfs);
+
 
     this->view->setAttribute( Qt::WA_AlwaysShowToolTips);
     gscene->setSceneRect(gscene->itemsBoundingRect());
@@ -149,8 +170,9 @@ unsigned int GeneBrowser::computeORFLevels(QList<ORFData> &orfs, STRAND strand) 
     return maxLevel;
 }
 
-void  GeneBrowser::eventFilter(QObject *object, QEvent *event){
+bool GeneBrowser::eventFilter(QObject *object, QEvent *event){
     if (object==view->viewport() && event->type() == QEvent::Wheel){
+
         view->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
         // Scale the view / do the zoom
@@ -161,7 +183,13 @@ void  GeneBrowser::eventFilter(QObject *object, QEvent *event){
         } else {
             view->scale(1.0 / scaleFactor, 1.0);
         }
+
+        return true;
+    }else {
+
+         return false;
     }
+
     //return true;
 }
 

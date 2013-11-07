@@ -22,9 +22,6 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
     this->rundata = RunData::getRunData();
 
-
-
-
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     checkComparativeMode = this->findChild<QCheckBox *>("checkComparativeMode");
@@ -127,6 +124,7 @@ void ResultWindow::setVisible(int i) {
 void ResultWindow::updateFileNames(){
 
     qDebug() << this->rundata->getFileList();
+
     files = this->rundata->getFileList();
     if( files.isEmpty()) return;
 
@@ -232,10 +230,14 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
 
+
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
+
     m->clearExistingTree();
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
+
     resultTabs->addTab(m, "TAXONOMIC");
+
 
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];

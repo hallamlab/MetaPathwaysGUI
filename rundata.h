@@ -10,6 +10,9 @@
 #include <QFileInfo>
 #include "types.h"
 #include "utilities.h"
+#include <QDir>
+#include <QSysInfo>
+#include <QtGlobal>
 
 class RunData
 {
@@ -57,6 +60,8 @@ public:
     void addFileToList(QString file);
     void setFileList(QStringList files);
     QStringList getFileList();
+    void loadInputFiles();
+    QString getSystem();
 
     unsigned int getNumRRNADB();
     unsigned int getNumADB();
@@ -78,6 +83,7 @@ private:
     QStringList annotationDBS;
     QProcess *process;
     QString currentSample;
+    QString system;
 };
 
 

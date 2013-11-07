@@ -60,6 +60,7 @@ MainFrame::MainFrame(QWidget *parent) :
     welcomeWindow = 0;
     stages = 0;
     settings = 0;
+    gridProgress = 0;
 
     this->setWindowTitle("MetaPathways 2.0");
     welcomeWindow = new Welcome();
@@ -129,6 +130,7 @@ void MainFrame::addRemainingTabs() {
 
     stageScroll = new QScrollArea();
     settingsScroll = new QScrollArea();
+    gridProgress = new GridProgress();
 
     stageScroll->setWidget(stages);
     settingsScroll->setWidget(settings);
@@ -136,6 +138,7 @@ void MainFrame::addRemainingTabs() {
     stackedWidget->addWidget(settingsScroll);
     stackedWidget->addWidget(resultWindow);
     stackedWidget->addWidget(progress);
+    stackedWidget->addWidget(gridProgress);
 
     stackedWidget->setCurrentWidget(welcomeWindow);
 
@@ -146,8 +149,13 @@ void MainFrame::addRemainingTabs() {
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
+    connect(actionGridProgress, SIGNAL(triggered()), this, SLOT(displayGridProgress()));
 }
 
+void MainFrame::displayGridProgress(){
+    this->updateWidgets();
+    stackedWidget->setCurrentWidget(gridProgress);
+}
 
 void MainFrame::displayStages(){
     this->updateWidgets();
@@ -158,7 +166,6 @@ void MainFrame::displayParams(){
     this->updateWidgets();
     stackedWidget->setCurrentWidget(settingsScroll);
 }
-
 
 void MainFrame::updateWidgets(){
     if(stackedWidget->currentWidget() == settingsScroll){

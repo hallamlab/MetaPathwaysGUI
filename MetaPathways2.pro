@@ -32,6 +32,7 @@ SOURCES += main.cpp\
     grid/grid.cpp \
     grid/nonec2.cpp \
     grid/ec2grid.cpp \
+    grid/gridprogress.cpp\
     metawidget.cpp \
     dataviews/graphdata.cpp \
     dataviews/largetable.cpp \
@@ -61,7 +62,8 @@ SOURCES += main.cpp\
     displaywidgets/mqtoolbar.cpp \
     popupviews/exportsource.cpp \
     datamodel/samplercmanager.cpp \
-    displaywidgets/progressview.cpp
+    displaywidgets/progressview.cpp \
+    popupviews/meganexportbox.cpp
 
 
 
@@ -82,6 +84,7 @@ HEADERS  += \
     grid/grid.h \
     grid/nonec2.h \
     grid/ec2grid.h \
+    grid/gridprogress.h\
     metawidget.h \
     dataviews/graphdata.h \
     dataviews/largetable.h \
@@ -113,7 +116,8 @@ HEADERS  += \
     displaywidgets/mqtoolbar.h \
     popupviews/exportsource.h \
     datamodel/samplercmanager.h \
-    displaywidgets/progressview.h
+    displaywidgets/progressview.h \
+    popupviews/meganexportbox.h
 
 
 
@@ -139,7 +143,8 @@ FORMS    += \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \
     datamodel/htabledata.ui \
-    mainframe.ui
+    mainframe.ui \
+    gridprogress.ui
 
 
 RESOURCES += \

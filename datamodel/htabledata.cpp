@@ -19,6 +19,9 @@ HTableData::HTableData(QWidget *parent) :
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
 
+    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+
     HTABLEIDENTITY a;
    // order is important
     a.attrType = KEGG; a.sampleName="KEGG";
