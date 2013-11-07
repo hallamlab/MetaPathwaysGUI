@@ -31,6 +31,7 @@ public slots:
     void saveSetup();
     void cancelSetup();
     void databaseBrowse();
+    void pathologicBrowse();
     void canSave(QString a="");
 
 signals:
@@ -44,17 +45,20 @@ private:
     QString perlPath;
     QString mpPath;
     QString databasePath;
+    QString pathologicPath;
 
     QPushButton *pythonBrowseButton;
     QPushButton *perlBrowseButton;
     QPushButton *metapathwaysBrowseButton;
     QPushButton *saveButton;
     QPushButton *databaseButton;
+    QPushButton *pathologicButton;
 
     QLineEdit *perlExecTxt;
     QLineEdit *pythonExecTxt;
     QLineEdit *dbDirectoryTxt;
     QLineEdit *pathMetaPathwaysTxt;
+    QLineEdit *pathologicTxt;
 
 };
 

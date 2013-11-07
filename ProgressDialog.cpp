@@ -256,7 +256,7 @@ void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
 
-//    qDebug() << rRNArefdbs << annotationDBS;
+    qDebug() << rRNArefdbs << annotationDBS;
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){

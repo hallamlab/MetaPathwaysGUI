@@ -75,6 +75,12 @@ MainFrame::MainFrame(QWidget *parent) :
     rundata->setupDefaultConfig();
     rundata->setupDefaultParams();
 
+    // databases are agnostic to what the param file has written from a previous run
+    // so we clear the values in the hash picked up from the config file to ensure
+    // the user has to always specify a new set to go with
+    rundata->setValue("rRNA:refdbs","",_PARAMS);
+    rundata->setValue("annotation:dbs","",_PARAMS);
+
     QString warningStr;
     stackedWidget->addWidget(setupWidget);
     connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(validateSetup()));

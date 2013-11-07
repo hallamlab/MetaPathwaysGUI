@@ -15,33 +15,41 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     metapathwaysBrowseButton = this->findChild<QPushButton *>("metapathwaysBrowseButton");
     saveButton = this->findChild<QPushButton *>("saveButton");
     databaseButton = this->findChild<QPushButton *>("databaseButton");
+    pathologicButton = this->findChild<QPushButton *>("pathologicButton");
 
     pythonExecTxt = this->findChild<QLineEdit *>("pythonExecTxt");
     perlExecTxt = this->findChild<QLineEdit *>("perlExecTxt");
     dbDirectoryTxt = this->findChild<QLineEdit *>("dbDirectoryTxt");
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
+    pathologicTxt = this->findChild<QLineEdit *>("pathologicTxt");
+
 
   //  if(!MainFrame::settingsAvailable()) this->canSave();
 
     RunData *rundata = RunData::getRunData();
-
 
     if( !rundata->getConfig().isEmpty() ){
         pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
         perlExecTxt->setText(rundata->getValueFromHash("PERL_EXECUTABLE",_CONFIG));
         dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
         pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
+        qDebug() << "not empty " << rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG);
+        pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
     }
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
     connect(metapathwaysBrowseButton, SIGNAL(clicked()), this, SLOT(metapathwaysBrowse()));
     connect(databaseButton, SIGNAL(clicked()), this, SLOT(databaseBrowse()));
+    connect(pathologicButton,SIGNAL(clicked()), this, SLOT(pathologicBrowse()));
+
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSetup()));
+
     connect(pythonExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(perlExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave(QString )) );
+    connect(pathologicTxt, SIGNAL(textEdited(QString)), this, SLOT(canSave(QString)));
 
     canSave();
 
@@ -52,7 +60,8 @@ void Setup::canSave(QString a){
           !(pythonExecTxt->text().isEmpty()) \
        && !(perlExecTxt->text().isEmpty()) \
        && !(pathMetaPathwaysTxt->text().isEmpty()) \
-       && !(dbDirectoryTxt->text().isEmpty() )
+       && !(dbDirectoryTxt->text().isEmpty()
+       && !(pathologicTxt->text().isEmpty()))
     )
     {
         saveButton->setEnabled(true);
@@ -63,12 +72,19 @@ void Setup::canSave(QString a){
         if(mpPath.isEmpty())
            mpPath = pathMetaPathwaysTxt->text();
         if(databasePath.isEmpty())
-            databasePath = dbDirectoryTxt->text();
-
+           databasePath = dbDirectoryTxt->text();
+        if(pathologicPath.isEmpty())
+           pathologicPath = pathologicTxt->text();
     }
     else {
         saveButton->setEnabled(false);
     }
+}
+
+void Setup::pathologicBrowse(){
+    pathologicPath = QFileDialog::getOpenFileName(this,tr("Select Pathologic Executable"));
+    pathologicTxt->setText(pathologicPath);
+    canSave();
 }
 
 void Setup::databaseBrowse(){
@@ -126,6 +142,11 @@ void Setup::saveSetup(){
         Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG, "REFDBS", dbDirectoryTxt->text(), false, false);
     }
 
+    if( !pathologicTxt->text().isEmpty()) {
+        temp["PATHOLOGIC_EXECUTABLE"] = pathologicTxt->text();
+        Utilities::writeSettingToFile(RunData::TEMPLATE_CONFIG,"PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
+    }
+
     rundata->setConfig(temp);
     this->savePathVariables();
     emit continueFromSetup();
@@ -153,6 +174,11 @@ void Setup::loadPathVariables(){
         rundata->setValue("REFDBS", dbDirectoryTxt->text(), _CONFIG);
     }
 
+    if( settings.allKeys().contains("PATHOLOGIC_EXECUTABLE") ) {
+        pathologicTxt->setText(settings.value("PATHOLOGIC_EXECUTABLE").toString());
+        rundata->setValue("PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), _CONFIG);
+    }
+
 
 }
 
@@ -169,6 +195,10 @@ void Setup::savePathVariables(){
 
     if( !dbDirectoryTxt->text().isEmpty()) {
        settings.setValue("REFDBS",  dbDirectoryTxt->text());
+    }
+
+    if(!pathologicTxt->text().isEmpty()) {
+        settings.setValue("PATHOLOGIC_EXECUTABLE", pathologicTxt->text());
     }
 }
 

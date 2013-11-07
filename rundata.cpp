@@ -134,11 +134,13 @@ void RunData::setupDefaultConfig(){
     QRegExp metaPathwaysPath("METAPATHWAYS_PATH");
     QRegExp refDBSPath("REFDBS");
     QRegExp systemType("SYSTEM");
+    QRegExp pathLogicExecPath("PATHOLOGIC_EXECUTABLE");
 
     bool reWriteConfig = false;
     QFileInfo config_file( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
     if (config_file.exists()){
         QHash<QString, QString> config = Utilities::parseFile(config_file.filePath());
+
         if(this->CONFIG["METAPATHWAYS_PATH"]!=config["METAPATHWAYS_PATH"] )
             reWriteConfig = true;
         if(this->CONFIG["PYTHON_EXECUTABLE"]!=config["PYTHON_EXECUTABLE"] )
@@ -147,17 +149,15 @@ void RunData::setupDefaultConfig(){
             reWriteConfig = true;
         if(this->CONFIG["REFDBS"]!=config["REFDBS"] )
             reWriteConfig = true;
-
+        if(this->CONFIG["PATHOLOGIC_EXECUTABLE"]!=config["PATHOLOGIC_EXECUTABLE"] )
+            reWriteConfig = true;
         if(this->CONFIG["EXECUTABLES_DIR"] != "executables/SYSTEM/bit64/") {
             reWriteConfig = true;
         }
-
-
     }
     else {
         reWriteConfig = true;
     }
-
     if( reWriteConfig ){
         QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG);
@@ -182,6 +182,9 @@ void RunData::setupDefaultConfig(){
                     }
                     else if( line.indexOf(refDBSPath) != -1) {
                         out << "REFDBS" << "  " <<  this->CONFIG["REFDBS"] <<"\n";
+                    }
+                    else if( line.indexOf(pathLogicExecPath ) != -1) {
+                        out << "PATHOLOGIC_EXECUTABLE" << "  " <<  this->CONFIG["PATHOLOGIC_EXECUTABLE"] <<"\n";
                     }
                     else if( line.indexOf(systemType) != -1) {
                         out << line.replace( QRegExp("SYSTEM"), this->getSystem()) << "\n";
