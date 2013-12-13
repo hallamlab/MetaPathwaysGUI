@@ -32,7 +32,7 @@ public slots:
     void cancelSetup();
     void databaseBrowse();
     void pathologicBrowse();
-    void canSave(QString a="");
+    void canSave();
 
 signals:
     void continueFromSetup();

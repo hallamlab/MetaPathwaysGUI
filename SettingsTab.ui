@@ -40,16 +40,6 @@
      </property>
     </widget>
    </item>
-   <item row="14" column="3">
-    <widget class="QSpinBox" name="annotationMIN_SCORE">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>10000</number>
-     </property>
-    </widget>
-   </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label">
      <property name="font">
@@ -133,29 +123,6 @@
      </property>
     </widget>
    </item>
-   <item row="15" column="3">
-    <widget class="QTextEdit" name="annotationMAX_EVALUE">
-     <property name="minimumSize">
-      <size>
-       <width>139</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-   </item>
    <item row="14" column="0" colspan="2">
     <widget class="QLabel" name="label_12">
      <property name="text">
@@ -205,49 +172,6 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="12" column="3">
-    <widget class="QComboBox" name="annotationALGORITHM">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-     <property name="maxCount">
-      <number>10</number>
-     </property>
-     <item>
-      <property name="text">
-       <string>blast</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>last</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="21" column="3">
-    <widget class="QTextEdit" name="rrnaMAX_EVALUE">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-    </widget>
-   </item>
    <item row="5" column="2">
     <widget class="QLabel" name="label_5">
      <property name="sizePolicy">
@@ -272,22 +196,6 @@ p, li { white-space: pre-wrap; }
     <widget class="QLabel" name="label_17">
      <property name="text">
       <string>Maximum EValue</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="3">
-    <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
-     <property name="minimum">
-      <double>0.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.010000000000000</double>
-     </property>
-     <property name="value">
-      <double>0.010000000000000</double>
      </property>
     </widget>
    </item>
@@ -426,25 +334,6 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="20" column="3">
-    <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
-     <property name="suffix">
-      <string>%</string>
-     </property>
-     <property name="decimals">
-      <number>2</number>
-     </property>
-     <property name="minimum">
-      <double>0.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>1.000000000000000</double>
-     </property>
-     <property name="value">
-      <double>30.000000000000000</double>
-     </property>
-    </widget>
-   </item>
    <item row="13" column="8">
     <widget class="QSpinBox" name="annotationMAX_HITS">
      <property name="minimum">
@@ -533,6 +422,117 @@ p, li { white-space: pre-wrap; }
     <widget class="QLabel" name="label_21">
      <property name="text">
       <string>Taxonomic Pruning</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <widget class="QComboBox" name="annotationALGORITHM">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>blast</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>last</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="13" column="2">
+    <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="2">
+    <widget class="QSpinBox" name="annotationMIN_SCORE">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="2">
+    <widget class="QTextEdit" name="annotationMAX_EVALUE">
+     <property name="minimumSize">
+      <size>
+       <width>139</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="2">
+    <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
+     <property name="suffix">
+      <string>%</string>
+     </property>
+     <property name="decimals">
+      <number>2</number>
+     </property>
+     <property name="minimum">
+      <double>0.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>30.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="21" column="2">
+    <widget class="QTextEdit" name="rrnaMAX_EVALUE">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>

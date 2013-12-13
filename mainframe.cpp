@@ -3,16 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include <QSettings>
-
 #include <QStylePainter>
-
-const QString MainFrame::TEMPLATE_PARAM = "template_param.txt";
-const QString MainFrame::DEFAULT_TEMPLATE_PARAM = "default_template_param.txt";
-const QString MainFrame::TEMPLATE_CONFIG = "template_config.txt";
-const QString MainFrame::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
 #include <QtGui>
-
-
 
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),
@@ -24,7 +16,7 @@ MainFrame::MainFrame(QWidget *parent) :
     actionSetup = this->findChild<QAction *>("actionSetup");
     actionRunSettings = this->findChild<QAction *>("actionRunSettings");
     actionProgress = this->findChild<QAction *>("actionRun");
-    actionGridProgress = this->findChild<QAction *>("actionGridProgress");
+    //actionGridProgress = this->findChild<QAction *>("actionGridProgress");
     actionResults = this->findChild<QAction *>("actionResults");
     actionRunParams = this->findChild<QAction *>("actionRunParams");
     actionRunStages = this->findChild<QAction *>("actionStages");
@@ -32,19 +24,7 @@ MainFrame::MainFrame(QWidget *parent) :
     toolBar = this->findChild<QToolBar *>("toolBar");
     leftToolBar = this->findChild<QToolBar *>("leftToolBar");
 
-    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
-    leftToolBar->setGeometry(0, toolBar->height(),4,10);
-    leftToolBar->setLayoutDirection(Qt::LeftToRight);
-    leftToolBar->setOrientation(Qt::Vertical);
-    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    leftToolBar->setMinimumSize(QSize(0,0));
- //   leftToolBar->setMaximumSize(QSize(100000,100000));
-    leftToolBar->setBaseSize(QSize(0,0));
-    leftToolBar->setSizeIncrement(0,0);
-    leftToolBar->setFloatable(true);
-    leftToolBar->setMovable(true);
-    leftToolBar->setAutoFillBackground(false);
-    leftToolBar->setParent(this);
+    setupLeftToolBar();
 
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
@@ -68,6 +48,9 @@ MainFrame::MainFrame(QWidget *parent) :
 
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
+
+//    QSettings settings("HallamLab", "MetaPathways");
+//    settings.clear();
 
     setupWidget = new Setup();
     setupWidget->loadPathVariables();
@@ -93,6 +76,21 @@ MainFrame::MainFrame(QWidget *parent) :
 
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
+}
+
+void MainFrame::setupLeftToolBar(){
+    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
+    leftToolBar->setGeometry(0, toolBar->height(),4,10);
+    leftToolBar->setLayoutDirection(Qt::LeftToRight);
+    leftToolBar->setOrientation(Qt::Vertical);
+    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    leftToolBar->setMinimumSize(QSize(0,0));
+    leftToolBar->setBaseSize(QSize(0,0));
+    leftToolBar->setSizeIncrement(0,0);
+    leftToolBar->setFloatable(true);
+    leftToolBar->setMovable(true);
+    leftToolBar->setAutoFillBackground(false);
+    leftToolBar->setParent(this);
 }
 
 void MainFrame::showSetupError(QString warningStr) {
@@ -122,7 +120,7 @@ void MainFrame::validateSetup() {
 
 void MainFrame::greyTabs(bool enabled){
     actionProgress->setEnabled(enabled);
-    actionGridProgress->setEnabled(enabled);
+//    actionGridProgress->setEnabled(enabled);
     actionResults->setEnabled(enabled);
     actionRunParams->setEnabled(enabled);
     actionRunStages->setEnabled(enabled);
@@ -155,7 +153,7 @@ void MainFrame::addRemainingTabs() {
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
-    connect(actionGridProgress, SIGNAL(triggered()), this, SLOT(displayGridProgress()));
+//    connect(actionGridProgress, SIGNAL(triggered()), this, SLOT(displayGridProgress()));
 }
 
 void MainFrame::displayGridProgress(){
@@ -267,10 +265,10 @@ void MainFrame::updateWidgets(){
             //write to file the changes
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
 
-            //disable all buttons now for the run
-            yesRadioButton->setEnabled(false);
-            redoRadioButton->setEnabled(false);
-            skipRadioButton->setEnabled(false);
+//            //disable all buttons now for the run
+//            yesRadioButton->setEnabled(false);
+//            redoRadioButton->setEnabled(false);
+//            skipRadioButton->setEnabled(false);
         }
 
         //write file format
@@ -279,8 +277,8 @@ void MainFrame::updateWidgets(){
         rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
 
         //save file selected
-        rundata->setValue("fileInput", stages->filesSelected->text(),_PARAMS);
-        rundata->setValue("folderOutput", stages->folderSelected->text(),_PARAMS);
+        rundata->setValue("fileInput", stages->selectedFiles,_PARAMS);
+        rundata->setValue("folderOutput", stages->selectedFolder,_PARAMS);
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
 //        if (stages->gridBlastChoice->isChecked() && MainFrame::PARAMS.value("metapaths_steps:BLAST_REFDB")!="skip"){

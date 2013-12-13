@@ -68,6 +68,7 @@ private:
     void updateWidgets();
     void executionPrep();
     void greyTabs(bool enabled);
+    void setupLeftToolBar();
 
     Ui::MainFrame *ui;
     ParentWidget *parentWidget;

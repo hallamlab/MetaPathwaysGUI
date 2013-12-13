@@ -26,7 +26,6 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     summaryTable = this->findChild<QTableWidget *>("summaryTable");
     summaryLabel = this->findChild<QLabel *>("summaryLabel");
     progressBar = this->findChild<QProgressBar *>("progressBar");
-    globalProgressBar = this->findChild<QProgressBar *>("globalProgressBar");
     progressLabel = this->findChild<QLabel *>("progressLabel");
     standardOut = this->findChild<QTextEdit *>("standardOut");
     runButton = this->findChild<QPushButton *>("runButton");
@@ -44,9 +43,10 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     _totalStepsPerSample = TABLE_MAPPING->size();
 
     timer = new QTimer(this);
-    timer->start(3000);
-
     this->myProcess =0;
+
+    cancelButton->setEnabled(false);
+
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
 }
@@ -163,10 +163,6 @@ void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
     progressBar->setValue(_stepsCompletedSample);
     progressBar->setMaximum(_totalStepsPerSample);
-
-    globalProgressBar->setMinimum(0);
-    globalProgressBar->setMaximum(_totalStepsPerSample*rundata->getFileList().length());
-
 }
 
 void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
@@ -267,6 +263,11 @@ void ProgressDialog::startRun(){
     }
     else{
         // otherwise start off the process
+        cancelButton->setEnabled(true);
+        runButton->setDisabled(true);
+
+        timer->start(1000);
+
         initProcess();
     }
 }
@@ -371,7 +372,16 @@ void ProgressDialog::checkFiles(){
 }
 
 void ProgressDialog::terminateRun(){
-    delete this;
+    myProcess->kill();
+    myProcess = 0;
+
+    timer->stop();
+    logBrowser->clear();
+    standardOut->clear();
+    sampleSelect->clear();
+    summaryTable->clearContents();
+
+    runButton->setEnabled(true);
 }
 
 ProgressDialog::~ProgressDialog()

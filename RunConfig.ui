@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>679</width>
+    <width>731</width>
     <height>904</height>
    </rect>
   </property>
@@ -101,7 +101,7 @@
   <widget class="QPushButton" name="fileBrowseButton">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>620</x>
      <y>70</y>
      <width>101</width>
      <height>31</height>
@@ -187,7 +187,7 @@
     <bool>true</bool>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -313,10 +313,10 @@
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>160</y>
-     <width>591</width>
-     <height>16</height>
+     <width>711</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="orientation">
@@ -1396,27 +1396,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QLabel" name="sampleWarning">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>70</y>
-     <width>391</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:red;</string>
-   </property>
-   <property name="text">
-    <string>Please select a folder containing your sample inputs.</string>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="blastWithGrid">
    <property name="enabled">
     <bool>false</bool>
@@ -1478,31 +1457,10 @@
     <string>Output Folder : </string>
    </property>
   </widget>
-  <widget class="QLabel" name="outputFolderName">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>100</y>
-     <width>391</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>13</pointsize>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color:red;</string>
-   </property>
-   <property name="text">
-    <string>Please select a folder for your output.</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="outputFolderBrowser">
    <property name="geometry">
     <rect>
-     <x>560</x>
+     <x>620</x>
      <y>100</y>
      <width>101</width>
      <height>31</height>
@@ -1510,6 +1468,32 @@
    </property>
    <property name="text">
     <string>Browse</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="inputLine">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>70</y>
+     <width>471</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="outputLine">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>100</y>
+     <width>471</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
    </property>
   </widget>
   <zorder>tableWidget</zorder>
@@ -1521,7 +1505,6 @@
   <zorder>label_4</zorder>
   <zorder>line</zorder>
   <zorder>fileInput</zorder>
-  <zorder>sampleWarning</zorder>
   <zorder>blastWithGrid</zorder>
   <zorder>setupGrids</zorder>
   <zorder>metapaths_stepsPATHOLOGIC</zorder>
@@ -1545,8 +1528,9 @@
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
   <zorder>overwrite</zorder>
   <zorder>outputFolder</zorder>
-  <zorder>outputFolderName</zorder>
   <zorder>outputFolderBrowser</zorder>
+  <zorder>inputLine</zorder>
+  <zorder>outputLine</zorder>
  </widget>
  <tabstops>
   <tabstop>fileBrowseButton</tabstop>

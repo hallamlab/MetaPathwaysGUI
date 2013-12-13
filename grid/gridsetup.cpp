@@ -25,8 +25,6 @@ GridSetup::GridSetup(QWidget *parent) :
 
     gc = 0;
 
-//    MainFrame::PARAMS = Utilities::parseFile("template_param.txt");
-
     Grids = new QHash<QString, Grid*>();
     //keeps track of the names of our grids and our grids
     //an internal representation of a grid is held by a Grid object,
@@ -53,16 +51,12 @@ GridSetup::GridSetup(QWidget *parent) :
 }
 
 void GridSetup::addNewGrid(){
-    if (gc){
-        delete gc;
-    }
-    gc = new GridChoice(0, this);
-    gc->show();
+    //remove ability to specify amazon ec2 grids
+    newNonEC2Form();
 }
 
 void GridSetup::newNonEC2Form(){
     qDebug() << "new non-ec2 form";
-    gc->close();
 
     QString name = QString("grid_engine%1").arg(gridSelection->count());
 
@@ -80,7 +74,6 @@ void GridSetup::newNonEC2Form(){
 
 void GridSetup::newEC2Form(){
     qDebug() << "new ec2 form";
-    gc->close();
 
     QString name = QString("grid_engine%1").arg(gridSelection->count());
 
@@ -260,4 +253,7 @@ void GridSetup::initGridValues(){
 GridSetup::~GridSetup()
 {
     delete ui;
+    delete gc;
+    delete Grids;
+    delete allWidgets;
 }

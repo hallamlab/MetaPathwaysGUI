@@ -25,24 +25,15 @@ class RunConfig : public QWidget
     Q_OBJECT
     
 public:
-    QList<QGroupBox *> *groupBoxes;
-    QGroupBox *runOptionsGroupBox;
-    QPushButton *fileBrowseButton;
-    QComboBox *fileInputFormat;
-    QTableWidget *table;
-    QString *selectedFiles;
-    QLabel *filesSelected;
-    QLabel* sampleWarning;
-    QCheckBox* gridBlastChoice;
-    QPushButton* setupGrids;
-    GridSetup* gridSetup;
-    QCheckBox* overwrite;
-    QPushButton *folderBrowseButton;
-    QLabel * folderSelected;
-    QString *selectedFolder;
-
     explicit RunConfig(QWidget *parent = 0);
     ~RunConfig();
+
+    QString selectedFolder;
+    QString selectedFiles;
+
+    QList<QGroupBox *> *groupBoxes;
+    QComboBox *fileInputFormat;
+    QCheckBox* overwrite;
 
 private slots:
     void closeWindow();
@@ -68,6 +59,16 @@ private:
 
     RunData *rundata;
 
+    QGroupBox *runOptionsGroupBox;
+    QPushButton *fileBrowseButton;
+    QTableWidget *table;
+    QCheckBox* gridBlastChoice;
+    QPushButton* setupGrids;
+    GridSetup* gridSetup;
+    QPushButton *folderBrowseButton;
+
+    QLineEdit* inputLine;
+    QLineEdit* outputLine;
 };
 
 #endif // RUNCONFIG_H

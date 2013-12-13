@@ -127,7 +127,6 @@
    <addaction name="actionRunParams"/>
    <addaction name="actionStages"/>
    <addaction name="actionRun"/>
-   <addaction name="actionGridProgress"/>
    <addaction name="actionResults"/>
   </widget>
   <widget class="QToolBar" name="leftToolBar">
@@ -147,16 +146,17 @@
    </property>
   </action>
   <action name="actionRun">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Run</string>
    </property>
   </action>
-  <action name="actionGridProgress">
-   <property name="text">
-    <string>Grid Progress</string>
-   </property>
-  </action>
   <action name="actionResults">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Results</string>
    </property>
@@ -188,11 +188,17 @@
    </property>
   </action>
   <action name="actionRunParams">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Parameters</string>
    </property>
   </action>
   <action name="actionStages">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Stages</string>
    </property>

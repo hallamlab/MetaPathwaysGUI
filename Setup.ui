@@ -14,6 +14,9 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="9" column="1">
+    <widget class="QLineEdit" name="dbDirectoryTxt"/>
+   </item>
    <item row="0" column="0" colspan="3">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
@@ -179,40 +182,8 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
-    <widget class="QLineEdit" name="dbDirectoryTxt"/>
-   </item>
    <item row="9" column="2">
     <widget class="QPushButton" name="databaseButton">
-     <property name="text">
-      <string>Browse</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" colspan="3">
-    <widget class="Line" name="line_5">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="metapathwaysLabel_3">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Pathologic Executable</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
-    <widget class="QLineEdit" name="pathologicTxt"/>
-   </item>
-   <item row="11" column="2">
-    <widget class="QPushButton" name="pathologicButton">
      <property name="text">
       <string>Browse</string>
      </property>
@@ -229,6 +200,35 @@
     <widget class="QPushButton" name="saveButton">
      <property name="text">
       <string>Proceed</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0" colspan="3">
+    <widget class="Line" name="line_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="2">
+    <widget class="QPushButton" name="pathologicButton">
+     <property name="text">
+      <string>Browse</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QLineEdit" name="pathologicTxt"/>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="metapathwaysLabel_3">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Pathologic Executable</string>
      </property>
     </widget>
    </item>

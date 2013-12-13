@@ -158,10 +158,12 @@ void RunData::setupDefaultConfig(){
     else {
         reWriteConfig = true;
     }
+
+    qDebug() << "rewrite config is " << reWriteConfig;
+    qDebug() << "pathologic is " << this->CONFIG["PATHOLOGIC_EXECUTABLE"];
     if( reWriteConfig ){
         QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG);
-
 
         if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
             QTextStream out(&outFile);

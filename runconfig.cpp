@@ -17,23 +17,16 @@ RunConfig::RunConfig(QWidget *parent) :
     runAll = this->findChild<QRadioButton *>("runAllRadioButton");
     skipAll = this->findChild<QRadioButton *>("skipAllRadioButton");
     redoAll = this->findChild<QRadioButton *>("redoAllRadioButton");
-    filesSelected = this->findChild<QLabel *>("fileInput");
     runOptionsGroupBox = this->findChild<QGroupBox *>("runOptionsGroupBox");
-
     fileInputFormat = this->findChild<QComboBox *>("fileInputFormat");
     fileBrowseButton = this->findChild<QPushButton *>("fileBrowseButton");
-
-    folderSelected= this->findChild<QLabel *>("outputFolderName");
     folderBrowseButton = this->findChild<QPushButton *>("outputFolderBrowser");
-
-    sampleWarning = this->findChild<QLabel *>("sampleWarning");
     gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
     overwrite = this->findChild<QCheckBox *>("overwrite");
-
+    inputLine = this->findChild<QLineEdit *>("inputLine");
+    outputLine = this->findChild<QLineEdit *>("outputLine");
     gridSetup = 0;
-    selectedFiles = 0;
-    selectedFolder =0;
 
     rundata = RunData::getRunData();
 
@@ -92,31 +85,33 @@ void RunConfig::specifyGrid(){
 }
 
 void RunConfig::browseFile(){
-    selectedFiles = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory with your files.")));
-    filesSelected->setText(*selectedFiles);
+    QString select = QFileDialog::getExistingDirectory(this, tr("Select a directory with your files."));
+    if (!select.isEmpty()) {
+        selectedFiles = select;
+        inputLine->setText(selectedFiles);
+    }
 
     this->rundata->setCurrentSample(QString());
-
-    this->rundata->setValue("fileInput", *selectedFiles, _PARAMS);
+    this->rundata->setValue("fileInput", selectedFiles, _PARAMS);
     //send a signal to the parent to enable the continue button
-    if (selectedFiles){
-        if( selectedFolder != 0 ) emit fileSet();
-        sampleWarning->hide();
+    if (!selectedFiles.isEmpty()){
+        if( !selectedFolder.isEmpty()) emit fileSet();
     }
 }
 
 void RunConfig::browseFolder(){
-    selectedFolder = new QString(QFileDialog::getExistingDirectory(this, tr("Select a directory for your output.")));
-    folderSelected->setText(*selectedFolder);
+    QString folderSelect = QFileDialog::getExistingDirectory(this, tr("Select a directory for your output."));
+    if(!folderSelect.isEmpty()){
+        outputLine->setText(folderSelect);
+        selectedFolder = folderSelect;
+    }
 
-    this->rundata->setValue("folderOutput", *selectedFolder, _PARAMS);
+    this->rundata->setValue("folderOutput", selectedFolder, _PARAMS);
     //send a signal to the parent to enable the continue button
-    if (selectedFolder){
-        if(selectedFiles!=0) emit fileSet();
-        sampleWarning->hide();
+    if (!selectedFolder.isEmpty()){
+        if(!selectedFiles.isEmpty()) emit fileSet();
     }
 }
-
 
 void RunConfig::toggleAllRun(){
     QList<QGroupBox *>::iterator i;
@@ -141,7 +136,6 @@ void RunConfig::toggleAllSkip(){
         QGroupBox *temp = *i;
         QString stepName = temp->objectName();
         //get the name, look up in the hash the corresponding setting key value pair
-
 
         //get the name of the radiobutton on the form by isolating for caps from the step,
         //taking the step name, to lower
