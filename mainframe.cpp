@@ -109,6 +109,7 @@ void MainFrame::validateSetup() {
      if( rundata->validate(warningStr)) {
          //pass
          addRemainingTabs();
+         stackedWidget->setCurrentWidget(settingsScroll);
          greyTabs(true);
      }
      else {

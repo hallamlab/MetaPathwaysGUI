@@ -187,7 +187,7 @@
     <bool>true</bool>
    </property>
    <attribute name="horizontalHeaderVisible">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <attribute name="horizontalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -1533,11 +1533,15 @@
   <zorder>outputLine</zorder>
  </widget>
  <tabstops>
+  <tabstop>inputLine</tabstop>
   <tabstop>fileBrowseButton</tabstop>
+  <tabstop>outputLine</tabstop>
+  <tabstop>outputFolderBrowser</tabstop>
   <tabstop>fileInputFormat</tabstop>
   <tabstop>runAllRadioButton</tabstop>
   <tabstop>skipAllRadioButton</tabstop>
   <tabstop>redoAllRadioButton</tabstop>
+  <tabstop>tableWidget</tabstop>
   <tabstop>preprocess_fastaYES</tabstop>
   <tabstop>preprocess_fastaSKIP</tabstop>
   <tabstop>preprocess_fastaREDO</tabstop>
@@ -1584,17 +1588,17 @@
   <tabstop>create_report_filesSKIP</tabstop>
   <tabstop>create_report_filesREDO</tabstop>
   <tabstop>mltreemap_calculationYES</tabstop>
-  <tabstop>mltreemap_imagemakerYES</tabstop>
   <tabstop>mltreemap_calculationSKIP</tabstop>
   <tabstop>mltreemap_calculationREDO</tabstop>
+  <tabstop>mltreemap_imagemakerYES</tabstop>
   <tabstop>mltreemap_imagemakerSKIP</tabstop>
   <tabstop>mltreemap_imagemakerREDO</tabstop>
   <tabstop>pathologicYES</tabstop>
   <tabstop>pathologicSKIP</tabstop>
   <tabstop>pathologicREDO</tabstop>
-  <tabstop>blastWithGrid</tabstop>
+  <tabstop>overwrite</tabstop>
   <tabstop>setupGrids</tabstop>
-  <tabstop>tableWidget</tabstop>
+  <tabstop>blastWithGrid</tabstop>
  </tabstops>
  <resources/>
  <connections/>

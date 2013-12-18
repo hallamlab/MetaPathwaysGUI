@@ -148,6 +148,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>checkComparativeMode</tabstop>
+  <tabstop>selectSamplesButton</tabstop>
+  <tabstop>sampleSelect</tabstop>
+  <tabstop>loadResults</tabstop>
+  <tabstop>resultTabs</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

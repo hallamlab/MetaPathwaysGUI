@@ -243,6 +243,8 @@
   <tabstop>metapathwaysBrowseButton</tabstop>
   <tabstop>dbDirectoryTxt</tabstop>
   <tabstop>databaseButton</tabstop>
+  <tabstop>pathologicTxt</tabstop>
+  <tabstop>pathologicButton</tabstop>
   <tabstop>saveButton</tabstop>
  </tabstops>
  <resources/>

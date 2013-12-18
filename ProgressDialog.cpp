@@ -66,7 +66,6 @@ bool ProgressDialog::checkInputOutPutLocations() {
             standardOut->append("No log file found for sample  " + rundata->getCurrentSample() + "\n");
             standardOut->append("Expected log file : " + logFile.absoluteFilePath());
         }
-
         return false;
     }
 
@@ -80,7 +79,7 @@ bool ProgressDialog::checkInputOutPutLocations() {
 void ProgressDialog::readStepsLog(){
     _stepsCompletedSample = 0;
 
-    //if(!this->checkInputOutPutLocations()) return;
+//    if(!this->checkInputOutPutLocations()) return;
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
@@ -112,12 +111,15 @@ void ProgressDialog::readStepsLog(){
             }
        }
        inputFile.close();
+    }else{
+        logBrowser->append("The log file has not yet been generated. Please wait.");
     }
 
     checkStepsWithDBS(statusHash, "BLAST_REFDB_","BLAST_REFDB");
     checkStepsWithDBS(statusHash, "PARSE_BLAST_", "PARSE_BLAST");
     checkStepsWithDBS(statusHash, "SCAN_rRNA_", "SCAN_rRNA");
     checkStepsWithDBS(statusHash, "STATS_", "STATS_rRNA");
+    checkStepsWithDBS(statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
     colorRunConfig(statusHash);
     updateProgressBar();
@@ -168,6 +170,24 @@ void ProgressDialog::updateProgressBar(){
 void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
     QHash<QString,QString>::iterator it;
     bool stepFailed = false;
+
+    if(stepName=="GENBANK_FILE"){
+        if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
+            statusHash->operator []("CREATE_SEQUIN_FILE") = "FAILED";
+            statusHash->operator []("PATHOLOGIC_INPUT") = "FAILED";
+        }else if(statusHash->operator []("GENBANK_FILE")=="RUNNING"){
+            statusHash->operator []("CREATE_SEQUIN_FILE") = "RUNNING";
+            statusHash->operator []("PATHOLOGIC_INPUT") = "RUNNING";
+        }else if(statusHash->operator []("GENBANK_FILE")=="SUCCESS"){
+            statusHash->operator []("CREATE_SEQUIN_FILE") = "SUCCESS";
+            statusHash->operator []("PATHOLOGIC_INPUT") = "SUCCESS";
+        }else if(statusHash->operator []("GENBANK_FILE")=="SKIPPED"){
+            statusHash->operator []("CREATE_SEQUIN_FILE") = "SKIPPED";
+            statusHash->operator []("PATHOLOGIC_INPUT") = "SKIPPED";
+        }
+        return;
+    }
+
     for (it=statusHash->begin();it!=statusHash->end();it++){
         QString k = it.key();
         if (k.contains(stepName)){
@@ -287,15 +307,17 @@ void ProgressDialog::initProcess(){
         sampleSelect->addItem(f);
     }
 
+    connect(sampleSelect, SIGNAL(currentIndexChanged(QString)), this, SLOT(selectedFileChanged(QString)));
+    rundata->setCurrentSample(sampleSelect->currentText());
+
     QString program =  rundata->getConfig()["PYTHON_EXECUTABLE"];
     QStringList arguments;
     METAPATH = this->rundata->getConfig()["METAPATHWAYS_PATH"];
+
     arguments <<  METAPATH + "/MetaPathways.py";
+    arguments << "-v";
     arguments << "-i" << this->rundata->getParams()["fileInput"];
-
-  //  if (this->run->getConfig()->value("metapaths_steps:BLAST_REFDB")=="grid"){
     arguments << "-o" << this->rundata->getParams()["folderOutput"];
-
     arguments << "-p" << METAPATH + "/template_param.txt";
     arguments << "-c" << METAPATH + "/template_config.txt";
     arguments << "-r" << this->rundata->getParams()["overwrite"];
@@ -309,24 +331,30 @@ void ProgressDialog::initProcess(){
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
     env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
-    qDebug() <<  program <<" " << arguments.join(" ");
-
-   // qDebug() << program << arguments << myProcess;
+//    qDebug() <<  program << " " << arguments.join(" ");
+   qDebug() << program << arguments << myProcess;
     qDebug() << env.toStringList();
 
     myProcess = new QProcess();
+
+    connect(myProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(processStateChanged(QProcess::ProcessState)));
+
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
 
     rundata->setProcess(myProcess);
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));    
+    connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processStateChanged(int,QProcess::ExitStatus)));
 }
 
 void ProgressDialog::selectedFileChanged(QString file){
     rundata->setCurrentSample(file);
     progressLabel->setText("Progress - " + rundata->getCurrentSample());
+
+    logBrowser->clear();
+    summaryTable->clearContents();
 }
 
 void ProgressDialog::checkFiles(){
@@ -368,7 +396,10 @@ void ProgressDialog::checkFiles(){
     }
 
     this->rundata->setFileList(filesDetected);
+}
 
+void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStatus){
+    QMessageBox::information(0,"Process exited!","It appears that the process has terminated. If the steps have not all completed, please check the output log file below for further information on what may have happened.",QMessageBox::Ok);
 }
 
 void ProgressDialog::terminateRun(){
@@ -380,6 +411,8 @@ void ProgressDialog::terminateRun(){
     standardOut->clear();
     sampleSelect->clear();
     summaryTable->clearContents();
+    progressBar->setValue(0);
+    rundata->setCurrentSample("");
 
     runButton->setEnabled(true);
 }

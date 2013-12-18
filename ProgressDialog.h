@@ -49,6 +49,7 @@ private slots:
     void selectedFileChanged(QString file);
     void readStepsLog();
     void startRun();
+    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     Ui::ProgressDialog *ui;

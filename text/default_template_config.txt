@@ -4,35 +4,41 @@
 # Please run: source MetaPathwaysrc before continuing
 
 # Paths for the Python, Perl and Pathway Tools
-PYTHON_EXECUTABLE   /path/to/python 
-PERL_EXECUTABLE   /path/to/perl
-METAPATHWAYS_PATH /path/to/MetaPathways
+PYTHON_EXECUTABLE  
+PERL_EXECUTABLE  
+METAPATHWAYS_PATH  
 
 # Replace with your current
-PATHOLOGIC_EXECUTABLE   /path/to/pathway_tools
+PATHOLOGIC_EXECUTABLE  
 
-REFDBS   'blastDB'
+REFDBS  
 
-# Executables: replace 'SYSTEM' to your platform linux, mac, win
-FORMATDB_EXECUTABLE     'executables/SYSTEM/bit64/makeblastdb'
-BLASTP_EXECUTABLE       'executables/SYSTEM/bit64/blastp'
-BLASTN_EXECUTABLE       'executables/SYSTEM/bit64/blastn'
-EXECUTABLES_DIR         'executables/SYSTEM/bit64/'
-LASTDB_EXECUTABLE       'executables/SYSTEM/bit64/lastdb'
-LAST_EXECUTABLE         'executables/SYSTEM/bit64/lastal'
-ORF_PREDICTION          'executables/SYSTEM/bit64/prodigal' 
-SCAN_tRNA               'executables/SYSTEM/bit64/trnascan-1.4' 
+# Executables: replace 'mac' to your platform linux, mac, win
+# Bit type - bit32 or bit64 
+FORMATDB_EXECUTABLE  'executables/mac/bit64/makeblastdb'
+BLASTP_EXECUTABLE  'executables/mac/bit64/blastp'
+BLASTN_EXECUTABLE  'executables/mac/bit64/blastn'
+EXECUTABLES_DIR  'executables'
 
-# Paths to python scripts and ML-TreeMap
-'GBK_TO_FNA_FAA_GFF'    'libs/python_scripts/MetaPathways_parse_genbank.py'
-'GFF_TO_FNA_FAA_GFF'    'libs/python_scripts/MetaPathways_input_gff.py'
-'PREPROCESS_FASTA'      'libs/python_scripts/MetaPathways_filter_input.py'
-'GFF_TO_FASTA'          'libs/python_scripts/MetaPathways_create_amino_sequences.py'
-'COMPUTE_REFSCORE'      'libs/python_scripts/MetaPathways_refscore.py' 
-'PARSE_BLAST'           'libs/python_scripts/MetaPathways_parse_blast.py'
-'ANNOTATE'              'libs/python_scripts/MetaPathways_annotate_fast.py'
-'GENBANK_FILE'          'libs/python_scripts/MetaPathways_create_genbank_ptinput_sequin.py'  
-'CREATE_REPORT_FILES'   'libs/python_scripts/MetaPathways_create_reports_fast.py' 
-'STATS_rRNA'            'libs/python_scripts/MetaPathways_rRNA_stats_calculator.py'
-'MLTREEMAP_IMAGEMAKER'  'mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl' 
-'MLTREEMAP_CALCULATION' 'mltreemap/mltreemap_calculation/mltreemap.pl'
+LASTDB_EXECUTABLE  'executables/mac/bit64/lastdb'
+LAST_EXECUTABLE  'executables/mac/bit64/lastal'
+ORF_PREDICTION 'executables/mac/bit64/prodigal' 
+TBL2ASN_EXECUTABLE 'executables/mac/bit64/tbl2asn' 
+
+SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
+# This is the folder where the scripts folder of the MetaPathways  pipeline 
+# # is installed
+
+GBK_TO_FNA_FAA_GFF   'libs/python_scripts/MetaPathways_parse_genbank.py'
+GFF_TO_FNA_FAA_GFF   'libs/python_scripts/MetaPathways_input_gff.py'
+PREPROCESS_FASTA          'libs/python_scripts/MetaPathways_filter_input.py'
+GFF_TO_FASTA 'libs/python_scripts/MetaPathways_create_amino_sequences.py'
+COMPUTE_REFSCORE 'libs/python_scripts/MetaPathways_refscore.py' 
+PARSE_BLAST 'libs/python_scripts/MetaPathways_parse_blast.py'
+ANNOTATE 'libs/python_scripts/MetaPathways_annotate_fast.py'
+GENBANK_FILE 'libs/python_scripts/MetaPathways_create_genbank_ptinput_sequin.py'  
+CREATE_REPORT_FILES 'libs/python_scripts/MetaPathways_create_reports_fast.py' 
+STATS_rRNA 'libs/python_scripts/MetaPathways_rRNA_stats_calculator.py'
+SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
+MLTREEMAP_IMAGEMAKER 'mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl' 
+MLTREEMAP_CALCULATION 'mltreemap/mltreemap_calculation/mltreemap.pl' 

@@ -538,6 +538,24 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>quality_controlMIN_LENGTH</tabstop>
+  <tabstop>quality_controlDELETE_REPLICATES</tabstop>
+  <tabstop>orf_predictionALGORITHM</tabstop>
+  <tabstop>orf_predictionMIN_LENGTH</tabstop>
+  <tabstop>annotationDBS</tabstop>
+  <tabstop>annotationALGORITHM</tabstop>
+  <tabstop>annotationMIN_BSR</tabstop>
+  <tabstop>annotationMAX_HITS</tabstop>
+  <tabstop>annotationMIN_SCORE</tabstop>
+  <tabstop>annotationMIN_LENGTH</tabstop>
+  <tabstop>annotationMAX_EVALUE</tabstop>
+  <tabstop>rrnaREFDBS</tabstop>
+  <tabstop>rrnaMIN_IDENTITY</tabstop>
+  <tabstop>rrnaMIN_BITSCORE</tabstop>
+  <tabstop>rrnaMAX_EVALUE</tabstop>
+  <tabstop>ptools_settingsTAXONOMIC_PRUNING</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
