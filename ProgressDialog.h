@@ -42,6 +42,7 @@ public:
     ~ProgressDialog();
 private:
     bool checkInputOutPutLocations() ;
+    void initTableImages();
 
 private slots:
     void terminateRun();
@@ -54,17 +55,16 @@ private slots:
 private:
     Ui::ProgressDialog *ui;
 
-    unsigned int _blastCount;
-    unsigned int _parseBlastCount;
-    unsigned int _scanCount;
-    unsigned int _statsCount;
-
     unsigned int _totalStepsPerSample;
     unsigned int _stepsCompletedSample;
 
     QPushButton *cancelButton;
     QPushButton *hideButton;
     QPushButton *runButton;
+
+    QHash<int, QTableWidgetItem*> successItems;
+    QHash<int, QTableWidgetItem*> failureItems;
+    QHash<int, QLabel*> runningLabels;
 
     QTextBrowser *logBrowser;
     QLabel *logLabel;

@@ -36,37 +36,37 @@ ResultWindow::ResultWindow(QWidget *parent) :
     getFileNames = new QTimer();
     getFileNames->start(500);
 
-    connect(sampleSelect,SIGNAL(currentIndexChanged(QString)),this,SLOT(sampleChanged(QString)));
+    connect(sampleSelect,SIGNAL(activated(QString)),this,SLOT(sampleChanged(QString)));
    // connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
     connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
     connect(loadResults, SIGNAL(clicked()), this, SLOT(_loadResults()) );
 
-    tables["PATHWAYS"] = new TableData();
-    tables["REACTIONS"] = new TableData();
-    tables["FUNC & TAX"] = new TableData();
-    tables["FUNC SRC"] = new TableData();
-    tables["FUNC KEGG 1"] = new TableData();
-    tables["FUNC KEGG 2"] = new TableData();
-    tables["FUNC KEGG 3"] = new TableData();
-    tables["FUNC KEGG 4"] = new TableData();
-    tables["FUNC COG 1"] = new TableData();
-    tables["FUNC COG 2"] = new TableData();
-    tables["FUNC COG 3"] = new TableData();
+//    tables["PATHWAYS"] = new TableData();
+//    tables["REACTIONS"] = new TableData();
+//    tables["FUNC & TAX"] = new TableData();
+//    tables["FUNC SRC"] = new TableData();
+//    tables["FUNC KEGG 1"] = new TableData();
+//    tables["FUNC KEGG 2"] = new TableData();
+//    tables["FUNC KEGG 3"] = new TableData();
+//    tables["FUNC KEGG 4"] = new TableData();
+//    tables["FUNC COG 1"] = new TableData();
+//    tables["FUNC COG 2"] = new TableData();
+//    tables["FUNC COG 3"] = new TableData();
 
-    displayInfos["FUNC & TAX"] = new DisplayInfo();
-    displayInfos["FUNC SRC"] = new DisplayInfo();
-    displayInfos["FUNC KEGG 1"] = new DisplayInfo();
-    displayInfos["FUNC KEGG 2"] = new DisplayInfo();
-    displayInfos["FUNC KEGG 3"] = new DisplayInfo();
-    displayInfos["FUNC KEGG 4"] = new DisplayInfo();
-    displayInfos["FUNC COG 1"] = new DisplayInfo();
-    displayInfos["FUNC COG 2"] = new DisplayInfo();
-    displayInfos["FUNC COG 3"] = new DisplayInfo();
+//    displayInfos["FUNC & TAX"] = new DisplayInfo();
+//    displayInfos["FUNC SRC"] = new DisplayInfo();
+//    displayInfos["FUNC KEGG 1"] = new DisplayInfo();
+//    displayInfos["FUNC KEGG 2"] = new DisplayInfo();
+//    displayInfos["FUNC KEGG 3"] = new DisplayInfo();
+//    displayInfos["FUNC KEGG 4"] = new DisplayInfo();
+//    displayInfos["FUNC COG 1"] = new DisplayInfo();
+//    displayInfos["FUNC COG 2"] = new DisplayInfo();
+//    displayInfos["FUNC COG 3"] = new DisplayInfo();
 
-    graphs["CONT LEN HIST"] = new GraphData();
-    graphs["ORF LEN HIST"] = new GraphData();
+//    graphs["CONT LEN HIST"] = new GraphData();
+//    graphs["ORF LEN HIST"] = new GraphData();
 
     meganviews["MEGAN_TAXONOMIC"]= new MeganView();
 
@@ -189,7 +189,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
 
-
     HTableData *htable;
     types.clear();
     types << STRING << STRING << INT;
@@ -266,37 +265,37 @@ void ResultWindow::sampleChanged(QString sampleName){
  //   if (nucStats.exists()) resultTabs->addTab(new TableData(true, true, nucFile, types), "CONT LEN TAB");
 
    // if (aminoStats.exists()) resultTabs->addTab(new TableData(true, true, aminoFile, types), "CONT LEN TAB");
-    GraphData *g;
-    g = graphs["CONT LEN HIST"];
+//    GraphData *g;
+//    g = graphs["CONT LEN HIST"];
 
-    g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
-    g->prepareInput();
-    resultTabs->addTab(g,"CONT LEN HIST");
+//    g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
+//    g->prepareInput();
+//    resultTabs->addTab(g,"CONT LEN HIST");
 
-    g  = graphs["ORF LEN HIST"];
-    g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
-    g->prepareInput();
-    resultTabs->addTab(g,"ORF LEN HIST");
+//    g  = graphs["ORF LEN HIST"];
+//    g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
+//    g->prepareInput();
+//    resultTabs->addTab(g,"ORF LEN HIST");
 
-    // PATHWAY TABLE
-     types.clear();
-     types << STRING << STRING<< INT << INT<< INT;
-     columns.clear();
-     columns << 1 << 2 << 3 << 4<<  5;
+//    // PATHWAY TABLE
+//     types.clear();
+//     types << STRING << STRING<< INT << INT<< INT;
+//     columns.clear();
+//     columns << 1 << 2 << 3 << 4<<  5;
 
-     t = this->tables["PATHWAYS"];
-     t->setParameters(false, pathwaysTable, types, columns, false,  QRegExp("^PWY:"));
-     resultTabs->addTab(t, "PATHwAYS");
+//     t = this->tables["PATHWAYS"];
+//     t->setParameters(false, pathwaysTable, types, columns, false,  QRegExp("^PWY:"));
+//     resultTabs->addTab(t, "PATHwAYS");
 
-     // REACTION TABLE
-     types.clear();
-     types << STRING << STRING<< INT;
-     columns.clear();
-     columns << 1 << 2 << 5;
+//     // REACTION TABLE
+//     types.clear();
+//     types << STRING << STRING<< INT;
+//     columns.clear();
+//     columns << 1 << 2 << 5;
 
-     t = this->tables["REACTIONS"];
-     t->setParameters(false, pathwaysTable, types, columns, false, QRegExp("^RXN:"));
-     resultTabs->addTab(t, "REACTIONS");
+//     t = this->tables["REACTIONS"];
+//     t->setParameters(false, pathwaysTable, types, columns, false, QRegExp("^RXN:"));
+//     resultTabs->addTab(t, "REACTIONS");
 
 
     //resultTabs->addTab(this->graphicsRepresentation["MEGAN"], "MEGAN");

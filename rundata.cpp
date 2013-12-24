@@ -119,7 +119,19 @@ void RunData::setDatabasesPath(QString databasePath) {
     this->CONFIG["REFDBS"] = databasePath;
 }
 
+int RunData::getRunningStepNumber(){
+    QHash<QString,QString>::iterator it;
+    int count = 0;
+    for (it=this->getParams().begin();it!=this->getParams().end();it++){
+        QString k = it.key();
+        QString v = it.value();
 
+        if(v.contains("yes") || v.contains("grid") || v.contains("skip")){
+            count++;
+        }
+    }
+    return count;
+}
 
 /*
  * Should setup settings.

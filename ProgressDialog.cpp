@@ -34,13 +34,9 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     summaryTable->setSortingEnabled(false);
 
     initMapping();
-
-    _blastCount = 0;
-    _parseBlastCount = 0;
-    _scanCount = 0;
-    _statsCount = 0;
+    initTableImages();
     _stepsCompletedSample = 0;
-    _totalStepsPerSample = TABLE_MAPPING->size();
+    _totalStepsPerSample = TABLE_MAPPING->size()-1;
 
     timer = new QTimer(this);
     this->myProcess =0;
@@ -49,6 +45,40 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
 
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
+}
+
+// because QMovies and QLabels are a part of the Qt core and are shared objects,
+// they persist until the application is terminated
+// so we should allocate up front how many of these gui items we need
+// and since the qtablewidget does not allow items to be shared between entries
+// we must allocate up front 3 items for every stage
+void ProgressDialog::initTableImages(){
+    QHash<int, QString>::iterator it;
+
+    for (it=TABLE_MAPPING->begin();it!=TABLE_MAPPING->end();it++){
+        int k = it.key();
+
+        QTableWidgetItem *successItem = new QTableWidgetItem();
+        QTableWidgetItem *failureItem = new QTableWidgetItem();
+
+        QMovie *running = new QMovie(":/images/loading.gif");
+        QLabel *runningLabel = new QLabel();
+
+        runningLabel->setFixedSize(30,25);
+        runningLabel->setMovie(running);
+        runningLabel->updateGeometry();
+        running->start();
+
+        QImage success(":/images/check.png");
+        QImage failure(":/images/cross.png");
+
+        successItems[k] = successItem;
+        successItems[k]->setData(Qt::DecorationRole, QPixmap::fromImage(success).scaled(12,12));
+        failureItems[k] = failureItem;
+        failureItems[k]->setData(Qt::DecorationRole, QPixmap::fromImage(success).scaled(12,12));
+        runningLabels[k] = runningLabel;
+    }
+    qDebug() << runningLabels;
 }
 
 
@@ -87,7 +117,7 @@ void ProgressDialog::readStepsLog(){
     //qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
 
     QFile inputFile(pathToLog);
-    QHash<QString, QString> *statusHash = new QHash<QString,QString>();
+    QHash<QString, QString> statusHash;
     QRegExp whiteSpace("\\s");
     QRegExp commentLine("#[^\"\\n\\r]*");
 
@@ -107,7 +137,7 @@ void ProgressDialog::readStepsLog(){
                 QString status = splitList.at(1).trimmed();
 
                 //qDebug() << line << splitList <<   " step " << step << " status " << status;
-                if (!step.isEmpty())  statusHash->insert(step,status);
+                if (!step.isEmpty())  statusHash.insert(step,status);
             }
        }
        inputFile.close();
@@ -115,13 +145,13 @@ void ProgressDialog::readStepsLog(){
         logBrowser->append("The log file has not yet been generated. Please wait.");
     }
 
-    checkStepsWithDBS(statusHash, "BLAST_REFDB_","BLAST_REFDB");
-    checkStepsWithDBS(statusHash, "PARSE_BLAST_", "PARSE_BLAST");
-    checkStepsWithDBS(statusHash, "SCAN_rRNA_", "SCAN_rRNA");
-    checkStepsWithDBS(statusHash, "STATS_", "STATS_rRNA");
-    checkStepsWithDBS(statusHash, "GENBANK_FILE", "GENBANK_FILE");
+    checkStepsWithDBS(&statusHash, "BLAST_REFDB_","BLAST_REFDB");
+    checkStepsWithDBS(&statusHash, "PARSE_BLAST_", "PARSE_BLAST");
+    checkStepsWithDBS(&statusHash, "SCAN_rRNA_", "SCAN_rRNA");
+    checkStepsWithDBS(&statusHash, "STATS_", "STATS_rRNA");
+    checkStepsWithDBS(&statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
-    colorRunConfig(statusHash);
+    colorRunConfig(&statusHash);
     updateProgressBar();
 
 //    qDebug() << _stepsCompletedSample << _totalStepsPerSample;
@@ -130,8 +160,6 @@ void ProgressDialog::readStepsLog(){
        QByteArray read = myProcess->readAll();
        if (!read.isEmpty()) standardOut->append(QString(read));
     }
-
-    delete statusHash;
 }
 
 /*
@@ -235,33 +263,21 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
 
         //qDebug() << stepName;
 
-        QImage img;
-        QTableWidgetItem *item = new QTableWidgetItem();
-        QMovie *loading = new QMovie(":/images/loading.gif");
-        QLabel *imageLabel = new QLabel();
-
-        //clear old cell
-        this->summaryTable->removeCellWidget(TABLE_MAPPING->key(stepName),0);
-        this->summaryTable->setItem(TABLE_MAPPING->key(stepName),0, NULL);
+        int row = TABLE_MAPPING->key(stepName);
 
         if (status.operator ==("FAILED")){
-            img  = QImage(":/images/cross.png");
-            item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-            this->summaryTable->setItem(TABLE_MAPPING->key(stepName),0, item);
+            // clear cell without deleting members
+            this->summaryTable->takeItem(row,0);
+            this->summaryTable->setItem(row,0, failureItems[row]);
             _stepsCompletedSample++;
-
         }else if (status.operator ==("RUNNING")){
-            imageLabel->setFixedSize(30,25);
-            imageLabel->setMovie(loading);
-            imageLabel->updateGeometry();
-            loading->start();
-            this->summaryTable->setCellWidget(TABLE_MAPPING->key(stepName),0,imageLabel);
+            this->summaryTable->setCellWidget(row,0, &QLabel(runningLabels[row]));
         }else if (status.operator ==("SUCCESS") ||
                   status.operator ==("ALREADY_COMPUTED") ||
                   status.operator ==("SKIPPED")){
-            img = QImage(":/images/check.png");
-            item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-            this->summaryTable->setItem(TABLE_MAPPING->key(stepName),0, item);
+            // clear cell without deleting members
+            this->summaryTable->takeItem(row,0);
+            this->summaryTable->setItem(row,0, successItems[row]);
             _stepsCompletedSample++;
         }
     }
@@ -272,7 +288,7 @@ void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
 
-    qDebug() << rRNArefdbs << annotationDBS;
+    //qDebug() << rRNArefdbs << annotationDBS;
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
@@ -285,14 +301,20 @@ void ProgressDialog::startRun(){
         // otherwise start off the process
         cancelButton->setEnabled(true);
         runButton->setDisabled(true);
-
-        timer->start(1000);
+        logBrowser->clear();
+        standardOut->clear();
+        sampleSelect->clear();
+        summaryTable->clearContents();
+        progressBar->setValue(0);
+        rundata->setCurrentSample("");
+        timer->start(500);
 
         initProcess();
     }
 }
 
 void ProgressDialog::initProcess(){
+
 
     //if(!this->checkInputOutPutLocations()) return;
 
@@ -302,7 +324,7 @@ void ProgressDialog::initProcess(){
     if(input.exists()) this->checkFiles();
 
     QStringList files = this->rundata->getFileList();
-    qDebug() << files;
+//    qDebug() << files;
     foreach (QString f, files){
         sampleSelect->addItem(f);
     }
@@ -331,14 +353,11 @@ void ProgressDialog::initProcess(){
     env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
     env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
 
-//    qDebug() <<  program << " " << arguments.join(" ");
-   qDebug() << program << arguments << myProcess;
-    qDebug() << env.toStringList();
+//  qDebug() <<  program << " " << arguments.join(" ");
+    //qDebug() << program << arguments << myProcess;
+    //qDebug() << env.toStringList();
 
     myProcess = new QProcess();
-
-    connect(myProcess, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(processStateChanged(QProcess::ProcessState)));
-
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
@@ -346,7 +365,7 @@ void ProgressDialog::initProcess(){
     rundata->setProcess(myProcess);
 
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));    
-    connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processStateChanged(int,QProcess::ExitStatus)));
+    connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
 }
 
 void ProgressDialog::selectedFileChanged(QString file){
@@ -399,27 +418,28 @@ void ProgressDialog::checkFiles(){
 }
 
 void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStatus){
-    QMessageBox::information(0,"Process exited!","It appears that the process has terminated. If the steps have not all completed, please check the output log file below for further information on what may have happened.",QMessageBox::Ok);
+    runButton->setEnabled(true);
+    cancelButton->setEnabled(false);
+
+    timer->stop();
+    progressBar->setValue(0);
+    myProcess = 0;
+   // qDebug() << "exit code " << exitCode << " es " << exitStatus;
+//    timer->stop();
 }
 
 void ProgressDialog::terminateRun(){
     myProcess->kill();
     myProcess = 0;
-
     timer->stop();
-    logBrowser->clear();
-    standardOut->clear();
-    sampleSelect->clear();
-    summaryTable->clearContents();
-    progressBar->setValue(0);
-    rundata->setCurrentSample("");
 
     runButton->setEnabled(true);
+    cancelButton->setEnabled(false);
 }
 
 ProgressDialog::~ProgressDialog()
 {
     myProcess->kill();
     timer->stop();
-    delete ui;
+    delete ui;    
 }
