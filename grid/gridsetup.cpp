@@ -22,7 +22,11 @@ GridSetup::GridSetup(QWidget *parent) :
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     saveButton = this->findChild<QPushButton *>("saveButton");
 
+    RunData *rundata = RunData::getRunData();
+    rundata->setupDefaultParams();
 
+    allWidgets = 0;
+    Grids = 0;
     gc = 0;
 
     Grids = new QHash<QString, Grid*>();
@@ -36,12 +40,12 @@ GridSetup::GridSetup(QWidget *parent) :
     //create individual forms and populate their values
     QHashIterator<QString, Grid*> it(*Grids);
     while(it.hasNext()){
-        it.next();
+       it.next();
        initForm(it.key());
     }
     qDebug() << "asdf";
 
-    //changeForm(Grids->keys().first());
+    if (Grids->keys().count()>0) changeForm(Grids->keys().first());
 
     connect(gridSelection,SIGNAL(currentIndexChanged(QString)),this,SLOT(changeForm(QString)));
     connect(addGrid, SIGNAL(clicked()), this, SLOT(addNewGrid()));
@@ -126,6 +130,7 @@ void GridSetup::getWidgetValues(const Grid &g){
 
 void GridSetup::saveAndClose(){
     QHashIterator<QString,Grid *> grids(*Grids);
+    RunData *rundata = RunData::getRunData();
 
     while (grids.hasNext()){
         //get next grid in hash
@@ -147,22 +152,24 @@ void GridSetup::saveAndClose(){
                 //if it is set to be scheduled, skip writing out the params
                 //need to implement deletion from file using utilities
                 qDebug() << "deleting grid" <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile("template_param.txt", grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
             }else if(grids.value()->newGrid){
                 qDebug() << "new grid writing " <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile("template_param.txt", grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
             }else{
                 qDebug() << "old grid writing" << grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile("template_param.txt", grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
             }
         }
     }
-    this->close();
+    rundata->setupDefaultParams();
+    // since we've added a new grid, need to update the hash
 }
 
 
 void GridSetup::changeForm(QString selected){
     Grid *g = Grids->value(selected);
+    if (!g) return;
     if (!g->values->value("type").isEmpty()){
         wid->setCurrentWidget(g->ec2);
     }else wid->setCurrentWidget(g->nonec2);
@@ -171,6 +178,7 @@ void GridSetup::changeForm(QString selected){
 void GridSetup::closeWindow(){
     this->close();
 }
+
 
 void GridSetup::deleteExistingGrid(){
     if (QMessageBox::Yes == QMessageBox::question(0,"Delete grid?","Do you really want to remove this grid?", QMessageBox::Yes|QMessageBox::No)){
@@ -185,20 +193,20 @@ void GridSetup::deleteExistingGrid(){
 void GridSetup::initForm(const QString &selected){
     Grid *g = Grids->value(selected);
 
-    if (!g->values->value("type").isEmpty()){
-        //AWS Config is shown
-        EC2Grid *EC2Form = new EC2Grid();
-        g->ec2 = EC2Form;
-        wid->addWidget(g->ec2);
-        EC2Form->populateValues(g, selected);
-    }
-    else{
+//    if (!g->values->value("type").isEmpty()){
+//        //AWS Config is shown
+//        EC2Grid *EC2Form = new EC2Grid();
+//        g->ec2 = EC2Form;
+//        wid->addWidget(g->ec2);
+//        EC2Form->populateValues(g, selected);
+//    }
+//    else{
         //normal config is shown
-        NonEC2 *normalForm = new NonEC2();
-        g->nonec2 = normalForm;
-        wid->addWidget(g->nonec2);
-        normalForm->populateValues(g, selected);
-    }
+    NonEC2 *normalForm = new NonEC2();
+    g->nonec2 = normalForm;
+    wid->addWidget(g->nonec2);
+    normalForm->populateValues(g, selected);
+//    }
 }
 
 void GridSetup::initSelectChoices(){
@@ -252,8 +260,10 @@ void GridSetup::initGridValues(){
 
 GridSetup::~GridSetup()
 {
-    delete ui;
-    delete gc;
     delete Grids;
     delete allWidgets;
+
+    delete ui;
+    delete gc;
+
 }

@@ -11,6 +11,7 @@
 #include "gridchoice.h"
 #include "grid.h"
 #include "nonec2.h"
+#include "rundata.h"
 
 namespace Ui {
 class GridSetup;
