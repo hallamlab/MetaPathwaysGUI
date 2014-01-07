@@ -1,4 +1,4 @@
-#ifndef MEGANDATA_H
+  #ifndef MEGANDATA_H
 #define MEGANDATA_H
 #include <QString>
 #include <QList>

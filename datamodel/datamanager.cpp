@@ -168,7 +168,6 @@ void DataManager::createDataModel() {
 
     RunData *rundata = RunData::getRunData();
 
-
     QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
     QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
     HTree *htree = createHTree(COG_categories);
@@ -180,20 +179,17 @@ void DataManager::createDataModel() {
     htree->hashNodes(htree->root);
     this->htrees[KEGG] = htree;
 
-
     QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
     htree = createHTree(MetaCyc_hierarchy);
     htree->hashNodes(htree->root);
     this->htrees[METACYC] = htree;
 
-
     QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
     htree = createHTree(Seed_subsystems);
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;
-    dataModelCreated=true;
-   // htree->printTree(htree->root);
 
+    dataModelCreated=true;
 }
 
 HTree *DataManager::createHTree(QString refDB) {
@@ -238,7 +234,6 @@ HTree *DataManager::createHTree(QString refDB) {
         }
         inputFile.close();
     }
-
     return htree;
 
 
@@ -416,6 +411,6 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
           this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
        this->connectors[sampleName][attrType] = connector;
      }
- //   qDebug() << sampleName << "created connector " << connector->getORFList().size();
+    qDebug() << sampleName << "created connector " << connector->getORFList().size();
     return connector;
 }

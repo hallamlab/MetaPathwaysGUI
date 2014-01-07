@@ -45,7 +45,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
 //    tables["PATHWAYS"] = new TableData();
 //    tables["REACTIONS"] = new TableData();
-//    tables["FUNC & TAX"] = new TableData();
+    tables["FUNC & TAX"] = new TableData();
 //    tables["FUNC SRC"] = new TableData();
 //    tables["FUNC KEGG 1"] = new TableData();
 //    tables["FUNC KEGG 2"] = new TableData();
@@ -55,7 +55,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
 //    tables["FUNC COG 2"] = new TableData();
 //    tables["FUNC COG 3"] = new TableData();
 
-//    displayInfos["FUNC & TAX"] = new DisplayInfo();
+    displayInfos["FUNC & TAX"] = new DisplayInfo();
 //    displayInfos["FUNC SRC"] = new DisplayInfo();
 //    displayInfos["FUNC KEGG 1"] = new DisplayInfo();
 //    displayInfos["FUNC KEGG 2"] = new DisplayInfo();
@@ -84,8 +84,7 @@ void ResultWindow::_loadResults() {
 
 
 void ResultWindow::indexSamples(bool userResourceFolder) {
-    ProgressView progressBar("Please wait while we index the FASTA files!", 0, files.size());
-
+    ProgressView progressBar("Indexing samples...", 0, files.size());
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     samplercmgr->setUseResourceFolder(userResourceFolder);
@@ -161,15 +160,13 @@ void ResultWindow::sampleChanged(QString sampleName){
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
 
     DataManager *datamanager = DataManager::getDataManager();
-
     datamanager->createDataModel();
 
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     sampleResourceManager->setOutPutPath(OUTPUTPATH);
     this->indexSamples(true);
 
-
-    ProgressView progressbar("Please wait while we load the sample!", 0, 0);
+    ProgressView progressbar("Please wait while the sample is loaded...", 0, 0);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
     const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
@@ -185,7 +182,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     QStringList headers;
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
-
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
 
@@ -231,12 +227,10 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
-
     m->clearExistingTree();
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
 
     resultTabs->addTab(m, "TAXONOMIC");
-
 
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
@@ -320,7 +314,6 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
     htable->clearConnectors();
 
     Connector *connect = datamanager->createConnector(sampleName, datamanager->getHTree(attr), attr, datamanager->getORFList(sampleName));
-
 
     htable->setParameters(datamanager->getHTree(attr), types);
     htable->addConnector(connect);

@@ -22,7 +22,6 @@ void MeganData::setInitLineLength(double length) {
 }
 
 void MeganData::setScale(double scale) {
-
     this->scale = scale;
 }
 

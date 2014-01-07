@@ -35,13 +35,6 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
 
     initMapping();
 
-    _blastCount = 0;
-    _parseBlastCount = 0;
-    _scanCount = 0;
-    _statsCount = 0;
-    _stepsCompletedSample = 0;
-    _totalStepsPerSample = TABLE_MAPPING->size();
-
     timer = new QTimer(this);
     this->myProcess =0;
 
@@ -295,6 +288,9 @@ void ProgressDialog::startRun(){
         standardOut->clear();
 
         timer->start(1000);
+
+        _stepsCompletedSample = 0;
+        _totalStepsPerSample = TABLE_MAPPING->size();
 
         initProcess();
     }

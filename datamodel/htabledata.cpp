@@ -62,7 +62,6 @@ HTableData::HTableData(QWidget *parent) :
 
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
-
 }
 
 HTableData::~HTableData()
@@ -294,6 +293,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     DataManager *datamanager = DataManager::getDataManager();
     HTableData *htable = new HTableData;
+    htable->setAttribute(Qt::WA_DeleteOnClose); // frees up memory once it's closed
     htable->setMultiSampleMode(this->isMultiSampleMode());
     htable->setSampleNames(this->sampleNames);
     htable->clearConnectors();
@@ -350,13 +350,12 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->switchCategory(this->id.attrType);
 
 
-    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
-    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
-    toolbarManager->addTab(htab,  htable);
-
-    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
-    wStacker->stackWidget(htable);
-
+    // kishori's changes
+//    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
+//    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
+//    toolbarManager->addTab(htab,  htable);
+//    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
+//    wStacker->stackWidget(htable);
   //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();
 
 }

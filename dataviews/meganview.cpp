@@ -47,10 +47,10 @@ MeganView::MeganView(QWidget *parent):
     }
 
     scene = new QGraphicsScene;
-
+    graphicsView->setRenderHints(QPainter::Antialiasing);
     graphicsView->setScene(scene);
 
-    qDebug() << graphicsView->x() << "  " << graphicsView->y();
+    //qDebug() << graphicsView->x() << "  " << graphicsView->y();
 
     connect(spinBox,SIGNAL(valueChanged(int)),this,SLOT(setDepth(int)));
     connect(exportToMegan, SIGNAL(clicked()), this, SLOT(exportMeganFile()));
@@ -102,10 +102,10 @@ void MeganView::setDataFromFile(const QString &fileName) {
           meganData = new MeganData;
           meganData->setDeltaY(this->deltaY);
           meganData->setConnectorPen(this->connectorPen);
+
           QTextStream in(&file);
           QString  data = in.readAll();
           meganData->setData(data);
-
           meganData->createTreeView();
           meganData->setInitLineLength(INIT_LINE_LENGTH);
 

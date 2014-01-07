@@ -201,7 +201,7 @@ void GridSetup::initForm(const QString &selected){
 //        EC2Form->populateValues(g, selected);
 //    }
 //    else{
-        //normal config is shown
+    //normal config is shown
     NonEC2 *normalForm = new NonEC2();
     g->nonec2 = normalForm;
     wid->addWidget(g->nonec2);
@@ -262,7 +262,6 @@ GridSetup::~GridSetup()
 {
     delete Grids;
     delete allWidgets;
-
     delete ui;
     delete gc;
 

@@ -22,17 +22,17 @@ MainFrame::MainFrame(QWidget *parent) :
     actionRunStages = this->findChild<QAction *>("actionStages");
 
     toolBar = this->findChild<QToolBar *>("toolBar");
-    leftToolBar = this->findChild<QToolBar *>("leftToolBar");
+//    leftToolBar = this->findChild<QToolBar *>("leftToolBar");
 
-    setupLeftToolBar();
+//    setupLeftToolBar();
 
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
     actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
     actionAbout = this->findChild<QAction *>("actionAbout");
 
-    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
-    toolbarManager->setToolBar(leftToolBar);
-    leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
+//    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
+//    toolbarManager->setToolBar(leftToolBar);
+//    leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
 
     setupWidget = 0;
     parentWidget = 0;
@@ -78,20 +78,20 @@ MainFrame::MainFrame(QWidget *parent) :
     wStacker->setReferenceCoordinate(this->pos());
 }
 
-void MainFrame::setupLeftToolBar(){
-    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
-    leftToolBar->setGeometry(0, toolBar->height(),4,10);
-    leftToolBar->setLayoutDirection(Qt::LeftToRight);
-    leftToolBar->setOrientation(Qt::Vertical);
-    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    leftToolBar->setMinimumSize(QSize(0,0));
-    leftToolBar->setBaseSize(QSize(0,0));
-    leftToolBar->setSizeIncrement(0,0);
-    leftToolBar->setFloatable(true);
-    leftToolBar->setMovable(true);
-    leftToolBar->setAutoFillBackground(false);
-    leftToolBar->setParent(this);
-}
+//void MainFrame::setup'LeftToolBar'(){
+//    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
+//    leftToolBar->setGeometry(0, toolBar->height(),4,10);
+//    leftToolBar->setLayoutDirection(Qt::LeftToRight);
+//    leftToolBar->setOrientation(Qt::Vertical);
+//    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+//    leftToolBar->setMinimumSize(QSize(0,0));
+//    leftToolBar->setBaseSize(QSize(0,0));
+//    leftToolBar->setSizeIncrement(0,0);
+//    leftToolBar->setFloatable(true);
+//    leftToolBar->setMovable(true);
+//    leftToolBar->setAutoFillBackground(false);
+//    leftToolBar->setParent(this);
+//}
 
 void MainFrame::showSetupError(QString warningStr) {
 

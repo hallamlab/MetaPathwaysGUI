@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>976</width>
-    <height>543</height>
+    <width>840</width>
+    <height>1043</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,7 +77,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>976</width>
+     <width>840</width>
      <height>22</height>
     </rect>
    </property>
@@ -128,17 +128,6 @@
    <addaction name="actionStages"/>
    <addaction name="actionRun"/>
    <addaction name="actionResults"/>
-  </widget>
-  <widget class="QToolBar" name="leftToolBar">
-   <property name="windowTitle">
-    <string>Sub Windows</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>BottomToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionSetup">
    <property name="text">
