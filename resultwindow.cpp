@@ -80,6 +80,9 @@ void ResultWindow::_loadResults() {
     this->disableSampleChanged = true;
     this->updateFileNames();
     this->disableSampleChanged = false;
+    if (this->sampleSelect->count() > 0) {
+        this->sampleSelect->setCurrentIndex(0);
+    }
 }
 
 
@@ -127,6 +130,7 @@ void ResultWindow::updateFileNames(){
     files = this->rundata->getFileList();
     if( files.isEmpty()) return;
 
+    sampleSelect->clear();
     QStringList existing;
 
     for (int i=0;i<sampleSelect->count();i++){

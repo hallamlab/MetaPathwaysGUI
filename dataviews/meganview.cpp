@@ -198,7 +198,7 @@ void MeganView::adjustScaleY() {
 
 void MeganView::computePositions(){
     meganData->computeBounds(this->depth );
-    this->adjustScaleY();
+    //this->adjustScaleY();
 
     meganData->synchronizeNodeAndTaxonItems(meganData->getRoot(),taxons[0][0], 0 ,this->depth);
     meganData->synchronizeConnectingLines(taxons[0][0], 0,  this->depth, this->lineStyle);
@@ -216,7 +216,6 @@ void MeganView::scaleDeltaY(double scaleFactor) {
 void MeganView::unscale(double scalefactor) {
 
     meganData->setLineStyle(this->lineStyle);
-
     meganData->unscale(taxons[0][0], this->graphicsView, 0, this->depth, scalefactor);
     scene->update();
 }
@@ -226,8 +225,8 @@ void MeganView::reDraw(double scale) {
       meganData->setDeltaY(this->deltaY);
       this->computePositions();
       scene->update();
-      scene->setSceneRect(scene->itemsBoundingRect());
-      scene->update();
+     // scene->setSceneRect(scene->itemsBoundingRect());
+     // scene->update();
 }
 
 
@@ -271,24 +270,23 @@ void MeganView::exportMeganFile() {
 
 bool MeganView::eventFilter(QObject *object, QEvent *event){
 
-    if (object==graphicsView->viewport() && event->type() == QEvent::Wheel){;
+    if (object==graphicsView->viewport() && event->type() == QEvent::Wheel){
         double scaleFactor = 1.05;
 
         QWheelEvent *qwe = dynamic_cast<QWheelEvent *>(event);
         if(qwe->delta() > 0) {
             //this->scaleDeltaY(scaleFactor);
-            graphicsView->scale(1, scaleFactor);
+            graphicsView->scale(scaleFactor, scaleFactor);
             this->yscale *= scaleFactor;
             this->unscale(1/scaleFactor);
         } else {
            // this->scaleDeltaY(1 /scaleFactor);
-            graphicsView->scale(1, 1/scaleFactor);
+            graphicsView->scale(scaleFactor, 1/scaleFactor);
             this->yscale /= scaleFactor;
             this->unscale(scaleFactor);
         }
 
         event->accept();
-
         return true;
     }
     return false;

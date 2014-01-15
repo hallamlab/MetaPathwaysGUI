@@ -74,6 +74,9 @@ MainFrame::MainFrame(QWidget *parent) :
         validateSetup();
     }
 
+    // auto update code
+    // run a separate process to check if there is a new file
+
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
 }
