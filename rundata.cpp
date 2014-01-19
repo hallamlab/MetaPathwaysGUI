@@ -321,7 +321,7 @@ bool RunData::validate(QString &warningMsg) {
     QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + "/MetaPathways.py");
 
     if( !file.exists() || !file1.exists() ) {
-        warningMsg = warningMsg + " -MetaPathways path\n";
+        warningMsg = warningMsg + " -MetaPathways.py is missing from your specified MetaPathways directory. Please verify it exists!\n";
         correct = false;
     }
 
