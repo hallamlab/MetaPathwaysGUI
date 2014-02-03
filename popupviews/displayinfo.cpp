@@ -14,7 +14,6 @@ DisplayInfo::DisplayInfo(QWidget *parent) :
     orfMap = this->findChild<QPushButton *>("orfMap");
     connect(orfMap, SIGNAL(clicked()), this, SLOT(openGenomeView()));
 
-
     sourceFile = "";
     sourceType = FASTA;
 }
@@ -39,7 +38,7 @@ void DisplayInfo::clickedOnCell(int row, int col) {
 
     qDebug() << "Row " << row << " col " << col;
 
-    this->textOut->setText("Hello how are you?");
+    this->textOut->setPlainText("Hello how are you?");
     this->show();
 }
 
@@ -56,8 +55,10 @@ void DisplayInfo::itemDoubleClicked(QTableWidgetItem * item) {
         result = QString("");
     else
          result = fileIndex->getDataToDisplay(key);
-
+    qDebug() << "file index is " << fileIndex << "result is " << result;
     this->textOut->setText(result);
+//    document = new QTextDocument(result);
+//    this->textOut->setDocument(document);
     this->show();
 }
 

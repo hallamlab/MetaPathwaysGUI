@@ -10,6 +10,7 @@
 #include "caching/fileindex.h"
 #include <QHash>
 #include <QPushButton>
+#include <QPlainTextEdit>
 #include "genebrowser/genomeview.h"
 
 namespace Ui {
@@ -36,6 +37,7 @@ public slots:
 private:
     Ui::DisplayInfo *ui;
     QTextEdit * textOut;
+    QTextDocument* document;
     QDialogButtonBox * okAndCancel;
     QString sourceFile;
     SOURCETYPE sourceType;

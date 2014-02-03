@@ -72,12 +72,12 @@ bool ProgressDialog::checkInputOutPutLocations() {
 void ProgressDialog::readStepsLog(){
     _stepsCompletedSample = 0;
 
-    if(!this->checkInputOutPutLocations()) return;
+    //if(!this->checkInputOutPutLocations()) return;
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
 
-    //qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
+    qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
 
     QFile inputFile(pathToLog);
     QHash<QString, QString> *statusHash = new QHash<QString,QString>();
@@ -163,7 +163,6 @@ void ProgressDialog::updateProgressBar(){
 
 void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
     QHash<QString,QString>::iterator it;
-    bool stepFailed = false;
 
     if(stepName=="GENBANK_FILE"){
         if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
@@ -178,6 +177,9 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
         }else if(statusHash->operator []("GENBANK_FILE")=="SKIPPED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "SKIPPED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "SKIPPED";
+        }else if(statusHash->operator []("GENBANK_FILE")=="ALREADY_COMPUTED"){
+            statusHash->operator []("CREATE_SEQUIN_FILE") = "ALREADY_COMPUTED";
+            statusHash->operator []("PATHOLOGIC_INPUT") = "ALREADY_COMPUTED";
         }
         return;
     }
@@ -198,6 +200,9 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
             }
             else if (v == "SUCCESS") {
                 statusHash->insert(realStepName,"SUCCESS");
+            }
+            else if (v == "SUCCESS") {
+                statusHash->insert(realStepName,"ALREADY_COMPUTED");
             }
             else if (v == "SKIPPED"){
                 statusHash->insert(realStepName,"SKIPPED");
@@ -286,6 +291,10 @@ void ProgressDialog::startRun(){
         cancelButton->setEnabled(true);
         runButton->setDisabled(true);
         standardOut->clear();
+        logBrowser->clear();
+        sampleSelect->clear();
+        summaryTable->clearContents();
+        progressBar->setValue(0);
 
         timer->start(1000);
 
@@ -353,7 +362,7 @@ void ProgressDialog::initProcess(){
 
 void ProgressDialog::selectedFileChanged(QString file){
     rundata->setCurrentSample(file);
-    progressLabel->setText("Progress - " + rundata->getCurrentSample());
+    //progressLabel->setText("Progress - " + rundata->getCurrentSample());
 
     logBrowser->clear();
     summaryTable->clearContents();
