@@ -68,11 +68,11 @@ ResultWindow::ResultWindow(QWidget *parent) :
 //    graphs["CONT LEN HIST"] = new GraphData();
 //    graphs["ORF LEN HIST"] = new GraphData();
 
+#ifdef MEGAN_VIEW
     meganviews["MEGAN_TAXONOMIC"]= new MeganView();
-
-
     DataManager *datamanager = DataManager::getDataManager();
     datamanager->createDataModel();
+#endif
 }
 
 void ResultWindow::_loadResults() {
@@ -229,12 +229,13 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
 
-
+#ifdef MEGAN_VIEW
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
     m->clearExistingTree();
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
-
     resultTabs->addTab(m, "TAXONOMIC");
+#endif
+
 
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
