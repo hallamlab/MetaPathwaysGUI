@@ -1,7 +1,6 @@
 #ifndef RESULTWINDOW_H
 #define RESULTWINDOW_H
 
-#include <QWidget>
 #include <QTableWidget>
 #include <QPushButton>
 #include <QComboBox>

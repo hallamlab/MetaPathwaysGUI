@@ -14,27 +14,6 @@ Utilities::Utilities()
 {
 }
 
-/*
- * Helper class for enabling numberic sorting of table items.
- * Credit to author at http://stackoverflow.com/a/17382750/485500 .
- */
-
-bool TableNumberItem::operator <(const QTableWidgetItem &other) const
-{
-    QString str1 = text();
-    QString str2 = other.text();
-
-    if (str1[0] == '$' || str1[0] == '€') {
-        str1.remove(0, 1);
-        str2.remove(0, 1); // we assume both items have the same format
-    }
-
-    if (str1[str1.length() - 1] == '%') {
-        str1.chop(1);
-        str2.chop(1); // this works for "N%" and for "N %" formatted strings
-    }
-return str1.toDouble() < str2.toDouble();
-}
 
 
 
@@ -207,7 +186,7 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
 
                 if (splitList.size() > 0){
                     //if the list has a key and value for us to use
-                    if (splitList.at(0).operator ==(KEY)){
+                    if (splitList.at(0)==KEY){
                         if (DELETE){
                             //we're not going to copy this entry over to the new configuration file
                             continue;

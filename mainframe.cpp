@@ -4,7 +4,6 @@
 #include <iostream>
 #include <QSettings>
 #include <QStylePainter>
-#include <QtGui>
 
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),

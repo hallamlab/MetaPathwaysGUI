@@ -187,6 +187,7 @@ void RunData::setupDefaultConfig(){
 
                 while ( !in.atEnd() )  {
                     QString line = in.readLine().trimmed();
+                    qDebug() << line;
                     if( line.indexOf(pythonPath) != -1) {
                         out << "PYTHON_EXECUTABLE" << "  " << this->CONFIG["PYTHON_EXECUTABLE"] <<"\n";
                     }
@@ -261,7 +262,7 @@ void RunData::setupDefaultParams(){
             }
             outFile.close();
         }
-        setupDefaultParams();
+        //setupDefaultParams();
     }
 }
 void RunData::setCurrentSample(QString currentSample) {

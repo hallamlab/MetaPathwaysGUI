@@ -9,7 +9,6 @@
 #include <QStringList>
 #include <QDebug>
 #include <QMessageBox>
-#include <QtCore>
 #include <QChar>
 #include "types.h"
 
