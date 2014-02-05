@@ -171,10 +171,12 @@ void RunData::setupDefaultConfig(){
         reWriteConfig = true;
     }
 
-    qDebug() << "rewrite config is " << reWriteConfig;
-    qDebug() << "pathologic is " << this->CONFIG["PATHOLOGIC_EXECUTABLE"];
+//    qDebug() << "rewrite config is " << reWriteConfig;
+//    qDebug() << "pathologic is " << this->CONFIG["PATHOLOGIC_EXECUTABLE"];
     if( reWriteConfig ){
-        QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
+        QString path = this->CONFIG["METAPATHWAYS_PATH"];
+        if (path.isEmpty()) path = QDir::currentPath();
+        QFile outFile( path + "/" + this->TEMPLATE_CONFIG);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG);
 
         if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
@@ -240,7 +242,9 @@ void RunData::setupDefaultParams(){
     }
 
     if (reWriteParam){
-        QFile outFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+        QString path = this->CONFIG["METAPATHWAYS_PATH"];
+        if (path.isEmpty()) path = QDir::currentPath();
+        QFile outFile( path + "/" + this->TEMPLATE_CONFIG);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_PARAM);
 
         if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
