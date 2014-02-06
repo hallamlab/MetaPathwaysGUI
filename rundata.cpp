@@ -134,11 +134,11 @@ int RunData::getRunningStepNumber(){
 }
 
 /*
- * Should setup settings.
- * Usually this lives in a template_config file. So if it doesn't exist, we'll have to create it.
+ * Setups default configs. We can assume sometimes the exe may have been moved to a different location rather than as a sibling file
+ * with the metapathways python code. Therefore, sometimes there may be a case where on initial startup, there are no config or param files
+ * since the METAPATHWAYS_PATH will not be set. So we should then generate template configs and param files for wherever the executable sits to
+ * alleviate this ambiguitity. Why are we even doing this?
  */
-
-
 void RunData::setupDefaultConfig(){
 
     QRegExp pythonPath("PYTHON_EXECUTABLE");
@@ -149,9 +149,12 @@ void RunData::setupDefaultConfig(){
     QRegExp pathLogicExecPath("PATHOLOGIC_EXECUTABLE");
 
     bool reWriteConfig = false;
-    QFileInfo config_file( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_CONFIG);
+    QString path = this->CONFIG["METAPATHWAYS_PATH"];
+    if (path.isEmpty()) path = QDir::currentPath();
+    QFileInfo config_file( path + "/" + this->TEMPLATE_CONFIG);
     if (config_file.exists()){
-        QHash<QString, QString> config = Utilities::parseFile(config_file.filePath());
+        QHash<QString, QString> config = Utilities::parseFile(config_file.fileName());
+        qDebug() << config;
 
         if(this->CONFIG["METAPATHWAYS_PATH"]!=config["METAPATHWAYS_PATH"] )
             reWriteConfig = true;
@@ -187,7 +190,7 @@ void RunData::setupDefaultConfig(){
 
                 while ( !in.atEnd() )  {
                     QString line = in.readLine().trimmed();
-                    qDebug() << line;
+                    //qDebug() << line;
                     if( line.indexOf(pythonPath) != -1) {
                         out << "PYTHON_EXECUTABLE" << "  " << this->CONFIG["PYTHON_EXECUTABLE"] <<"\n";
                     }
@@ -213,6 +216,7 @@ void RunData::setupDefaultConfig(){
             }
             outFile.close();
         }
+//        setupDefaultConfig();
     }
    // MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_CONFIG);
 }
@@ -224,9 +228,10 @@ void RunData::setupDefaultConfig(){
  * In both instances, a default parameter settings list will be loaded.
  */
 void RunData::setupDefaultParams(){
-
+    QString path = this->CONFIG["METAPATHWAYS_PATH"];
+    if (path.isEmpty()) path = QDir::currentPath();
     QFileInfo defaultParamFile( QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_PARAM);
-    QFileInfo paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+    QFileInfo paramFile( path + "/" + this->TEMPLATE_PARAM);
     bool reWriteParam = false;
     if( paramFile.exists() ) {
         QHash<QString, QString> params = Utilities::parseFile(paramFile.filePath());
@@ -240,12 +245,14 @@ void RunData::setupDefaultParams(){
 
     } else {
         reWriteParam = true;
+        qDebug() << "couldn't find file";
+
     }
 
     if (reWriteParam){
         QString path = this->CONFIG["METAPATHWAYS_PATH"];
         if (path.isEmpty()) path = QDir::currentPath();
-        QFile outFile( path + "/" + this->TEMPLATE_CONFIG);
+        QFile outFile( path + "/" + this->TEMPLATE_PARAM);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_PARAM);
 
         if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
@@ -262,7 +269,7 @@ void RunData::setupDefaultParams(){
             }
             outFile.close();
         }
-        //setupDefaultParams();
+        setupDefaultParams();
     }
 }
 void RunData::setCurrentSample(QString currentSample) {
@@ -275,7 +282,7 @@ QString RunData::getCurrentSample() {
 
 
 bool RunData::checkParams(){
-    QFileInfo paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+    QFile paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
 
     if (paramFile.exists()) return true;
     else return false;
@@ -299,7 +306,7 @@ void RunData::setNumADB(unsigned int n){
 
 bool RunData::checkConfig(){
   //  qDebug() << " config file ";
-    QFileInfo configFile(  this->CONFIG["METAPATHWAYS_PATH"] + "/" +this->TEMPLATE_CONFIG);
+    QFile configFile(  this->CONFIG["METAPATHWAYS_PATH"] + "/" +this->TEMPLATE_CONFIG);
 
     if (configFile.exists()) return true;
     else return false;
