@@ -154,7 +154,6 @@ void RunData::setupDefaultConfig(){
     QFileInfo config_file( path + "/" + this->TEMPLATE_CONFIG);
     if (config_file.exists()){
         QHash<QString, QString> config = Utilities::parseFile(config_file.fileName());
-        qDebug() << config;
 
         if(this->CONFIG["METAPATHWAYS_PATH"]!=config["METAPATHWAYS_PATH"] )
             reWriteConfig = true;

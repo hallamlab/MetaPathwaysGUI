@@ -97,8 +97,8 @@ bool SettingsTab::findFiles(QString path, QStringList *fileListing){
 }
 
 void SettingsTab::showRRNADBS(){
-    QSettings settings("HallamLab","MetaPathways");
-    QString dbPath = settings.value("REFDBS").toString() + "/taxonomic";
+    RunData *run = RunData::getRunData();
+    QString dbPath =  run->getConfig().operator []("REFDBS") + "/taxonomic";
     QStringList *filesInDir = new QStringList();
 
     QRegExp reg("^[.]");
@@ -122,8 +122,8 @@ void SettingsTab::showRRNADBS(){
 }
 
 void SettingsTab::showORFDBS(){
-    QSettings settings("HallamLab","MetaPathways");
-    QString dbPath = settings.value("REFDBS").toString() + "/functional";
+    RunData *run = RunData::getRunData();
+    QString dbPath =  run->getConfig().operator []("REFDBS") + "/functional";
     QStringList *filesInDir = new QStringList();
 
     QRegExp reg("^[.]");
