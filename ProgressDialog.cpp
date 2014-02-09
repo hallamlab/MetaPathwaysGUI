@@ -323,26 +323,26 @@ void ProgressDialog::initProcess(){
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
     rundata->setCurrentSample(sampleSelect->currentText());
 
-    QString program =  rundata->getConfig()["PYTHON_EXECUTABLE"];
+    QString program =  QDir::toNativeSeparators(rundata->getConfig()["PYTHON_EXECUTABLE"]);
     QStringList arguments;
-    METAPATH = this->rundata->getConfig()["METAPATHWAYS_PATH"];
+    METAPATH = QDir::toNativeSeparators(this->rundata->getConfig()["METAPATHWAYS_PATH"]);
 
-    arguments <<  METAPATH + "/MetaPathways.py";
+    arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "MetaPathways.py");
     arguments << "-v";
-    arguments << "-i" << this->rundata->getParams()["fileInput"];
-    arguments << "-o" << this->rundata->getParams()["folderOutput"];
-    arguments << "-p" << METAPATH + "/template_param.txt";
-    arguments << "-c" << METAPATH + "/template_config.txt";
-    arguments << "-r" << this->rundata->getParams()["overwrite"];
+    arguments << "-i" << QDir::toNativeSeparators(this->rundata->getParams()["fileInput"]);
+    arguments << "-o" << QDir::toNativeSeparators(this->rundata->getParams()["folderOutput"]);
+    arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_param.txt");
+    arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_config.txt");
+    arguments << "-r" << (this->rundata->getParams()["overwrite"]);
 
     //qDebug() << arguments;
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
-    env.insert("CURRDIR", METAPATH);
-    env.insert("METAPATH", METAPATH);
-    env.insert("METAPATHLIB", METAPATH + "/libs");
-    env.insert("STARCLUSTERLIB", METAPATH + "/libs/starcluster");
-    env.insert("PYTHONPATH", METAPATH + "/libs:" + METAPATH + "/libs/starcluster");
+    env.insert("CURRDIR", QDir::toNativeSeparators(METAPATH));
+    env.insert("METAPATH", QDir::toNativeSeparators(METAPATH));
+    env.insert("METAPATHLIB", QDir::toNativeSeparators(METAPATH + QDir::separator() + "libs"));
+    env.insert("STARCLUSTERLIB", QDir::toNativeSeparators(METAPATH + "libs" + QDir::separator() + "starcluster"));
+    env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
 
 //    qDebug() <<  program << " " << arguments.join(" ");
    qDebug() << program << arguments << myProcess;
@@ -359,6 +359,7 @@ void ProgressDialog::initProcess(){
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));    
     connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
 }
+
 
 void ProgressDialog::selectedFileChanged(QString file){
     rundata->setCurrentSample(file);
