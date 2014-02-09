@@ -149,17 +149,17 @@ void RunData::setupDefaultConfig(){
 
     bool reWriteConfig = false;
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
-    qDebug() << "path with CONFIG is " << path;
+    // qDebug() << "path with CONFIG is " << path;
     if (path.isEmpty()) path = QDir::currentPath();
-    qDebug() << "path with CURRENT PATH IS is " << path;
+    // qDebug() << "path with CURRENT PATH IS is " << path;
     QFileInfo config_file( path + "/" + this->TEMPLATE_CONFIG);
-    qDebug() << "config file " << config_file.exists();
+    // qDebug() << "config file " << config_file.exists();
 
     QStringList atrList;
     atrList<< "METAPATHWAYS_PATH" << "PYTHON_EXECUTABLE" << "PERL_EXECUTABLE" << "REFDBS" << "PATHOLOGIC_EXECUTABLE" << "SYSTEM";
 
     if (config_file.exists()){
-        QHash<QString, QString> config = Utilities::parseFile(config_file.fileName());
+        QHash<QString, QString> config = Utilities::parseFile(config_file.filePath());
       //  qDebug() << "(" << this->CONFIG["METAPATHWAYS_PATH"] <<")"  << "(" <<  config["METAPATHWAYS_PATH"] <<")";
 
         foreach( QString atr, atrList ) {
@@ -254,7 +254,7 @@ void RunData::setupDefaultParams(){
 
     } else {
         reWriteParam = true;
-        qDebug() << "couldn't find file";
+        // qDebug() << "couldn't find file";
 
     }
 
