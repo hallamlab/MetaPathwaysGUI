@@ -92,7 +92,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
 
      if( this->useResourceFolder ) {
 
-         QDir resSampleDir( this->OUTPUTPATH + "/" + SampleResourceManager::resourceFolderName + "/" + sampleName );
+         QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
 
          if( !resSampleDir.exists()) {
              resSampleDir.mkpath(resSampleDir.absolutePath());
