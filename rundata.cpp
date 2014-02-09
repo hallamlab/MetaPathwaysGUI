@@ -1,4 +1,5 @@
 #include "rundata.h"
+#include <QMessageBox>
 /*
  * This class contains the data for a run. It is an internal object class that represents all the data
  * about this instance of MetaPathways running.
@@ -12,7 +13,12 @@ RunData* RunData::runData = 0;
 
 
 RunData::RunData(){
-
+    CONFIG.insert("METAPATHWAYS_PATH", QString());
+    CONFIG.insert("PYTHON_EXECUTABLE", QString());
+    CONFIG.insert("PERL_EXECUTABLE", QString());
+    CONFIG.insert("PATHOLOGIC_EXECUTABLE", QString());
+    CONFIG.insert("REFDBS", QString());
+    CONFIG.insert("EXECUTABLES_DIR",QString());
 }
 
 RunData* RunData::getRunData(){
@@ -141,43 +147,42 @@ int RunData::getRunningStepNumber(){
  */
 void RunData::setupDefaultConfig(){
 
-    QRegExp pythonPath("PYTHON_EXECUTABLE");
-    QRegExp perlPath("PERL_EXECUTABLE");
-    QRegExp metaPathwaysPath("METAPATHWAYS_PATH");
-    QRegExp refDBSPath("REFDBS");
-    QRegExp systemType("SYSTEM");
-    QRegExp pathLogicExecPath("PATHOLOGIC_EXECUTABLE");
-
     bool reWriteConfig = false;
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
+    qDebug() << "path with CONFIG is " << path;
     if (path.isEmpty()) path = QDir::currentPath();
+    qDebug() << "path with CURRENT PATH IS is " << path;
     QFileInfo config_file( path + "/" + this->TEMPLATE_CONFIG);
+    qDebug() << "config file " << config_file.exists();
+
+    QStringList atrList;
+    atrList<< "METAPATHWAYS_PATH" << "PYTHON_EXECUTABLE" << "PERL_EXECUTABLE" << "REFDBS" << "PATHOLOGIC_EXECUTABLE" << "SYSTEM";
+
     if (config_file.exists()){
         QHash<QString, QString> config = Utilities::parseFile(config_file.fileName());
+      //  qDebug() << "(" << this->CONFIG["METAPATHWAYS_PATH"] <<")"  << "(" <<  config["METAPATHWAYS_PATH"] <<")";
 
-        if(this->CONFIG["METAPATHWAYS_PATH"]!=config["METAPATHWAYS_PATH"] )
-            reWriteConfig = true;
-        if(this->CONFIG["PYTHON_EXECUTABLE"]!=config["PYTHON_EXECUTABLE"] )
-            reWriteConfig = true;
-        if(this->CONFIG["PERL_EXECUTABLE"]!=config["PERL_EXECUTABLE"] )
-            reWriteConfig = true;
-        if(this->CONFIG["REFDBS"]!=config["REFDBS"] )
-            reWriteConfig = true;
-        if(this->CONFIG["PATHOLOGIC_EXECUTABLE"]!=config["PATHOLOGIC_EXECUTABLE"] )
-            reWriteConfig = true;
-        if(this->CONFIG["EXECUTABLES_DIR"] != "executables/SYSTEM/bit64/") {
-            reWriteConfig = true;
+        foreach( QString atr, atrList ) {
+           if(this->CONFIG[atr].compare(config[atr])!=0 ){
+               reWriteConfig = true;
+             //    qDebug() << "Xxxxxxxxxxxxxxxxxxxxxx  metapathways dir true";
+           }
         }
+        if(!reWriteConfig) this->CONFIG = config;
+
+        /*
+        qDebug() << this->CONFIG;
+        qDebug()<< "\n--------------------\n";
+        qDebug()<< config;
+        */
+
     }
     else {
         reWriteConfig = true;
     }
 
-//    qDebug() << "rewrite config is " << reWriteConfig;
-//    qDebug() << "pathologic is " << this->CONFIG["PATHOLOGIC_EXECUTABLE"];
+    // if we need to reWrite the config
     if( reWriteConfig ){
-        QString path = this->CONFIG["METAPATHWAYS_PATH"];
-        if (path.isEmpty()) path = QDir::currentPath();
         QFile outFile( path + "/" + this->TEMPLATE_CONFIG);
         QFile inputFile(QString(":/text/")  + "/" + this->DEFAULT_TEMPLATE_CONFIG);
 
@@ -186,36 +191,41 @@ void RunData::setupDefaultConfig(){
 
             if (inputFile.open(QIODevice::ReadOnly) ) {
                 QTextStream in(&inputFile);
-
+                //qDebug() << "writing config, input and output files could be opened";
                 while ( !in.atEnd() )  {
                     QString line = in.readLine().trimmed();
-                    //qDebug() << line;
-                    if( line.indexOf(pythonPath) != -1) {
-                        out << "PYTHON_EXECUTABLE" << "  " << this->CONFIG["PYTHON_EXECUTABLE"] <<"\n";
+                    bool matched = false;
+                    foreach( QString atr, atrList ) {
+                       if( line.indexOf(atr) != -1) {
+                           if(!this->CONFIG.contains(atr) || this->CONFIG[atr].length()==0 ) {
+                               if(line.indexOf("METAPATHWAYS_PATH") != -1) {
+                                  this->CONFIG["METAPATHWAYS_PATH"] = path;
+                               }
+                               else {
+                                   this->CONFIG[atr] = Utilities::extractAttribute(line);
+                                 //  qDebug() << "AAA " << line;
+                                 //  qDebug() << "ZZZZZZZZZZZ " << atr << "  " << this->CONFIG[atr];
+                               }
+                           }
+                           out << atr <<"  " <<  CONFIG[atr] << "\n";
+                           matched = true;
+                           break;
+                       }
                     }
-                    else if( line.indexOf(perlPath) != -1) {
-                        out << "PERL_EXECUTABLE" << "  " <<  this->CONFIG["PERL_EXECUTABLE"] <<"\n";
+                    if( matched==false) {
+                        out << line << "\n";
                     }
-                    else if( line.indexOf(metaPathwaysPath) != -1) {
-                        out << "METAPATHWAYS_PATH" << "  " <<  this->CONFIG["METAPATHWAYS_PATH"] <<"\n";
-                    }
-                    else if( line.indexOf(refDBSPath) != -1) {
-                        out << "REFDBS" << "  " <<  this->CONFIG["REFDBS"] <<"\n";
-                    }
-                    else if( line.indexOf(pathLogicExecPath ) != -1) {
-                        out << "PATHOLOGIC_EXECUTABLE" << "  " <<  this->CONFIG["PATHOLOGIC_EXECUTABLE"] <<"\n";
-                    }
-                    else if( line.indexOf(systemType) != -1) {
-                        out << line.replace( QRegExp("SYSTEM"), this->getSystem()) << "\n";
-                    }
-                    else
-                        out << line + "\n";
+
                 }
                 inputFile.close();
             }
             outFile.close();
+         //   qDebug() << "both file handlers closed, wrote to " << path + "/" + this->TEMPLATE_CONFIG;
         }
-//        setupDefaultConfig();
+
+//        QMessageBox::warning(0,"title","infin loop in setup default config",QMessageBox::Ok);
+
+        setupDefaultConfig();
     }
    // MainFrame::CONFIG = Utilities::parseFile(this->pathMetaPathways + "/" +TEMPLATE_CONFIG);
 }

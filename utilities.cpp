@@ -290,6 +290,30 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
     return configs;
 }
 
+QString Utilities::extractAttribute(QString line) {
+
+    QRegExp splitRegex("\\s");
+    QRegExp keepRegex("\\w+");
+    line = line.remove(QRegExp("[,\\s]*$"));
+    QStringList splitList = line.split(splitRegex);
+    //then, split the line up by white space
+    splitList = splitList.filter(keepRegex);
+    //filter the line into a list, keeping only non-whitespace characters
+
+    QString key;
+    QString value;
+
+    if (splitList.size()>1){
+        //if the list has a and value for us to use
+        value = splitList.at(1);
+        value.replace("'","");
+    }
+    else {
+        value = "";
+    }
+
+    return value;
+}
 
 QString Utilities::createToolTipTable(  QList< QList<QString> > tableData ) {
 
