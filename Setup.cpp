@@ -156,7 +156,6 @@ void Setup::loadPathVariables(){
     if( settings.allKeys().contains("METAPATHWAYS_PATH") ) {
         pathMetaPathwaysTxt->setText(settings.value("METAPATHWAYS_PATH").toString());
         rundata->setValue("METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), _CONFIG);
-        qDebug() << "mp txt " << pathMetaPathwaysTxt->text();
     }
     if( settings.allKeys().contains("PYTHON_EXECUTABLE") ) {
         pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
