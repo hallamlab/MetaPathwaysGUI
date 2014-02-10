@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
-    <height>1043</height>
+    <width>741</width>
+    <height>782</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -71,30 +71,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>840</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuSetup">
-    <property name="title">
-     <string>Setup</string>
-    </property>
-    <addaction name="actionSetupMenu"/>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
-   <addaction name="menuSetup"/>
-   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">

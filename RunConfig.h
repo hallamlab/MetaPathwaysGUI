@@ -32,6 +32,7 @@ public:
     QString selectedFiles;
 
     QList<QGroupBox *> *groupBoxes;
+    QCheckBox* gridBlastChoice;
     QComboBox *fileInputFormat;
     QCheckBox* overwrite;
 
@@ -62,7 +63,6 @@ private:
     QGroupBox *runOptionsGroupBox;
     QPushButton *fileBrowseButton;
     QTableWidget *table;
-    QCheckBox* gridBlastChoice;
     QPushButton* setupGrids;
     GridSetup* gridSetup;
     QPushButton *folderBrowseButton;

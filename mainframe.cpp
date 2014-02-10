@@ -5,6 +5,19 @@
 #include <QSettings>
 #include <QStylePainter>
 
+#ifdef Q_OS_WIN
+#include <windows.h> // for Sleep
+#endif
+void MainFrame::qSleep(int ms)
+{
+#ifdef Q_OS_WIN
+    Sleep(uint(ms));
+#else
+    struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
+    nanosleep(&ts, NULL);
+#endif
+}
+
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainFrame)
@@ -15,23 +28,12 @@ MainFrame::MainFrame(QWidget *parent) :
     actionSetup = this->findChild<QAction *>("actionSetup");
     actionRunSettings = this->findChild<QAction *>("actionRunSettings");
     actionProgress = this->findChild<QAction *>("actionRun");
-    //actionGridProgress = this->findChild<QAction *>("actionGridProgress");
     actionResults = this->findChild<QAction *>("actionResults");
     actionRunParams = this->findChild<QAction *>("actionRunParams");
     actionRunStages = this->findChild<QAction *>("actionStages");
 
     toolBar = this->findChild<QToolBar *>("toolBar");
-//    leftToolBar = this->findChild<QToolBar *>("leftToolBar");
-
-//    setupLeftToolBar();
-
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
-    actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
-    actionAbout = this->findChild<QAction *>("actionAbout");
-
-//    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
-//    toolbarManager->setToolBar(leftToolBar);
-//    leftToolBar->setStyleSheet("QToolBar{spacing: 2px;}");
 
     setupWidget = 0;
     parentWidget = 0;
@@ -43,13 +45,13 @@ MainFrame::MainFrame(QWidget *parent) :
 
     this->setWindowTitle("MetaPathways 2.0");
     welcomeWindow = new Welcome();
-    stackedWidget->addWidget(welcomeWindow);
+    welcomeWindow->show();
+    qSleep(2500);
+    welcomeWindow->close();
+    delete welcomeWindow;
 
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
-
-//    QSettings settings("HallamLab", "MetaPathways");
-//    settings.clear();
 
     setupWidget = new Setup();
     setupWidget->loadPathVariables();
@@ -79,21 +81,6 @@ MainFrame::MainFrame(QWidget *parent) :
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
 }
-
-//void MainFrame::setup'LeftToolBar'(){
-//    leftToolBar->setAllowedAreas(Qt::LeftToolBarArea);
-//    leftToolBar->setGeometry(0, toolBar->height(),4,10);
-//    leftToolBar->setLayoutDirection(Qt::LeftToRight);
-//    leftToolBar->setOrientation(Qt::Vertical);
-//    leftToolBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-//    leftToolBar->setMinimumSize(QSize(0,0));
-//    leftToolBar->setBaseSize(QSize(0,0));
-//    leftToolBar->setSizeIncrement(0,0);
-//    leftToolBar->setFloatable(true);
-//    leftToolBar->setMovable(true);
-//    leftToolBar->setAutoFillBackground(false);
-//    leftToolBar->setParent(this);
-//}
 
 void MainFrame::showSetupError(QString warningStr) {
 
@@ -147,16 +134,11 @@ void MainFrame::addRemainingTabs() {
     stackedWidget->addWidget(progress);
     stackedWidget->addWidget(gridProgress);
 
-    stackedWidget->setCurrentWidget(welcomeWindow);
-
     connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
-    connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
-    connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
-//    connect(actionGridProgress, SIGNAL(triggered()), this, SLOT(displayGridProgress()));
 }
 
 void MainFrame::displayGridProgress(){
@@ -230,9 +212,7 @@ void MainFrame::updateWidgets(){
                     QStringList rt(rdbs.keys());
                     value = rt.join(",");
                 }
-                //qDebug() << "keys " <<  adbs.keys() << rdbs.keys() << " value " << value << " cfname " << configName;
             }
-            //qDebug() << " Setting the value " << configName << " val = " << value;
             rundata->setValue(configName, value,_PARAMS);
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configName, value, false, false);
         }
@@ -247,7 +227,6 @@ void MainFrame::updateWidgets(){
             QGroupBox *temp = *i;
             QString stepName = temp->objectName();
             //get the name, look up in the hash the corresponding setting key value pair
-          //  qDebug() <<  "stepName " << MainFrame::CONFIG_MAPPING;
             QString configKey = rundata->getConfigMapping().key(stepName);
 
             //get the name of the radiobutton on the form by isolating for caps from the step,
@@ -267,11 +246,6 @@ void MainFrame::updateWidgets(){
 
             //write to file the changes
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
-
-//            //disable all buttons now for the run
-//            yesRadioButton->setEnabled(false);
-//            redoRadioButton->setEnabled(false);
-//            skipRadioButton->setEnabled(false);
         }
 
         //write file format
@@ -284,10 +258,10 @@ void MainFrame::updateWidgets(){
         rundata->setValue("folderOutput", stages->selectedFolder,_PARAMS);
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
-//        if (stages->gridBlastChoice->isChecked() && MainFrame::PARAMS.value("metapaths_steps:BLAST_REFDB")!="skip"){
-//            MainFrame::PARAMS["metapaths_steps:BLAST_REFDB"] = "grid";
-//            Utilities::writeSettingToFile(MainFrame::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
-//        }
+        if (stages->gridBlastChoice->isChecked() && rundata->getParams().operator []("metapaths_steps:BLAST_REFDB")!="skip"){
+            rundata->setValue("metapaths_steps:BLAST_REFDB","grid",_PARAMS);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
+        }
 
         //trim off commas on refdbs for rRNA and annotation
         QString rRNArefdbs = rundata->getValueFromHash("rRNA:refdbs", _PARAMS);
@@ -323,7 +297,6 @@ void MainFrame::executionPrep(){
     rrnaDBS = rdbs.split(",");
     rrnaDBS.removeAll("");
 
-
     QString adbs = rundata->getValueFromHash("annotation:dbs", _PARAMS);
 
     QStringList annotationDBS = adbs.split(",");
@@ -331,7 +304,6 @@ void MainFrame::executionPrep(){
 
     rrnaDBS  = Utilities::getUniqueDBS(rrnaDBS);
     annotationDBS = Utilities::getUniqueDBS(annotationDBS);
-
 
     if( annotationDBS.size() > 0) {
         rundata->setNumADB(annotationDBS.size());
@@ -345,11 +317,6 @@ void MainFrame::executionPrep(){
 void MainFrame::displayProgress(){
     this->updateWidgets();
     stackedWidget->setCurrentWidget(progress);
-}
-
-void MainFrame::displayWelcome(){
-    stackedWidget->setCurrentWidget(welcomeWindow);
-    updateWidgets();
 }
 
 void MainFrame::openSetup(){

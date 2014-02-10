@@ -56,7 +56,6 @@ private slots:
 
     void validateSetup();
     void displayProgress();
-    void displayWelcome();
     void displayResults();
     void displayStages();
     void displayParams();
@@ -69,6 +68,7 @@ private:
     void executionPrep();
     void greyTabs(bool enabled);
     void setupLeftToolBar();
+    void qSleep(int ms);
 
     Ui::MainFrame *ui;
     ParentWidget *parentWidget;
@@ -101,8 +101,8 @@ private:
     QToolBar* toolBar;
     QToolBar* leftToolBar;
 
-    QMenu* menuSetup;
-    QMenu* menuAbout;
+//    QMenu* menuSetup;
+//    QMenu* menuAbout;
 
     RunData* rundata;
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>778</width>
-    <height>826</height>
+    <width>685</width>
+    <height>804</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -72,6 +72,39 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="3" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Delete Replicates</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="maxVisibleItems">
+      <number>2</number>
+     </property>
+     <property name="maxCount">
+      <number>2</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>yes</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>no</string>
+      </property>
+     </item>
+    </widget>
+   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_4">
      <property name="font">
@@ -108,14 +141,34 @@
      </item>
     </widget>
    </item>
-   <item row="3" column="0" colspan="7">
+   <item row="2" column="3" colspan="2">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Mininum Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+     <property name="value">
+      <number>60</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="6">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
+   <item row="4" column="0" colspan="2">
     <widget class="QLabel" name="label_7">
      <property name="font">
       <font>
@@ -134,7 +187,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1" colspan="6">
+   <item row="5" column="1" colspan="5">
     <widget class="QListWidget" name="annotationDBS">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
@@ -202,14 +255,14 @@
      </item>
     </widget>
    </item>
-   <item row="7" column="4" colspan="2">
+   <item row="7" column="3">
     <widget class="QLabel" name="label_14">
      <property name="text">
       <string>Maximum Hits</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="6">
+   <item row="7" column="5">
     <widget class="QSpinBox" name="annotationMAX_HITS">
      <property name="minimum">
       <number>0</number>
@@ -245,14 +298,14 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="4" colspan="2">
+   <item row="8" column="3">
     <widget class="QLabel" name="label_13">
      <property name="text">
       <string>Mininum Length</string>
      </property>
     </widget>
    </item>
-   <item row="8" column="6">
+   <item row="8" column="5">
     <widget class="QSpinBox" name="annotationMIN_LENGTH">
      <property name="maximum">
       <number>1000</number>
@@ -286,7 +339,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="1" colspan="3">
+   <item row="10" column="1" colspan="2">
     <widget class="QTextEdit" name="annotationMAX_EVALUE">
      <property name="minimumSize">
       <size>
@@ -304,19 +357,19 @@
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Lucida Grande'; font-size:13pt;&quot;&gt;0.000001&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Lucida Grande UI'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Lucida Grande';&quot;&gt;0.000001&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="0" colspan="7">
+   <item row="11" column="0" colspan="6">
     <widget class="Line" name="line_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="12" column="0" colspan="3">
+   <item row="12" column="0" colspan="2">
     <widget class="QLabel" name="label_15">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -347,7 +400,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="13" column="1" colspan="6">
+   <item row="13" column="1" colspan="5">
     <widget class="QListWidget" name="rrnaREFDBS">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -396,14 +449,14 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="15" column="4">
+   <item row="15" column="3">
     <widget class="QLabel" name="label_19">
      <property name="text">
       <string>Mininum Bitscore</string>
      </property>
     </widget>
    </item>
-   <item row="15" column="5" colspan="2">
+   <item row="15" column="4" colspan="2">
     <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
      <property name="minimum">
       <number>1</number>
@@ -420,7 +473,7 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="16" column="1" colspan="3">
+   <item row="16" column="1" colspan="2">
     <widget class="QTextEdit" name="rrnaMAX_EVALUE">
      <property name="maximumSize">
       <size>
@@ -432,12 +485,12 @@ p, li { white-space: pre-wrap; }
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Lucida Grande'; font-size:13pt;&quot;&gt;0.000001&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Lucida Grande UI'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Lucida Grande';&quot;&gt;0.000001&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="17" column="0" colspan="7">
+   <item row="17" column="0" colspan="6">
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -475,59 +528,6 @@ p, li { white-space: pre-wrap; }
        <string>no</string>
       </property>
      </item>
-    </widget>
-   </item>
-   <item row="1" column="6">
-    <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <property name="maxVisibleItems">
-      <number>2</number>
-     </property>
-     <property name="maxCount">
-      <number>2</number>
-     </property>
-     <item>
-      <property name="text">
-       <string>yes</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>no</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="1" column="5">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Delete Replicates</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="6">
-    <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>10000</number>
-     </property>
-     <property name="value">
-      <number>60</number>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Mininum Length</string>
-     </property>
     </widget>
    </item>
   </layout>

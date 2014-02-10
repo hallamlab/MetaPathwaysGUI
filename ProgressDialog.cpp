@@ -77,8 +77,6 @@ void ProgressDialog::readStepsLog(){
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
 
-    //qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
-
     QFile inputFile(pathToLog);
     QHash<QString, QString> *statusHash = new QHash<QString,QString>();
     QRegExp whiteSpace("\\s");
