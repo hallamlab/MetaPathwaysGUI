@@ -5,6 +5,19 @@
 #include <QSettings>
 #include <QStylePainter>
 
+#ifdef Q_OS_WIN
+#include <windows.h> // for Sleep
+#endif
+void MainFrame::qSleep(int ms)
+{
+#ifdef Q_OS_WIN
+    Sleep(uint(ms));
+#else
+    struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
+    nanosleep(&ts, NULL);
+#endif
+}
+
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainFrame)
@@ -26,8 +39,8 @@ MainFrame::MainFrame(QWidget *parent) :
 //    setupLeftToolBar();
 
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
-    actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
-    actionAbout = this->findChild<QAction *>("actionAbout");
+//    actionSetupMenu = this->findChild<QAction *>("actionSetupMenu");
+//    actionAbout = this->findChild<QAction *>("actionAbout");
 
 //    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
 //    toolbarManager->setToolBar(leftToolBar);
@@ -43,7 +56,9 @@ MainFrame::MainFrame(QWidget *parent) :
 
     this->setWindowTitle("MetaPathways 2.0");
     welcomeWindow = new Welcome();
-    stackedWidget->addWidget(welcomeWindow);
+    welcomeWindow->show();
+    qSleep(2500);
+    welcomeWindow->close();
 
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
@@ -147,8 +162,8 @@ void MainFrame::addRemainingTabs() {
     stackedWidget->setCurrentWidget(welcomeWindow);
 
     connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
-    connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
-    connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
+//    connect(actionAbout, SIGNAL(triggered()), this, SLOT(displayWelcome()));
+//    connect(actionSetupMenu, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
