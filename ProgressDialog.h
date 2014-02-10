@@ -78,6 +78,7 @@ private:
     QTimer *fileCheckTimer;
     QTextEdit *standardOut;
     QComboBox* sampleSelect;
+    QCheckBox* runVerbose;
 };
 
 #endif // ProgressDialog_H

@@ -33,8 +33,8 @@ TableData::TableData(  QWidget *parent) :
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->hide();
 
-    tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
-    tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
+    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
 
 
     this->exportBox = new ExportBox(this);

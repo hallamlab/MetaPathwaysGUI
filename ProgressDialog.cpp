@@ -30,6 +30,8 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     standardOut = this->findChild<QTextEdit *>("standardOut");
     runButton = this->findChild<QPushButton *>("runButton");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
+    runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
+    qDebug() << "run verbose " << runVerbose;
 
     summaryTable->setSortingEnabled(false);
 
@@ -326,7 +328,7 @@ void ProgressDialog::initProcess(){
     METAPATH = QDir::toNativeSeparators(this->rundata->getConfig()["METAPATHWAYS_PATH"]);
 
     arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "MetaPathways.py");
-    arguments << "-v";
+    if(runVerbose->isChecked()) arguments << "-v";
     arguments << "-i" << QDir::toNativeSeparators(this->rundata->getParams()["fileInput"]);
     arguments << "-o" << QDir::toNativeSeparators(this->rundata->getParams()["folderOutput"]);
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_param.txt");
