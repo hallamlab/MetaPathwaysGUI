@@ -56,7 +56,6 @@ private slots:
 
     void validateSetup();
     void displayProgress();
-    void displayWelcome();
     void displayResults();
     void displayStages();
     void displayParams();
