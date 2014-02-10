@@ -39,6 +39,11 @@ public:
 
     ORF* _createAnORF(QStringList &attributes);
 
+    void setDataModelCreated(bool);
+    bool getDataModelCreated();
+    bool AreORFsUptoDate(QString sample);
+    void setORFsUptoDate(QString, bool);
+    void setORFsUptoDateAll( bool);
 
     void createDataModel();
     CATEGORYNODE createCategoryNode(QString line);
@@ -47,6 +52,7 @@ public:
 private:
     DataManager();
     QHash<QString, QList<ORF *> *> *ORFList;
+    QHash<QString, bool> ORFsUptoDateList;
     QHash<QString, QHash<ATTRTYPE, Connector *> > connectors;
     QHash<ATTRTYPE, HTree *>  htrees;
 
@@ -55,6 +61,7 @@ private:
     QHash<ATTRTYPE, QHash<QString, ATTRIBUTE *> > attributes;
 
     bool dataModelCreated;
+
 
 };
 

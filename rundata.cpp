@@ -170,11 +170,7 @@ void RunData::setupDefaultConfig(){
         }
         if(!reWriteConfig) this->CONFIG = config;
 
-        /*
-        qDebug() << this->CONFIG;
-        qDebug()<< "\n--------------------\n";
-        qDebug()<< config;
-        */
+
 
     }
     else {

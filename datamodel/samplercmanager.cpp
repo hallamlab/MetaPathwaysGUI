@@ -29,7 +29,7 @@ SampleResourceManager* SampleResourceManager::getSampleResourceManager() {
 
 QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
      QString path;
-     qDebug() << sampleName << type << OUTPUTPATH;
+
      switch(type) {
          case NUCSTATS:
             path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".nuc.stats";

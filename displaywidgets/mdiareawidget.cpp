@@ -39,6 +39,5 @@ void MdiAreaWidget::removeWidget(HTableData *w) {
         QMdiSubWindow* QMdiChild = qobject_cast<QMdiSubWindow*>(w->parentWidget());
         QMdiChild->close();
         this->subWindows.remove(w);
-        qDebug() << "removing a subwindow";
     }
 }

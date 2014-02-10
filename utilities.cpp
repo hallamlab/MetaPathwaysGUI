@@ -28,11 +28,6 @@ bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
     QString mp = PARAMS->value("METAPATHWAYS_PATH");
     QString blastdbs = PARAMS->value("REFDBS");
 
-    qDebug() << python;
-    qDebug() << perl;
-    qDebug() << mp;
-    qDebug() << blastdbs;
-
     if (python.isEmpty()) return false;
     else if (perl.isEmpty()) return false;
     else if (mp.isEmpty()) return false;

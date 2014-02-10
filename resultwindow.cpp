@@ -80,6 +80,9 @@ void ResultWindow::_loadResults() {
     this->disableSampleChanged = true;
     this->updateFileNames();
     this->disableSampleChanged = false;
+    DataManager *datamanager = DataManager::getDataManager();
+  //  datamanager->setDataModelCreated(false);
+  //  datamanager->setORFsUptoDateAll(false);
     if (this->sampleSelect->count() > 0) {
         this->sampleSelect->setCurrentIndex(0);
     }
@@ -125,7 +128,7 @@ void ResultWindow::setVisible(int i) {
 
 void ResultWindow::updateFileNames(){
 
-    qDebug() << this->rundata->getFileList();
+  //  qDebug() << this->rundata->getFileList();
 
     files = this->rundata->getFileList();
     if( files.isEmpty()) return;
@@ -341,7 +344,7 @@ void ResultWindow::switchToComparativeMode() {
     QString orfTableName;
     QString orfMetaCycTableName;
 
-    qDebug() << "comparative mode";
+  //  qDebug() << "comparative mode";
 
     QList<enum TYPE> types;
     QList<unsigned int> columns;
@@ -360,7 +363,8 @@ void ResultWindow::switchToComparativeMode() {
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
-        datamanager->createORFs(files[i], orfTableName);
+     //   if( !datamanager->AreORFsUptoDate(files[i]) )
+           datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
     }

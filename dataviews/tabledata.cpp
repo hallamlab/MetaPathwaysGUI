@@ -234,7 +234,6 @@ void TableData::initializeSearchFilter(QString query, int column, bool caseSensi
 }
 
 void TableData::searchButtonPressed(){
-    qDebug() << " search button";
     this->searchWidget->show();
 }
 

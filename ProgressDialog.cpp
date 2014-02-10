@@ -77,7 +77,7 @@ void ProgressDialog::readStepsLog(){
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
 
-    qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
+    //qDebug() << "output path is " << OUTPUTPATH << " path to log is " << pathToLog;
 
     QFile inputFile(pathToLog);
     QHash<QString, QString> *statusHash = new QHash<QString,QString>();
@@ -277,7 +277,7 @@ void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
 
-    qDebug() << rRNArefdbs << annotationDBS;
+    // qDebug() << rRNArefdbs << annotationDBS;
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
@@ -315,7 +315,7 @@ void ProgressDialog::initProcess(){
     if(input.exists()) this->checkFiles();
 
     QStringList files = this->rundata->getFileList();
-    qDebug() << files;
+   // qDebug() << files;
     foreach (QString f, files){
         sampleSelect->addItem(f);
     }
@@ -345,8 +345,8 @@ void ProgressDialog::initProcess(){
     env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
 
 //    qDebug() <<  program << " " << arguments.join(" ");
-   qDebug() << program << arguments << myProcess;
-    qDebug() << env.toStringList();
+   //qDebug() << program << arguments << myProcess;
+   // qDebug() << env.toStringList();
 
     myProcess = new QProcess();
 

@@ -26,9 +26,9 @@ ATTRTYPE Connector::getAttrType() {
 
 
 QList<ORF *> Connector::getORFList(ATTRIBUTE *attribute) {
-    qDebug() << "list size " << this->connected.size();
+
     if(this->connected.contains(attribute)) {
-        qDebug() << "attribute not bound ";
+
         return this->connected[attribute];
     }
     else {

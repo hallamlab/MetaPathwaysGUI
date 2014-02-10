@@ -14,9 +14,34 @@ DataManager *DataManager::getDataManager() {
 DataManager::DataManager()
 {
     ORFList = new QHash<QString, QList<ORF *>*>();
-    dataModelCreated = false;
+    this->setDataModelCreated(false);
+            //    dataModelCreated = false;
 }
 
+void DataManager::setDataModelCreated(bool flag) {
+
+    this->dataModelCreated = flag;
+}
+
+bool DataManager::getDataModelCreated() {
+    return this->dataModelCreated;
+}
+
+
+void DataManager::setORFsUptoDateAll(bool flag) {
+    foreach( QString sample, this->ORFsUptoDateList.keys())
+       this->ORFsUptoDateList[sample] = flag;
+}
+
+
+bool DataManager::AreORFsUptoDate(QString sample) {
+    if( !this->ORFsUptoDateList.contains(sample)) return false;
+    return this->ORFsUptoDateList[sample];
+}
+
+void DataManager::setORFsUptoDate(QString sample, bool flag){
+    this->ORFsUptoDateList[sample] = flag;
+}
 
 HTree *DataManager::getHTree(ATTRTYPE atrType) {
 
@@ -70,8 +95,6 @@ QStringList DataManager::getConnectorSamples() {
 
 QList<ATTRTYPE> DataManager::getConnectorSampleAttributes(QString sampleName) {
     if( this->connectors.contains(sampleName) ) {
-        qDebug() << this->connectors[sampleName].keys();
-        qDebug() << this->connectors[sampleName].values();
         return this->connectors[sampleName].keys();
     }
     return QList<ATTRTYPE>();
@@ -166,6 +189,7 @@ void DataManager::createDataModel() {
 
     if( dataModelCreated ) return;
 
+
     RunData *rundata = RunData::getRunData();
 
     QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
@@ -189,7 +213,8 @@ void DataManager::createDataModel() {
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;
 
-    dataModelCreated=true;
+    this->setDataModelCreated(true);
+ //   dataModelCreated=true;
 }
 
 HTree *DataManager::createHTree(QString refDB) {
@@ -282,8 +307,16 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
 
 void DataManager::createORFs(QString sampleName, QString fileName) {
 
+   // qDebug() << "Checking orf sample " << sampleName;
+   // if(this->ORFsUptoDateList.contains(sampleName) &&  this->ORFsUptoDateList[sampleName] ) return;
     //return if already created;
-    if(this->ORFList->contains(sampleName)) return;
+      if(this->ORFList->contains(sampleName)) return;
+   // qDebug() << "ORFs exists for the smaple " << sampleName;
+   /* if( this->ORFList->contains(sampleName)) {
+        this->ORFList->clear(); //memory leak
+       // qDebug() << "Clearing the clog";
+    }*/
+
     this->ORFList->insert(sampleName, new QList<ORF *>);
 
     QFile inputFile(fileName);
@@ -300,6 +333,8 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
     this->attributes[COG].clear();
     this->attributes[KEGG].clear();
     this->attributes[SEED].clear();
+
+ //   this->ORFsUptoDateList[sampleName] = true;
 }
 
 
@@ -369,7 +404,7 @@ Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector
                   orfHash[orf]=true;
               }
           }
-          qDebug() << "ORF hash size " << orfHash.size();
+
           DataManager *datamanager = DataManager::getDataManager();
 
           HTree* targetTree= datamanager->getHTree(attrType) ;
@@ -411,6 +446,6 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
           this->connectors[sampleName] = QHash<ATTRTYPE, Connector *>();
        this->connectors[sampleName][attrType] = connector;
      }
-    qDebug() << sampleName << "created connector " << connector->getORFList().size();
+
     return connector;
 }
