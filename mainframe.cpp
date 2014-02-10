@@ -48,8 +48,6 @@ MainFrame::MainFrame(QWidget *parent) :
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
 
-
-
     setupWidget = new Setup();
     setupWidget->loadPathVariables();
 
