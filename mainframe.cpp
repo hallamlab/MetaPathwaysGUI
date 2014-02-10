@@ -48,8 +48,7 @@ MainFrame::MainFrame(QWidget *parent) :
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
 
-//    QSettings settings("HallamLab", "MetaPathways");
-//    settings.clear();
+
 
     setupWidget = new Setup();
     setupWidget->loadPathVariables();
