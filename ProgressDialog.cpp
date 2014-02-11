@@ -201,7 +201,7 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
             else if (v == "SUCCESS") {
                 statusHash->insert(realStepName,"SUCCESS");
             }
-            else if (v == "SUCCESS") {
+            else if (v == "ALREADY_COMPUTED") {
                 statusHash->insert(realStepName,"ALREADY_COMPUTED");
             }
             else if (v == "SKIPPED"){
