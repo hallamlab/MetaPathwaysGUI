@@ -21,10 +21,8 @@ SettingsTab::SettingsTab(QWidget *parent) :
 
     getAllWidgets();
 
-    annotationDBSWarning = this->findChild<QLabel *>("annotationDBSWarning");
     annotationDBS = this->findChild<QListWidget *>("annotationDBS");
     rrnaREFDBS = this->findChild<QListWidget *>("rrnaREFDBS");
-    rrnaREFDBSWarning = this->findChild<QLabel *>("rrnaREFDBSWarning");
 
     showORFDBS();
     showRRNADBS();
@@ -49,11 +47,9 @@ void SettingsTab::annotationClicked(QModelIndex index){
     }
 
     if (!oneChecked){
-        annotationDBSWarning->show();
         isBothDBSSet();
         return;
     }
-    annotationDBSWarning->hide();
     isBothDBSSet();
 }
 
@@ -66,20 +62,14 @@ void SettingsTab::rrnaClicked(QModelIndex index){
     }
 
     if (!oneChecked) {
-        rrnaREFDBSWarning->show();
         isBothDBSSet();
         return;
     }
-    rrnaREFDBSWarning->hide();
     isBothDBSSet();
 }
 
 void SettingsTab::isBothDBSSet(){
-    if (annotationDBSWarning->isHidden() && rrnaREFDBSWarning->isHidden()){
-        emit setContinueButton();
-    }else{
-        emit hideContinueButton();
-    }
+    emit setContinueButton();
 }
 
 bool SettingsTab::findFiles(QString path, QStringList *fileListing){
@@ -112,7 +102,7 @@ void SettingsTab::showRRNADBS(){
                 rrnaREFDBS->addItem(item);
             }
         }else{
-            rrnaREFDBSWarning->setText("No taxonomic databases found under your specified database path!");
+//            rrnaREFDBSWarning->setText("No taxonomic databases found under your specified database path!");
        }
     }
     else{
@@ -138,7 +128,7 @@ void SettingsTab::showORFDBS(){
                 annotationDBS->addItem(item);
             }
         else{
-            annotationDBSWarning->setText("No functional databases found under your specified database path : " + dbPath );
+//            annotationDBSWarning->setText("No functional databases found under your specified database path : " + dbPath );
         }
     }
     else{
@@ -148,8 +138,8 @@ void SettingsTab::showORFDBS(){
 }
 
 void SettingsTab::setStyling(){
-    rrnaREFDBSWarning->setStyleSheet("color:red");
-    annotationDBSWarning->setStyleSheet("color:red");
+//    rrnaREFDBSWarning->setStyleSheet("color:red");
+//    annotationDBSWarning->setStyleSheet("color:red");
 }
 
 

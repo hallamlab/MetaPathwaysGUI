@@ -279,12 +279,16 @@ void ProgressDialog::startRun(){
 
     // qDebug() << rRNArefdbs << annotationDBS;
 
+    if(rRNArefdbs.isEmpty()){
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"rRNA:refdbs","",false,false);
+    }
+    if(annotationDBS.isEmpty()){
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"annotation:dbs","",false,false);
+    }
+
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
         QMessageBox::warning(0,"Input/Output Not Set!","Missing input or output folders, step back to stages and make sure you've filled that in!",QMessageBox::Ok );
-    }
-    else if(rRNArefdbs.isEmpty() || annotationDBS.isEmpty()){
-        QMessageBox::warning(0,"Datbases Not Set!","Both databases need to be specified! Step back to parameters to make sure you've picked some!",QMessageBox::Ok );
     }
     else{
         // otherwise start off the process
