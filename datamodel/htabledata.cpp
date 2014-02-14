@@ -19,8 +19,13 @@ HTableData::HTableData(QWidget *parent) :
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
 
+ #ifdef SECTION
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
+#else
+    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+#endif
 
     HTABLEIDENTITY a;
    // order is important
