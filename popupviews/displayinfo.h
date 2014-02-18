@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QPlainTextEdit>
 #include "genebrowser/genomeview.h"
+#include "utilities.h"
 
 namespace Ui {
 class DisplayInfo;

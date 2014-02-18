@@ -445,6 +445,33 @@ void ResultWindow::switchToComparativeMode() {
     resultTabs->addTab(htable, "METACYC");
 
 
+    // SEED
+    htable = new HTableData;
+    types.clear();
+    types << STRING << STRING;
+    headers.clear();
+    headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) ";
+    htable->clearConnectors();
+
+    for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );
+       htable->addConnector(connect);
+       headers << files[i];
+       htable->addSampleName(files[i]);
+       types << INT;
+    }
+
+    htable->setParameters(datamanager->getHTree(SEED),  types);
+    htable->setMaxSpinBoxDepth(datamanager->getHTree(SEED)->getTreeDepth());
+    htable->setShowHierarchy(true);
+    htable->setHeaders(headers);
+    htable->setTableIdentity("SEED", SEED);
+    htable->showTableData();
+    htable->setMultiSampleMode(true);
+    resultTabs->addTab(htable, "SEED");
+
+
 }
 
 RunData* ResultWindow::getRunData(){

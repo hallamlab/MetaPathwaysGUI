@@ -381,3 +381,16 @@ QLabel *Utilities::ShowWaitScreen(QString pngFile, QString msg) {
     return aWidget;
 }
 
+
+QString Utilities::insertCharacterAtIntervals(QString string, QChar insertC, int n) {
+
+    QString newString = "";
+    int count = 0;
+    foreach(QChar c, string) {
+        newString += c;
+        if(count%n==0 && count > 0) newString += insertC;
+        count++;
+    }
+    return newString;
+}
+

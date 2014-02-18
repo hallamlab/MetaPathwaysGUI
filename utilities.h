@@ -32,6 +32,7 @@ public:
     static QString createToolTipTable(  QList< QList<QString> > tableData );
     static QLabel *ShowWaitScreen(QString pngFile, QString msg ) ;
     static QLabel *ShowWaitScreen(QString msg) ;
+    static QString insertCharacterAtIntervals(QString string, QChar c, int n);
 };
 
 #endif // UTILITIES_H

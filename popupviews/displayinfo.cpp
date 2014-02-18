@@ -51,10 +51,14 @@ void DisplayInfo::itemDoubleClicked(QTableWidgetItem * item) {
     unsigned int column = item->column();
 
     FileIndex *fileIndex = fileIndexes.contains(column) ? fileIndexes[column] : 0;
-    if( fileIndex ==0 )
+    if( fileIndex ==0 ) {
         result = QString("");
-    else
+    }
+    else {
          result = fileIndex->getDataToDisplay(key);
+    }
+
+    result = Utilities::insertCharacterAtIntervals(result, '\n',10000);
 
     this->textOut->setText(result);
 //    document = new QTextDocument(result);

@@ -45,7 +45,7 @@ void FileIndex::indexFastaFile(QTextStream &inputFile) {
     bool readyToInsert = false;
     while( !inputFile.atEnd()) {
         s.end = pos;
-        line  = inputFile.readLine();
+        line  = inputFile.readLine().trimmed();
         prevPos = pos;
         pos =  pos + line.length() + 1;
 
@@ -58,6 +58,10 @@ void FileIndex::indexFastaFile(QTextStream &inputFile) {
             readyToInsert = true;
         }
     }
+    s.end = pos;
+
+  //  qDebug() << "Begin " << s.beg << "  End " << s.end;
+
     this->locations.insert(name, s);
 }
 
@@ -84,11 +88,16 @@ QString FileIndex::getDataToDisplay(QString &key) {
     QString line;
     QString result("");
     unsigned int pos = s.beg;
+
+   // qDebug() << "A " << s.beg << "  " << s.end;
+
     while( !inputFile.atEnd() && pos < s.end) {
         line  = inputFile.readLine();
         result.append(line);
         pos = pos + line.size() + 1;
     }
+    inputFile.close();
+
     return result;
 }
 
