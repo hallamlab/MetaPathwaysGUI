@@ -395,7 +395,19 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim) {
     QFile outFile(fileName);
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
+
+
+        int j = 0;
+        foreach(QString header, this->headers) {
+            if(j > 0 ) out << delim;
+            out << header;
+            j++;
+        }
+        out << "\n";
+
         for(int i =0; i < this->tableWidget->rowCount(); i++) {
+            if( this->tableWidget->isRowHidden(i) ) continue;
+
              for(int j =0; j < this->tableWidget->columnCount(); j++)  {
                  if(j!=0)  out << delim;
                  out << this->tableWidget->item(i,j)->text();
@@ -447,3 +459,59 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
     return true;
 }
 
+
+void HTableData::searchQuery(QString query, int column, bool caseSensitive){
+
+    qDebug() << "Searching in Htable ";
+   // this->initializeSearchFilter(query, column, caseSensitive);
+
+    for( int i = 0; i < tableWidget->rowCount(); ++i )
+    {
+        bool match = false;
+        for( int j = 0; j < tableWidget->columnCount(); ++j )
+        {
+            QTableWidgetItem *item = tableWidget->item( i, j );
+            if( item->text().contains(query) )
+            {
+                match = true;
+                break;
+            }
+        }
+        tableWidget->setRowHidden(i, !match );
+    }
+
+}
+
+void HTableData::initializeSearchFilter(QString query, int column, bool caseSensitive) {
+
+    QString _and = "&&", _or="||";
+
+    QStringList searchFields;
+    this->searchFilter.searchItems.clear();
+    this->searchFilter.searchCols.clear();
+
+
+    searchFields = query.split(_or, QString::SkipEmptyParts);
+    this->searchFilter.type = OR;
+
+    if( searchFields.size() ==0 ) {
+        searchFields = query.split(_and, QString::SkipEmptyParts);
+        this->searchFilter.type = AND;
+    }
+
+    this->searchFilter.searchItems = searchFields;
+
+
+    if( column==0) {
+        for(unsigned int i = 0; i < this->numCols; i++) {
+            if( this->types[i]==STRING)
+               this->searchFilter.searchCols.append(i);
+        }
+    }
+    else {
+        this->searchFilter.searchCols.append(column-1);
+    }
+
+    this->searchFilter.caseSensitive = caseSensitive;
+
+}

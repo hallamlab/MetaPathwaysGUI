@@ -39,14 +39,18 @@ void SearchWidget::createWidget()
 
     connect(okAndCancel, SIGNAL(accepted()), this, SLOT(querySet()));
     connect(okAndCancel,SIGNAL(rejected()), this, SLOT(hide()));
-    //connect(this, SIGNAL(lookUp(QString,int, bool)), this->td, SLOT(searchQuery(QString,int, bool)));
+
+    if( this->td->getIndex() == 0)
+       connect(this, SIGNAL(lookUp(QString,int, bool)), this->td->getTableDataPointer(), SLOT(searchQuery(QString,int, bool)));
+
+    if( this->td->getIndex() == 1)
+       connect(this, SIGNAL(lookUp(QString,int, bool)), this->td->getHTableDataPointer(), SLOT(searchQuery(QString,int, bool)));
 }
 
 
 void SearchWidget::querySet(){
     QString query = keyword->text();
     int columnIndex = this->index.at(columnSelect->currentIndex());
-
     emit lookUp(query, columnIndex, this->caseSensitive->isChecked());
     this->hide();
 }

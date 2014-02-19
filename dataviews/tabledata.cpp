@@ -195,6 +195,7 @@ enum TYPE TableData::getFieldType(unsigned int i) {
 }
 
 void TableData::searchQuery(QString query, int column, bool caseSensitive){
+
     this->initializeSearchFilter(query, column, caseSensitive);
     this->largeTable->markRowsSearch(this->searchFilter);
     tableWidget->setRowCount(largeTable->tableData.length());
@@ -416,6 +417,13 @@ bool TableData::saveTableToFile(QString fileName, QChar delim) {
 
         unsigned int interval = this->largeTable->tableData.size()/100;
 
+        int j = 0;
+        foreach(QString header, this->largeTable->colNames) {
+            if(j > 0 ) out << delim;
+            out << header;
+            j++;
+        }
+        out << "\n";
 
         for(int i =0; i < this->largeTable->tableData.size();  i++) {
             for(int j =0; j < this->tableWidget->columnCount(); j++)  {

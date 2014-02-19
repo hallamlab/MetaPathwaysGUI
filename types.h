@@ -82,4 +82,12 @@ typedef struct GeneProperty {
 }  GENEPROPERTY;
 
 
+typedef struct _SEARCH {
+    QList<QString> searchItems;
+    enum OPTYPE type;
+    QList<unsigned int> searchCols;
+    bool caseSensitive;
+
+} SEARCH;
+
 #endif // TYPES_H

@@ -72,6 +72,8 @@ public:
     void setSampleNames(QStringList sampleNames);
     QString getSampleName(unsigned int i);
 
+    void initializeSearchFilter(QString query, int column, bool caseSensitive);
+
     QTableWidget* tableWidget;
     unsigned int numCols;
     QList<enum TYPE> types;
@@ -103,6 +105,8 @@ private slots:
     void searchButtonPressed();
     void exportButtonPressed();
 
+public slots:
+    void searchQuery(QString query, int column, bool caseSensitive);
 
 private:
 
@@ -125,6 +129,8 @@ private:
     QStringList headers;
     QStringList sampleNames;
     unsigned int maxSpinBoxDepth;
+
+    SEARCH searchFilter;
 
     Ui::HTableData *ui;
 };

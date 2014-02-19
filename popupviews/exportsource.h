@@ -18,6 +18,9 @@ public:
     bool saveTableToFile(QString fileName, QChar delim);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
     bool isMultiSampleMode();
+    unsigned int getIndex();
+    HTableData *getHTableDataPointer();
+    TableData *getTableDataPointer();
 
 private:
     unsigned int index;

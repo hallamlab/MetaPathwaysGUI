@@ -24,17 +24,6 @@ typedef struct row{
 } ROW;
 
 
-
-
-
-typedef struct _SEARCH {
-    QList<QString> searchItems;
-    enum OPTYPE type;
-    QList<unsigned int> searchCols;
-    bool caseSensitive;
-
-} SEARCH;
-
 class LargeTable
 {
 public:

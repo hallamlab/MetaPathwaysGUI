@@ -31,7 +31,6 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     runButton = this->findChild<QPushButton *>("runButton");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
-    qDebug() << "run verbose " << runVerbose;
 
     summaryTable->setSortingEnabled(false);
 

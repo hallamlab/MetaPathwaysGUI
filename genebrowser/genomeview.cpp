@@ -27,9 +27,11 @@ void GenomeView::showData(GeneBrowserData &gbdata) {
 
 void GenomeView::wheelEvent(QWheelEvent* event) {
     gBrowser->wheelEvent(event);
+    /*
     qDebug() << "Wheeling";
     qDebug() << this->horizontalScrollBar()->minimum() << "  " << this->horizontalScrollBar()->maximum();
     qDebug() << this->horizontalScrollBar()->value();
+    */
 }
 
 

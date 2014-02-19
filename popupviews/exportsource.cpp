@@ -126,3 +126,18 @@ bool ExportSource::isMultiSampleMode() {
             return false;
     }
 }
+
+
+unsigned int ExportSource::getIndex() {
+    return this->index;
+
+}
+
+
+HTableData *ExportSource::getHTableDataPointer() {
+    return this->td1;
+}
+
+TableData *ExportSource::getTableDataPointer() {
+    return this->td0;
+}
