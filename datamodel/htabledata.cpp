@@ -370,9 +370,13 @@ void HTableData::switchCategory(int index) {
 
     DataManager *datamanager = DataManager::getDataManager();
 
+    if( this->htableIdentities.length() <= index  ) return;
+    if( !this->allConnectors.contains(this->htableIdentities[index].attrType)) return;
     this->connectors = this->allConnectors[this->htableIdentities[index].attrType];
 
+    if(datamanager->getHTree(htableIdentities[index].attrType)==NULL) return;
     this->setParameters(datamanager->getHTree(htableIdentities[index].attrType), this->types);
+
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
     this->setShowHierarchy(true);
 

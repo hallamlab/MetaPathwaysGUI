@@ -9,6 +9,7 @@
 #include <QFileInfo>
 
 
+extern const QString SELECT_SAMPLE_TAG;
 
 class SampleResourceManager
 {

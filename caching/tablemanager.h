@@ -30,12 +30,15 @@ public:
     LargeTable *getTable(QString fileName);
     bool setTable(QString fileName, LargeTable *table);
     QString getTableToDelete();
-
+    void deleteAllTables() ;
+    void deleteTable(QString fileName);
 
     GRAPHDATA *getGraphData(QString fileName);
     bool setGraphData(QString fileName, GRAPHDATA *graphData);
     QString getGraphDataToDelete();
 
+    void deleteGraphData(QString fileName);
+    void deleteAllGraphData() ;
 
 private:
     TableManager();

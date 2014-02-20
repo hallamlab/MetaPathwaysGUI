@@ -81,8 +81,27 @@ void ResultWindow::_loadResults() {
     this->updateFileNames();
     this->disableSampleChanged = false;
     DataManager *datamanager = DataManager::getDataManager();
-  //  datamanager->setDataModelCreated(false);
-  //  datamanager->setORFsUptoDateAll(false);
+    /***/
+    datamanager->destroyAllORFs();
+    datamanager->deleteAllConnectors();
+    datamanager->destroyAllHTrees();
+    datamanager->destroyAllAttributes();
+
+    TableManager *tableManager = TableManager::getTableManager();
+    tableManager->deleteAllGraphData();
+    tableManager->deleteAllTables();
+
+
+
+
+
+
+
+
+    /***/
+    datamanager->setDataModelCreated(false);
+
+    //  datamanager->setORFsUptoDateAll(false);
     if (this->sampleSelect->count() > 0) {
         this->sampleSelect->setCurrentIndex(0);
     }
@@ -140,6 +159,7 @@ void ResultWindow::updateFileNames(){
         existing.append(sampleSelect->itemText(i));
     }
 
+    sampleSelect->addItem(SELECT_SAMPLE_TAG);
     foreach (QString f, files){
         if (!existing.contains(f)){
             sampleSelect->addItem(f);

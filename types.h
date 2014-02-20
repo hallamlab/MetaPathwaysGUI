@@ -5,6 +5,8 @@
 #include <QList>
 #include <QGraphicsItem>
 
+
+const QString  SELECT_SAMPLE_TAG = "Select sample";
 enum TYPE {INT, DOUBLE, STRING, UNKNOWN};
 enum OPTYPE{ OR, AND};
 enum DECISION { YES, NO, MAYBE};

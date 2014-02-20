@@ -33,11 +33,18 @@ public:
 
     Connector *createSubConnector(HTree *tree, HNODE *hnode, Connector* connector, ATTRTYPE attrType);
 
+    void deleteConnector(QString sampleName) ;
+    void deleteAllConnectors();
+
     void createORFs(QString sampleName, QString fileName);
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
 
     ORF* _createAnORF(QStringList &attributes);
+    void destroyORFs(QString sampleName);
+    void destroyAllORFs();
+    void _destroyAnORF(ORF *);
+   // void destroyAllAttributes();
 
     void setDataModelCreated(bool);
     bool getDataModelCreated();
@@ -48,6 +55,12 @@ public:
     void createDataModel();
     CATEGORYNODE createCategoryNode(QString line);
     HTree *createHTree(QString refDB);
+    void destroyAllHTrees();
+    void destroyHTree(ATTRTYPE refDB );
+    void _destroyHTree(HNODE *hnode );
+
+    void destroyAllAttributes();
+
 
 private:
     DataManager();

@@ -51,6 +51,8 @@ LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreCo
 }
 
 LargeTable::~LargeTable() {
+
+
     foreach(ROW *r, wholeTableData ){
         delete r;
     }

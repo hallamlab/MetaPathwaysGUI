@@ -45,10 +45,10 @@ void DataManager::setORFsUptoDate(QString sample, bool flag){
 
 HTree *DataManager::getHTree(ATTRTYPE atrType) {
 
-    if(htrees.contains(atrType))
+    if(htrees.contains(atrType) )
         return htrees[atrType];
-    else
-        return 0;
+
+    return 0;
 }
 
 QString DataManager::getORFFaa(QString sampleName) {
@@ -217,7 +217,7 @@ void DataManager::createDataModel() {
  //   dataModelCreated=true;
 }
 
-HTree *DataManager::createHTree(QString refDB) {
+HTree *DataManager::createHTree(QString refDBFileName) {
     HTree *htree = new HTree();
 
     QStack<HNODE *> S;
@@ -234,7 +234,7 @@ HTree *DataManager::createHTree(QString refDB) {
     created["root"] = hnode->attribute;
     S.push(hnode);
 
-    QFile inputFile(refDB);
+    QFile inputFile(refDBFileName);
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
@@ -260,7 +260,44 @@ HTree *DataManager::createHTree(QString refDB) {
         inputFile.close();
     }
     return htree;
+}
 
+
+void DataManager::destroyAllHTrees() {
+    foreach(ATTRTYPE attr, this->htrees.keys()) {
+        destroyHTree(attr);
+    }
+
+}
+
+void DataManager::_destroyHTree(HNODE *hnode) {
+    foreach( HNODE *child, hnode->children) {
+        _destroyHTree(child);
+    }
+    delete hnode;
+}
+
+
+
+void DataManager::destroyAllAttributes() {
+    foreach( ATTRTYPE attr, this->attributes.keys() ) {
+        foreach(ATTRIBUTE *attrib, this->attributes[attr].values())
+            delete attrib;
+
+        foreach(QString key, this->attributes[attr].keys())
+            this->attributes[attr].remove(key);
+
+        this->attributes.remove(attr);
+    }
+
+}
+
+void DataManager::destroyHTree(ATTRTYPE refDB ) {
+     HTree *htree = this->getHTree(refDB);
+     HNODE *hnode = htree->getRootHNODE();
+     _destroyHTree(hnode);
+     hnode = 0;
+     this->htrees.remove(refDB);
 
 }
 
@@ -335,6 +372,25 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
     this->attributes[SEED].clear();
 
  //   this->ORFsUptoDateList[sampleName] = true;
+}
+
+
+void DataManager::destroyAllORFs() {
+    foreach( QString sampleName, this->ORFList->keys())
+        this->destroyORFs(sampleName);
+}
+
+void DataManager::destroyORFs(QString sampleName) {
+
+    if( !this->ORFList->contains(sampleName)) return;
+    const QList<ORF *> *orfList = this->ORFList->value(sampleName);
+
+    foreach(ORF *orf, *orfList) {
+        delete orf;
+    }
+
+    this->ORFList->remove(sampleName);
+
 }
 
 
@@ -416,6 +472,21 @@ Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector
 QList<ORF *> * DataManager::getORFList(QString sampleName) {
     if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) return this->ORFList->value(sampleName);
     return 0;
+}
+
+void DataManager::deleteConnector(QString sampleName) {
+    foreach(ATTRTYPE attrType, this->connectors[sampleName].keys()) {
+        delete this->connectors[sampleName][attrType];
+        this->connectors[sampleName][attrType] = NULL;
+    }
+
+}
+
+void DataManager::deleteAllConnectors() {
+    foreach(QString sampleName, this->connectors.keys()) {
+        this->deleteConnector(sampleName);
+    }
+    this->connectors.clear();
 }
 
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {

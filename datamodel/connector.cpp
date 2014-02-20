@@ -2,6 +2,12 @@
 
 Connector::Connector()
 {
+
+}
+
+Connector::~Connector() {
+
+
 }
 
 QList<ATTRIBUTE *> Connector::getSinks(ATTRIBUTE *) {

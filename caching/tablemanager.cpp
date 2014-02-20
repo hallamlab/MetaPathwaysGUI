@@ -71,11 +71,26 @@ bool TableManager::setTable(QString fileName, LargeTable *table) {
 }
 
 
+void TableManager::deleteAllTables() {
+    foreach( QString fileName, this->tables.keys()) {
+        this->deleteTable(fileName);
+    }
+}
+
+void TableManager::deleteTable(QString fileName) {
+    if( tables.contains(fileName) ) {
+        delete tables[fileName].table;
+        this->tables[fileName].table = NULL;
+        tables.remove(fileName);
+    }
+}
+
+
 GRAPHDATA *TableManager::getGraphData(QString fileName) {
     if( graphData.contains(fileName) ) {
         graphData[fileName]->accessed = timeAccessed;
         timeAccessed++;
-        qDebug() << "Found cached table " << fileName;
+        qDebug() << "Found cached graph data " << fileName;
         return graphData[fileName];
     }
     return 0;
@@ -92,6 +107,21 @@ bool TableManager::setGraphData(QString fileName, GRAPHDATA *graphData) {
     }
 
 }
+
+void TableManager::deleteAllGraphData() {
+    foreach( QString fileName, this->graphData.keys()) {
+        this->deleteGraphData(fileName);
+    }
+}
+
+void TableManager::deleteGraphData(QString fileName) {
+    if( this->graphData.contains(fileName ) ) {
+        delete this->graphData[fileName];
+        this->graphData[fileName] = NULL;
+        this->graphData.remove(fileName);
+    }
+}
+
 
 QString TableManager::getGraphDataToDelete() {
 

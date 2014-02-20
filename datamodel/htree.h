@@ -34,7 +34,7 @@ public:
     HNODE *getHNODE(QString name);
     void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
     void copyDataToSubConnector(HNODE *hnode, Connector *targetConnector, HTree* targetTree, QHash<ORF *, bool> & orfHash);
-
+    HNODE *getRootHNODE();
     HNODE *root;
 private:
     void _getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList);

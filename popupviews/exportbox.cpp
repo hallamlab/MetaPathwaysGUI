@@ -200,7 +200,7 @@ typedef struct _EXPORT_FILES_INFO {
 
      if( this->td->isMultiSampleMode() ) {
          QDir dir(fileName);
-         if( !dir.exists() ) dir.mkpath(fileName);
+         if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
          foreach( QString sampleName, this->td->getSampleNames())
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {

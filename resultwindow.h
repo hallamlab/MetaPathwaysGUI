@@ -7,6 +7,7 @@
 #include <QSignalMapper>
 #include <QTimer>
 #include "rundata.h"
+#include "types.h"
 #include "ProgressDialog.h"
 #include "resultpage.h"
 #include "popupviews/displayinfo.h"
@@ -29,7 +30,7 @@
 #include "datamodel/samplercmanager.h"
 
 
-
+extern const QString SELECT_SAMPLE_TAG;
 class SelectSamples;
 
 namespace Ui {

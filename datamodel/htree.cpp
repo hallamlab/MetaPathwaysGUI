@@ -30,7 +30,6 @@ short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
 
 short int HTree::getTreeDepth() {
     short int depth;
-
     depth = this->_getTreeDepth(this->root, -1);
     return depth;
 }
@@ -63,6 +62,9 @@ void HTree::_getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList) {
     }
 }
 
+HNODE *HTree::getRootHNODE() {
+    return root;
+}
 
 void HTree::printTree(HNODE *hnode) {
 

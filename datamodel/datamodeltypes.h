@@ -4,12 +4,15 @@
 #include <QString>
 #include <QList>
 #include <QHash>
+#include <QDebug>
 
 
 
 typedef struct _ATTRIBUTE {
     QString name, alias;
+    ~_ATTRIBUTE() {}
 } ATTRIBUTE;
+
 
 typedef struct _CONTIG {
     QString name;
@@ -34,6 +37,15 @@ typedef struct _ORF {
     unsigned int start, end, length;
     QString name;
     bool strand;
+
+
+    ~_ORF() {
+        if(this->contig) {
+           delete this->contig;
+           this->contig = NULL;
+         }
+    }
+
 } ORF;
 
 typedef struct _CATEGORYNODE {

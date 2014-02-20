@@ -5,6 +5,7 @@
 #include <QGroupBox>
 #include <QGridLayout>
 #include <QCheckBox>
+#include <QString>
 #include "dataviews/tabledata.h"
 #include <QList>
 #include "datamodel/htabledata.h"
@@ -12,6 +13,9 @@
 #include <QRadioButton>
 #include <QFileDialog>
 #include "utilities.h"
+#include "types.h"
+
+extern const QString SELECT_SAMPLE_TAG;
 
 typedef struct _export {
     QString name;

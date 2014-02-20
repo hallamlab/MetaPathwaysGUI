@@ -94,7 +94,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
 
          QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
 
-         if( !resSampleDir.exists()) {
+         if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {
              resSampleDir.mkpath(resSampleDir.absolutePath());
          }
          QFileInfo resourceFile(resSampleDir.absolutePath() + "/" + resNames[resname] + ".txt");

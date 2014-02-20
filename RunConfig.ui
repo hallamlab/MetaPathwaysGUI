@@ -255,7 +255,7 @@
    </row>
    <row>
     <property name="text">
-     <string>Pathologic Input</string>
+     <string>Pathway Tools Input</string>
     </property>
    </row>
    <row>
@@ -285,7 +285,7 @@
    </row>
    <row>
     <property name="text">
-     <string>Pathologic</string>
+     <string>Pathway Tools</string>
     </property>
    </row>
    <column>

@@ -9,6 +9,7 @@ class Connector
 {
 public:
     Connector();
+    ~Connector();
     void addToList(ATTRIBUTE *attribute, ORF *orf);
     QHash<ATTRIBUTE *, QList<ORF *> > connected;
     void setAttrType(ATTRTYPE attrType);
