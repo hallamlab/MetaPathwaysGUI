@@ -29,6 +29,7 @@ void SearchWidget::createWidget()
     QStringList headers = this->td->getHeaders();
 
     this->index.append(0); // this is for the ALL option
+
     for( int i=0; i < headers.size(); i++) {
        // if( this->td->getFieldType(i) == STRING) {
             columnSelect->addItem(headers.at(i));

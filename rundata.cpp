@@ -382,9 +382,11 @@ void RunData::loadInputFiles(){
         QString temp = *entry;
         QStringList file = temp.split(".");
 
+        QString suffix = QString(".") + file.last();
+
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
-               if(temp.indexOf(reg,0) > -1 ) {
+               if(suffix.indexOf(reg,0) > -1 ) {
                    filesDetected.append( temp.remove(reg).replace('.','_') );
                    break;
                }
@@ -401,6 +403,7 @@ void RunData::loadInputFiles(){
             }
         }
     }
+
     this->setFileList(filesDetected);
 }
 

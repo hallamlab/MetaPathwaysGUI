@@ -80,7 +80,7 @@ void GeneBrowser::drawGenomeBrowser() {
     geneProp.height = 10;
     geneProp.spaceAbove = 5;
     geneProp.spaceBelow = 5;
-    geneProp.color = Qt::green;
+    geneProp.color = Qt::blue;
     geneProp.basePairToPixelRatio = basePairToPixelRatio;
 
 
@@ -105,7 +105,7 @@ void GeneBrowser::drawGenomeBrowser() {
     gscene->addItem(this->line);
 
     pen.ystart = pen.ystart + 2*(2 + 1*basePairToPixelRatio);
-    geneProp.color = Qt::red;
+    geneProp.color = Qt::magenta;
 
     this->revorfs = itemCreator->getORFDiagrams(data.orfData, REVERSE, geneProp, pen);
     gscene->addItem(this->revorfs);

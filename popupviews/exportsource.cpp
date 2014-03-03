@@ -85,13 +85,13 @@ enum TYPE ExportSource::getFieldType(unsigned int i) {
    }
 }
 
-bool ExportSource::saveTableToFile(QString fileName, QChar delim) {
+bool ExportSource::saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders) {
     switch(this->index) {
         case 0:
-             return td0->saveTableToFile(fileName, delim);
+             return td0->saveTableToFile(fileName, delim, selectedHeaders);
              break;
         case 1:
-             return td1->saveTableToFile(fileName, delim);
+             return td1->saveTableToFile(fileName, delim, selectedHeaders);
              break;
         default:
             return UNKNOWN;

@@ -49,7 +49,7 @@ public:
     void initializeSearchFilter(QString query, int column=0, bool caseSensitive = true) ;
     enum TYPE getFieldType(unsigned int i);
 
-    bool saveTableToFile(QString fileName, QChar delim);
+    bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString fileName,  RESOURCE type);
     void setSampleName(QString sampleName);
     QString getSampleName();

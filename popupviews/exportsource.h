@@ -15,7 +15,7 @@ public:
     QString getHeader(unsigned int i) ;
     QString getSampleName(unsigned int i) ;
     enum TYPE getFieldType(unsigned int i);
-    bool saveTableToFile(QString fileName, QChar delim);
+    bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
     bool isMultiSampleMode();
     unsigned int getIndex();

@@ -46,6 +46,8 @@ public slots:
 
 private:
     void createWidget();
+    QStringList getCheckedHeaders();
+    QStringList getAllHeaders();
 private:
     QGroupBox *createNonExclusiveGroup(QVBoxLayout *grid);
     ExportSource *td;

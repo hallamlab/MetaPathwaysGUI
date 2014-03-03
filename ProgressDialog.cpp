@@ -306,6 +306,7 @@ void ProgressDialog::startRun(){
 
         initProcess();
     }
+
 }
 
 void ProgressDialog::initProcess(){

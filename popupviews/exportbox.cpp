@@ -64,6 +64,29 @@ void ExportBox::clickedChoice() {
 
  }
 
+
+QStringList ExportBox::getCheckedHeaders() {
+    QStringList selectedHeaders;
+
+    for(unsigned int i=0; i < Columns.size(); i++)
+        if(Columns[i].checkbox->isChecked() )
+            selectedHeaders << Columns[i].name;
+
+    return selectedHeaders;
+
+ }
+
+
+QStringList ExportBox::getAllHeaders() {
+    QStringList selectedHeaders;
+
+    for(unsigned int i=0; i < Columns.size(); i++)
+            selectedHeaders << Columns[i].name;
+
+    return selectedHeaders;
+
+ }
+
  QGroupBox *ExportBox::createNonExclusiveGroup(QVBoxLayout *pvbox)
  {
      QGroupBox *groupBox = new QGroupBox(tr("Select Columns to Export"));
@@ -161,10 +184,10 @@ typedef struct _EXPORT_FILES_INFO {
 
      if (fileName.isEmpty())
          return false;
-
+/*
      QList<QRegExp> invalidSuffixes;
-     invalidSuffixes << QRegExp("[.].csv$") << QRegExp("[.].txt$") << QRegExp("[.].fasta$")\
-                     << QRegExp("[.].faa$") << QRegExp("[.].fna$");
+     invalidSuffixes << QRegExp("[.]csv$") << QRegExp("[.]txt$") << QRegExp("[.]fasta$")\
+                     << QRegExp("[.]faa$") << QRegExp("[.]fna$");
 
 
 
@@ -176,21 +199,25 @@ typedef struct _EXPORT_FILES_INFO {
             return false;
         }
      }
-
+*/
+     QStringList selectedHeaders = this->getCheckedHeaders();
+     if( selectedHeaders.size() ==0 ) {
+         selectedHeaders = this->getAllHeaders();
+     }
 
      if( csvRadio->isChecked()) {
-         exportFileName = fileName + QString(".csv");
+         exportFileName = fileName.remove(QRegExp("[.]csv$") ) + QString(".csv");
          delim=QChar(',');
          QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-         this->td->saveTableToFile(exportFileName, delim);
+         this->td->saveTableToFile(exportFileName, delim, selectedHeaders );
          waitScreen->hide();
      }
 
      if( tsvRadio->isChecked()) {
-         exportFileName = fileName + QString(".txt");
+         exportFileName = fileName.remove(QRegExp("[.]txt$") ) + QString(".txt");
          delim=QChar('\t');
          QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-         this->td->saveTableToFile(exportFileName, delim);
+         this->td->saveTableToFile(exportFileName, delim, selectedHeaders);
          waitScreen->hide();
      }
      EXPORT_FILES_INFO filesInfo;

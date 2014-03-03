@@ -62,7 +62,7 @@ public:
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
     unsigned int fillSelectedData(QString category, unsigned int maxDepth, int state, bool hideZeroRows);
 
-    bool saveTableToFile(QString fileName, QChar delim);
+    bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
 
     void setMultiSampleMode(bool multisample);

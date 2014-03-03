@@ -19,11 +19,10 @@ FORMATDB_EXECUTABLE  'executables/mac/bit64/makeblastdb'
 BLASTP_EXECUTABLE  'executables/mac/bit64/blastp'
 BLASTN_EXECUTABLE  'executables/mac/bit64/blastn'
 EXECUTABLES_DIR  'executables'
-
+RESOURCES_DIR           'resources/'
 LASTDB_EXECUTABLE  'executables/mac/bit64/lastdb'
 LAST_EXECUTABLE  'executables/mac/bit64/lastal'
 ORF_PREDICTION 'executables/mac/bit64/prodigal' 
-TBL2ASN_EXECUTABLE 'executables/mac/bit64/tbl2asn' 
 
 SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
 # This is the folder where the scripts folder of the MetaPathways  pipeline 

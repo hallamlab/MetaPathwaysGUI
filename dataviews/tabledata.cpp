@@ -30,19 +30,23 @@ TableData::TableData(  QWidget *parent) :
     connect(tableWidget->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(headerClicked(int)));
 
 
-    this->searchWidget = new SearchWidget(this);
-    this->searchWidget->hide();
+  //  this->searchWidget = new SearchWidget(this);
+   // this->searchWidget->hide();
 
 #ifdef SECTION
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
 #else
-    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    //     tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
 #endif
 
-    this->exportBox = new ExportBox(this);
-    this->exportBox->hide();
+
+    //this->exportBox = new ExportBox(this);
+    //this->exportBox->hide();
+
+
     this->p =0;
     this->g =0;
 }
@@ -239,10 +243,12 @@ void TableData::initializeSearchFilter(QString query, int column, bool caseSensi
 }
 
 void TableData::searchButtonPressed(){
+    this->searchWidget = new SearchWidget(this);
     this->searchWidget->show();
 }
 
 void TableData::exportButtonPressed(){
+    this->exportBox = new ExportBox(this);
     this->exportBox->show();
 }
 
@@ -404,48 +410,71 @@ void  TableData::parseFile(const QString &file, QList<QStringList> &data, const 
 }
 
 
-bool TableData::saveTableToFile(QString fileName, QChar delim) {
+bool TableData::saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders) {
 
     QFile outFile(fileName);
 
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
-        QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while the file is being written!");
+        //QLabel *waitScreen = Utilities::ShowWaitScreen("Please wait while the file is being written!");
         QProgressBar progressBar;
-        progressBar.setRange(0, this->largeTable->tableData.size());
-        progressBar.show();
 
-        unsigned int interval = this->largeTable->tableData.size()/100;
-
-        int j = 0;
+        QHash<QString, bool> includeColumn;
         foreach(QString header, this->largeTable->colNames) {
-            if(j > 0 ) out << delim;
-            out << header;
-            j++;
+            includeColumn[header] = false;
+        }
+
+        foreach(QString header, selectedHeaders) {
+            includeColumn[header]= true;
+        }
+
+
+        bool delimOn = false;
+        foreach(QString header, this->largeTable->colNames) {
+            if( !includeColumn[header])
+                continue;
+            else {
+                if(delimOn)  out << delim;
+                delimOn = true;
+                out << header;
+            }
+
         }
         out << "\n";
 
-        for(int i =0; i < this->largeTable->tableData.size();  i++) {
+        unsigned int interval =  this->largeTable->tableData.size() > 100 ? this->largeTable->tableData.size()/100 : 10;
+
+        progressBar.setRange(0, this->largeTable->tableData.size());
+        progressBar.show();
+
+        for(int i =0; i < this->largeTable->tableData.size();  i++) {   
+            bool delimOn = false;
             for(int j =0; j < this->tableWidget->columnCount(); j++)  {
                  if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
-                 if(j!=0)  out << delim;
-                 switch( this->types[j] ) {
-                     case STRING:
-                          out << this->largeTable->tableData[i]->strVar[ this->largeTable->index[j]];
-                          break;
-                     case INT:
-                          out << QString::number(this->largeTable->tableData[i]->intVar[ this->largeTable->index[j]]);
-                          break;
-                     case DOUBLE:
-                          break;
-                     default:
-                          break;
+                 if( !includeColumn[this->largeTable->colNames[j]])
+                     continue;
+                 else {
+                     if(delimOn)  out << delim;
+                     delimOn = true;
+                     switch( this->types[j] ) {
+                         case STRING:
+                              out << this->largeTable->tableData[i]->strVar[ this->largeTable->index[j]];
+                              break;
+                         case INT:
+                              out << QString::number(this->largeTable->tableData[i]->intVar[ this->largeTable->index[j]]);
+                              break;
+                         case DOUBLE:
+                              break;
+                         default:
+                              break;
+                     }
                  }
 
              }
              out << "\n";
         }
-        waitScreen->hide();
+
+       // waitScreen->hide();
         progressBar.hide();
 
         outFile.close();

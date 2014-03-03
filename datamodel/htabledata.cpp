@@ -23,7 +23,8 @@ HTableData::HTableData(QWidget *parent) :
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
 #else
-    tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+  //  tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+        tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
     tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
 #endif
 
@@ -395,26 +396,45 @@ void HTableData::switchCategory(int index) {
 
 }
 
-bool HTableData::saveTableToFile(QString fileName, QChar delim) {
+bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders) {
     QFile outFile(fileName);
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
+        bool delimOn;
 
+        QHash<QString, bool> includeColumn;
+        foreach(QString header, this->headers) {
+            includeColumn[header] = false;
+        }
+
+        foreach(QString header, selectedHeaders) {
+            includeColumn[header]= true;
+        }
 
         int j = 0;
+        delimOn = false;
         foreach(QString header, this->headers) {
-            if(j > 0 ) out << delim;
+            if(delimOn)  out << delim;
+            if( !includeColumn[header])
+                continue;
+            else
+                delimOn = true;
             out << header;
-            j++;
         }
         out << "\n";
 
+
         for(int i =0; i < this->tableWidget->rowCount(); i++) {
             if( this->tableWidget->isRowHidden(i) ) continue;
-
+             delimOn = false;
              for(int j =0; j < this->tableWidget->columnCount(); j++)  {
-                 if(j!=0)  out << delim;
-                 out << this->tableWidget->item(i,j)->text();
+                 if( !includeColumn[this->headers[j]])
+                     continue;
+                 else {
+                      if(delimOn)  out << delim;
+                      delimOn = true;
+                      out << this->tableWidget->item(i,j)->text();
+                 }
              }
              out << "\n";
         }
@@ -444,8 +464,9 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
          foreach(ORF *orf, orfList) {
              if( type == NUCFNA || type == AMINOFAA)
                  keyNames[orf->name] = true;
-             if( type==NUCFASTA)
+             if( type==NUCFASTA) {
                  keyNames[orf->contig->name] = true;
+             }
          }
     }
 
