@@ -210,6 +210,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
+    qDebug() << " adding metacyc annotaton again";
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
 
     HTableData *htable;

@@ -176,7 +176,12 @@ bool TableData::isMultiSampleMode() {
 }
 
 QStringList TableData::getSampleNames() {
-    return this->sampleNames;
+    QStringList sampleNames;
+
+    sampleNames << this->sampleName;
+    return sampleNames;
+
+    //return this->sampleNames;
 }
 
 QString TableData::getSampleName(unsigned int i) {
@@ -506,10 +511,12 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
             if( type == NUCFASTA) col = 4;
 
             QString name, resultStr;
-
+            QHash<QString, bool> alreadyWritten;
             for(int i =0; i < this->largeTable->tableData.size();  i++) {
                if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
                name = this->largeTable->tableData[i]->strVar[ this->largeTable->index[col]];
+               if(alreadyWritten.contains(name) ) continue;
+               alreadyWritten[name] = true;
                resultStr = fileIndex->getDataToDisplay(name);
                if( !resultStr.isEmpty()) { out << resultStr; }
             }

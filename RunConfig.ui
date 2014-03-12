@@ -1008,6 +1008,9 @@
     <bool>true</bool>
    </property>
    <widget class="QRadioButton" name="mltreemap_calculationYES">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1034,6 +1037,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_calculationREDO">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1063,6 +1069,9 @@
     <bool>true</bool>
    </property>
    <widget class="QRadioButton" name="mltreemap_imagemakerYES">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1089,6 +1098,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_imagemakerREDO">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>250</x>

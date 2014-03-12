@@ -164,7 +164,7 @@ QStringList ExportBox::getAllHeaders() {
      delete this->cancelButton;
      delete this->exportButton;
      */
-     qDebug() << " Export box closed ";
+   //  qDebug() << " Export box closed ";
 
  }
 
@@ -220,6 +220,7 @@ typedef struct _EXPORT_FILES_INFO {
          this->td->saveTableToFile(exportFileName, delim, selectedHeaders);
          waitScreen->hide();
      }
+
      EXPORT_FILES_INFO filesInfo;
      filesInfo.checkBoxes << fasta << fna << faa;
      filesInfo.suffixes << ".fasta" << ".fna" << ".faa";
@@ -238,14 +239,17 @@ typedef struct _EXPORT_FILES_INFO {
                  }
              }
      }else {
-         for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
-             foreach( QString sampleName, this->td->getSampleNames() )
-               if( filesInfo.checkBoxes[i]->isChecked() ) {
-                   exportFileName = fileName + QString(filesInfo.suffixes[i]);
-                   QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-                   this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
-                   waitScreen->hide();
-               }
+         QDir dir(fileName);
+         if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
+         foreach( QString sampleName, this->td->getSampleNames())
+             for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
+                 if( filesInfo.checkBoxes[i]->isChecked() ) {
+                    exportFileName =  fileName + "/" + sampleName +QString(filesInfo.suffixes[i]);
+                    QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+                    this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
+                    waitScreen->hide();
+
+             }
          }
      }
 
