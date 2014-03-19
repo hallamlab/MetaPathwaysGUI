@@ -29,7 +29,7 @@ TableData::TableData(  QWidget *parent) :
     connect(tableWidget->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(outputRows(int)));
     connect(tableWidget->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(headerClicked(int)));
 
-
+#define SECTION
   //  this->searchWidget = new SearchWidget(this);
    // this->searchWidget->hide();
 

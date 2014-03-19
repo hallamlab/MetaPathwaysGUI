@@ -15,27 +15,6 @@ Utilities::Utilities()
 {
 }
 
-
-
-
-/*
- * Validate the currently loaded run parameters.
- */
-bool Utilities::validateConfig(const QHash<QString, QString>* PARAMS){
-    if( PARAMS ==0 ) return false;
-
-    QString python = PARAMS->value("PYTHON_EXECUTABLE");
-    QString perl = PARAMS->value("PERL_EXECUTABLE");
-    QString mp = PARAMS->value("METAPATHWAYS_PATH");
-    QString blastdbs = PARAMS->value("REFDBS");
-
-    if (python.isEmpty()) return false;
-    else if (perl.isEmpty()) return false;
-    else if (mp.isEmpty()) return false;
-    else if (blastdbs.isEmpty()) return false;
-    else return true;
-}
-
 /*
  * Create a mapping of a CONFIG_KEY -> FORM_WIDGET_NAME. We cannot directly copy
  * the existing CONFIG key values to the form, because it contains invalid characters (like colon)
@@ -267,7 +246,6 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
             QRegExp splitRegex("\\s");
             QRegExp keepRegex("\\w+");
             QStringList splitList;
-
             if (!comment.exactMatch(line)){
                 //if the line doesn't begin with a comment hash
                 if(TYPE=="CONFIG"){
@@ -277,7 +255,6 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
                     line.remove(position,wrappedValue.length());
                     line = line.trimmed();
                     splitList << line << wrappedValue;
-
                 }else{
                     line = line.remove(QRegExp("[,\\s]*$"));
                     splitList = line.split(splitRegex);
@@ -290,7 +267,7 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
                 QString value;
 
                 if (!splitList.isEmpty()){
-
+                    //qDebug() << splitList;
                     //if the list has a key and value for us to use
                     key = splitList.at(0);
 
@@ -305,6 +282,9 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
                 }
             }
        }
+    }else{
+        QMessageBox msg;
+        msg.warning(0,"Error!\n",QString("Could not read the configuration file to " + TEMPLATE_FILE + ", does that file exist?"), QMessageBox::Ok);
     }
     inputFile.close();
     return configs;
@@ -313,9 +293,9 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
 QString Utilities::extractAttribute(QString line) {
 
     line = line.remove(QRegExp("[,\\s]*$"));
-    qDebug() << "before ea split";
+    //qDebug() << "before ea split";
     QStringList splitList = line.split("'([^']*?)'");
-    qDebug() << "inside ea " << splitList;
+    //qDebug() << "inside ea " << splitList;
     //then, split the line up by white space
     //filter the line into a list, keeping only non-whitespace characters
 

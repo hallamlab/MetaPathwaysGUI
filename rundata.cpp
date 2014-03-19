@@ -1,5 +1,6 @@
 #include "rundata.h"
 #include <QMessageBox>
+#include <QSettings>
 /*
  * This class contains the data for a run. It is an internal object class that represents all the data
  * about this instance of MetaPathways running.
@@ -13,12 +14,12 @@ RunData* RunData::runData = 0;
 
 
 RunData::RunData(){
-//    CONFIG.insert("METAPATHWAYS_PATH", QString());
-//    CONFIG.insert("PYTHON_EXECUTABLE", QString());
-//    CONFIG.insert("PERL_EXECUTABLE", QString());
-//    CONFIG.insert("PATHOLOGIC_EXECUTABLE", QString());
-//    CONFIG.insert("REFDBS", QString());
-//    CONFIG.insert("EXECUTABLES_DIR",QString());
+    QSettings settings("HallamLab", "MetaPathways");
+    this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
+    this->setValue("PYTHON_EXECUTABLE", settings.value("PYTHON_EXECUTABLE").toString(),_CONFIG);
+    this->setValue("PERL_EXECUTABLE", settings.value("PERL_EXECUTABLE").toString(),_CONFIG);
+    this->setValue("PATHOLOGIC_EXECUTABLE", settings.value("REFDBS").toString(),_CONFIG);
+    this->setValue("REFDBS", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
 }
 
 RunData* RunData::getRunData(){
@@ -52,17 +53,17 @@ RunData* RunData::getRunData(){
 
 QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
     if (type==_CONFIG)
-        return this->CONFIG.contains(key)  ?  this->CONFIG[key]: QString("");
+        return this->CONFIG.contains(key)  ?  this->CONFIG.value(key): QString("");
     if (type==_PARAMS)
-        return this->PARAMS.contains(key)  ?  this->PARAMS[key]: QString("");
+        return this->PARAMS.contains(key)  ?  this->PARAMS.value(key): QString("");
 }
 
 void RunData::setValue(QString key, QString value, SETTING_TYPE type){
     if(type==_CONFIG) {
-        this->CONFIG[key] = value;
+        this->CONFIG.insert(key,value);
     }
     if(type==_PARAMS)
-        this->PARAMS[key]=value;
+        this->PARAMS.insert(key,value);
 }
 
 void RunData::initVartoNULL() {
@@ -110,11 +111,11 @@ QProcess *RunData::getProcess(){
 }
 
 void RunData::setPythonExecutablePath(QString pythonPath) {
-    this->CONFIG["PYTHON_PATH"] = pythonPath;
+    this->CONFIG["PYTHON_EXECUTABLE"] = pythonPath;
 }
 
 void RunData::setPerlExecutablePath(QString perlPath) {
-    this->CONFIG["PERL_PATH"]  = perlPath;
+    this->CONFIG["PERL_EXECUTABLE"]  = perlPath;
 }
 
 void RunData::setMetaPathwaysPath(QString mpPath) {
@@ -123,6 +124,10 @@ void RunData::setMetaPathwaysPath(QString mpPath) {
 
 void RunData::setDatabasesPath(QString databasePath) {
     this->CONFIG["REFDBS"] = databasePath;
+}
+
+void RunData::setPathologicPath(QString pathologicPath){
+    this->CONFIG["PATHOLOGIC_EXECUTABLE"] = pathologicPath;
 }
 
 int RunData::getRunningStepNumber(){
@@ -146,9 +151,10 @@ int RunData::getRunningStepNumber(){
  */
 void RunData::setupDefaultConfig(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
-    if (path.isEmpty()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_CONFIG;
+    QFileInfo configFile(path);
+    if (!configFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_CONFIG;
+    else path = path + QDir::separator() + this->TEMPLATE_CONFIG;
     this->setConfig(Utilities::parseFile(path,"CONFIG"));
-    qDebug() << this->CONFIG;
 }
 
 /*
@@ -158,8 +164,10 @@ void RunData::setupDefaultConfig(){
  */
 void RunData::setupDefaultParams(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
-    if (path.isEmpty()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
-    this->setParams(Utilities::parseFile(path,"PARAM"));
+    QFileInfo paramFile(path);
+    if (!paramFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
+    else path = path + QDir::separator() + this->TEMPLATE_PARAM;
+    this->setParams(Utilities::parseFile(path,"PARAMS"));
 }
 void RunData::setCurrentSample(QString currentSample) {
     this->currentSample = currentSample;
@@ -202,8 +210,9 @@ bool RunData::checkConfig(){
 }
 
 
-bool RunData::validate(QString &warningMsg) {
 
+bool RunData::validate(QString &warningMsg) {
+    qDebug() << "validating stuff" << this->getConfig();
     bool correct = true;
     QFileInfo file(this->getValueFromHash("PYTHON_EXECUTABLE", _CONFIG));
     if( !file.exists() ) {

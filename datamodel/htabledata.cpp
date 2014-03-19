@@ -19,6 +19,8 @@ HTableData::HTableData(QWidget *parent) :
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
 
+
+#define SECTION
  #ifdef SECTION
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);

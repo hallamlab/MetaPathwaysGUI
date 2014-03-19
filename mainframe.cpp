@@ -54,10 +54,11 @@ MainFrame::MainFrame(QWidget *parent) :
     rundata->setConfigMapping(Utilities::createMapping());
 
     setupWidget = new Setup();
-    setupWidget->loadPathVariables();
 
     rundata->setupDefaultConfig();
     rundata->setupDefaultParams();
+
+    setupWidget->loadPathVariables();
 
     // databases are agnostic to what the param file has written from a previous run
     // so we clear the values in the hash picked up from the config file to ensure
@@ -74,7 +75,7 @@ MainFrame::MainFrame(QWidget *parent) :
     }else{
         validateSetup();
     }
-
+    qDebug() << rundata->getParams();
     // auto update code
     // run a separate process to check if there is a new file
 

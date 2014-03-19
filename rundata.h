@@ -35,6 +35,7 @@ public:
     void setProcess(QProcess *process);
     void setRRNADBS(QStringList rrnaDBS);
     void setAnnotationDBS(QStringList annotationDBS);
+    void setPathologicPath(QString pathologicPath);
 
     QString getValueFromHash(QString key, SETTING_TYPE type);
     void setValue(QString key, QString value, SETTING_TYPE type);
