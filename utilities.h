@@ -24,9 +24,9 @@ public:
     static QTableWidget* createTable(const QString &FILE_NAME, const QChar &DELIM);
     static QList<QString>* parseResults(const QString &FILE_NAME, const QChar &DELIM);
     static QHash<QString,QString> createMapping();
-    static QHash<QString,QString> parseFile(const QString &TEMPLATE_FILE);
+    static QHash<QString,QString> parseFile(const QString &TEMPLATE_FILE, const QString TYPE);
     static QString extractAttribute(QString line);
-    static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
+    static bool writeSettingToFile(const QString &TEMPLATE_FILE, const QString TYPE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE);
     static int countRunSteps(QHash<QString,QString>* PARAMS);
     static QStringList getUniqueDBS(QStringList dbs);
     static QString createToolTipTable(  QList< QList<QString> > tableData );

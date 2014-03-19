@@ -24,6 +24,8 @@ public:
 public:
     void loadPathVariables();
     void savePathVariables();
+    void updateValues();
+
 public slots:
     void pythonBrowse();
     void perlBrowse();

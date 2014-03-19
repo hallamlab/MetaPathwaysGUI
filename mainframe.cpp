@@ -87,6 +87,7 @@ void MainFrame::showSetupError(QString warningStr) {
     warning->warning(0,"Configuration Invalid!\n", QString("You are missing the following:\n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
     greyTabs(false);
     this->openSetup();
+    setupWidget->updateValues();
 
 }
 
@@ -214,7 +215,7 @@ void MainFrame::updateWidgets(){
                 }
             }
             rundata->setValue(configName, value,_PARAMS);
-            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configName, value, false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", configName, value, false, false);
         }
     }
     else if(stackedWidget->currentWidget()==stageScroll){
@@ -245,12 +246,12 @@ void MainFrame::updateWidgets(){
             else rundata->setValue(configKey,"skip",_PARAMS);
 
             //write to file the changes
-            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", configKey, rundata->getValueFromHash(configKey,_PARAMS), false, false);
         }
 
         //write file format
         QString inputTypeKey = rundata->getConfigMapping().key(stages->fileInputFormat->objectName());
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, inputTypeKey, stages->fileInputFormat->currentText(), false, false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", inputTypeKey, stages->fileInputFormat->currentText(), false, false);
         rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
 
         //save file selected
@@ -260,7 +261,7 @@ void MainFrame::updateWidgets(){
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
         if (stages->gridBlastChoice->isChecked() && rundata->getParams().operator []("metapaths_steps:BLAST_REFDB")!="skip"){
             rundata->setValue("metapaths_steps:BLAST_REFDB","grid",_PARAMS);
-            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "metapaths_steps:BLAST_REFDB", "grid", false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "metapaths_steps:BLAST_REFDB", "grid", false, false);
         }
 
         //trim off commas on refdbs for rRNA and annotation
@@ -276,8 +277,8 @@ void MainFrame::updateWidgets(){
         rundata->setNumADB(annotationDBS.size());
         rundata->setNumRRNADB(rRNArefdbs.size());
 
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "rRNA:refdbs",rRNArefdbs, false,false);
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "annotation:dbs",annotationDBS, false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs",rRNArefdbs, false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "annotation:dbs",annotationDBS, false,false);
 
         //use overwrite settings?
         if (stages->overwrite->isChecked()){

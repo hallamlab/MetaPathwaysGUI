@@ -152,13 +152,13 @@ void GridSetup::saveAndClose(){
                 //if it is set to be scheduled, skip writing out the params
                 //need to implement deletion from file using utilities
                 qDebug() << "deleting grid" <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
             }else if(grids.value()->newGrid){
                 qDebug() << "new grid writing " <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
             }else{
                 qDebug() << "old grid writing" << grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
             }
         }
     }

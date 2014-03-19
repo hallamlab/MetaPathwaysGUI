@@ -279,10 +279,10 @@ void ProgressDialog::startRun(){
     // qDebug() << rRNArefdbs << annotationDBS;
 
     if(rRNArefdbs.isEmpty()){
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"rRNA:refdbs","",false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs","",false,false);
     }
     if(annotationDBS.isEmpty()){
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"annotation:dbs","",false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"PARAMS", "annotation:dbs","",false,false);
     }
 
     if (this->rundata->getParams()["fileInput"].isEmpty()

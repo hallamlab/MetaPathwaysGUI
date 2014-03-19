@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <QMessageBox>
 
 Utilities::Utilities()
 {
@@ -152,10 +153,11 @@ int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
 
 /*
  * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
- * pairing for settings.
+ * pairing for settings. TYPE specifies if it is a config or param file, as the first will require all values
+ * to be wrapped in single quotations, and params do not.
  */
 
-bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE){
+bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString TYPE, const QString &KEY, const QString &VALUE, const bool &CREATE, const bool &DELETE){
     QFile inputFile(TEMPLATE_FILE);
     QFile newFile( TEMPLATE_FILE + "_new" );
 
@@ -181,6 +183,8 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
 
                 if (splitList.size() > 0){
                     //if the list has a key and value for us to use
+                    QString n_value = "";
+
                     if (splitList.at(0)==KEY){
                         if (DELETE){
                             //we're not going to copy this entry over to the new configuration file
@@ -189,13 +193,17 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
                         else if (splitList.size()<2){
                             //if only the key exists, the value hasn't been selected
                             //then write out a line with the key and the newly defined value
-                            out << splitList.at(0) << " " << VALUE << "\n";
+                            //but for CONFIGS we gotta wrap the bad boy around with single quotes
+                            if (TYPE=="CONFIG") n_value =  KEY + " " + "'" +  VALUE + "'" + "\n";
+                            else n_value =  KEY + " " +  VALUE + "\n";
                         }else {
                             //the value exists in file, we're replacing it, so replace the
                             //stringlist entry with the new value
-                            splitList.replace(1,VALUE);
-                            out << splitList.at(0) << " " << splitList.at(1) << "\n";
+                            //but for CONFIGS we gotta wrap the bad boy around with single quotes
+                            if (TYPE=="CONFIG") n_value = KEY + " " + "'" +  VALUE + "'" + "\n";
+                            else n_value =  KEY + " " + VALUE + "\n";
                         }
+                        out << n_value;
                         found = true;
                     }
                 }
@@ -215,6 +223,9 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString &
        newFile.close();
        //set new file with the proper name and close
        return true;
+    }else{
+        QMessageBox msg;
+        msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
     }
     return false;
 }
@@ -240,8 +251,9 @@ QStringList Utilities::getUniqueDBS(QStringList dbs){
 /*
  * For parsing the template config or parameter file.
  * Returns a hash of String to Strings, denoting the settings key, value pairs.
+ * TYPE can be of "CONFIG" or "PARAMS". Parsing behavior is different for the two, so TYPE needs to be specified always.
  */
-QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
+QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const QString TYPE){
     QFile inputFile(TEMPLATE_FILE);
     QHash<QString, QString> configs;
 
@@ -254,13 +266,25 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
             QRegExp comment("#[^\"\\n\\r]*");
             QRegExp splitRegex("\\s");
             QRegExp keepRegex("\\w+");
+            QStringList splitList;
+
             if (!comment.exactMatch(line)){
                 //if the line doesn't begin with a comment hash
-                line = line.remove(QRegExp("[,\\s]*$"));
-                QStringList splitList = line.split(splitRegex);
-                //then, split the line up by white space
-                splitList = splitList.filter(keepRegex);
-                //filter the line into a list, keeping only non-whitespace characters
+                if(TYPE=="CONFIG"){
+                    // find first occurance of a single quote, get the rest of the line from that
+                    int position = line.indexOf("'",0);
+                    QString wrappedValue = line.mid(position).trimmed();
+                    line.remove(position,wrappedValue.length());
+                    line = line.trimmed();
+                    splitList << line << wrappedValue;
+
+                }else{
+                    line = line.remove(QRegExp("[,\\s]*$"));
+                    splitList = line.split(splitRegex);
+                    //then, split the line up by white space
+                    splitList = splitList.filter(keepRegex);
+                    //filter the line into a list, keeping only non-whitespace characters
+                }
 
                 QString key;
                 QString value;
@@ -269,13 +293,14 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
 
                     //if the list has a key and value for us to use
                     key = splitList.at(0);
-                    key.replace("'","");
 
                     if (splitList.size()>1){
                         value = splitList.at(1);
                         value.replace("'","");
                     }
-                    else value = "";
+                    else{
+                        value = "";
+                    }
                     configs.insert(key,value);
                 }
             }
@@ -287,12 +312,11 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE){
 
 QString Utilities::extractAttribute(QString line) {
 
-    QRegExp splitRegex("\\s");
-    QRegExp keepRegex("\\w+");
     line = line.remove(QRegExp("[,\\s]*$"));
-    QStringList splitList = line.split(splitRegex);
+    qDebug() << "before ea split";
+    QStringList splitList = line.split("'([^']*?)'");
+    qDebug() << "inside ea " << splitList;
     //then, split the line up by white space
-    splitList = splitList.filter(keepRegex);
     //filter the line into a list, keeping only non-whitespace characters
 
     QString key;
@@ -351,8 +375,6 @@ QLabel *Utilities::ShowWaitScreen( QString msg) {
 
     aWidget->setAttribute(Qt::WA_TranslucentBackground);
     aWidget->setAlignment(Qt::AlignCenter );
-
-    aWidget->setTextFormat(Qt::RichText);
     aWidget->setText( QString("<FONT COLOR='#ff0000' FONT SIZE = 10>") +  msg  + QString("</>"));
 
     aWidget->show();

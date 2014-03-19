@@ -23,18 +23,9 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
     pathologicTxt = this->findChild<QLineEdit *>("pathologicTxt");
 
+    updateValues();
 
   //  if(!MainFrame::settingsAvailable()) this->canSave();
-
-    RunData *rundata = RunData::getRunData();
-
-    if( !rundata->getConfig().isEmpty() ){
-        pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
-        perlExecTxt->setText(rundata->getValueFromHash("PERL_EXECUTABLE",_CONFIG));
-        dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
-        pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
-        pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
-    }
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
@@ -49,6 +40,16 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(pathologicTxt, SIGNAL(textEdited(QString)), this, SLOT(canSave()));
+}
+
+void Setup::updateValues(){
+    RunData *rundata = RunData::getRunData();
+
+    pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
+    perlExecTxt->setText(rundata->getValueFromHash("PERL_EXECUTABLE",_CONFIG));
+    dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
+    pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
+    pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
 }
 
 void Setup::canSave(){
@@ -120,26 +121,27 @@ void Setup::saveSetup(){
     RunData *rundata = RunData::getRunData();
     QHash<QString,QString> temp = rundata->getConfig();
     //write to file only if the user has provided input
+    QString pathToWriteTo;
     if (!pathMetaPathwaysTxt->text().isEmpty()) {
         temp["METAPATHWAYS_PATH"] = pathMetaPathwaysTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
     }
     if (!pythonExecTxt->text().isEmpty()) {
         temp["PYTHON_EXECUTABLE"] = pythonExecTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
     }
     if (!perlExecTxt->text().isEmpty()) {
         temp["PERL_EXECUTABLE"] = perlExecTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
     }
     if (!dbDirectoryTxt->text().isEmpty()) {
         temp["REFDBS"] = dbDirectoryTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "REFDBS", dbDirectoryTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "REFDBS", dbDirectoryTxt->text(), false, false);
     }
 
     if( !pathologicTxt->text().isEmpty()) {
         temp["PATHOLOGIC_EXECUTABLE"] = pathologicTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG,"PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
     }
 
     rundata->setConfig(temp);
