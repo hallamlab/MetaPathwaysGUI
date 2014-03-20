@@ -147,7 +147,8 @@ int RunData::getRunningStepNumber(){
 /*
  * Setup our default configs - if have a path variable already, use it. Otherwise, use the default built in
  * config file from here. Let the user make the changes they need in the setup screen, then write out those
- * changes.
+ * changes. We can't make the default_template copies yet, because we don't know the METAPATHWAYS_PATH
+ * in the case that the user hasn't specified it.
  */
 void RunData::setupDefaultConfig(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
@@ -167,7 +168,9 @@ void RunData::setupDefaultParams(){
     QFileInfo paramFile(path);
     if (!paramFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
     else path = path + QDir::separator() + this->TEMPLATE_PARAM;
-    this->setParams(Utilities::parseFile(path,"PARAMS"));
+
+    QHash<QString,QString> parsed = Utilities::parseFile(path,"PARAMS");
+    this->setParams(parsed);
 }
 void RunData::setCurrentSample(QString currentSample) {
     this->currentSample = currentSample;
@@ -215,13 +218,13 @@ bool RunData::validate(QString &warningMsg) {
     bool correct = true;
     QFileInfo file(this->getValueFromHash("PYTHON_EXECUTABLE", _CONFIG));
     if( !file.exists() ) {
-        warningMsg = warningMsg + " -Python executable path\n";
+        warningMsg = warningMsg + " - Python executable path\n";
         correct = false;
     }
 
     file.setFile(this->getValueFromHash("REFDBS", _CONFIG));
     if( !file.exists() ) {
-        warningMsg = warningMsg + " -Database path\n";
+        warningMsg = warningMsg + " - Database path\n";
         correct = false;
     }
 
@@ -229,7 +232,19 @@ bool RunData::validate(QString &warningMsg) {
     QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + "/MetaPathways.py");
 
     if( !file.exists() || !file1.exists() ) {
-        warningMsg = warningMsg + " -MetaPathways.py is missing from your specified MetaPathways directory. Please verify it exists!\n";
+        warningMsg = warningMsg + " - MetaPathways.py is missing from your specified MetaPathways directory. Please verify it exists!\n";
+        correct = false;
+    }
+
+    QFileInfo configFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) + QDir::separator() + this->TEMPLATE_CONFIG);
+    if( !configFile.exists() ){
+        warningMsg = warningMsg + "- template_config.txt does not exist in your specified MetaPathways Directory!\n";
+        correct = false;
+    }
+
+    QFileInfo paramFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) + QDir::separator() + this->TEMPLATE_PARAM);
+    if( !paramFile.exists() ){
+        warningMsg = warningMsg + "- template_param.txt does not exist in your specified MetaPathways Directory!\n";
         correct = false;
     }
 

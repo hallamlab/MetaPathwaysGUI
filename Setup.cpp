@@ -117,12 +117,56 @@ void Setup::metapathwaysBrowse(){
 }
 
 void Setup::saveSetup(){
-
     RunData *rundata = RunData::getRunData();
     QHash<QString,QString> temp = rundata->getConfig();
+
+    this->savePathVariables();
+
     //write to file only if the user has provided input
     if (!pathMetaPathwaysTxt->text().isEmpty()) {
         temp["METAPATHWAYS_PATH"] = pathMetaPathwaysTxt->text();
+
+        // at this point, we check if there's a template_config file in the METAPATHWAYS_PATH
+        // if there isn't we need to copy the default_template_config file as it
+
+        QString template_config = temp["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_CONFIG;
+        QFile template_config_file(template_config);
+        QFile default_template_config_file(":/text/" + RunData::DEFAULT_TEMPLATE_CONFIG);
+        QFileInfo t_file(template_config);
+
+        if (t_file.exists()){
+            // see if it's empty - then we need to remove the old first
+
+            if(Utilities::checkEmptyFile(template_config)){
+                // delete old, copy default to the location where it needs to be
+                template_config_file.remove();
+                default_template_config_file.copy(template_config);
+            }
+        }else{
+            // it doesn't exist, so copy it
+            default_template_config_file.copy(template_config);
+        }
+
+        // do the same for template_param
+
+        QString template_param = temp["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_PARAM;
+        QFile template_param_file(template_param);
+        QFile default_template_param_file(":/text/" + RunData::DEFAULT_TEMPLATE_PARAM);
+        QFileInfo p_file(template_param);
+
+        if (p_file.exists()){
+            // see if it's empty - then we need to remove the old first
+
+            if(Utilities::checkEmptyFile(template_param)){
+                // delete old, copy default to the location where it needs to be
+                template_param_file.remove();
+                default_template_param_file.copy(template_param);
+            }
+        }else{
+            // it doesn't exist, so copy it
+            default_template_param_file.copy(template_param);
+        }
+
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
     }
     if (!pythonExecTxt->text().isEmpty()) {
@@ -143,7 +187,6 @@ void Setup::saveSetup(){
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
     }
     rundata->setConfig(temp);
-    this->savePathVariables();
     emit continueFromSetup();
 }
 

@@ -31,6 +31,7 @@ public:
     static QString createToolTipTable(  QList< QList<QString> > tableData );
     static QLabel *ShowWaitScreen(QString pngFile, QString msg ) ;
     static QLabel *ShowWaitScreen(QString msg) ;
+    static bool checkEmptyFile(QString filepath);
     static QString insertCharacterAtIntervals(QString string, QChar c, int n);
 };
 

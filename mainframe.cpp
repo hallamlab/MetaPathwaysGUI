@@ -75,8 +75,7 @@ MainFrame::MainFrame(QWidget *parent) :
     }else{
         validateSetup();
     }
-    // auto update code
-    // run a separate process to check if there is a new file
+
 
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->setReferenceCoordinate(this->pos());
@@ -84,7 +83,7 @@ MainFrame::MainFrame(QWidget *parent) :
 
 void MainFrame::showSetupError(QString warningStr) {
 
-    warning->warning(0,"Configuration Invalid!\n", QString("You are missing the following:\n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
+    warning->warning(0,"Configuration Invalid!\n", QString("These problems require your attention : \n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
     greyTabs(false);
     this->openSetup();
     setupWidget->updateValues();

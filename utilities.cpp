@@ -131,6 +131,20 @@ int Utilities::countRunSteps(QHash<QString,QString>* PARAMS){
 }
 
 /*
+ * Checks to see if a file is empty. Returns 1 if it is, else 0;
+ */
+bool Utilities::checkEmptyFile(QString filepath){
+    QFile newFile(filepath);
+    newFile.open( QIODevice::WriteOnly|QIODevice::Append );
+    if (newFile.pos() == 0) {
+      return true;
+    } else {
+      return false;
+    }
+    newFile.close();
+}
+
+/*
  * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
  * pairing for settings. TYPE specifies if it is a config or param file, as the first will require all values
  * to be wrapped in single quotations, and params do not.
@@ -140,7 +154,7 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
     QFile inputFile(TEMPLATE_FILE);
     QFile newFile( TEMPLATE_FILE + "_new" );
 
-    if (inputFile.open(QIODevice::ReadWrite) && newFile.open(QIODevice::ReadWrite))
+    if (inputFile.open(QIODevice::ReadOnly) && newFile.open(QIODevice::ReadWrite))
     {
        QTextStream in(&inputFile);
        QTextStream out(&newFile);
@@ -205,6 +219,7 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
     }else{
         QMessageBox msg;
         msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
+        return false;
     }
     return false;
 }
@@ -285,6 +300,7 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
     }else{
         QMessageBox msg;
         msg.warning(0,"Error!\n",QString("Could not read the configuration file to " + TEMPLATE_FILE + ", does that file exist?"), QMessageBox::Ok);
+        return QHash<QString,QString>();
     }
     inputFile.close();
     return configs;

@@ -20,7 +20,6 @@ HTableData::HTableData(QWidget *parent) :
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
 
 
-#define SECTION
  #ifdef SECTION
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
     tableWidget->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);

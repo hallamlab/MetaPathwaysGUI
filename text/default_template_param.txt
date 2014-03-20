@@ -17,7 +17,7 @@ orf_prediction:min_length        60
 # ORF annotation parameters
 annotation:algorithm blast
 # e.g. blast or last
-annotation:dbs    metacyc-v5-2011-10-21
+annotation:dbs
 # e.g. annotation:dbs    cog,kegg,refseq,metacyc
 annotation:min_bsr  0.4
 annotation:max_evalue 0.000001
@@ -26,7 +26,7 @@ annotation:min_length 60
 annotation:max_hits 5
 
 # rRNA annotation parameters
-rRNA:refdbs LSURef_111_tax_silva
+rRNA:refdbs
 # e.g. rRNA:refdbs GREENGENES_gg16S,SSURef_111_NR_tax_silva,LSURef_111_tax_silva
 rRNA:max_evalue 0.000001
 rRNA:min_identity 20
@@ -36,12 +36,12 @@ rRNA:min_bitscore 50
 ptools_settings:taxonomic_pruning no
 
 # grid settings
-grid_engine:batch_size 200
-grid_engine:max_concurrent_batches 400
-grid_engine:walltime 10:00:00   
-grid_engine:RAM 10gb
-grid_engine:user myusername
-grid_engine:server mygrid.domain.com
+grid_engine0:batch_size 200
+grid_engine0:max_concurrent_batches 400
+grid_engine0:walltime 10:00:00   
+grid_engine0:RAM 10gb
+grid_engine0:user myusername
+grid_engine0:server mygrid.domain.com
 
 # pipeline execution flags
 # e.g. yes, skip, redo
