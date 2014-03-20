@@ -212,7 +212,6 @@ bool RunData::checkConfig(){
 
 
 bool RunData::validate(QString &warningMsg) {
-    qDebug() << "validating stuff" << this->getConfig();
     bool correct = true;
     QFileInfo file(this->getValueFromHash("PYTHON_EXECUTABLE", _CONFIG));
     if( !file.exists() ) {

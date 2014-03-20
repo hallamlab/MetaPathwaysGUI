@@ -75,7 +75,6 @@ MainFrame::MainFrame(QWidget *parent) :
     }else{
         validateSetup();
     }
-    qDebug() << rundata->getParams();
     // auto update code
     // run a separate process to check if there is a new file
 
