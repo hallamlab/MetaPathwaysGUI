@@ -92,12 +92,6 @@ void ResultWindow::_loadResults() {
     tableManager->deleteAllTables();
 
 
-
-
-
-
-
-
     /***/
     datamanager->setDataModelCreated(false);
 
@@ -171,7 +165,8 @@ void ResultWindow::updateFileNames(){
 
  void ResultWindow::receiveSelection(QList<bool> &selection) {
      this->selectedSamples = selection;
-
+     DataManager *datamanager = DataManager::getDataManager();
+     datamanager->createDataModel();
      this->switchToComparativeMode();
 
  }
@@ -179,7 +174,6 @@ void ResultWindow::updateFileNames(){
 
 void ResultWindow::sampleChanged(QString sampleName){
 
-   // if( disableSampleChanged==true) return;
     this->rundata->setCurrentSample(sampleName);
 
     TableData *t;
@@ -214,15 +208,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
 
     HTableData *htable;
-    types.clear();
-    types << STRING << STRING << INT;
-    headers.clear();
-    headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
-    htable = this->getHTableData(sampleName, KEGG, types, headers, datamanager);
-    htable->addSampleName(sampleName);
-    htable->setMultiSampleMode(false);
-    resultTabs->addTab(htable, "KEGG");
-
 
     types.clear();
     types << STRING << STRING << INT;
@@ -233,6 +218,14 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
 
+    types.clear();
+    types << STRING << STRING << INT;
+    headers.clear();
+    headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
+    htable = this->getHTableData(sampleName, KEGG, types, headers, datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
+    resultTabs->addTab(htable, "KEGG");
 
     types.clear();
     types << STRING << STRING << INT;
@@ -377,15 +370,21 @@ void ResultWindow::switchToComparativeMode() {
     DataManager *datamanager = DataManager::getDataManager();
    //// datamanager->createORFs(changed, orfTableName);
 
-   //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
+    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
+    datamanager->createDataModel();
+    samplercmgr->setOutPutPath(OUTPUTPATH);
+    this->indexSamples(true);
+
+    //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
 
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
     for(unsigned int i=0; i < files.size(); i++) {
+        qDebug()<< "Selected ?";
        if( !this->selectedSamples[i])  continue;
-        orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
-     //   if( !datamanager->AreORFsUptoDate(files[i]) )
-           datamanager->createORFs(files[i], orfTableName);
+       qDebug() << " yes ";
+        orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
+        datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
     }
