@@ -355,6 +355,9 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
 void ResultWindow::switchToComparativeMode() {
     resultTabs->clear();
 
+    //if no sample has been loaded then load the results
+    if(files.size()==0)  _loadResults();
+
     QString orfTableName;
     QString orfMetaCycTableName;
 
@@ -380,9 +383,7 @@ void ResultWindow::switchToComparativeMode() {
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
     for(unsigned int i=0; i < files.size(); i++) {
-        qDebug()<< "Selected ?";
        if( !this->selectedSamples[i])  continue;
-       qDebug() << " yes ";
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
         datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
