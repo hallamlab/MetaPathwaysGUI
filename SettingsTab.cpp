@@ -174,12 +174,12 @@ void SettingsTab::initWidgetValues(){
                 temp->addItem(value);
             }
         }
-        else if (qobject_cast<QSpinBox *>(widget)!=NULL){
-            QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
-            temp->setValue(value.toInt());
-        }
         else if (qobject_cast<QDoubleSpinBox *>(widget)!=NULL){
             QDoubleSpinBox *temp = qobject_cast<QDoubleSpinBox *>(widget);
+            temp->setValue(value.toDouble());
+        }
+        else if (qobject_cast<QSpinBox *>(widget)!=NULL){
+            QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
             temp->setValue(value.toInt());
         }
         else if (qobject_cast<QTextEdit *>(widget)!=NULL){
