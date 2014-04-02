@@ -138,8 +138,7 @@ FORMS    += \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \
     datamodel/htabledata.ui \
-    mainframe.ui \
-    gridprogress.ui
+    mainframe.ui
 
 
 RESOURCES += \
