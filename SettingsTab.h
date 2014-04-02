@@ -8,6 +8,12 @@
 #include <QListWidget>
 #include <QSettings>
 #include <QDir>
+#include <QObject>
+#include <QDebug>
+#include <QString>
+#include <QFileDialog>
+#include <QFileInfo>
+
 
 namespace Ui {
 class SettingsTab;
@@ -36,10 +42,6 @@ private slots:
     void annotationClicked(QModelIndex index);
     void rrnaClicked(QModelIndex index);
 
-signals:
-    void setContinueButton();
-    void hideContinueButton();
-
 private:
     bool writeOutToFile();
     void getAllWidgets();
@@ -47,7 +49,6 @@ private:
     void showORFDBS();
     void showRRNADBS();
     bool findFiles(QString path, QStringList *fileListing);
-    void isBothDBSSet();
 
 
     QStringList *annotationFiles;

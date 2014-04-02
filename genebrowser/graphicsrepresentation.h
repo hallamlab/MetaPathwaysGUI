@@ -10,7 +10,6 @@
 #include <QBrush>
 #include "genebrowser/graphicsitemscollection.h"
 #include "genebrowser/genomeview.h"
-#include "metawidget.h"
 #include "dataviews/meganview.h"
 
 
@@ -19,7 +18,7 @@ namespace Ui {
 class GraphicsRepresentation;
 }
 
-class GraphicsRepresentation : public QWidget, public MetaWidget
+class GraphicsRepresentation : public QWidget
 {
     Q_OBJECT
     
@@ -40,6 +39,8 @@ private:
     unsigned int XSIZE;
     unsigned int YSIZE;
     MeganView *meganView;
+    QString file;
+    QLabel* titleLabel;
 
 };
 

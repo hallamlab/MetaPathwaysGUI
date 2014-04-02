@@ -9,7 +9,7 @@ Welcome::Welcome(QWidget *parent) :
 {
 
     ui->setupUi(this);
-    this->setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     QLabel *logo = this->findChild<QLabel *>("logo");
     logo->setPixmap(QPixmap(":/images/logo.png"));
 }

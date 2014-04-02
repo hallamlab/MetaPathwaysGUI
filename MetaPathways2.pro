@@ -16,7 +16,6 @@ TEMPLATE = app
 #CONFIG += console
 
 SOURCES += main.cpp\
-        parentwidget.cpp \
         Setup.cpp \
         SettingsTab.cpp \
         RunConfig.cpp \
@@ -33,7 +32,6 @@ SOURCES += main.cpp\
     grid/nonec2.cpp \
     grid/ec2grid.cpp \
     grid/gridprogress.cpp\
-    metawidget.cpp \
     dataviews/graphdata.cpp \
     dataviews/largetable.cpp \
     popupviews/searchwidget.cpp \
@@ -68,7 +66,6 @@ SOURCES += main.cpp\
 
 
 HEADERS  += \
-            parentwidget.h \
             Setup.h \
             SettingsTab.h \
             RunConfig.h \
@@ -85,7 +82,6 @@ HEADERS  += \
     grid/nonec2.h \
     grid/ec2grid.h \
     grid/gridprogress.h\
-    metawidget.h \
     dataviews/graphdata.h \
     dataviews/largetable.h \
     popupviews/searchwidget.h \
@@ -126,7 +122,6 @@ FORMS    += \
             SettingsTab.ui \
             RunConfig.ui \
             ProgressDialog.ui \
-    parentwidget.ui \
     resultwindow.ui \
     dataviews/tabledata.ui \
     welcome.ui \

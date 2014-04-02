@@ -5,7 +5,7 @@
 
 
 GraphData::GraphData( QWidget *parent) :
-    QWidget(parent), MetaWidget(),
+    QWidget(parent),
     ui(new Ui::GraphData)
 {
     ui->setupUi(this);

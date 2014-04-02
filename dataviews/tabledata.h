@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
-#include "metawidget.h"
 #include "dataviews/largetable.h"
 #include "popupviews/searchwidget.h"
 #include "popupviews/exportbox.h"
@@ -20,11 +19,10 @@ namespace Ui {
 }
 
 
-
- class SearchWidget;
+class SearchWidget;
 class ExportBox;
 
-class TableData : public QWidget, public MetaWidget
+class TableData : public QWidget
 {
     Q_OBJECT
 
@@ -97,7 +95,7 @@ signals:
 private:
     int dw;
     QStringList headers; //table headers
-
+    QLabel *titleLabel;
     SearchWidget * searchWidget;
     QPushButton* searchButton;
 
@@ -106,7 +104,7 @@ private:
     DisplayInfo *p;
     GenomeView *g;
     QString sampleName;
-
+    QString file;
     ExportBox * exportBox;
 
     SEARCH searchFilter;

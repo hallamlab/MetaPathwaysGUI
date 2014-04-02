@@ -1,12 +1,10 @@
+/*
+ * This class represents the settings screen where the user sets up values for the run, including
+ * the specification of dbs.
+ */
 #include "SettingsTab.h"
 #include "ui_SettingsTab.h"
 #include "mainframe.h"
-#include <QObject>
-#include <QDebug>
-#include <QString>
-#include <QDir>
-#include <QFileDialog>
-#include <QFileInfo>
 
 QList<QWidget *> *SettingsTab::allWidgets = NULL;
 
@@ -45,12 +43,6 @@ void SettingsTab::annotationClicked(QModelIndex index){
             oneChecked = true;
         }
     }
-
-    if (!oneChecked){
-        isBothDBSSet();
-        return;
-    }
-    isBothDBSSet();
 }
 
 void SettingsTab::rrnaClicked(QModelIndex index){
@@ -60,16 +52,6 @@ void SettingsTab::rrnaClicked(QModelIndex index){
             oneChecked = true;
         }
     }
-
-    if (!oneChecked) {
-        isBothDBSSet();
-        return;
-    }
-    isBothDBSSet();
-}
-
-void SettingsTab::isBothDBSSet(){
-    emit setContinueButton();
 }
 
 bool SettingsTab::findFiles(QString path, QStringList *fileListing){
@@ -119,7 +101,7 @@ void SettingsTab::showORFDBS(){
     QRegExp reg("^[.]");
 
     if (this->findFiles(dbPath,filesInDir)){
-        if (filesInDir->length()>0)
+        if (filesInDir->length()>0){
             foreach (QString db, *filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
@@ -127,8 +109,6 @@ void SettingsTab::showORFDBS(){
                 item->setCheckState(Qt::Unchecked);
                 annotationDBS->addItem(item);
             }
-        else{
-//            annotationDBSWarning->setText("No functional databases found under your specified database path : " + dbPath );
         }
     }
     else{
@@ -156,6 +136,10 @@ void SettingsTab::openParameterSetup(){
     close();
 }
 
+/*
+ * Similiar to the code in MainFrame, where we save values, we are instead initializing them here
+ * for each field widget.
+ */
 void SettingsTab::initWidgetValues(){
     QList<QWidget *>::iterator i;
 
@@ -189,6 +173,10 @@ void SettingsTab::initWidgetValues(){
     }
 }
 
+/*
+ * AllWidgets is used by the mainframe to update values across activities. We simply cast
+ * all the widgets of this class to QWidget, and save it in allWidgets.
+ */
 void SettingsTab::getAllWidgets(){
     qcWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^quality_control*")));
     orfWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^orf_prediction*")));

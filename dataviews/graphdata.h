@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QVector>
 #include <QPushButton>
-#include "metawidget.h"
 #include "qcustomplot.h"
 #include "caching/tablemanager.h"
 
@@ -13,7 +12,7 @@ namespace Ui {
 class GraphData;
 }
 
-class GraphData : public QWidget, public MetaWidget
+class GraphData : public QWidget
 {
     Q_OBJECT
     
@@ -42,6 +41,8 @@ private:
     double min, max;
     double ymax;
     unsigned int numBuckets;
+    QString file;
+    QLabel* titleLabel;
     QVector<double> x, y;
 
     Ui::GraphData *ui;

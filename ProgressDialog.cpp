@@ -12,12 +12,14 @@
 #include <QTextStream>
 #include <QDir>
 
+/*
+ * Default constructor, sets up private variables.
+ */
 ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::ProgressDialog)
 {
     ui->setupUi(this);
 
     this->rundata = RunData::getRunData();
-    this->pw = pw;
 
     this->setWindowTitle("MetaPathways - Run Progress");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
@@ -71,7 +73,7 @@ bool ProgressDialog::checkInputOutPutLocations() {
 }
 
 void ProgressDialog::readStepsLog(){
-    _stepsCompletedSample = 0;
+    _stepsCompleted = 0;
 
     //if(!this->checkInputOutPutLocations()) return;
 
@@ -116,7 +118,7 @@ void ProgressDialog::readStepsLog(){
     colorRunConfig(statusHash);
     updateProgressBar();
 
-//    qDebug() << _stepsCompletedSample << _totalStepsPerSample;
+//    qDebug() << _stepsCompleted << _totalSteps;
 
     if( myProcess !=0 ) {
        QByteArray read = myProcess->readAll();
@@ -129,7 +131,7 @@ void ProgressDialog::readStepsLog(){
 
 /*
  * There is no mapping from the table to the groupboxes. Therefore, this function will declare
- * the mapping of a row index to its groupbox by augmenting TABLE_MAPPING.
+ * the mapping of a row index to its groupbox.
  */
 void ProgressDialog::initMapping(){
     TABLE_MAPPING = new QHash<int,QString>();
@@ -156,8 +158,8 @@ void ProgressDialog::initMapping(){
 
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
-    progressBar->setValue(_stepsCompletedSample);
-    progressBar->setMaximum(_totalStepsPerSample);
+    progressBar->setValue(_stepsCompleted);
+    progressBar->setMaximum(_totalSteps);
 }
 
 void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
@@ -167,18 +169,23 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
         if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "FAILED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "FAILED";
+            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }else if(statusHash->operator []("GENBANK_FILE")=="RUNNING"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "RUNNING";
             statusHash->operator []("PATHOLOGIC_INPUT") = "RUNNING";
+            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }else if(statusHash->operator []("GENBANK_FILE")=="SUCCESS"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "SUCCESS";
             statusHash->operator []("PATHOLOGIC_INPUT") = "SUCCESS";
+            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }else if(statusHash->operator []("GENBANK_FILE")=="SKIPPED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "SKIPPED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "SKIPPED";
+            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }else if(statusHash->operator []("GENBANK_FILE")=="ALREADY_COMPUTED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "ALREADY_COMPUTED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "ALREADY_COMPUTED";
+            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }
         return;
     }
@@ -206,6 +213,7 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
             else if (v == "SKIPPED"){
                 statusHash->insert(realStepName,"SKIPPED");
             }
+
         }
     }
 }
@@ -221,7 +229,7 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
     // for all, and only consider that "step" to be done if its SKIPPED or SUCCESS
 
     QHash<QString,QString>::iterator it;
-    _stepsCompletedSample = 0;
+    _stepsCompleted = 0;
     this->summaryTable->clearContents();
 
     for(it=statusHash->begin();it!=statusHash->end();it++){
@@ -252,7 +260,7 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
             img  = QImage(":/images/cross.png");
             item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
             this->summaryTable->setItem(_row,0, item);
-            _stepsCompletedSample++;
+            _stepsCompleted++;
 
         }else if (status.operator ==("RUNNING")){
             imageLabel->setFixedSize(30,25);
@@ -266,7 +274,7 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
             img = QImage(":/images/check.png");
             item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
             this->summaryTable->setItem(_row,0, item);
-            _stepsCompletedSample++;
+            _stepsCompleted++;
         }
     }
 
@@ -301,8 +309,8 @@ void ProgressDialog::startRun(){
 
         timer->start(1000);
 
-        _stepsCompletedSample = 0;
-        _totalStepsPerSample = TABLE_MAPPING->size();
+        _stepsCompleted = 0;
+        _totalSteps = TABLE_MAPPING->size();
 
         initProcess();
     }

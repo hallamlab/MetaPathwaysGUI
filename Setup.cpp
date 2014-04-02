@@ -6,6 +6,9 @@
 #include <QFileDialog>
 #include <QSettings>
 
+/*
+ * Setups connections for all the buttons and checking mechanisms.
+ */
 Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
 {
     ui->setupUi(this);
@@ -24,17 +27,14 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     pathologicTxt = this->findChild<QLineEdit *>("pathologicTxt");
 
     updateValues();
-
-  //  if(!MainFrame::settingsAvailable()) this->canSave();
+    // sets up values from the hash, if they exist
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
     connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
     connect(metapathwaysBrowseButton, SIGNAL(clicked()), this, SLOT(metapathwaysBrowse()));
     connect(databaseButton, SIGNAL(clicked()), this, SLOT(databaseBrowse()));
     connect(pathologicButton,SIGNAL(clicked()), this, SLOT(pathologicBrowse()));
-
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSetup()));
-
     connect(pythonExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(perlExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
@@ -42,6 +42,10 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(pathologicTxt, SIGNAL(textEdited(QString)), this, SLOT(canSave()));
 }
 
+/*
+ * Sets up initial values based off of what was loaded into the CONFIG at startup (see
+ * RunData's private constructor).
+ */
 void Setup::updateValues(){
     RunData *rundata = RunData::getRunData();
 
@@ -52,6 +56,10 @@ void Setup::updateValues(){
     pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
 }
 
+/*
+ * Checks to see if any of the text fields are empty. Changes the state of the save button
+ * accordingly.
+ */
 void Setup::canSave(){
     if (
           (!pythonExecTxt->text().isEmpty()) \
@@ -116,11 +124,20 @@ void Setup::metapathwaysBrowse(){
 
 }
 
+/*
+ * Two scenarios are possible here : 1.) the user has not defined a METAPATHWAYS_PATH so we cannot
+ * assume the existence of a config nor parameter file, or 2.) the user has, so we can locate the file.
+ * In the first case, we must then use the default_template_config and default_template_param file to
+ * fill in the CONFIG and PARAMS hash in rundata, and also copy over the files to the path as the template_config and template
+ * _ param files once they have been defined. In this way it is crucial that the user first provides the METAPATHWAYS_PATH, otherwise nothing
+ * else can proceed, since all other config settings cannot be written at all.
+ */
 void Setup::saveSetup(){
     RunData *rundata = RunData::getRunData();
     QHash<QString,QString> temp = rundata->getConfig();
 
     this->savePathVariables();
+    // save the paths, if there are any provided beforehand
 
     //write to file only if the user has provided input
     if (!pathMetaPathwaysTxt->text().isEmpty()) {
@@ -186,8 +203,8 @@ void Setup::saveSetup(){
         temp["PATHOLOGIC_EXECUTABLE"] = pathologicTxt->text();
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
     }
-    rundata->setConfig(temp);
-    emit continueFromSetup();
+    rundata->setConfig(temp); // update our run config's representation with our (possibly) newly created configs
+    emit continueFromSetup(); // sends a signal back to the mainframe to perform checking with validateSetup()
 }
 
 
@@ -220,6 +237,9 @@ void Setup::loadPathVariables(){
     // after we construct this object anyways
 }
 
+/*
+ * Saves path variables for each config value.
+ */
 void Setup::savePathVariables(){
     QSettings settings("HallamLab", "MetaPathways");
     RunData *run = RunData::getRunData();
@@ -235,7 +255,6 @@ void Setup::savePathVariables(){
         settings.setValue("PERL_EXECUTABLE", perlExecTxt->text());
         run->setPerlExecutablePath(perlExecTxt->text());
     }
-
     if( !dbDirectoryTxt->text().isEmpty()) {
        settings.setValue("REFDBS",  dbDirectoryTxt->text());
        run->setDatabasesPath(dbDirectoryTxt->text());
