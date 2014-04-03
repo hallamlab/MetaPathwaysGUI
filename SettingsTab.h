@@ -38,7 +38,6 @@ public:
 
 private slots:
     void closeWindow();
-    void openParameterSetup();
     void annotationClicked(QModelIndex index);
     void rrnaClicked(QModelIndex index);
 
@@ -57,7 +56,6 @@ private:
     QPushButton *annotationDBSButton;
     QPushButton *rrnaREFDBSButton;
 
-    RunConfig *RunConfigWindow;
     QList<QWidget *> *qcWidgets;
     QList<QWidget *> *orfWidgets;
     QList<QWidget *> *annotationWidgets;

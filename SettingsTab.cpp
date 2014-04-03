@@ -15,8 +15,6 @@ SettingsTab::SettingsTab(QWidget *parent) :
     ui->setupUi(this);
     SettingsTab::allWidgets = new QList<QWidget *>();
 
-    RunConfigWindow = NULL;
-
     getAllWidgets();
 
     annotationDBS = this->findChild<QListWidget *>("annotationDBS");
@@ -35,6 +33,7 @@ SettingsTab::SettingsTab(QWidget *parent) :
     initWidgetValues();
     setStyling();
 }
+
 
 void SettingsTab::annotationClicked(QModelIndex index){
     bool oneChecked = false;
@@ -124,15 +123,6 @@ void SettingsTab::setStyling(){
 
 
 void SettingsTab::closeWindow(){
-    close();
-}
-
-/*
- * Save params to file.
- */
-void SettingsTab::openParameterSetup(){
-    if (RunConfigWindow == NULL) RunConfigWindow = new RunConfig();
-    RunConfigWindow->show();
     close();
 }
 

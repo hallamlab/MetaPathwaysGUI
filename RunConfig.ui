@@ -993,6 +993,9 @@
    </widget>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_CALCULATION">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -1024,6 +1027,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_calculationSKIP">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1054,6 +1060,9 @@
    </widget>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -1085,6 +1094,9 @@
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_imagemakerSKIP">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>150</x>

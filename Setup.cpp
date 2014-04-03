@@ -1,10 +1,6 @@
 #include "Setup.h"
 #include "ui_Setup.h"
 #include "utilities.h"
-#include <QDebug>
-#include <QString>
-#include <QFileDialog>
-#include <QSettings>
 
 /*
  * Setups connections for all the buttons and checking mechanisms.

@@ -6,6 +6,10 @@
 #include <QString>
 #include <QHash>
 #include <QLineEdit>
+#include <QDebug>
+#include <QString>
+#include <QFileDialog>
+#include <QSettings>
 #include "rundata.h"
 #include "types.h"
 

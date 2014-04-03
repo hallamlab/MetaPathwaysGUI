@@ -109,19 +109,22 @@ void ProgressDialog::readStepsLog(){
         logBrowser->append("The log file has not yet been generated. Please wait.");
     }
 
+    // problem : several steps have an unknown number of databases (sub-steps) that run
+    // so we pass these values off to another function to see what the overall progress is
     checkStepsWithDBS(&statusHash, "BLAST_REFDB_","BLAST_REFDB");
     checkStepsWithDBS(&statusHash, "PARSE_BLAST_", "PARSE_BLAST");
     checkStepsWithDBS(&statusHash, "SCAN_rRNA_", "SCAN_rRNA");
     checkStepsWithDBS(&statusHash, "STATS_", "STATS_rRNA");
     checkStepsWithDBS(&statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
+    // update icons for each step
     colorRunConfig(&statusHash);
+    // update progress bar
     updateProgressBar();
 
-//    qDebug() << _stepsCompleted << _totalSteps;
-
     if( myProcess !=0 ) {
-       QByteArray read = myProcess->readAll();
+        // dump out output from stdout to the other log
+        QByteArray read = myProcess->readAll();
        if (!read.isEmpty()) standardOut->append(QString(read));
     }
 }
@@ -153,15 +156,23 @@ void ProgressDialog::initMapping(){
     TABLE_MAPPING->operator [](17) = "PATHOLOGIC";
 }
 
+/*
+ * You know.
+ */
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
     progressBar->setValue(_stepsCompleted);
     progressBar->setMaximum(_totalSteps);
 }
 
+/*
+ * Some special handling of certain steps to ascern their true states.
+ */
 void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
     QHash<QString,QString>::iterator it;
 
+    // GENBANK_FILE, CREATE_SEQUIN_FILE, AND PATHOLOGIC_INPUT are considered to be really all the same step
+    // so if any one of them fails, they all fail, any one is done, they're all done, etc
     if(stepName=="GENBANK_FILE"){
         if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "FAILED";
@@ -187,6 +198,9 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
         return;
     }
 
+    // checking through the hash for one of our problem steps
+    // stepName is just the substring of what a substep would look like
+    // eg realStepName = BLAST_REFDB, stepName = BLAST_REFDB_
     for (it=statusHash->begin();it!=statusHash->end();it++){
         QString k = it.key();
         if (k.contains(stepName)){
@@ -215,15 +229,10 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
     }
 }
 
+/*
+ * Crayons, ma. Update the table with the appropriate widget depending on the status for that step.
+ */
 void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
-    // special cases : BLAST_REFDB, PARSE_BLAST, SCAN_rRNA, STATS
-    // all have multiple databases associated with them
-    // so be agnostic to what the user picks and just go with the
-    // output of the run log to determine status to show
-    // log ouput will be in the form of
-    // BLAST_REFDB_DBNAME, PARSE_BLAST_REFDB, SCAN_rRNA_REFDB, STATS_REFDB
-    // in that case, put them into 4 respective hashes that summarize progress
-    // for all, and only consider that "step" to be done if its SKIPPED or SUCCESS
 
     QHash<QString,QString>::iterator it;
     _stepsCompleted = 0;
@@ -237,8 +246,6 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
         if (stepName.contains(QRegExp("PARSE_BLAST_"))) continue;
         if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
 //        if (stepName.contains(QRegExp("STATS_"))) continue;
-
-        //qDebug() << stepName;
 
         QTableWidgetItem *item = new QTableWidgetItem();
         QMovie *loading = new QMovie(":/images/loading.gif");
@@ -424,6 +431,9 @@ void ProgressDialog::checkFiles(){
     this->rundata->setFileList(filesDetected);
 }
 
+/*
+ * Reset the state after its finished, but don't clear everything.
+ */
 void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStatus){
     runButton->setEnabled(true);
     cancelButton->setEnabled(false);
@@ -435,6 +445,10 @@ void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStat
     myProcess = 0;
 }
 
+
+/*
+ * Kill the current run. Clear everything.
+ */
 void ProgressDialog::terminateRun(){
     myProcess->kill();
     myProcess = 0;
