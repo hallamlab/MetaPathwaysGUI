@@ -73,6 +73,9 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case MEGANBLASTFILE:
             path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/" + sampleName + ".refseq.BLASTout";
             break;
+         case RUNSTATS:
+            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
+            break;
          default:
             path = "";
             break;
@@ -82,7 +85,7 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
  }
 
 
-FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE resname ) {
+FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE resname, bool reindex ) {
      FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
      FileIndex *fileIndex =0;
      QHash<RESOURCE, QString> resNames;
@@ -91,7 +94,6 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
      resNames[NUCFNA] = "NUCFNA";
 
      if( this->useResourceFolder ) {
-
          QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
 
          if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {
@@ -99,7 +101,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
          }
          QFileInfo resourceFile(resSampleDir.absolutePath() + "/" + resNames[resname] + ".txt");
 
-         if( resourceFile.exists() && !fileindexmanager->hasFileIndex(sampleName, resname) ) {
+         if( reindex == false && resourceFile.exists() && !fileindexmanager->hasFileIndex(sampleName, resname) ) {
               fileIndex = fileindexmanager->readFileIndex(sampleName, resourceFile.absoluteFilePath(), resname);
               fileIndex->setSourceFile(this->getFilePath(sampleName, resname));
          }

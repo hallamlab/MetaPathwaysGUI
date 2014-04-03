@@ -1,17 +1,17 @@
 #include "displaywidgets/progressview.h"
 
-ProgressView::ProgressView()
+ProgressView::ProgressView(QWidget *parent)
 {
 }
 
 
-ProgressView::ProgressView(QString text, unsigned int i , unsigned int j) {
+ProgressView::ProgressView(QString text, unsigned int i , unsigned int j, QWidget *parent) {
 
 
     layout = new QVBoxLayout(this);
 
     if(i < j ) {
-       progressBar = new QProgressBar;
+        progressBar = new QProgressBar(parent);
        progressBar->setRange(i, j);
        progressBar->setAlignment(Qt::AlignCenter);
        progressBar->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);

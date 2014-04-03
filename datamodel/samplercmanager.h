@@ -18,7 +18,7 @@ public:
     void setOutPutPath(QString outputDir);
     void setUseResourceFolder(bool flag);
     QString getFilePath(QString sampleName,  RESOURCE resource);
-    FileIndex *getFileIndex(QString sampleName, RESOURCE resource);
+    FileIndex *getFileIndex(QString sampleName, RESOURCE resource, bool reindex = false);
 
 private:
     SampleResourceManager();

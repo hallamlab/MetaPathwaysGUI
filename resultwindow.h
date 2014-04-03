@@ -19,10 +19,12 @@
 #include "dataviews/meganview.h"
 #include "genebrowser/genomeview.h"
 #include <QMdiArea>
+#include <QTableView>
 
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
 #include "datamodel/datamanager.h"
+#include "datamodel/rundatastats.h"
 #include "popupviews/selectsamples.h"
 
 #include "displaywidgets/mdiareawidget.h"
@@ -64,7 +66,8 @@ signals:
 private:
     explicit ResultWindow(QWidget *parent = 0);
     void switchToComparativeMode();
-    void indexSamples(bool useResourceFolder);
+    void indexSamples(bool useResourceFolder, bool forcereindex =false);
+    void indexSample(QString sampleName, bool userResourceFolder, bool reindex) ;
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
 
 
@@ -77,7 +80,7 @@ private:
     QComboBox* sampleSelect;
     QPushButton *selectSamplesButton;
     QPushButton *loadResults;
-    QCheckBox *checkComparativeMode;
+    QCheckBox *checkComparativeMode, *reindex;
     QLabel *currentSampleLabel;
 
     QTabWidget *resultTabs;

@@ -27,6 +27,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
     checkComparativeMode = this->findChild<QCheckBox *>("checkComparativeMode");
     selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
     currentSampleLabel = this->findChild<QLabel *>("currentSampleLabel");
+    reindex = this->findChild<QCheckBox *>("reindex");
     loadResults = this->findChild<QPushButton *>("loadResults");
 
     selectSamplesButton->setEnabled(false);
@@ -102,23 +103,41 @@ void ResultWindow::_loadResults() {
 }
 
 
-void ResultWindow::indexSamples(bool userResourceFolder) {
-    ProgressView progressBar("Indexing samples...", 0, files.size());
+void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
+    ProgressView progressBar("Indexing samples...", 0, files.size(), this);
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     samplercmgr->setUseResourceFolder(userResourceFolder);
 
     unsigned int i =0;
     foreach(QString file, this->rundata->getFileList() ) {
-        samplercmgr->getFileIndex(file, NUCFASTA);
-        samplercmgr->getFileIndex(file, AMINOFAA);
-        samplercmgr->getFileIndex(file, NUCFNA);
+        qDebug() << " file " << file;
+        samplercmgr->getFileIndex(file, NUCFASTA, reindex);
+        samplercmgr->getFileIndex(file, AMINOFAA, reindex);
+        samplercmgr->getFileIndex(file, NUCFNA, reindex);
         progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
     }
 
     progressBar.hide();
-
 }
+
+void ResultWindow::indexSample(QString sampleName, bool userResourceFolder, bool reindex) {
+    ProgressView progressBar(QString("Indexing sample...") + sampleName, 0, 1, this);
+
+    SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
+    samplercmgr->setUseResourceFolder(userResourceFolder);
+
+    unsigned int i =0;
+    foreach(QString file, this->rundata->getFileList() ) {
+        samplercmgr->getFileIndex(file, NUCFASTA, reindex);
+        samplercmgr->getFileIndex(file, AMINOFAA, reindex);
+        samplercmgr->getFileIndex(file, NUCFNA, reindex);
+        progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
+    }
+
+    progressBar.hide();
+}
+
 
 void ResultWindow::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
@@ -185,9 +204,15 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     sampleResourceManager->setOutPutPath(OUTPUTPATH);
-    this->indexSamples(true);
 
-    ProgressView progressbar("Please wait while the sample is loaded...", 0, 0);
+    bool forceReindex = false;
+    if( reindex->isChecked() )
+        forceReindex = true;
+
+    this->indexSamples(true, forceReindex);
+
+
+    ProgressView progressbar("Please wait while the sample is loaded...", 0, 0, this);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
     const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
@@ -206,6 +231,33 @@ void ResultWindow::sampleChanged(QString sampleName){
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
     qDebug() << " adding metacyc annotaton again";
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
+
+
+
+    QStringList selectedFileNames;
+
+    selectedFileNames.append(sampleName);
+
+    RunDataStats *rundatamodel = new RunDataStats;
+    rundatamodel->setFileNames(selectedFileNames);
+    rundatamodel->readStatFiles();
+
+    QTableView *statTableView = new QTableView;
+    resultTabs->addTab(statTableView, "RUN STATS");
+    statTableView->setModel(rundatamodel);
+    statTableView->setAlternatingRowColors(true);
+    statTableView->show();
+
+
+ #ifdef SECTION
+     statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
+     statTableView->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
+ #else
+     statTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+     statTableView->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+     statTableView->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+ #endif
+
 
     HTableData *htable;
 
@@ -376,6 +428,7 @@ void ResultWindow::switchToComparativeMode() {
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     datamanager->createDataModel();
     samplercmgr->setOutPutPath(OUTPUTPATH);
+
     this->indexSamples(true);
 
     //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
@@ -406,6 +459,33 @@ void ResultWindow::switchToComparativeMode() {
        htable->addSampleName(files[i]);
        types << INT;
     }
+
+
+   QStringList selectedFileNames;
+   for(unsigned int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       selectedFileNames.append(files[i]);
+   }
+
+   RunDataStats *rundatamodel = new RunDataStats;
+   rundatamodel->setFileNames(selectedFileNames);
+   rundatamodel->readStatFiles();
+
+   QTableView *statTableView = new QTableView;
+   resultTabs->addTab(statTableView, "RUN STATS");
+   statTableView->setModel(rundatamodel);
+   statTableView->setAlternatingRowColors(true);
+   statTableView->show();
+
+#ifdef SECTION
+    statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
+    statTableView->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
+#else
+    statTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
+    statTableView->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    statTableView->verticalHeader()->setResizeMode(QHeaderView::Stretch);
+#endif
+
 
     htable->setParameters(datamanager->getHTree(COG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());

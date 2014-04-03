@@ -63,7 +63,8 @@ SOURCES += main.cpp\
     popupviews/exportsource.cpp \
     datamodel/samplercmanager.cpp \
     displaywidgets/progressview.cpp \
-    popupviews/meganexportbox.cpp
+    popupviews/meganexportbox.cpp \
+    datamodel/rundatastats.cpp
 
 
 
@@ -117,7 +118,8 @@ HEADERS  += \
     popupviews/exportsource.h \
     datamodel/samplercmanager.h \
     displaywidgets/progressview.h \
-    popupviews/meganexportbox.h
+    popupviews/meganexportbox.h \
+    datamodel/rundatastats.h
 
 
 

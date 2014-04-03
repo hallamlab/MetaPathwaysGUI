@@ -67,27 +67,6 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QLabel" name="currentSampleLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>13</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Current Sample</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QComboBox" name="sampleSelect">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -104,9 +83,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="reindex">
+         <property name="text">
+          <string>Re-index</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="loadResults">
          <property name="text">
-          <string>Load Results</string>
+          <string>Load Samples</string>
          </property>
         </widget>
        </item>

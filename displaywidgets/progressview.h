@@ -12,8 +12,8 @@
 class ProgressView:public QWidget {
     Q_OBJECT
 public:
-    ProgressView();
-    ProgressView(QString text, unsigned int i, unsigned int j );
+    ProgressView(QWidget *parent = 0);
+    ProgressView(QString text, unsigned int i, unsigned int j, QWidget *parent );
     void updateprogress(unsigned int i);
 private:
     QVBoxLayout* layout;

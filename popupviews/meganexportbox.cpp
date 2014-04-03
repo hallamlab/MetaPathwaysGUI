@@ -155,14 +155,14 @@ QString  MeganExportBox::lastToBlastFormat(QString line, QChar &sep) {
 void MeganExportBox::exportMeganTable(const QString & meganFile, const QString &fileName, RESOURCE resourceType) {
 
 
-    ProgressView progressBar1("Please wait while we compute the file size!", 0, 0);
+    ProgressView progressBar1("Please wait while we compute the file size!", 0, 0, this);
     int numHits = this->countLines(meganFile);
     progressBar1.hide();
 
     unsigned int onePercent = numHits/100;
 
 
-    ProgressView progressBar("Please wait while we save the file!", 0, 100);
+    ProgressView progressBar("Please wait while we save the file!", 0, 100, this);
     QRegExp comment("^#");
     QChar sep('\t');
 
@@ -202,12 +202,12 @@ void MeganExportBox::exportMeganTable(const QString & meganFile, const QString &
 
 void MeganExportBox::exportMeganFile(const QString & meganFile, const QString &fileName) {
 
-    ProgressView progressBar1("Please wait while we compute the file size!", 0, 0);
+    ProgressView progressBar1("Please wait while we compute the file size!", 0, 0, this);
     int numHits = this->countLines(meganFile);
     progressBar1.hide();
     unsigned int onePercent = numHits/100;
     this->hide();
-    ProgressView progressBar("Please wait while we save the file!", 0, 100);
+    ProgressView progressBar("Please wait while we save the file!", 0, 100, this);
 
     QFile inFile(meganFile);
     QFile outFile(fileName);
