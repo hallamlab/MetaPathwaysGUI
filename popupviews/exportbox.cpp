@@ -208,17 +208,17 @@ typedef struct _EXPORT_FILES_INFO {
      if( csvRadio->isChecked()) {
          exportFileName = fileName.remove(QRegExp("[.]csv$") ) + QString(".csv");
          delim=QChar(',');
-         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+//         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
          this->td->saveTableToFile(exportFileName, delim, selectedHeaders );
-         waitScreen->hide();
+//         waitScreen->hide();
      }
 
      if( tsvRadio->isChecked()) {
          exportFileName = fileName.remove(QRegExp("[.]txt$") ) + QString(".txt");
          delim=QChar('\t');
-         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+//         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
          this->td->saveTableToFile(exportFileName, delim, selectedHeaders);
-         waitScreen->hide();
+//         waitScreen->hide();
      }
 
      EXPORT_FILES_INFO filesInfo;
@@ -233,9 +233,9 @@ typedef struct _EXPORT_FILES_INFO {
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {
                      exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
-                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+//                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
                      this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
-                     waitScreen->hide();
+                     //waitScreen->hide();
                  }
              }
      }else {
@@ -245,9 +245,9 @@ typedef struct _EXPORT_FILES_INFO {
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked() ) {
                     exportFileName =  fileName + "/" + sampleName +QString(filesInfo.suffixes[i]);
-                    QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+//                    QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
                     this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
-                    waitScreen->hide();
+                    //waitScreen->hide();
 
              }
          }

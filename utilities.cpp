@@ -1,15 +1,9 @@
+/*
+ * Helper functions for the GUI.
+ */
+
 #include "utilities.h"
-#include <QString>
-#include <QFile>
-#include <QTextStream>
-#include <QRegExp>
-#include <QHash>
-#include <QSplitter>
-#include <QDebug>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <QMessageBox>
+
 
 Utilities::Utilities()
 {
@@ -229,8 +223,6 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
  * 1.) Sort all files alphabetically
  * 2.) Ensure that only strings that do not exist as substrings for other strings in the list are returned.
  */
-
-
 QStringList Utilities::getUniqueDBS(QStringList dbs){
     QHash<QString, bool> unique;
 

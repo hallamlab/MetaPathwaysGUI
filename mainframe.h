@@ -3,9 +3,15 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QRect>
-#include "parentwidget.h"
+#include <QStackedWidget>
+#include <fstream>
+#include <iostream>
+#include <QSettings>
+#include <QStylePainter>
 #include "Setup.h"
 #include "resultwindow.h"
+#include "RunConfig.h"
+#include "SettingsTab.h"
 #include "utilities.h"
 #include "ProgressDialog.h"
 #include "welcome.h"
@@ -13,6 +19,9 @@
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/mqtoolbar.h"
+#ifdef Q_OS_WIN
+    #include <windows.h> // for Sleep
+#endif
 
 namespace Ui {
 class MainFrame;
@@ -42,7 +51,6 @@ public:
     static QHash<QString,QString> CONFIG_MAPPING;
 
     void createMapping();
-   // static bool settingsAvailable();
     void loadPathVariables();
 
     QMessageBox *warning;
@@ -71,7 +79,6 @@ private:
     void qSleep(int ms);
 
     Ui::MainFrame *ui;
-    ParentWidget *parentWidget;
     Setup *setupWidget;
     ResultWindow *resultWindow;
     ProgressDialog *progress;
@@ -80,13 +87,11 @@ private:
     SettingsTab* settings;
     GridProgress* gridProgress;
 
-
     QScrollArea* stageScroll;
     QScrollArea* settingsScroll;
 
     QWidget *centralWidget;
     QStackedWidget* stackedWidget;
-
 
     QAction* actionSetup;
     QAction* actionRunSettings;

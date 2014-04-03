@@ -3,7 +3,7 @@
 #include <QSettings>
 /*
  * This class contains the data for a run. It is an internal object class that represents all the data
- * about this instance of MetaPathways running.
+ * about this instance of MetaPathways running. It has
  */
 
 const QString RunData::TEMPLATE_PARAM = "template_param.txt";
@@ -12,7 +12,9 @@ const QString RunData::TEMPLATE_CONFIG = "template_config.txt";
 const QString RunData::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
 RunData* RunData::runData = 0;
 
-
+/*
+ * Private constructor, loads settings values into the CONFIG hash if they already exist.
+ */
 RunData::RunData(){
     QSettings settings("HallamLab", "MetaPathways");
     this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
@@ -22,6 +24,9 @@ RunData::RunData(){
     this->setValue("REFDBS", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
 }
 
+/*
+ * Initializes and returns our singleton.
+ */
 RunData* RunData::getRunData(){
     if (runData ==0){
         runData = new RunData();
@@ -29,28 +34,23 @@ RunData* RunData::getRunData(){
         runData->initVartoNULL();
         runData->nADB = 0;
         runData->nRRNADB = 0;
-
         runData->system = "UNKNOWN";
-
-
-
-#ifdef Q_OS_MAC64
+        #ifdef Q_OS_MAC64
         runData->system = "mac";
-#endif
-
-#ifdef Q_OS_LINUX
+        #endif
+        #ifdef Q_OS_LINUX
         runData->system = "linux";
-#endif
-
-
-#ifdef  Q_OS_WIN
+        #endif
+        #ifdef  Q_OS_WIN
         runData->system = "win";
-#endif
+        #endif
     }
-
     return runData;
 }
 
+/*
+ * Returns value from
+ */
 QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
     if (type==_CONFIG)
         return this->CONFIG.contains(key)  ?  this->CONFIG.value(key): QString("");
@@ -148,7 +148,8 @@ int RunData::getRunningStepNumber(){
  * Setup our default configs - if have a path variable already, use it. Otherwise, use the default built in
  * config file from here. Let the user make the changes they need in the setup screen, then write out those
  * changes. We can't make the default_template copies yet, because we don't know the METAPATHWAYS_PATH
- * in the case that the user hasn't specified it.
+ * in the case that the user hasn't specified it. At this point RunData has already been initialized, so
+ * we can safely use the config values for METAPATHWAYS_PATH.
  */
 void RunData::setupDefaultConfig(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];

@@ -7,6 +7,16 @@
 #include <QList>
 #include <QThread>
 #include <QTextFormat>
+#include <QFile>
+#include <QTextStream>
+#include <QRegExp>
+#include <QHash>
+#include <QSplitter>
+#include <QDebug>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <QMessageBox>
 
 class TableNumberItem : public QTableWidgetItem{
 

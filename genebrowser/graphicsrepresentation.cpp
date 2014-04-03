@@ -4,7 +4,7 @@
 #include <QMessageBox>
 
 GraphicsRepresentation::GraphicsRepresentation(QWidget *parent) :
-    QWidget(parent),  MetaWidget(),
+    QWidget(parent),
     ui(new Ui::GraphicsRepresentation)
 {
     ui->setupUi(this);

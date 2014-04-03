@@ -3,14 +3,13 @@
 
 #include "qpushbutton.h"
 #include "rundata.h"
-#include "parentwidget.h"
 #include "resultpage.h"
 #include <QTimer>
 #include <QWidget>
 #include <QProcess>
 #include <QTextBrowser>
 #include <QProgressBar>
-
+#include <QCheckBox>
 
 namespace Ui {
 class ProgressDialog;
@@ -26,7 +25,6 @@ public:
     void initProcess();
 
     RunData *rundata;
-    ParentWidget *pw;
     QString METAPATH;
     QStringList filesDetected;
     QHash<int,QString> *TABLE_MAPPING;
@@ -59,8 +57,8 @@ private:
     unsigned int _scanCount;
     unsigned int _statsCount;
 
-    unsigned int _totalStepsPerSample;
-    unsigned int _stepsCompletedSample;
+    unsigned int _totalSteps;
+    unsigned int _stepsCompleted;
 
     QPushButton *cancelButton;
     QPushButton *hideButton;

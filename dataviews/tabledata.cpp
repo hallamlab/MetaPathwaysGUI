@@ -8,7 +8,7 @@
 #include "QDebug"
 
 TableData::TableData(  QWidget *parent) :
-    QWidget(parent), MetaWidget(),
+    QWidget(parent),
     ui(new Ui::TableData)
 {
     ui->setupUi(this);

@@ -1,23 +1,28 @@
+/*
+ * The main encompassing frame of the entire application. This class is responsible for coordinating
+ * all the interactions between all activities of config, parameter setup.
+ *
+ */
 #include "mainframe.h"
 #include "ui_mainframe.h"
-#include <fstream>
-#include <iostream>
-#include <QSettings>
-#include <QStylePainter>
 
-#ifdef Q_OS_WIN
-#include <windows.h> // for Sleep
-#endif
+/*
+ * Sleep function used for displaying the logo at startup.
+ */
 void MainFrame::qSleep(int ms)
 {
-#ifdef Q_OS_WIN
-    Sleep(uint(ms));
-#else
-    struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
-    nanosleep(&ts, NULL);
-#endif
+    #ifdef Q_OS_WIN
+        Sleep(uint(ms));
+    #else
+        struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
+        nanosleep(&ts, NULL);
+    #endif
 }
 
+/*
+ * Default constructor of MainFrame. Makes important calls to make sure config and param
+ * files will exist at startup through a series of function calls.
+ */
 MainFrame::MainFrame(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainFrame)
@@ -36,7 +41,6 @@ MainFrame::MainFrame(QWidget *parent) :
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
 
     setupWidget = 0;
-    parentWidget = 0;
     resultWindow = 0;
     welcomeWindow = 0;
     stages = 0;
@@ -49,16 +53,22 @@ MainFrame::MainFrame(QWidget *parent) :
     qSleep(2500);
     welcomeWindow->close();
     delete welcomeWindow;
+    // shows the welcome window, closes it after a sleep
 
     rundata = RunData::getRunData();
     rundata->setConfigMapping(Utilities::createMapping());
+    // initialize our singleton of rundata, encompasses a virtualization of the modified
+    // configuration file and parameter file; also sets up a mapping required later
 
     setupWidget = new Setup();
 
     rundata->setupDefaultConfig();
     rundata->setupDefaultParams();
+    // for the config and param file, check to see if pre-existing config or parameter files
+    // are defined and exist. see their function heads for clarification.
 
     setupWidget->loadPathVariables();
+    // populates the setup form with values previously used, if they exist
 
     // databases are agnostic to what the param file has written from a previous run
     // so we clear the values in the hash picked up from the config file to ensure
@@ -71,29 +81,27 @@ MainFrame::MainFrame(QWidget *parent) :
     connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(validateSetup()));
 
     if( !rundata->validate(warningStr) ) {
+       // validate(string) will check to see if values exist and return  warning string if not
        this->showSetupError(warningStr);
     }else{
         validateSetup();
     }
-
-
-    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
-    wStacker->setReferenceCoordinate(this->pos());
 }
 
 void MainFrame::showSetupError(QString warningStr) {
-
     warning->warning(0,"Configuration Invalid!\n", QString("These problems require your attention : \n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
     greyTabs(false);
     this->openSetup();
     setupWidget->updateValues();
-
 }
 
+/*
+ * On startup, the user can only select the setup tab if there are fields missing. This validates
+ * the config and parameters given and enables them if the user should be able to proceed to
+ * further steps.
+ */
 void MainFrame::validateSetup() {
-
      RunData *rundata= RunData::getRunData();
-
      QString warningStr;
      if( rundata->validate(warningStr)) {
          //pass
@@ -108,14 +116,19 @@ void MainFrame::validateSetup() {
      }
 }
 
+/*
+ * Enables/Disables actions in the menu.
+ */
 void MainFrame::greyTabs(bool enabled){
     actionProgress->setEnabled(enabled);
-//    actionGridProgress->setEnabled(enabled);
     actionResults->setEnabled(enabled);
     actionRunParams->setEnabled(enabled);
     actionRunStages->setEnabled(enabled);
 }
 
+/*
+ * Instantiates the rest of the objects associated with each tab and sets up connections.
+ */
 void MainFrame::addRemainingTabs() {
     stages = new RunConfig();
     settings = new SettingsTab();
@@ -124,7 +137,6 @@ void MainFrame::addRemainingTabs() {
 
     stageScroll = new QScrollArea();
     settingsScroll = new QScrollArea();
-    gridProgress = new GridProgress();
 
     stageScroll->setWidget(stages);
     settingsScroll->setWidget(settings);
@@ -132,7 +144,6 @@ void MainFrame::addRemainingTabs() {
     stackedWidget->addWidget(settingsScroll);
     stackedWidget->addWidget(resultWindow);
     stackedWidget->addWidget(progress);
-    stackedWidget->addWidget(gridProgress);
 
     connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
@@ -156,12 +167,21 @@ void MainFrame::displayParams(){
     stackedWidget->setCurrentWidget(settingsScroll);
 }
 
+/*
+ * This function is called everytime the user switches widgets to make sure any changes
+ * that need to be written out are done immediately. This is really only applicable to the
+ * parameters widget and the stages widget.
+ */
 void MainFrame::updateWidgets(){
     if(stackedWidget->currentWidget() == settingsScroll){
-        //write SettingsTab changes to file
+        // the user was looking at the param setup screen
+
         QList<QWidget *>::iterator i;
         QList<QWidget *> *allWidgets = SettingsTab::allWidgets;
 
+        // go through each widget in the settings tab
+        // and cast them appropriately
+        // retrieve their values and write them out
         for (i = allWidgets->begin(); i != allWidgets->end(); ++i){
             QWidget *widget = *i;
 
@@ -212,14 +232,17 @@ void MainFrame::updateWidgets(){
                     QStringList rt(rdbs.keys());
                     value = rt.join(",");
                 }
+                // concatenate all the databases together by commas
             }
             rundata->setValue(configName, value,_PARAMS);
-            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", configName, value, false, false);
+            Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_PARAM, "PARAMS", configName, value, false, false);
+            // update rundata's param hash, and write out the setting accordingly
         }
     }
     else if(stackedWidget->currentWidget()==stageScroll){
-        QList<QGroupBox *> *groupBoxes = stages->groupBoxes;
+        // if the user was looking at the stage selection screen
 
+        QList<QGroupBox *> *groupBoxes = stages->groupBoxes;
         QList<QGroupBox *>::iterator i;
         //write radio button changes to file
         for (i = groupBoxes->begin(); i!= groupBoxes->end(); ++i){
@@ -240,7 +263,6 @@ void MainFrame::updateWidgets(){
 
             //write to hash the changes
             if (yesRadioButton->isChecked()) rundata->setValue(configKey,"yes",_PARAMS);
-
             else if (redoRadioButton->isChecked()) rundata->setValue(configKey,"redo",_PARAMS);
             else rundata->setValue(configKey,"skip",_PARAMS);
 
@@ -253,7 +275,7 @@ void MainFrame::updateWidgets(){
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", inputTypeKey, stages->fileInputFormat->currentText(), false, false);
         rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
 
-        //save file selected
+        //save file input and output selected
         rundata->setValue("fileInput", stages->selectedFiles,_PARAMS);
         rundata->setValue("folderOutput", stages->selectedFolder,_PARAMS);
 
@@ -265,21 +287,21 @@ void MainFrame::updateWidgets(){
 
         //trim off commas on refdbs for rRNA and annotation
         QString rRNArefdbs = rundata->getValueFromHash("rRNA:refdbs", _PARAMS);
-
         rRNArefdbs = rRNArefdbs.remove(QRegExp("[\\s,]*$"));
-        rundata->setValue("rRNA:refdbs", rRNArefdbs, _PARAMS); //trim ending comma
+        rundata->setValue("rRNA:refdbs", rRNArefdbs, _PARAMS);
+
         QString annotationDBS = rundata->getValueFromHash("annotation:dbs", _PARAMS);
         annotationDBS = annotationDBS.remove(QRegExp("[\\s,]*$"));
         rundata->setValue("annotationDBS", annotationDBS, _PARAMS);
 
-        //number of each
+        //number of each - used to count the number of steps left
         rundata->setNumADB(annotationDBS.size());
         rundata->setNumRRNADB(rRNArefdbs.size());
 
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs",rRNArefdbs, false,false);
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "annotation:dbs",annotationDBS, false,false);
 
-        //use overwrite settings?
+        //use -r overwrite? defaults to overlay
         if (stages->overwrite->isChecked()){
             rundata->setValue("overwrite", "overwrite", _PARAMS);
         }else rundata->setValue("overwrite", "overlay", _PARAMS);
@@ -288,8 +310,10 @@ void MainFrame::updateWidgets(){
     }
 }
 
+/*
+ * Does a bit of cleanup, for extra spaces and dirty characters around our paths and fields.
+ */
 void MainFrame::executionPrep(){
-    //copy the current CONFIG, PARAMS pointers to a newly instantiated RunData instance
 
     //set the rrnaDB and annotationDBS so we know how many to look for in the log
     QStringList rrnaDBS;
