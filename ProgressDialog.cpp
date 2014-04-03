@@ -65,23 +65,23 @@ bool ProgressDialog::checkInputOutPutLocations() {
         return false;
     }
 
-//    standardOut->append("Input folder found : " + input.absoluteFilePath());
-//    standardOut->append("Output folder found : " + output.absoluteFilePath());
-//    standardOut->append("Log file found for sample  " + rundata->getCurrentSample() );
-
     return true;
 }
 
+/*
+ * Function called every time the timer expires. Intended to be what updates the table based off the log
+ * input for the current sample.
+ */
 void ProgressDialog::readStepsLog(){
     _stepsCompleted = 0;
 
     //if(!this->checkInputOutPutLocations()) return;
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
-    QString pathToLog = OUTPUTPATH + "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt";
+    QString pathToLog = OUTPUTPATH + QDir::separator() + rundata->getCurrentSample() + QDir::separator() + "metapathways_steps_log.txt";
 
     QFile inputFile(pathToLog);
-    QHash<QString, QString> *statusHash = new QHash<QString,QString>();
+    QHash<QString, QString> statusHash;
     QRegExp whiteSpace("\\s");
     QRegExp commentLine("#[^\"\\n\\r]*");
 
@@ -101,7 +101,7 @@ void ProgressDialog::readStepsLog(){
                 QString status = splitList.at(1).trimmed();
 
                 //qDebug() << line << splitList <<   " step " << step << " status " << status;
-                if (!step.isEmpty())  statusHash->insert(step,status);
+                if (!step.isEmpty())  statusHash.insert(step,status);
             }
        }
        inputFile.close();
@@ -109,13 +109,13 @@ void ProgressDialog::readStepsLog(){
         logBrowser->append("The log file has not yet been generated. Please wait.");
     }
 
-    checkStepsWithDBS(statusHash, "BLAST_REFDB_","BLAST_REFDB");
-    checkStepsWithDBS(statusHash, "PARSE_BLAST_", "PARSE_BLAST");
-    checkStepsWithDBS(statusHash, "SCAN_rRNA_", "SCAN_rRNA");
-    checkStepsWithDBS(statusHash, "STATS_", "STATS_rRNA");
-    checkStepsWithDBS(statusHash, "GENBANK_FILE", "GENBANK_FILE");
+    checkStepsWithDBS(&statusHash, "BLAST_REFDB_","BLAST_REFDB");
+    checkStepsWithDBS(&statusHash, "PARSE_BLAST_", "PARSE_BLAST");
+    checkStepsWithDBS(&statusHash, "SCAN_rRNA_", "SCAN_rRNA");
+    checkStepsWithDBS(&statusHash, "STATS_", "STATS_rRNA");
+    checkStepsWithDBS(&statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
-    colorRunConfig(statusHash);
+    colorRunConfig(&statusHash);
     updateProgressBar();
 
 //    qDebug() << _stepsCompleted << _totalSteps;
@@ -124,9 +124,6 @@ void ProgressDialog::readStepsLog(){
        QByteArray read = myProcess->readAll();
        if (!read.isEmpty()) standardOut->append(QString(read));
     }
-
-    statusHash->clear();
-    delete statusHash;
 }
 
 /*
@@ -280,6 +277,9 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
 
 }
 
+/*
+ * When the user presses the run button, this function is called.
+ */
 void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
@@ -295,10 +295,11 @@ void ProgressDialog::startRun(){
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
+        // check to see if they're jonesing us
         QMessageBox::warning(0,"Input/Output Not Set!","Missing input or output folders, step back to stages and make sure you've filled that in!",QMessageBox::Ok );
     }
     else{
-        // otherwise start off the process
+        // otherwise start off the process, clear out a bunch of statuses in case there was a previous run
         cancelButton->setEnabled(true);
         runButton->setDisabled(true);
         standardOut->clear();
@@ -307,16 +308,19 @@ void ProgressDialog::startRun(){
         summaryTable->clearContents();
         progressBar->setValue(0);
 
-        timer->start(1000);
+        timer->start(1000); // refresh rate of 1 sec for the log
 
         _stepsCompleted = 0;
-        _totalSteps = TABLE_MAPPING->size();
+        _totalSteps = TABLE_MAPPING->size(); // used for progress bar
 
         initProcess();
     }
 
 }
 
+/*
+ * A bunch of hard core setup leading up to the firing off of the python process.
+ */
 void ProgressDialog::initProcess(){
 
     //if(!this->checkInputOutPutLocations()) return;
@@ -329,16 +333,18 @@ void ProgressDialog::initProcess(){
     QStringList files = this->rundata->getFileList();
    // qDebug() << files;
     foreach (QString f, files){
-        sampleSelect->addItem(f);
+        sampleSelect->addItem(f); // sampleselect lets the user monitor the status of multiple samples
     }
 
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
     rundata->setCurrentSample(sampleSelect->currentText());
 
     QString program =  QDir::toNativeSeparators(rundata->getConfig()["PYTHON_EXECUTABLE"]);
-    QStringList arguments;
     METAPATH = QDir::toNativeSeparators(this->rundata->getConfig()["METAPATHWAYS_PATH"]);
 
+    QStringList arguments;
+    // arguments to the python execution process call
+    // recall : python code is run as python MetaPathways.py -i input -o output -p paramfile -c configfile -r writemode
     arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "MetaPathways.py");
     if(runVerbose->isChecked()) arguments << "-v";
     arguments << "-i" << QDir::toNativeSeparators(this->rundata->getParams()["fileInput"]);
@@ -347,27 +353,23 @@ void ProgressDialog::initProcess(){
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_config.txt");
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
 
-    //qDebug() << arguments;
+    // set up paths and environment - essential for the python code to run
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-
     env.insert("CURRDIR", QDir::toNativeSeparators(METAPATH));
     env.insert("METAPATH", QDir::toNativeSeparators(METAPATH));
     env.insert("METAPATHLIB", QDir::toNativeSeparators(METAPATH + QDir::separator() + "libs"));
     env.insert("STARCLUSTERLIB", QDir::toNativeSeparators(METAPATH + "libs" + QDir::separator() + "starcluster"));
     env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
 
-//    qDebug() <<  program << " " << arguments.join(" ");
-   //qDebug() << program << arguments << myProcess;
-   // qDebug() << env.toStringList();
-
+    // the actual process setup
     myProcess = new QProcess();
-
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
 
-    rundata->setProcess(myProcess);
+    rundata->setProcess(myProcess); // let rundata know what's good
 
+    // set up the timer so the logs will be updated
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));    
     connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
 }
