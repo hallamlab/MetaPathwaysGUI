@@ -144,5 +144,7 @@ FORMS    += \
 RESOURCES += \
     Resources.qrc
 
+RC_FILE += MetaPathways2.rc
+ICON += MetaPathways2.icns
 
 

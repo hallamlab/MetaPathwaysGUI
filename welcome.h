@@ -2,6 +2,8 @@
 #define WELCOME_H
 
 #include <QWidget>
+#include <QPixmap>
+#include <QLabel>
 
 namespace Ui {
 class Welcome;

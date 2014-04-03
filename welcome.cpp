@@ -1,7 +1,10 @@
+/*
+ * Just shows the logo without a frame on the application.
+ */
+
 #include "welcome.h"
 #include "ui_welcome.h"
-#include <QPixmap>
-#include <QLabel>
+
 
 Welcome::Welcome(QWidget *parent) :
     QWidget(parent),

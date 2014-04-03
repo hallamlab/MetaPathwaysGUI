@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     MainFrame *w = new MainFrame();
+
     w->show();
     a.exec();
 }

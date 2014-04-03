@@ -169,7 +169,8 @@ void MainFrame::displayParams(){
 
 /*
  * This function is called everytime the user switches widgets to make sure any changes
- * that need to be written out are done immediately.
+ * that need to be written out are done immediately. This is really only applicable to the
+ * parameters widget and the stages widget.
  */
 void MainFrame::updateWidgets(){
     if(stackedWidget->currentWidget() == settingsScroll){
