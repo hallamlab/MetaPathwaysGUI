@@ -77,6 +77,8 @@ private:
     QTextEdit *standardOut;
     QComboBox* sampleSelect;
     QCheckBox* runVerbose;
+    QCheckBox *computeStats;
+
 };
 
 #endif // ProgressDialog_H

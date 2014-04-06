@@ -33,6 +33,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     runButton = this->findChild<QPushButton *>("runButton");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
+    computeStats = this->findChild<QCheckBox *>("computeStats");
 
     summaryTable->setSortingEnabled(false);
 
@@ -359,6 +360,7 @@ void ProgressDialog::initProcess(){
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_param.txt");
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_config.txt");
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
+    if(computeStats->isChecked())  arguments << "--stats";
 
     // set up paths and environment - essential for the python code to run
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
