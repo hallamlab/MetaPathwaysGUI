@@ -6,9 +6,11 @@
 #include <QList>
 #include <QMap>
 #include <QFile>
+#include <QHash>
 #include <QFileInfo>
 #include <QTextStream>
 #include <QStringList>
+#include <QPair>
 #include "rundata.h"
 #include "samplercmanager.h"
 
@@ -24,8 +26,9 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     void setFileNames(const QStringList &filenames);
-    void readStatFiles();
-    void readDataFromFile(const QString &filename);
+    bool readStatFiles();
+    bool readDataFromFile(const QString &filename, const QString &sample);
+    void clear();
     
 signals:
     
@@ -34,8 +37,9 @@ public slots:
 private:
     QMap<QString, QList<QString> > dataVectorMap;
     QStringList filenames;
-    int numcols;
-    
+
+    QHash<QString, QHash<QString, QString> > statsData;
+    QHash<QString, bool> statNames;
 };
 
 

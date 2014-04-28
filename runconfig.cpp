@@ -26,6 +26,7 @@ RunConfig::RunConfig(QWidget *parent) :
     overwrite = this->findChild<QCheckBox *>("overwrite");
     inputLine = this->findChild<QLineEdit *>("inputLine");
     outputLine = this->findChild<QLineEdit *>("outputLine");
+    selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
     gridSetup = 0;
 
     rundata = RunData::getRunData();
@@ -33,6 +34,7 @@ RunConfig::RunConfig(QWidget *parent) :
     setStyling();
     loadRunParams();
 
+    connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample() ) );
     connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
     connect(redoAll, SIGNAL(clicked()), this, SLOT(toggleAllRedo()));
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
@@ -41,6 +43,19 @@ RunConfig::RunConfig(QWidget *parent) :
 
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 }
+
+
+void RunConfig::clickedSelectSample(){
+    this->selectWindow = new SelectSamples;
+    this->selectWindow->setReceiver(this);
+    this->selectWindow->addSamples(this->rundata->getFileList());
+    this->selectWindow->show();
+}
+
+void RunConfig::receiveSelection(QList<QString> &selectedSamples) {
+    this->rundata->setSamplesSubsetToRun(selectedSamples);
+}
+
 
 void RunConfig::loadRunParams(){
     RunData *run = RunData::getRunData();
@@ -92,11 +107,14 @@ void RunConfig::browseFile(){
     }
 
     this->rundata->setCurrentSample(QString());
+    this->rundata->loadInputFiles();
     this->rundata->setValue("fileInput", selectedFiles, _PARAMS);
     //send a signal to the parent to enable the continue button
     if (!selectedFiles.isEmpty()){
         if( !selectedFolder.isEmpty()) emit fileSet();
     }
+    this->rundata->emitloadSampleList();
+
 }
 
 void RunConfig::browseFolder(){

@@ -76,6 +76,9 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case RUNSTATS:
             path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
             break;
+         case ERRORS:
+            path = OUTPUTPATH + "/" + sampleName + "/"+ "errors_warnings_log.txt";
+            break;
          default:
             path = "";
             break;
@@ -84,6 +87,36 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
 
  }
 
+bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname ) {
+    FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
+    FileIndex *fileIndex =0;
+    QHash<RESOURCE, QString> resNames;
+    resNames[NUCFASTA] = "NUCFASTA";
+    resNames[AMINOFAA] = "AMINOFAA";
+    resNames[NUCFNA] = "NUCFNA";
+
+    // this is the indexing of the sequences into the resoure folder ".resource" that resides under each
+    // sample output folder
+    if( this->useResourceFolder ) {
+        QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
+        // if the resource folder does not exist then create it
+        if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {
+            resSampleDir.mkpath(resSampleDir.absolutePath());
+        }
+
+        if( resname == AMINOFAA || resname == NUCFASTA || resname == NUCFNA)
+        fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname);
+
+        QFileInfo resourceFile(resSampleDir.absolutePath() + "/" + resNames[resname] + ".txt");
+        fileindexmanager->writeFileIndex(fileIndex, resourceFile.absoluteFilePath());
+
+        fileindexmanager->deleteFileIndex(fileIndex);  // delete only from the memory
+    }
+
+    return true;
+
+
+}
 
 FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE resname, bool reindex ) {
      FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
@@ -93,19 +126,24 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
      resNames[AMINOFAA] = "AMINOFAA";
      resNames[NUCFNA] = "NUCFNA";
 
+
+     // this is the indexing of the sequences into the resoure folder ".resource" that resides under each
+     // sample output folder
      if( this->useResourceFolder ) {
          QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
 
+         // if the resource folder does not exist then create it
          if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {
              resSampleDir.mkpath(resSampleDir.absolutePath());
          }
          QFileInfo resourceFile(resSampleDir.absolutePath() + "/" + resNames[resname] + ".txt");
 
+         // load the index file if you are not reindexing and the resource files already exists
          if( reindex == false && resourceFile.exists() && !fileindexmanager->hasFileIndex(sampleName, resname) ) {
               fileIndex = fileindexmanager->readFileIndex(sampleName, resourceFile.absoluteFilePath(), resname);
               fileIndex->setSourceFile(this->getFilePath(sampleName, resname));
          }
-         else {
+         else {  // if the resource folder does not have the right index files.
              if( resname == AMINOFAA || resname == NUCFASTA || resname == NUCFNA)
                 fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname);
 

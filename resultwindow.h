@@ -6,6 +6,10 @@
 #include <QComboBox>
 #include <QSignalMapper>
 #include <QTimer>
+#include <QMdiArea>
+#include <QTableView>
+#include <QProgressDialog>
+
 #include "rundata.h"
 #include "types.h"
 #include "ProgressDialog.h"
@@ -18,8 +22,7 @@
 #include <QDebug>
 #include "dataviews/meganview.h"
 #include "genebrowser/genomeview.h"
-#include <QMdiArea>
-#include <QTableView>
+
 
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
@@ -30,6 +33,7 @@
 #include "displaywidgets/mdiareawidget.h"
 #include "displaywidgets/progressview.h"
 #include "datamodel/samplercmanager.h"
+#include "displaywidgets/createwidgets.h"
 
 
 extern const QString SELECT_SAMPLE_TAG;

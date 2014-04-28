@@ -15,6 +15,8 @@ SelectSamples::SelectSamples(QWidget *parent) :
     connect(selectAll, SIGNAL(clicked()), this, SLOT(selectAllSlot()));
     connect(clearAll, SIGNAL(clicked()), this, SLOT(clearAllSlot()));
     connect(decisionBox, SIGNAL(accepted()), this, SLOT(sendSelection()) );
+    this->resultWindow = 0;
+    this->runconfigWindow = 0;
 
 }
 
@@ -25,13 +27,25 @@ SelectSamples::~SelectSamples()
 
 
 void SelectSamples::addSamples(QStringList samples) {
+   this->samples = samples;
+
    for(unsigned int i =0; i < checkboxes.size(); i++) {
        sampleGrid->removeWidget(checkboxes[i]);
    }
+
+   RunData *rundata = RunData::getRunData();
+   QHash<QString, bool> alreadySelectedSamples;
+   foreach(QString samplename, rundata->getSamplesSubsetToRun() ) {
+       alreadySelectedSamples[samplename] = true;
+   }
+
    checkboxes.clear();
    for(unsigned int i=0; i < samples.size(); i++ ) {
-        QCheckBox *checkBox = new QCheckBox(samples.at(i));
+        QCheckBox *checkBox = new QCheckBox(this->samples.at(i));
         sampleGrid->addWidget(checkBox,(int)i/5, i%5);
+        if(alreadySelectedSamples.contains(this->samples.at(i))) {
+            checkBox->setChecked(true);
+        }
         checkboxes.append(checkBox);
    }
 }
@@ -53,12 +67,27 @@ void SelectSamples::setReceiver(ResultWindow *resultWindow  ) {
     this->resultWindow = resultWindow;
 }
 
+void SelectSamples::setReceiver(RunConfig *runconfigWindow  ) {
+    this->runconfigWindow    = runconfigWindow;
+}
 
 void SelectSamples::sendSelection() {
    QList<bool> selection;
-   foreach(QCheckBox *decision, checkboxes) {
-       selection.append(decision->checkState());
+   if(this->resultWindow!=0) {
+     foreach(QCheckBox *decision, checkboxes) {
+           selection.append(decision->checkState());
+     }
+     this->resultWindow->receiveSelection(selection);
    }
-   this->resultWindow->receiveSelection(selection);
 
+   QList<QString> selectedSamples;
+   if( this->runconfigWindow!=0) {
+       unsigned int i =0;
+       foreach(QCheckBox *decision, checkboxes) {
+           if(decision->isChecked())  selectedSamples.append(this->samples.at(i));
+           i++;
+       }
+      // qDebug() << selectedSamples;
+       this->runconfigWindow->receiveSelection(selectedSamples);
+   }
 }

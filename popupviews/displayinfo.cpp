@@ -56,14 +56,12 @@ void DisplayInfo::itemDoubleClicked(QTableWidgetItem * item) {
     }
     else {
          result = fileIndex->getDataToDisplay(key);
+         result = Utilities::insertCharacterAtIntervals(result, '\n',10000);
+         this->textOut->setText(result);
+        //    document = new QTextDocument(result);
+        //    this->textOut->setDocument(document);
+         this->show();
     }
-
-    result = Utilities::insertCharacterAtIntervals(result, '\n',10000);
-
-    this->textOut->setText(result);
-//    document = new QTextDocument(result);
-//    this->textOut->setDocument(document);
-    this->show();
 }
 
 

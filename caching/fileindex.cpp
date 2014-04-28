@@ -6,7 +6,7 @@ FileIndex::FileIndex()
 }
 
 
-FileIndex::FileIndex(QString inputFilePath, enum SOURCETYPE type)
+FileIndex::FileIndex(QString inputFilePath, QString sampleName, RESOURCE type)
 {
     QFile inputFile(inputFilePath);
     if (!QFile::exists(inputFilePath))
@@ -20,7 +20,9 @@ FileIndex::FileIndex(QString inputFilePath, enum SOURCETYPE type)
         return;
     }
     QTextStream stream(&inputFile);
-    sourceFile = inputFilePath;
+    this->sourceFile = inputFilePath;
+    this->sampleName = sampleName;
+    this->type = type;
 
     this->indexFastaFile(stream);
     inputFile.close();
@@ -103,7 +105,7 @@ QString FileIndex::getDataToDisplay(QString &key) {
 
 
 bool FileIndex::writeFileIndex(QString filePath, SOURCETYPE type) {
-    QFile outputFile(filePath);
+    QFile outputFile(filePath +".tmp");
 
     QHash<QString, FILELOCSPAN>::const_iterator it;
     QString line;
@@ -114,12 +116,15 @@ bool FileIndex::writeFileIndex(QString filePath, SOURCETYPE type) {
             line = it.key() + "\t" + QString::number(it.value().beg) + "\t" + QString::number(it.value().end);
             outstream << line << endl;
         }
+        outputFile.rename( filePath);
         outputFile.close();
        return true;
     }
+
     return false;
 
 }
+
 
 QString FileIndex::getSourceFile() {
     return this->sourceFile;
@@ -158,3 +163,8 @@ bool FileIndex::loadFileIndex(QString filePath, SOURCETYPE type) {
     return true;
 }
 
+
+FileIndex::~FileIndex()
+{
+    this->locations.clear();
+}

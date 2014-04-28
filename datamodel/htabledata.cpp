@@ -255,7 +255,7 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
 
 void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, int hierarchyEnabled){
 
-    tableWidget->clearContents();
+    tableWidget->clear();
     tableWidget->setColumnCount(headers.size());
     tableWidget->setHorizontalHeaderLabels(headers);
     tableWidget->setRowCount(data.size());

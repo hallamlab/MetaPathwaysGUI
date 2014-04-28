@@ -92,7 +92,7 @@
        <item>
         <widget class="QPushButton" name="loadResults">
          <property name="text">
-          <string>Load Samples</string>
+          <string>Load/Reload Sample</string>
          </property>
         </widget>
        </item>

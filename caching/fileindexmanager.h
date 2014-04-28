@@ -12,6 +12,7 @@ public:
 
     bool hasFileIndex(QString fileName, RESOURCE type);
 
+    bool deleteFileIndex(FileIndex *fileIndex) ;
     bool writeFileIndex(FileIndex *fileindex, QString filePath);
     FileIndex* readFileIndex( QString sampleName, QString filePath,  RESOURCE type) ;
 

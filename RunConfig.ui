@@ -133,7 +133,7 @@
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>250</y>
+     <y>253</y>
      <width>495</width>
      <height>561</height>
     </rect>
@@ -327,7 +327,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>300</y>
+     <y>280</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -391,7 +391,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>330</y>
+     <y>310</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -446,7 +446,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>390</y>
+     <y>370</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -501,7 +501,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>420</y>
+     <y>400</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -556,7 +556,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>450</y>
+     <y>430</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -611,7 +611,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>480</y>
+     <y>460</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -666,7 +666,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>510</y>
+     <y>490</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -721,7 +721,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>600</y>
+     <y>580</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -776,7 +776,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>570</y>
+     <y>550</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -831,7 +831,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>660</y>
+     <y>640</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -886,7 +886,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>630</y>
+     <y>610</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -941,7 +941,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>690</y>
+     <y>670</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -999,7 +999,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>720</y>
+     <y>700</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1066,7 +1066,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>750</y>
+     <y>730</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1130,7 +1130,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>780</y>
+     <y>760</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1185,7 +1185,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>270</y>
+     <y>250</y>
      <width>314</width>
      <height>30</height>
     </rect>
@@ -1259,7 +1259,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>540</y>
+     <y>520</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1316,9 +1316,9 @@
   <widget class="QGroupBox" name="runOptionsGroupBox">
    <property name="geometry">
     <rect>
-     <x>330</x>
+     <x>280</x>
      <y>200</y>
-     <width>251</width>
+     <width>301</width>
      <height>41</height>
     </rect>
    </property>
@@ -1328,9 +1328,9 @@
    <widget class="QRadioButton" name="runAllRadioButton">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>20</y>
-      <width>71</width>
+      <width>81</width>
       <height>20</height>
      </rect>
     </property>
@@ -1341,7 +1341,7 @@
    <widget class="QRadioButton" name="skipAllRadioButton">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>120</x>
       <y>20</y>
       <width>71</width>
       <height>20</height>
@@ -1354,9 +1354,9 @@
    <widget class="QRadioButton" name="redoAllRadioButton">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>220</x>
       <y>20</y>
-      <width>81</width>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
@@ -1369,7 +1369,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>360</y>
+     <y>340</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1520,6 +1520,19 @@
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="selectSamplesButton">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>130</y>
+     <width>131</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select Samples</string>
+   </property>
+  </widget>
   <zorder>tableWidget</zorder>
   <zorder>label</zorder>
   <zorder>fileInputFormat</zorder>
@@ -1555,6 +1568,7 @@
   <zorder>outputFolderBrowser</zorder>
   <zorder>inputLine</zorder>
   <zorder>outputLine</zorder>
+  <zorder>selectSamplesButton</zorder>
  </widget>
  <tabstops>
   <tabstop>inputLine</tabstop>

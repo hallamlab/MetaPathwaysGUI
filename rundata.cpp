@@ -213,7 +213,9 @@ bool RunData::checkConfig(){
     else return false;
 }
 
-
+ QHash<QString, QString> RunData::getPARAMS() {
+     return this->PARAMS;
+ }
 
 bool RunData::validate(QString &warningMsg) {
     bool correct = true;
@@ -312,6 +314,18 @@ void RunData::loadInputFiles(){
     }
 
     this->setFileList(filesDetected);
+}
+
+void RunData::setSamplesSubsetToRun(QList<QString> &selection) {
+   this->selectSamplesToRun = selection;
+}
+
+QList<QString> RunData::getSamplesSubsetToRun() {
+    return this->selectSamplesToRun;
+}
+
+void RunData::emitloadSampleList() {
+    emit loadSampleList();
 }
 
 QString RunData::getSystem() {

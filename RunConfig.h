@@ -12,9 +12,11 @@
 #include "grid/gridsetup.h"
 #include "types.h"
 #include "rundata.h"
+#include "popupviews/selectsamples.h"
 
 class ParentWidget;
 class GridSetup;
+class SelectSamples;
 
 namespace Ui {
 class RunConfig;
@@ -44,7 +46,10 @@ private slots:
     void browseFile();
     void browseFolder();
     void specifyGrid();
+    void clickedSelectSample();
     //void run();
+public slots:
+    void receiveSelection(QList<QString> &selectedSamples);
 
 signals:
     void fileSet();
@@ -67,8 +72,11 @@ private:
     GridSetup* gridSetup;
     QPushButton *folderBrowseButton;
 
-    QLineEdit* inputLine;
-    QLineEdit* outputLine;
+    QLineEdit *inputLine;
+    QLineEdit *outputLine;
+    QPushButton *selectSamplesButton;
+    SelectSamples *selectWindow;
+
 };
 
 #endif // RUNCONFIG_H

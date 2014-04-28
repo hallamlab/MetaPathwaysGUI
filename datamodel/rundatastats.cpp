@@ -5,7 +5,6 @@
 RunDataStats::RunDataStats(QObject *parent) :
     QAbstractTableModel(parent)
 {
-    numcols = 0;
 
 }
 
@@ -15,56 +14,83 @@ void RunDataStats::setFileNames(const QStringList &filenames) {
 }
 
 
-void RunDataStats::readStatFiles() {
+bool RunDataStats::readStatFiles() {
     RunData *rundata = RunData::getRunData();
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
     QString OUTPUTPATH = rundata->getParams()["folderOutput"];
     samplercmgr->setOutPutPath(OUTPUTPATH);
+
     QString runstatsFile;
     foreach(QString filename, filenames) {
        runstatsFile = samplercmgr->getFilePath(filename, RUNSTATS);
-       this->readDataFromFile(runstatsFile);
+       this->readDataFromFile(runstatsFile, filename);
     }
 
+    foreach(QString sample, this->statsData.keys()) {
+        foreach(QString stat, this->statsData[sample].keys()) {
+            this->statNames[stat] =true;
+        }
+    }
+
+    this->dataVectorMap.clear();
+
+    foreach(QString statName, this->statNames.keys()) {
+        this->dataVectorMap[statName] = QList<QString>();
+        foreach(QString sample, this->filenames) {
+            if( this->statsData[sample].contains(statName))
+                this->dataVectorMap[statName].append( this->statsData[sample][statName]);
+            else
+                this->dataVectorMap[statName].append("0");
+        }
+    }
 
 
 }
 
-void RunDataStats::readDataFromFile(const QString &filename) {
+void RunDataStats::clear() {
+    this->dataVectorMap.clear();
+    this->statNames.clear();
+    this->statsData.clear();
+}
+
+bool RunDataStats::readDataFromFile(const QString &filename, const QString &sample) {
     QFileInfo fileinfo(filename);
-    qDebug() << filename;
-    if (!fileinfo.exists()) return;
+
+    this->statsData[sample] = QHash<QString, QString>();
+
+    if (!fileinfo.exists())  {
+        return false;
+    }
 
     QFile inputFile(filename);
+    QList<QPair<QString, QString > > cols;
+    QPair<QString, QString> pair;
 
-    QList<QStringList> cols;
-    QStringList pair;
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QString line = in.readLine().trimmed();
-            pair = line.split(QChar('\t'));
-            if( pair.length()!= 2) continue;
+            QStringList fields = line.split(QChar('\t'));
+            if( fields.length()!= 2) continue;
+
+
+            pair.first= fields[0].trimmed();
+            pair.second= fields[1].trimmed();
             cols.append(pair);
         }
-    }
-    foreach(QStringList pair, cols) {
+        inputFile.close();
 
-        if(!dataVectorMap.contains(pair[0]) ) {
-            dataVectorMap[pair[0]] = QList<QString>();
-            for(int i=0; i < numcols; i++) {
-                dataVectorMap[pair[0]].append(QString("0"));
-            }
+
+        for( QList<QPair<QString, QString> >::iterator it= cols.begin(); it!= cols.end(); it++) {
+            this->statsData[sample][it->first] =  it->second;
         }
-
-        dataVectorMap[pair[0]].append(pair[1]);
-
     }
 
-    numcols++;
-
+    return true;
 }
+
+
 
 int RunDataStats::rowCount(const QModelIndex & /* parent */) const
 {
@@ -88,6 +114,8 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
    }
    else if (role == Qt::DisplayRole) {
 
+   //    qDebug() << dataVectorMap.size() << " , " << index.row() << ", " << index.column();
+      // qDebug() << dataVectorMap.keys();
        if( index.row() < dataVectorMap.size() ) {
            QString key =  (dataVectorMap.begin()+ index.row()).key();
            if( index.column() < dataVectorMap[key].size() ) {
@@ -100,9 +128,7 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
        else {
            return QString("0");
        }
-
    }
-
    return QVariant();
 }
 
@@ -113,8 +139,5 @@ QVariant RunDataStats::headerData(int section, Qt::Orientation orientation, int 
        return QVariant();
 
    if( orientation==Qt::Horizontal) return filenames[section];
-
    return (dataVectorMap.begin()+ section).key();
-
-
 }

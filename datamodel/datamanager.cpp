@@ -347,13 +347,15 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
    // qDebug() << "Checking orf sample " << sampleName;
    // if(this->ORFsUptoDateList.contains(sampleName) &&  this->ORFsUptoDateList[sampleName] ) return;
     //return if already created;
-      if(this->ORFList->contains(sampleName)) return;
+      if(this->ORFList->contains(sampleName)) {
+
+          return;
+      }
    // qDebug() << "ORFs exists for the smaple " << sampleName;
    /* if( this->ORFList->contains(sampleName)) {
         this->ORFList->clear(); //memory leak
        // qDebug() << "Clearing the clog";
     }*/
-
     this->ORFList->insert(sampleName, new QList<ORF *>);
 
     QFile inputFile(fileName);
@@ -396,16 +398,15 @@ void DataManager::destroyORFs(QString sampleName) {
 
 void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
-
     QFile inputFile(fileName);
-    QHash<QString, ORF *> orfHash;
-    foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
-        orfHash[orf->name] = orf;
-    }
 
     ORF *temporf;
     QString name, alias;
     if (inputFile.open(QIODevice::ReadOnly)) {
+        QHash<QString, ORF *> orfHash;
+        foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
+            orfHash[orf->name] = orf;
+        }
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
@@ -417,8 +418,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
             line.removeFirst();
             line.removeFirst();
             foreach(QString orfName, line) {
-
-                if( orfHash.contains(orfName)) {
+               if( orfHash.contains(orfName)) {
                    temporf = orfHash[orfName];
                }
                else {
@@ -442,6 +442,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
         }
         inputFile.close();
     }
+
     this->attributes[METACYC].clear();
 }
 

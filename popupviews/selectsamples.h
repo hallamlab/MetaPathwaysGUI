@@ -8,9 +8,12 @@
 #include <QList>
 #include <QDialogButtonBox>
 #include "resultwindow.h"
+#include "RunConfig.h"
+#include "rundata.h"
 
 
 class ResultWindow;
+class RunConfig;
 
 namespace Ui {
 class SelectSamples;
@@ -25,6 +28,7 @@ public:
     ~SelectSamples();
     void addSamples(QStringList samples);
     void setReceiver(ResultWindow *resultWindow  );
+    void setReceiver(RunConfig *runconfigWindow  );
 
 
 private slots:
@@ -39,8 +43,10 @@ private:
     QGridLayout *sampleGrid;
     QDialogButtonBox *decisionBox;
     ResultWindow *resultWindow;
+    RunConfig *runconfigWindow;
     QList<QCheckBox *> checkboxes;
     QPushButton *selectAll, *clearAll;
+    QStringList samples;
 };
 
 #endif // SELECTSAMPLES_H

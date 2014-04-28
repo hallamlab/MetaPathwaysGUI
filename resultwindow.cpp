@@ -78,6 +78,22 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
 void ResultWindow::_loadResults() {
 
+    if( this->rundata->getParams()["fileInput"].size()==0 || this->rundata->getParams()["folderOutput"].size()==0) {
+        QMessageBox::warning(this, "Input/Output Folder Missing", "Input or Output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
+        return;
+    }
+
+    QFileInfo input(this->rundata->getParams()["fileInput"]);
+    QFileInfo output(this->rundata->getParams()["folderOutput"]);
+    if( !input.exists()) {
+        QMessageBox::warning(this, "Input Folder does not exist", "Input folder specified in Stages tab does not exist!", QMessageBox::Ok);
+        return;
+    }
+    if( !output.exists()) {
+        QMessageBox::warning(this, "Output Folder does not exist", "Output folder specified in Stages tab does not exist!", QMessageBox::Ok);
+        return;
+    }
+
     this->disableSampleChanged = true;
     this->updateFileNames();
     this->disableSampleChanged = false;
@@ -112,9 +128,9 @@ void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
     unsigned int i =0;
     foreach(QString file, this->rundata->getFileList() ) {
         qDebug() << " file " << file;
-        samplercmgr->getFileIndex(file, NUCFASTA, reindex);
-        samplercmgr->getFileIndex(file, AMINOFAA, reindex);
-        samplercmgr->getFileIndex(file, NUCFNA, reindex);
+        samplercmgr->createFileIndex(file, NUCFASTA);
+        samplercmgr->createFileIndex(file, AMINOFAA);
+        samplercmgr->createFileIndex(file, NUCFNA);
         progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
     }
 
@@ -129,9 +145,9 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder, bool
 
     unsigned int i =0;
     foreach(QString file, this->rundata->getFileList() ) {
-        samplercmgr->getFileIndex(file, NUCFASTA, reindex);
-        samplercmgr->getFileIndex(file, AMINOFAA, reindex);
-        samplercmgr->getFileIndex(file, NUCFNA, reindex);
+        samplercmgr->createFileIndex(file, NUCFASTA);
+        samplercmgr->createFileIndex(file, AMINOFAA);
+        samplercmgr->createFileIndex(file, NUCFNA);
         progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
     }
 
@@ -193,9 +209,15 @@ void ResultWindow::updateFileNames(){
 
 void ResultWindow::sampleChanged(QString sampleName){
 
+
+    QRegExp select_sample_regexp = QRegExp("Select sample");
+
+    if( select_sample_regexp.indexIn(sampleName) != -1 ) return;
+
     this->rundata->setCurrentSample(sampleName);
 
-    TableData *t;
+
+
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
 
@@ -205,11 +227,10 @@ void ResultWindow::sampleChanged(QString sampleName){
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     sampleResourceManager->setOutPutPath(OUTPUTPATH);
 
-    bool forceReindex = false;
-    if( reindex->isChecked() )
-        forceReindex = true;
-
-    this->indexSamples(true, forceReindex);
+    if( reindex->isChecked() ) {
+        this->indexSamples(true, true);
+        reindex->setChecked(false);
+    }
 
 
     ProgressView progressbar("Please wait while the sample is loaded...", 0, 0, this);
@@ -229,25 +250,23 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
-    qDebug() << " adding metacyc annotaton again";
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
-
 
 
     QStringList selectedFileNames;
 
     selectedFileNames.append(sampleName);
 
-    RunDataStats *rundatamodel = new RunDataStats;
+    RunDataStats *rundatamodel =  CreateWidgets::getRunDataStats();
+    rundatamodel->clear();
     rundatamodel->setFileNames(selectedFileNames);
     rundatamodel->readStatFiles();
 
-    QTableView *statTableView = new QTableView;
-    resultTabs->addTab(statTableView, "RUN STATS");
+    QTableView *statTableView = CreateWidgets::getStatsTableView();
     statTableView->setModel(rundatamodel);
     statTableView->setAlternatingRowColors(true);
     statTableView->show();
-
+    resultTabs->addTab(statTableView, "RUN STATS");
 
  #ifdef SECTION
      statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
@@ -260,7 +279,6 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
     HTableData *htable;
-
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
@@ -306,6 +324,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 #endif
 
 
+    TableData *func_tax_table;
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
     p->removeFileIndexes();
@@ -318,17 +337,17 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     types.clear();
     types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
-    t = this->tables["FUNC & TAX"];
-    t->setSampleName(sampleName);
-    t->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
-    t->setPopupListener(p);
-    resultTabs->addTab(t, "FUNC & TAX");
+    func_tax_table = this->tables["FUNC & TAX"];
+    func_tax_table->setSampleName(sampleName);
+    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+    func_tax_table->setPopupListener(p);
+    resultTabs->addTab(func_tax_table, "FUNC & TAX");
 
 
     progressbar.hide();
 
 
-    return;
+
 
  //   if (nucStats.exists()) resultTabs->addTab(new TableData(true, true, nucFile, types), "CONT LEN TAB");
 
@@ -384,12 +403,13 @@ void ResultWindow::sampleChanged(QString sampleName){
 }
 
 HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers,  DataManager *datamanager) {
-    HTableData *htable = new HTableData;
-    htable->clearConnectors();
+    HTableData *htable = CreateWidgets::getHtableData(attr);
 
+    htable->clearConnectors();
     Connector *connect = datamanager->createConnector(sampleName, datamanager->getHTree(attr), attr, datamanager->getORFList(sampleName));
 
     htable->setParameters(datamanager->getHTree(attr), types);
+
     htable->addConnector(connect);
 
     htable->setMaxSpinBoxDepth(datamanager->getHTree(attr)->getTreeDepth());
@@ -416,7 +436,7 @@ void ResultWindow::switchToComparativeMode() {
   //  qDebug() << "comparative mode";
 
     QList<enum TYPE> types;
-    QList<unsigned int> columns;
+
 
     QStringList headers;
 
@@ -429,19 +449,28 @@ void ResultWindow::switchToComparativeMode() {
     datamanager->createDataModel();
     samplercmgr->setOutPutPath(OUTPUTPATH);
 
-    this->indexSamples(true);
+  //  this->indexSamples(true);
 
     //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
 
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
+
+    ProgressView *progressbar = new ProgressView("creating ORFs for samples ", 0, 0, this);
+   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
+    progressbar->show();
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
         datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
+         //progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
     }
+    progressbar->hide();
+    delete progressbar;
+
+
 
 
     HTableData *htable = new HTableData;
@@ -451,6 +480,8 @@ void ResultWindow::switchToComparativeMode() {
     headers << "COG Category" << "COG Category (Alias)";
     htable->clearConnectors();
 
+    progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
+    progressbar->show();
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue; 
        connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
@@ -459,6 +490,8 @@ void ResultWindow::switchToComparativeMode() {
        htable->addSampleName(files[i]);
        types << INT;
     }
+    progressbar->hide();
+    delete progressbar;
 
 
    QStringList selectedFileNames;
@@ -467,11 +500,12 @@ void ResultWindow::switchToComparativeMode() {
        selectedFileNames.append(files[i]);
    }
 
-   RunDataStats *rundatamodel = new RunDataStats;
+   RunDataStats *rundatamodel = CreateWidgets::getRunDataStats();
+   rundatamodel->clear();
    rundatamodel->setFileNames(selectedFileNames);
    rundatamodel->readStatFiles();
 
-   QTableView *statTableView = new QTableView;
+   QTableView *statTableView = CreateWidgets::getStatsTableView();
    resultTabs->addTab(statTableView, "RUN STATS");
    statTableView->setModel(rundatamodel);
    statTableView->setAlternatingRowColors(true);
@@ -496,13 +530,14 @@ void ResultWindow::switchToComparativeMode() {
     htable->setMultiSampleMode(true);
     resultTabs->addTab(htable, "COG");
 
-    htable = new HTableData;
+    htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
     types.clear();
     types << STRING << STRING;
     headers.clear();
     headers << "KEGG Function" << "KEGG function (alias)" ;
     htable->clearConnectors();
-
+    progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
+    progressbar->show();
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
@@ -511,6 +546,9 @@ void ResultWindow::switchToComparativeMode() {
        htable->addSampleName(files[i]);
        types << INT;
     }
+    progressbar->hide();
+    delete progressbar;
+
     htable->setParameters(datamanager->getHTree(KEGG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
     htable->setShowHierarchy(true);
@@ -521,7 +559,7 @@ void ResultWindow::switchToComparativeMode() {
     resultTabs->addTab(htable, "KEGG");
 
     // METACYC
-    htable = new HTableData;
+    htable = CreateWidgets::getHtableData(METACYC); //new HTableData;
     types.clear();
     types << STRING << STRING;
     headers.clear();
@@ -547,13 +585,14 @@ void ResultWindow::switchToComparativeMode() {
 
 
     // SEED
-    htable = new HTableData;
+    htable = CreateWidgets::getHtableData(SEED);;
     types.clear();
     types << STRING << STRING;
     headers.clear();
     headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) ";
     htable->clearConnectors();
-
+    progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
+    progressbar->show();
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );
@@ -562,7 +601,8 @@ void ResultWindow::switchToComparativeMode() {
        htable->addSampleName(files[i]);
        types << INT;
     }
-
+    progressbar->hide();
+    delete progressbar;
     htable->setParameters(datamanager->getHTree(SEED),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(SEED)->getTreeDepth());
     htable->setShowHierarchy(true);

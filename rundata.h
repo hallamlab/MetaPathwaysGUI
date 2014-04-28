@@ -14,8 +14,9 @@
 #include <QSysInfo>
 #include <QtGlobal>
 
-class RunData
+class RunData: public QObject
 {
+    Q_OBJECT
 public:
 
     static const QString TEMPLATE_PARAM;
@@ -36,6 +37,9 @@ public:
     void setRRNADBS(QStringList rrnaDBS);
     void setAnnotationDBS(QStringList annotationDBS);
     void setPathologicPath(QString pathologicPath);
+
+    void setSamplesSubsetToRun(QList<QString> &selection);
+    QList<QString> getSamplesSubsetToRun();
 
     QString getValueFromHash(QString key, SETTING_TYPE type);
     void setValue(QString key, QString value, SETTING_TYPE type);
@@ -67,6 +71,11 @@ public:
 
     unsigned int getNumRRNADB();
     unsigned int getNumADB();
+    QHash<QString, QString> getPARAMS();
+    void emitloadSampleList();
+
+signals:
+    void loadSampleList();
 
 private:
     RunData();
@@ -86,6 +95,7 @@ private:
     QProcess *process;
     QString currentSample;
     QString system;
+    QList<QString> selectSamplesToRun;
 };
 
 

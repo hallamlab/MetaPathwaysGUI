@@ -31,6 +31,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     progressLabel = this->findChild<QLabel *>("progressLabel");
     standardOut = this->findChild<QTextEdit *>("standardOut");
     runButton = this->findChild<QPushButton *>("runButton");
+    showErrorsButton = this->findChild<QPushButton *>("showErrors");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
     computeStats = this->findChild<QCheckBox *>("computeStats");
@@ -40,14 +41,37 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     initMapping();
 
     timer = new QTimer(this);
+    timer->start(1000);
+
     this->myProcess =0;
 
     cancelButton->setEnabled(false);
 
+    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
+    connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
+    connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleList()));
+    connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
 }
 
+void ProgressDialog::showErrors() {
+   StatusView *statusview = StatusView::getStatusView();
+   statusview->showTreeView();
+   //statusview->deleteLater();
+
+}
+void ProgressDialog::loadSampleList() {
+
+    QStringList files = this->rundata->getFileList();
+
+    sampleSelect->clear();
+    foreach (QString f, files){
+        sampleSelect->addItem(f); // sampleselect lets the user monitor the status of multiple samples
+    }
+    rundata->setCurrentSample(sampleSelect->currentText());
+
+}
 
 bool ProgressDialog::checkInputOutPutLocations() {
     QFileInfo input(this->rundata->getParams()["fileInput"]);
@@ -101,7 +125,7 @@ void ProgressDialog::readStepsLog(){
                 QString step = splitList.at(0).trimmed();
                 QString status = splitList.at(1).trimmed();
 
-                //qDebug() << line << splitList <<   " step " << step << " status " << status;
+
                 if (!step.isEmpty())  statusHash.insert(step,status);
             }
        }
@@ -119,14 +143,16 @@ void ProgressDialog::readStepsLog(){
     checkStepsWithDBS(&statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
     // update icons for each step
-    colorRunConfig(&statusHash);
+
+    colorRunConfig(statusHash);
     // update progress bar
+
     updateProgressBar();
 
     if( myProcess !=0 ) {
         // dump out output from stdout to the other log
         QByteArray read = myProcess->readAll();
-       if (!read.isEmpty()) standardOut->append(QString(read));
+        if (!read.isEmpty()) standardOut->append(QString(read));
     }
 }
 
@@ -163,7 +189,40 @@ void ProgressDialog::initMapping(){
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
     progressBar->setValue(_stepsCompleted);
+
+    _totalSteps = this->countTotalNumberOfSteps();
     progressBar->setMaximum(_totalSteps);
+
+}
+
+
+unsigned int ProgressDialog::countTotalNumberOfSteps() {
+    RunData *rundata = RunData::getRunData();
+
+    QStringList candidate_keys = rundata->getPARAMS().keys();
+    QRegExp metapathway_steps("^metapaths_steps*");
+
+    QRegExp metapathway_steps_BLAST_REDB("^metapaths_steps:BLAST_REFDB");
+    QRegExp metapathway_steps_SCAN_rRNA("^metapaths_steps:SCAN_rRNA");
+
+    unsigned int count=0;
+    /* count the steps that are set to redo and yes in the config */
+    foreach( QString candidate_step, candidate_keys ) {
+        if( metapathway_steps.indexIn(candidate_step,0) != -1 ) {
+            if(QString("redo").compare(rundata->getPARAMS()[candidate_step]) ==0 ||\
+               QString("yes").compare(rundata->getPARAMS()[candidate_step]) ==0 )  {
+                   if( metapathway_steps_BLAST_REDB.indexIn(candidate_step,0) != -1 ) {
+                       count += rundata->getNumADB();
+                   }
+                   else if( metapathway_steps_SCAN_rRNA.indexIn(candidate_step,0) != -1 ) {
+                       count += rundata->getNumRRNADB();
+                   }
+                   else
+                       count++;
+            }
+        }
+    }
+    return rundata->getFileList().size()*count;
 }
 
 /*
@@ -233,51 +292,50 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
 /*
  * Crayons, ma. Update the table with the appropriate widget depending on the status for that step.
  */
-void ProgressDialog::colorRunConfig(QHash<QString,QString> *statusHash){
+void ProgressDialog::colorRunConfig(QHash<QString,QString> &statusHash){
 
     QHash<QString,QString>::iterator it;
     _stepsCompleted = 0;
-    this->summaryTable->clearContents();
+   // this->summaryTable->clearContents();
+    QTableWidgetItem *item;
 
-    for(it=statusHash->begin();it!=statusHash->end();it++){
+    ProgressDisplayData *progressdisplaydata = ProgressDisplayData::getProgressDisplayData();
+    progressdisplaydata->destroyWidgets();
+    progressdisplaydata->createWidgets(statusHash);
+
+    for(it=statusHash.begin();it!=statusHash.end();it++){
         QString stepName = it.key();
         QString status = it.value();
 
+        if( !progressdisplaydata->isValidKey(stepName)) continue;
         if (stepName.contains(QRegExp("BLAST_REFDB_"))) continue;
         if (stepName.contains(QRegExp("PARSE_BLAST_"))) continue;
-        if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
+       // if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
 //        if (stepName.contains(QRegExp("STATS_"))) continue;
-
-        QTableWidgetItem *item = new QTableWidgetItem();
-        QMovie *loading = new QMovie(":/images/loading.gif");
-        QLabel *imageLabel = new QLabel();
-        loading->setParent(imageLabel);
 
         int _row = TABLE_MAPPING->key(stepName);
 
         //clear old cell
-        this->summaryTable->removeCellWidget(_row,0);
-        this->summaryTable->setItem(_row,0, NULL);
-
-        QImage img;
+      //  this->summaryTable->removeCellWidget(_row,0);
+        this->summaryTable->setItem(_row, 0, NULL);
 
         if (status.operator ==("FAILED")){
-            img  = QImage(":/images/cross.png");
-            item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-            this->summaryTable->setItem(_row,0, item);
+            item = progressdisplaydata->getTableWidgetItem(stepName, REDCROSS);
+            this->summaryTable->setItem(_row, 0, item);
             _stepsCompleted++;
 
         }else if (status.operator ==("RUNNING")){
-            imageLabel->setFixedSize(30,25);
-            imageLabel->setMovie(loading);
-            imageLabel->updateGeometry();
-            loading->start();
-            this->summaryTable->setCellWidget(_row,0,imageLabel);
-        }else if (status.operator ==("SUCCESS") ||
+            //loading->start();
+            item = progressdisplaydata->getTableWidgetItem(stepName, LOADING);
+            this->summaryTable->setItem(_row,0,item);
+        }
+
+        else if (status.operator ==("SUCCESS") ||
                   status.operator ==("ALREADY_COMPUTED") ||
-                  status.operator ==("SKIPPED")){
-            img = QImage(":/images/check.png");
-            item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+                  status.operator ==("SKIPPED"))  {
+
+            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+            item = progressdisplaydata->getTableWidgetItem(stepName, GREENCHECK);
             this->summaryTable->setItem(_row,0, item);
             _stepsCompleted++;
         }
@@ -312,11 +370,9 @@ void ProgressDialog::startRun(){
         runButton->setDisabled(true);
         standardOut->clear();
         logBrowser->clear();
-        sampleSelect->clear();
-        summaryTable->clearContents();
         progressBar->setValue(0);
 
-        timer->start(1000); // refresh rate of 1 sec for the log
+     //   timer->start(1000); // refresh rate of 1 sec for the log
 
         _stepsCompleted = 0;
         _totalSteps = TABLE_MAPPING->size(); // used for progress bar
@@ -332,25 +388,23 @@ void ProgressDialog::startRun(){
 void ProgressDialog::initProcess(){
 
     //if(!this->checkInputOutPutLocations()) return;
-
     QFileInfo input(this->rundata->getParams()["fileInput"]);
     QFileInfo output(this->rundata->getParams()["folderOutput"]);
 
     if(input.exists()) this->checkFiles();
 
-    QStringList files = this->rundata->getFileList();
-   // qDebug() << files;
-    foreach (QString f, files){
-        sampleSelect->addItem(f); // sampleselect lets the user monitor the status of multiple samples
-    }
-
-    connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
-    rundata->setCurrentSample(sampleSelect->currentText());
-
     QString program =  QDir::toNativeSeparators(rundata->getConfig()["PYTHON_EXECUTABLE"]);
     METAPATH = QDir::toNativeSeparators(this->rundata->getConfig()["METAPATHWAYS_PATH"]);
 
     QStringList arguments;
+
+
+    if(this->rundata->getSamplesSubsetToRun().size()==0) {
+       QMessageBox::warning(0,"ERROR", "At least one sample must be selected to process!", QMessageBox::Ok);
+       this->processFinished(0,QProcess::NormalExit);
+       return;
+    }
+
     // arguments to the python execution process call
     // recall : python code is run as python MetaPathways.py -i input -o output -p paramfile -c configfile -r writemode
     arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "MetaPathways.py");
@@ -360,7 +414,12 @@ void ProgressDialog::initProcess(){
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_param.txt");
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_config.txt");
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
-    if(computeStats->isChecked())  arguments << "--stats";
+    if(computeStats->isChecked())  arguments << "--stats" << "on";
+    //add the specific samples
+    foreach(QString samplename, this->rundata->getSamplesSubsetToRun()) {
+        arguments << "-s" << samplename;
+    }
+   // qDebug() << arguments;
 
     // set up paths and environment - essential for the python code to run
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -379,7 +438,7 @@ void ProgressDialog::initProcess(){
     rundata->setProcess(myProcess); // let rundata know what's good
 
     // set up the timer so the logs will be updated
-    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));    
+
     connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
 }
 
@@ -387,9 +446,8 @@ void ProgressDialog::initProcess(){
 void ProgressDialog::selectedFileChanged(QString file){
     rundata->setCurrentSample(file);
     //progressLabel->setText("Progress - " + rundata->getCurrentSample());
-
     logBrowser->clear();
-    summaryTable->clearContents();
+
 }
 
 void ProgressDialog::checkFiles(){
@@ -439,10 +497,6 @@ void ProgressDialog::checkFiles(){
 void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStatus){
     runButton->setEnabled(true);
     cancelButton->setEnabled(false);
-
-    this->readStepsLog();
-    timer->stop();
-    rundata->setCurrentSample("");
     progressBar->setValue(0);
     myProcess = 0;
 }
@@ -452,18 +506,18 @@ void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStat
  * Kill the current run. Clear everything.
  */
 void ProgressDialog::terminateRun(){
-    myProcess->kill();
+    if(myProcess !=0 && myProcess->Running == QProcess::Running)  {
+        myProcess->kill();
+        // dump out output from stdout to the other log
+        QByteArray read = myProcess->readAll();
+        standardOut->append(QString("Received a TERMINATION/KILL signal"));
+    }
+
     myProcess = 0;
 
-    timer->stop();
-
-    logBrowser->clear();
-    standardOut->clear();
-    sampleSelect->clear();
-    summaryTable->clearContents();
+   // summaryTable->clearContents();
     progressBar->setValue(0);
-
-    rundata->setCurrentSample("");
+  //  rundata->setCurrentSample("");
     runButton->setEnabled(true);
 }
 

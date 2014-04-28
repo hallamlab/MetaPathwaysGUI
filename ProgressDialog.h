@@ -4,12 +4,19 @@
 #include "qpushbutton.h"
 #include "rundata.h"
 #include "resultpage.h"
+#include "progressdisplaydata.h"
+#include "dataviews/statusview.h"
+
 #include <QTimer>
 #include <QWidget>
 #include <QProcess>
 #include <QTextBrowser>
 #include <QProgressBar>
 #include <QCheckBox>
+#include <QMessageBox>
+#include <QTreeView>
+
+#include "dataviews/statusview.h"
 
 namespace Ui {
 class ProgressDialog;
@@ -34,7 +41,7 @@ public:
     QHash<QString,int> stepsPassed;
 
     void checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName);
-    void colorRunConfig(QHash<QString,QString> *statusHash);
+    void colorRunConfig(QHash<QString,QString> &statusHash);
     void initMapping();
 
     ~ProgressDialog();
@@ -45,9 +52,15 @@ private slots:
     void terminateRun();
     void checkFiles();
     void selectedFileChanged(QString file);
+    void loadSampleList();
+    void showErrors();
     void readStepsLog();
     void startRun();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    unsigned int countTotalNumberOfSteps();
+
+
+
 
 private:
     Ui::ProgressDialog *ui;
@@ -62,7 +75,7 @@ private:
 
     QPushButton *cancelButton;
     QPushButton *hideButton;
-    QPushButton *runButton;
+    QPushButton *runButton, *showErrorsButton;
 
     QTextBrowser *logBrowser;
     QLabel *logLabel;

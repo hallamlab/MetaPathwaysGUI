@@ -15,6 +15,8 @@ TEMPLATE = app
 
 #CONFIG += console
 
+
+
 SOURCES += main.cpp\
         Setup.cpp \
         SettingsTab.cpp \
@@ -62,7 +64,11 @@ SOURCES += main.cpp\
     datamodel/samplercmanager.cpp \
     displaywidgets/progressview.cpp \
     popupviews/meganexportbox.cpp \
-    datamodel/rundatastats.cpp
+    datamodel/rundatastats.cpp \
+    progressdisplaydata.cpp \
+    displaywidgets/createwidgets.cpp \
+    caching/memorymanager.cpp \
+    dataviews/statusview.cpp
 
 
 
@@ -115,7 +121,11 @@ HEADERS  += \
     datamodel/samplercmanager.h \
     displaywidgets/progressview.h \
     popupviews/meganexportbox.h \
-    datamodel/rundatastats.h
+    datamodel/rundatastats.h \
+    progressdisplaydata.h \
+    displaywidgets/createwidgets.h \
+    caching/memorymanager.h \
+    dataviews/statusview.h
 
 
 
