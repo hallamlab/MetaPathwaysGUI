@@ -55,6 +55,13 @@ void DisplayInfo::itemDoubleClicked(QTableWidgetItem * item) {
         result = QString("");
     }
     else {
+        if(column ==0 ) {
+            key = Utilities::getShortORFId(key);
+        }
+        else if(column==4) {
+            key= Utilities::getShortContigId(key);
+        }
+
          result = fileIndex->getDataToDisplay(key);
          result = Utilities::insertCharacterAtIntervals(result, '\n',10000);
          this->textOut->setText(result);

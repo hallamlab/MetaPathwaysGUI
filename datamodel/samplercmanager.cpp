@@ -87,7 +87,7 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
 
  }
 
-bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname ) {
+bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname) {
     FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
     FileIndex *fileIndex =0;
     QHash<RESOURCE, QString> resNames;
@@ -105,7 +105,7 @@ bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname
         }
 
         if( resname == AMINOFAA || resname == NUCFASTA || resname == NUCFNA)
-        fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname);
+        fileIndex = fileindexmanager->getFileIndex(sampleName, this->getFilePath(sampleName, resname), resname, true);
 
         QFileInfo resourceFile(resSampleDir.absolutePath() + "/" + resNames[resname] + ".txt");
         fileindexmanager->writeFileIndex(fileIndex, resourceFile.absoluteFilePath());

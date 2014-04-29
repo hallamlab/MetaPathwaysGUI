@@ -71,7 +71,7 @@ private:
     explicit ResultWindow(QWidget *parent = 0);
     void switchToComparativeMode();
     void indexSamples(bool useResourceFolder, bool forcereindex =false);
-    void indexSample(QString sampleName, bool userResourceFolder, bool reindex) ;
+    void indexSample(QString sampleName, bool userResourceFolder) ;
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
 
 

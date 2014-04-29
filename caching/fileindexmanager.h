@@ -8,7 +8,7 @@ class FileIndexManager
 public:
     static FileIndexManager *getFileIndexManager();
 
-    FileIndex *getFileIndex(QString sampleName, QString fileName, RESOURCE type);
+    FileIndex *getFileIndex(QString sampleName, QString fileName, RESOURCE type, bool createNew =false);
 
     bool hasFileIndex(QString fileName, RESOURCE type);
 

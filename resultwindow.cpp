@@ -127,7 +127,6 @@ void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
 
     unsigned int i =0;
     foreach(QString file, this->rundata->getFileList() ) {
-        qDebug() << " file " << file;
         samplercmgr->createFileIndex(file, NUCFASTA);
         samplercmgr->createFileIndex(file, AMINOFAA);
         samplercmgr->createFileIndex(file, NUCFNA);
@@ -137,7 +136,7 @@ void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
     progressBar.hide();
 }
 
-void ResultWindow::indexSample(QString sampleName, bool userResourceFolder, bool reindex) {
+void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
     ProgressView progressBar(QString("Indexing sample...") + sampleName, 0, 1, this);
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
@@ -233,7 +232,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     }
 
 
-    ProgressView progressbar("Please wait while the sample is loaded...", 0, 0, this);
+    ProgressView progressbar("Please wait! Loading sample " + sampleName + "...", 0, 0, this);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
     const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
@@ -456,16 +455,24 @@ void ResultWindow::switchToComparativeMode() {
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
 
-    ProgressView *progressbar = new ProgressView("creating ORFs for samples ", 0, 0, this);
+
+    unsigned int numSamplesToLoad = 0;
+    for(unsigned int i=0; i < files.size(); i++) {
+        if(this->selectedSamples[i])  numSamplesToLoad++;
+    }
+    ProgressView *progressbar = new ProgressView("creating ORFs for samples ", 0, numSamplesToLoad, this);
    // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
+
     for(unsigned int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
         datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
-         //progressBar.updateprogress(++i); qApp->processEvents();  progressBar.update();
+        progressbar->updateprogress(i+1);
+        qApp->processEvents();
+        progressbar->update();
     }
     progressbar->hide();
     delete progressbar;

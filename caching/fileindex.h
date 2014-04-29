@@ -1,10 +1,14 @@
 #ifndef FILEINDEX_H
 #define FILEINDEX_H
 #include "types.h"
+#include "utilities.h"
+
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
 #include <QStringList>
+#include <QMessageBox>
+
 
 #include <QDebug>
 
@@ -15,6 +19,7 @@ typedef struct FILELOCATIONSPAN {
 
 class FileIndex
 {
+
 public:
     FileIndex();
     FileIndex(QString intputFilePath, QString sampleName,  RESOURCE type);

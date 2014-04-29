@@ -404,3 +404,31 @@ QString Utilities::insertCharacterAtIntervals(QString string, QChar insertC, int
     return newString;
 }
 
+QString Utilities::getShortORFId(const QString &orfname) {
+    QRegExp orfNameRegEx("_(\\d+_\\d+)$");
+
+    QString shortORFname;
+    int pos  = orfNameRegEx.indexIn(orfname);
+    if( pos > -1 ) {
+        shortORFname = orfNameRegEx.cap(1);
+    }
+    else {
+        return "";
+    }
+    return shortORFname;
+}
+
+
+QString Utilities::getShortContigId(const QString &contigname) {
+    QRegExp contigNameRegEx("_(\\d+)$");
+
+    QString shortContigname;
+    int pos  = contigNameRegEx.indexIn(contigname);
+    if( pos > -1 ) {
+        shortContigname = contigNameRegEx.cap(1);
+    }
+    else {
+        return "";
+    }
+    return shortContigname;
+}

@@ -43,6 +43,8 @@ public:
     static QLabel *ShowWaitScreen(QString msg) ;
     static bool checkEmptyFile(QString filepath);
     static QString insertCharacterAtIntervals(QString string, QChar c, int n);
+    static QString getShortORFId(const QString &orfname);
+    static QString getShortContigId(const QString &orfname);
 };
 
 #endif // UTILITIES_H

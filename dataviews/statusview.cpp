@@ -78,30 +78,34 @@ void StatusView::readDataFromFile(const QString &absFileName, const QString &fil
         if( data[stepName].size() < 2) continue;
 
         foreach(QString type, data[stepName].keys()) {
+            // this is the type of error
             QStandardItem *errorTypeItem = this->getQStandardItem(type);
             stepNameItem->appendRow(errorTypeItem);
 
             QList<QStandardItem *> itemList;
+            QString errorMessage = "";
             for(int i = 1; i < data[stepName][type].size(); i++) {
-                QStandardItem *messageItem =  this->getQStandardItem(data[stepName][type][i]);
-                itemList.append(messageItem);
+                errorMessage += data[stepName][type][i];
             }
-            errorTypeItem->appendColumn(itemList);
+            QStandardItem *messageItem =  this->getQStandardItem(errorMessage);
+            errorTypeItem->appendRow(messageItem);
         }
 
     }
 
     return;
 
-
-
 }
 
 void StatusView::createModel() {
     QString runstatsFile;
 
+    QList<QVariant> rootData;
+    rootData << "Title" << "Summary";
+
     model = new QStandardItemModel;
     rootitem = model->invisibleRootItem();
+
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     foreach(QString filename, this->filenames) {
@@ -121,6 +125,7 @@ void StatusView::setFileList(QStringList &filenames) {
 
 void StatusView::showTreeView() {
     treeView = new QTreeView();
+    treeView->setWindowTitle("Error and Wornings!");
     treeView->setAttribute(Qt::WA_DeleteOnClose);
     treeView->setAlternatingRowColors(true);
     RunData *rundata= RunData::getRunData();

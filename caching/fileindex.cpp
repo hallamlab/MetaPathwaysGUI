@@ -11,12 +11,12 @@ FileIndex::FileIndex(QString inputFilePath, QString sampleName, RESOURCE type)
     QFile inputFile(inputFilePath);
     if (!QFile::exists(inputFilePath))
     {
-        // warn that the file doesn't exist
+       // QMessageBox::warning(this, "File to index is missing for sample " + sampleName, inputFilePath, QMessageBox::Ok);
         return;
     }
     else if (!inputFile.open(QIODevice::ReadOnly))
     {
-        // warn that the file couldn't be read
+        //QMessageBox::warning(this, QString("File to index could not be read for sample ") + sampleName, inputFilePath, QMessageBox::Ok);
         return;
     }
     QTextStream stream(&inputFile);
@@ -56,7 +56,12 @@ void FileIndex::indexFastaFile(QTextStream &inputFile) {
                 this->locations.insert(name, s);
             }
             s.beg = prevPos;
-            name = FileIndex::extractFastaSeqName(line, sep);
+            if(this->type==NUCFASTA)
+                name = Utilities::getShortContigId(FileIndex::extractFastaSeqName(line, sep));
+            if(this->type==NUCFNA)
+                name = Utilities::getShortORFId(FileIndex::extractFastaSeqName(line, sep));
+            if(this->type==AMINOFAA)
+                name = Utilities::getShortORFId(FileIndex::extractFastaSeqName(line, sep));
             readyToInsert = true;
         }
     }
@@ -116,7 +121,12 @@ bool FileIndex::writeFileIndex(QString filePath, SOURCETYPE type) {
             line = it.key() + "\t" + QString::number(it.value().beg) + "\t" + QString::number(it.value().end);
             outstream << line << endl;
         }
-        outputFile.rename( filePath);
+        QFile  oldfile(filePath);
+        if( QFile::exists(filePath) ) {
+            oldfile.remove();
+            oldfile.remove();
+        }
+        outputFile.rename(filePath);
         outputFile.close();
        return true;
     }

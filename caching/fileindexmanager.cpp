@@ -32,10 +32,14 @@ FileIndex *FileIndexManager::readFileIndex(QString sampleName, QString filePath,
     return iFile;
 }
 
-FileIndex *FileIndexManager::getFileIndex(QString sampleName, QString fileName, RESOURCE type) {
+FileIndex *FileIndexManager::getFileIndex(QString sampleName, QString fileName, RESOURCE type, bool createNew) {
 
-    if( indexedFiles.contains(sampleName) && indexedFiles[sampleName].contains(type) ) {
+    if(!createNew && indexedFiles.contains(sampleName) && indexedFiles[sampleName].contains(type) ) {
         return indexedFiles[sampleName][type];
+    }
+    if(indexedFiles.contains(sampleName) && indexedFiles[sampleName].contains(type) ) {
+        delete indexedFiles[sampleName][type];
+        indexedFiles[sampleName].remove(type);
     }
 
     FileIndex *iFile = new FileIndex(fileName, sampleName, type);

@@ -302,16 +302,20 @@ void DataManager::destroyHTree(ATTRTYPE refDB ) {
 }
 
 ORF *DataManager::_createAnORF(QStringList &attributes) {
+
     ORF *orf = new ORF;
     QHash<QString, CONTIG *> contigHash;
-    orf->name = attributes[0];
 
-    if(contigHash.contains(attributes[1]))
-        orf->contig = contigHash[attributes[1]];
+    orf->name =  Utilities::getShortORFId(attributes[0]);
+
+    QString shortContigName =  Utilities::getShortContigId(attributes[1]);
+
+    if(contigHash.contains(shortContigName))
+        orf->contig = contigHash[shortContigName];
     else {
         CONTIG *contig = new CONTIG;
-        contig->name  = attributes[1];
-        contigHash[attributes[1]] = contig;
+        contig->name  = shortContigName;
+        contigHash[shortContigName] = contig;
         orf->contig = contig;
     }
 
@@ -344,11 +348,9 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
 
 void DataManager::createORFs(QString sampleName, QString fileName) {
 
-   // qDebug() << "Checking orf sample " << sampleName;
    // if(this->ORFsUptoDateList.contains(sampleName) &&  this->ORFsUptoDateList[sampleName] ) return;
     //return if already created;
       if(this->ORFList->contains(sampleName)) {
-
           return;
       }
    // qDebug() << "ORFs exists for the smaple " << sampleName;
@@ -362,7 +364,7 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
-            QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
+            QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
             if(line.size() < 4) continue;
             (this->ORFList->value(sampleName))->append(this->_createAnORF(line));
         }
@@ -471,7 +473,11 @@ Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector
 }
 
 QList<ORF *> * DataManager::getORFList(QString sampleName) {
-    if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) return this->ORFList->value(sampleName);
+    if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) {
+        return this->ORFList->value(sampleName);
+    }
+
+    qDebug() << "did not find orf list " << this->ORFList->contains(sampleName) << sampleName;
     return 0;
 }
 
@@ -501,17 +507,17 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
     QList<ORF *>::const_iterator it;
     Connector *connector = new Connector;
 
+    //set the appropriate attribute such as COG, KEGG, SEED, METACYC
     connector->setAttrType(attrType);
     HNODE *hnode;
     for(it = orfList->begin(); it!= orfList->end(); ++it ) {
         if( !(*it)->attributes.contains(attrType) ) continue;
-
+      //  qDebug() << (*it)->name;
         hnode = htree->getHNODE((*it)->attributes[attrType]->name);
         if(hnode!=0) {
             connector->addToList(hnode->attribute, *it);
        }
     }
-
 
     if( sampleName!=QString("temp") ) {
        if( !this->connectors.contains(sampleName))
