@@ -1,7 +1,7 @@
 #include "gridsetup.h"
 #include "ui_gridsetup.h"
 #include "mainframe.h"
-#include "Setup.h"
+#include "tabs/Setup.h"
 #include "gridchoice.h"
 #include <QDebug>
 #include <QMessageBox>

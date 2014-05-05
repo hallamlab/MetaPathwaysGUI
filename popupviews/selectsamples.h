@@ -7,8 +7,8 @@
 #include <QLabel>
 #include <QList>
 #include <QDialogButtonBox>
-#include "resultwindow.h"
-#include "RunConfig.h"
+#include "tabs/resultwindow.h"
+#include "tabs/RunConfig.h"
 #include "rundata.h"
 
 

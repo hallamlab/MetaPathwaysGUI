@@ -2,7 +2,7 @@
 #include "ui_ProgressDialog.h"
 #include "utilities.h"
 #include "rundata.h"
-#include "resultwindow.h"
+#include "tabs/resultwindow.h"
 #include <QProcess>
 #include <QPushButton>
 #include <QDebug>
@@ -56,9 +56,20 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
 }
 
 void ProgressDialog::showErrors() {
-   StatusView *statusview = StatusView::getStatusView();
+  /* OLD WAY StatusView *statusview = StatusView::getStatusView();
    statusview->showTreeView();
-   //statusview->deleteLater();
+   */
+    RunData *rundata= RunData::getRunData();
+
+    TreeModel *model = new TreeModel;
+    model->setSampleNames(rundata->getFileList());
+    model->readFiles();
+
+    QTreeView *view = new QTreeView;
+    view->setModel(model);
+    view->expandAll();
+    view->show();
+
 
 }
 void ProgressDialog::loadSampleList() {
@@ -434,6 +445,7 @@ void ProgressDialog::initProcess(){
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
+    standardOut->append( arguments.join(" ") );
 
     rundata->setProcess(myProcess); // let rundata know what's good
 

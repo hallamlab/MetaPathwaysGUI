@@ -1,4 +1,4 @@
-#include "resultwindow.h"
+#include "tabs/resultwindow.h"
 
 ResultWindow *ResultWindow::resultWindow=0;
 

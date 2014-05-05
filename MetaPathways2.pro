@@ -18,16 +18,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        Setup.cpp \
-        SettingsTab.cpp \
-        RunConfig.cpp \
-        ProgressDialog.cpp \
+        tabs/Setup.cpp \
+        tabs/SettingsTab.cpp \
+        tabs/RunConfig.cpp \
+        tabs/ProgressDialog.cpp \
         utilities.cpp \
     rundata.cpp \
     qcustomplot.cpp \
-    resultwindow.cpp \
+    tabs/resultwindow.cpp \
     dataviews/tabledata.cpp \
-    welcome.cpp \
+    tabs/welcome.cpp \
     grid/gridchoice.cpp \
     grid/gridsetup.cpp \
     grid/grid.cpp \
@@ -68,21 +68,23 @@ SOURCES += main.cpp\
     progressdisplaydata.cpp \
     displaywidgets/createwidgets.cpp \
     caching/memorymanager.cpp \
-    dataviews/statusview.cpp
+    dataviews/statusview.cpp \
+    datamodel/treeitem.cpp \
+    datamodel/treemodel.cpp
 
 
 
 HEADERS  += \
-            Setup.h \
-            SettingsTab.h \
-            RunConfig.h \
-            ProgressDialog.h \
+            tabs/Setup.h \
+            tabs/SettingsTab.h \
+            tabs/RunConfig.h \
+            tabs/ProgressDialog.h \
             utilities.h \
     rundata.h \
     qcustomplot.h \
-    resultwindow.h \
+    tabs/resultwindow.h \
     dataviews/tabledata.h \
-    welcome.h \
+    tabs/welcome.h \
     grid/gridchoice.h \
     grid/gridsetup.h \
     grid/grid.h \
@@ -125,18 +127,21 @@ HEADERS  += \
     progressdisplaydata.h \
     displaywidgets/createwidgets.h \
     caching/memorymanager.h \
-    dataviews/statusview.h
+    dataviews/statusview.h\
+    datamodel/treeitem.h\
+    datamodel/treemodel.h
+
 
 
 
 FORMS    += \
-            Setup.ui \
-            SettingsTab.ui \
-            RunConfig.ui \
-            ProgressDialog.ui \
-    resultwindow.ui \
+            tabs/Setup.ui \
+            tabs/SettingsTab.ui \
+            tabs/RunConfig.ui \
+            tabs/ProgressDialog.ui \
+    tabs/resultwindow.ui \
     dataviews/tabledata.ui \
-    welcome.ui \
+    tabs/welcome.ui \
     grid/gridchoice.ui \
     grid/gridsetup.ui \
     grid/nonec2.ui \

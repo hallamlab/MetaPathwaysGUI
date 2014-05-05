@@ -17,6 +17,8 @@
 #include <QTreeView>
 
 #include "dataviews/statusview.h"
+#include "datamodel/treeitem.h"
+#include "datamodel/treemodel.h"
 
 namespace Ui {
 class ProgressDialog;
