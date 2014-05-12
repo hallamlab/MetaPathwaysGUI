@@ -19,7 +19,8 @@ enum SOURCETYPE {FASTA, TABTABLE};
 
 typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, NUCFNA, CONTIGLENGTH, ORFLENGTH, \
                              NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
-                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, MEGANLASTFILE, MEGANBLASTFILE, RUNSTATS, ERRORS } RESOURCE;
+                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, MEGANLASTFILE,\
+                             MEGANBLASTFILE, RUNSTATS, ERRORS, GLOBAL_ERRORS } RESOURCE;
 
 typedef struct _RANK_BEGIN_PAIR {
     unsigned int rank, begin;
@@ -93,5 +94,12 @@ typedef struct _SEARCH {
     bool caseSensitive;
 
 } SEARCH;
+
+
+const QString PIPELINE_STEP_BLAST = "metapaths_steps:BLAST_REFDB";
+
+
+
+
 
 #endif // TYPES_H

@@ -46,7 +46,7 @@ public:
     void addConnector(Connector *connector);
     void clearConnectors();
     void setNumCols(unsigned int numCols);
-    void fillData(unsigned int maxDepth, int state, bool hideZeroRows);
+    void fillData(bool state, bool hideZeroRows);
 
     void populateTable( QList<ROWDATA *> &data, const QStringList &headers, int state);
 
@@ -77,7 +77,7 @@ public:
     QTableWidget* tableWidget;
     unsigned int numCols;
     QList<enum TYPE> types;
-    Connector *connector;
+    Connector *_connector;
     QList<Connector *> connectors;
     QHash<ATTRTYPE, QList<Connector *> > allConnectors;
 

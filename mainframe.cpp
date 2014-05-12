@@ -173,7 +173,8 @@ void MainFrame::displayParams(){
  * parameters widget and the stages widget.
  */
 void MainFrame::updateWidgets(){
-    if(stackedWidget->currentWidget() == settingsScroll){
+    // if(stackedWidget->currentWidget() == settingsScroll)
+    {
         // the user was looking at the param setup screen
 
         QList<QWidget *>::iterator i;
@@ -207,13 +208,16 @@ void MainFrame::updateWidgets(){
             }
             else if (qobject_cast<QListWidget *>(widget)){
                 QListWidget *temp = qobject_cast<QListWidget *>(widget);
+
                 QHash<QString,QString> adbs;
                 QHash<QString,QString> rdbs;
                 //use the power of hashes to only get unique strings
 
                 adbs.clear();
                 rdbs.clear();
-
+              // qDebug() << "Before going through the annotation DBs";
+               // qDebug() << "The number of databases that are already there "<< temp->count();
+                qDebug() << "\n\n";
                 for (int i=0;i<temp->count();i++){
                     if (temp->item(i)->checkState() == Qt::Checked){
                         if (temp->objectName() == "annotationDBS"){
@@ -222,6 +226,9 @@ void MainFrame::updateWidgets(){
                         else if(temp->objectName() == "rrnaREFDBS"){
                             rdbs[temp->item(i)->text()] = "";
                         }
+                       // qDebug() << temp->item(i) << " ::: " << "Checked" ;
+                    }else{
+                      //  qDebug() << temp->item(i) << " ::: " << "Unchecked" ;
                     }
                 }
                 if (temp->objectName()=="annotationDBS"){
@@ -234,12 +241,16 @@ void MainFrame::updateWidgets(){
                 }
                 // concatenate all the databases together by commas
             }
+         //   qDebug() << "configName : " << configName << " value : " << value;
             rundata->setValue(configName, value,_PARAMS);
+            // now write them to the parameter file
+          //  qDebug() << " Writing out the file";
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_PARAM, "PARAMS", configName, value, false, false);
             // update rundata's param hash, and write out the setting accordingly
         }
     }
-    else if(stackedWidget->currentWidget()==stageScroll){
+    // else {//if(stackedWidget->currentWidget()==stageScroll){ //else part
+    {
         // if the user was looking at the stage selection screen
 
         QList<QGroupBox *> *groupBoxes = stages->groupBoxes;
@@ -307,7 +318,7 @@ void MainFrame::updateWidgets(){
         }else rundata->setValue("overwrite", "overlay", _PARAMS);
 
         executionPrep();
-    }
+    } //end of else
 }
 
 /*

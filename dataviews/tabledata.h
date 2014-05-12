@@ -4,13 +4,14 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTableWidget>
+#include <QProgressBar>
 #include "dataviews/largetable.h"
 #include "popupviews/searchwidget.h"
 #include "popupviews/exportbox.h"
 #include "popupviews/displayinfo.h"
 #include "genebrowser/genomeview.h"
 #include "caching/tablemanager.h"
-#include <QProgressBar>
+#include "utilities.h"
 #include "datamodel/samplercmanager.h"
 
 #include <QStringList>

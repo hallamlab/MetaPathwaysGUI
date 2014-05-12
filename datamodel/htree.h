@@ -26,11 +26,11 @@ public:
     QList<HNODE *> getChildrenOf(QString name);
     QList<ATTRIBUTE *> getLeafAttributesOf(HNODE *hnode);
 
-    void printTree(HNODE *hnode);
-    QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, int showHierarchy, short int currDepth, QList<ROWDATA *> &data);
+    void printTree(HNODE *hnode, unsigned int d =0);
+    QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data);
 
-    QList<ROWDATA *> getRows(unsigned int maxDepth, int showHierarchy, QList< Connector *> &connectors);
-    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, int showHierarchy, QList< Connector *> &connectors);
+    QList<ROWDATA *> getRows(unsigned int maxDepth, bool showHierarchy, QList< Connector *> &connectors);
+    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, bool showHierarchy, QList< Connector *> &connectors);
     HNODE *getHNODE(QString name);
     void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
     void copyDataToSubConnector(HNODE *hnode, Connector *targetConnector, HTree* targetTree, QHash<ORF *, bool> & orfHash);

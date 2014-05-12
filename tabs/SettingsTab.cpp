@@ -40,8 +40,13 @@ void SettingsTab::annotationClicked(QModelIndex index){
     for (int i=0;i<annotationDBS->count();i++){
         if(annotationDBS->item(i)->checkState()==Qt::Checked){
             oneChecked = true;
+          //  qDebug() <<  annotationDBS->item(i)->text() << " : " << "Checked";
+        }
+        else {
+           //  qDebug() <<  annotationDBS->item(i)->text() << " : " << "UnChecked";
         }
     }
+
 }
 
 void SettingsTab::rrnaClicked(QModelIndex index){
@@ -78,7 +83,7 @@ void SettingsTab::showRRNADBS(){
             foreach (QString db, *filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
-                item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+                item->setFlags(item->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
                 item->setCheckState(Qt::Unchecked);
                 rrnaREFDBS->addItem(item);
             }
@@ -99,12 +104,13 @@ void SettingsTab::showORFDBS(){
 
     QRegExp reg("^[.]");
 
+
     if (this->findFiles(dbPath,filesInDir)){
         if (filesInDir->length()>0){
             foreach (QString db, *filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
-                item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+                item->setFlags(item->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
                 item->setCheckState(Qt::Unchecked);
                 annotationDBS->addItem(item);
             }
@@ -174,6 +180,7 @@ void SettingsTab::getAllWidgets(){
     rrnaWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^rrna*")));
     pathwaysWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^ptools_settings*")));
     QList<QWidget *>::iterator i;
+
 
     for (i = qcWidgets->begin();i != qcWidgets->end(); ++i){
         QWidget *widget = *i;

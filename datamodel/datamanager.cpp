@@ -195,8 +195,12 @@ void DataManager::createDataModel() {
     QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
     QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
     HTree *htree = createHTree(COG_categories);
+
     htree->hashNodes(htree->root);
     this->htrees[COG] = htree;
+  //  htree->printTree(htree->getRootHNODE());
+
+
 
     QString KEGG_categories = refDBFolder + "/functional_categories/" + "KO_classification.txt";
     htree = createHTree(KEGG_categories);
@@ -449,7 +453,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 }
 
 
-
+// it creates a new connector from the old connector for the given type of attrbute attrType
 Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector* connector, ATTRTYPE attrType) {
       Connector *newConnector = new Connector;
       newConnector->setAttrType(attrType);
@@ -496,6 +500,7 @@ void DataManager::deleteAllConnectors() {
     this->connectors.clear();
 }
 
+
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {
     if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(attrType)) {
      //   qDebug() << sampleName <<" retrieving  connector " << this->connectors[sampleName][attrType]->getORFList().size();
@@ -510,6 +515,7 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
     //set the appropriate attribute such as COG, KEGG, SEED, METACYC
     connector->setAttrType(attrType);
     HNODE *hnode;
+
     for(it = orfList->begin(); it!= orfList->end(); ++it ) {
         if( !(*it)->attributes.contains(attrType) ) continue;
       //  qDebug() << (*it)->name;
@@ -525,5 +531,6 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
        this->connectors[sampleName][attrType] = connector;
      }
 
+  //  qDebug() << "created a new conn of size " << connector->getNumOfORFs();
     return connector;
 }

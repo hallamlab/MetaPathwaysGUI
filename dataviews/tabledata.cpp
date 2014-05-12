@@ -509,14 +509,19 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
             if( type == NUCFNA || type == AMINOFAA ) col = 0;
             if( type == NUCFASTA) col = 4;
 
-            QString name, resultStr;
+            QString name, resultStr, shortname;
             QHash<QString, bool> alreadyWritten;
             for(int i =0; i < this->largeTable->tableData.size();  i++) {
                if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
                name = this->largeTable->tableData[i]->strVar[ this->largeTable->index[col]];
-               if(alreadyWritten.contains(name) ) continue;
-               alreadyWritten[name] = true;
-               resultStr = fileIndex->getDataToDisplay(name);
+               if(type==NUCFASTA)
+                  shortname = Utilities::getShortContigId(name);
+               if(type==NUCFNA || type==AMINOFAA)
+                  shortname = Utilities::getShortORFId(name);
+
+               if(alreadyWritten.contains(shortname) ) continue;
+               alreadyWritten[shortname] = true;
+               resultStr = fileIndex->getDataToDisplay(shortname);
                if( !resultStr.isEmpty()) { out << resultStr; }
             }
         }

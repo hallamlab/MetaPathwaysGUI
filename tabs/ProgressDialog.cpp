@@ -11,6 +11,8 @@
 #include <QMovie>
 #include <QTextStream>
 #include <QDir>
+#include "types.h"
+
 
 /*
  * Default constructor, sets up private variables.
@@ -69,6 +71,9 @@ void ProgressDialog::showErrors() {
     view->setModel(model);
     view->expandAll();
     view->show();
+    view->resizeColumnToContents(0);
+    view->resizeColumnToContents(1);
+    view->resizeColumnToContents(2);
 
 
 }
@@ -321,8 +326,8 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> &statusHash){
         if( !progressdisplaydata->isValidKey(stepName)) continue;
         if (stepName.contains(QRegExp("BLAST_REFDB_"))) continue;
         if (stepName.contains(QRegExp("PARSE_BLAST_"))) continue;
-       // if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
-//        if (stepName.contains(QRegExp("STATS_"))) continue;
+        if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
+        if (stepName.contains(QRegExp("STATS_"))) continue;
 
         int _row = TABLE_MAPPING->key(stepName);
 
@@ -373,23 +378,30 @@ void ProgressDialog::startRun(){
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
         // check to see if they're jonesing us
-        QMessageBox::warning(0,"Input/Output Not Set!","Missing input or output folders, step back to stages and make sure you've filled that in!",QMessageBox::Ok );
+        QMessageBox::warning(0,"Input/Output Not Set!","Missing input or output folders!\nPlease set input and output folders in Stages tab.",QMessageBox::Ok );
     }
     else{
         // otherwise start off the process, clear out a bunch of statuses in case there was a previous run
-        cancelButton->setEnabled(true);
-        runButton->setDisabled(true);
-        standardOut->clear();
-        logBrowser->clear();
-        progressBar->setValue(0);
-
-     //   timer->start(1000); // refresh rate of 1 sec for the log
-
-        _stepsCompleted = 0;
-        _totalSteps = TABLE_MAPPING->size(); // used for progress bar
-
+        this->resetRunTab();
         initProcess();
     }
+
+}
+
+
+void ProgressDialog::resetRunTab() {
+    cancelButton->setEnabled(true);
+    runButton->setDisabled(true);
+    standardOut->clear();
+    logBrowser->clear();
+    progressBar->setValue(0);
+
+ //   timer->start(1000); // refresh rate of 1 sec for the log
+
+    _stepsCompleted = 0;
+    _totalSteps = TABLE_MAPPING->size(); // used for progress bar
+
+
 
 }
 
@@ -410,10 +422,24 @@ void ProgressDialog::initProcess(){
     QStringList arguments;
 
 
+    qDebug() << " num of databases to run on " << rundata->getNumADB();
     if(this->rundata->getSamplesSubsetToRun().size()==0) {
-       QMessageBox::warning(0,"ERROR", "At least one sample must be selected to process!", QMessageBox::Ok);
+
+       QMessageBox::warning(0,"ERROR", "At least one sample must be selected to process!\nPlease select samples in the Stages tab.", QMessageBox::Ok);
        this->processFinished(0,QProcess::NormalExit);
+       this->resetRunTab();
        return;
+    }
+
+//    qDebug() << this->rundata->getNumADB();
+
+
+
+    if(this->rundata->getNumADB()==0 && this->rundata->getParams().contains(PIPELINE_STEP_BLAST)\
+            && this->rundata->getParams()[PIPELINE_STEP_BLAST].indexOf(QString("skip")) == -1 )  {
+        QMessageBox::warning(0,QString("Error!\n") ,QString("No reference Database selected! \nPlease make sure you selected at least one in the Parameters tab."), QMessageBox::Ok);
+        this->resetRunTab();
+        return;
     }
 
     // arguments to the python execution process call

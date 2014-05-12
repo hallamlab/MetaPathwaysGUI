@@ -1,4 +1,4 @@
-#include "tabs/resultwindow.h"
+#include "resultwindow.h"
 
 ResultWindow *ResultWindow::resultWindow=0;
 
@@ -278,14 +278,6 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
     HTableData *htable;
-    types.clear();
-    types << STRING << STRING << INT;
-    headers.clear();
-    headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
-    htable = this->getHTableData(sampleName, COG, types, headers,  datamanager);
-    htable->addSampleName(sampleName);
-    htable->setMultiSampleMode(false);
-    resultTabs->addTab(htable, "COG");
 
     types.clear();
     types << STRING << STRING << INT;
@@ -295,6 +287,16 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "KEGG");
+
+
+    types.clear();
+    types << STRING << STRING << INT;
+    headers.clear();
+    headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
+    htable = this->getHTableData(sampleName, COG, types, headers,  datamanager);
+    htable->addSampleName(sampleName);
+    htable->setMultiSampleMode(false);
+    resultTabs->addTab(htable, "COG");
 
     types.clear();
     types << STRING << STRING << INT;
@@ -558,6 +560,10 @@ void ResultWindow::switchToComparativeMode() {
 
     htable->setParameters(datamanager->getHTree(KEGG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
+
+
+
+
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
     htable->setTableIdentity("KEGG", KEGG);

@@ -163,6 +163,25 @@
      RunData *rundata = RunData::getRunData();
      QString OUTPUTPATH = rundata->getParams()["folderOutput"];
      samplercmgr->setOutPutPath(OUTPUTPATH);
+     QList<QVariant> columnData;
+
+     columnData << "GENERAL ERRORS" << " " << " ";
+     TreeItem *treeitem = new TreeItem(columnData, parent);
+     parent->appendChild(treeitem);
+
+     QStringList errorMessages;
+     this->readDataFromGlobalFile(errorMessages);
+
+     unsigned int errcount =0;
+     foreach(QString message, errorMessages) {
+       errcount++;
+       columnData.clear();
+       columnData << QString::number(errcount) << message << " ";
+       qDebug() << message;
+       TreeItem *treeitem2 = new TreeItem(columnData, treeitem);
+       treeitem->appendChild(treeitem2);
+     }
+
 
      foreach(QString filename, this->sampleNames) {
         QHash<QString, QHash<QString, QList<QStringList > > > data;
@@ -174,7 +193,33 @@
      }
  }
 
-
+void TreeModel::readDataFromGlobalFile(QStringList &errorMessages) {
+    RunData *rundata = RunData::getRunData();
+    QString OUTPUTPATH = rundata->getParams()["folderOutput"];
+    QString globalErroFile = OUTPUTPATH + "/" + "global_errors_warnings.txt";
+    QFile inputFile(globalErroFile);
+    QString outputStr ="";
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QString line = in.readLine().trimmed();
+            QStringList fields = line.split("\t");
+            if( fields.size()> 1) {
+                if( fields[0].indexOf(QString("ERROR"))!=-1 ) {
+                    if(outputStr.size()!=0) errorMessages.append(outputStr);
+                    outputStr = fields[1] + "\n";
+                }
+                else {
+                    outputStr += line +"\n";
+                }
+            }
+            else {
+                outputStr += line + "\n";
+            }
+        }
+        if(outputStr.size()!=0) errorMessages.append(outputStr);
+    }
+}
  // add the sample errors and warning to it
  TreeItem *TreeModel::addWarningsFromSample(QString sampleName, const QHash<QString, QHash<QString, QList< QStringList > > > &data, TreeItem* parent, bool fileFound) {
       QList<QVariant> columnData;

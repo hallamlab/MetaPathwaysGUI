@@ -70,6 +70,7 @@
      int columnCount(const QModelIndex &parent = QModelIndex()) const;
      bool readDataFromFile(const QString &absFileName, const QString &filename, QHash<QString, QHash<QString, QList<QStringList> > > &data);
      void readFiles();
+     void readDataFromGlobalFile(QStringList &messageLines) ;
      TreeItem *addWarningsFromSample(QString sampleName, const QHash<QString, QHash<QString, QList<QStringList> > > &data, TreeItem* parent, bool fileFound);
      void setSampleNames(const QStringList &samplenames);
  private:

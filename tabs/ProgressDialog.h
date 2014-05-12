@@ -51,6 +51,7 @@ private:
     bool checkInputOutPutLocations() ;
 
 private slots:
+
     void terminateRun();
     void checkFiles();
     void selectedFileChanged(QString file);
@@ -61,7 +62,7 @@ private slots:
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
     unsigned int countTotalNumberOfSteps();
 
-
+    void resetRunTab() ;
 
 
 private:

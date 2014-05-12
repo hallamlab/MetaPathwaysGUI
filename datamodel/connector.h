@@ -5,6 +5,8 @@
 #include <QList>
 #include <QDebug>
 
+// This class connects the attributes to a list of ORFs and maintains the knowledge
+// connections
 class Connector
 {
 public:
@@ -16,9 +18,14 @@ public:
     ATTRTYPE getAttrType();
     QList<ORF *> getORFList(ATTRIBUTE *attribute);
     QList<ORF *> getORFList();
-    QList<ORF *> getORFList(QList<ATTRIBUTE *> attribute);
+    QList<ORF *> getORFList(QList<ATTRIBUTE *> attributes);
+    unsigned int getNumOfORFs(ATTRIBUTE *attribute);
+    unsigned int getNumOfORFs();
+    unsigned int getNumOfORFs(QList<ATTRIBUTE *> attributes);
+    unsigned int getNumAttributes();
 private:
     ATTRTYPE attrType;
+
 
     QString source, sink;
   //  QHash<ATTRIBUTE *, QList<ORF *> > connected;

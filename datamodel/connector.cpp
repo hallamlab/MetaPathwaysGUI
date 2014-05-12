@@ -56,13 +56,43 @@ QList<ORF *> Connector::getORFList(QList<ATTRIBUTE *> attributes) {
 
 
 QList<ORF *> Connector::getORFList() {
-    QList<ORF *> list;
+    QHash<ORF *, bool> listHash;
 
     foreach(ATTRIBUTE *attribute, this->connected.keys()) {
-        if(this->connected.contains(attribute))
-           list.append(this->connected[attribute]);
+        foreach(ORF *orf, this->connected[attribute])
+            if(!listHash.contains(orf))
+                listHash[orf] = true;
     }
-    return list;
+    return listHash.keys();
 }
 
+
+unsigned int Connector::getNumOfORFs(ATTRIBUTE *attribute) {
+    unsigned int size = 0;
+    if(this->connected.contains(attribute))
+       size += this->connected[attribute].size();
+    return size;
+}
+
+unsigned int Connector::getNumOfORFs() {
+    unsigned int size =0;
+    foreach(ATTRIBUTE *attribute, this->connected.keys()) {
+        if(this->connected.contains(attribute))
+           size += this->connected[attribute].size();
+    }
+    return size;
+}
+
+unsigned int Connector::getNumOfORFs(QList<ATTRIBUTE *> attributes) {
+    unsigned int size =0;
+    foreach(ATTRIBUTE *attribute, attributes) {
+        if(this->connected.contains(attribute))
+           size += this->connected[attribute].size();
+    }
+    return size;
+}
+
+unsigned int Connector::getNumAttributes() {
+    return connected.size();
+}
 

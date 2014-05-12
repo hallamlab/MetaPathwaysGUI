@@ -79,6 +79,9 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case ERRORS:
             path = OUTPUTPATH + "/" + sampleName + "/"+ "errors_warnings_log.txt";
             break;
+         case GLOBAL_ERRORS:
+            path = OUTPUTPATH + "/" + sampleName + "/"+ "global_errors_warnings.txt";
+            break;
          default:
             path = "";
             break;

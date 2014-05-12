@@ -79,6 +79,8 @@ HTableData::~HTableData()
 void HTableData::setMaxSpinBoxDepth(unsigned int maxDepth) {
     this->maxSpinBoxDepth  = maxDepth;
     showDepth->setMaximum(maxDepth);
+
+    showDepth->setMinimum( maxDepth > 0 ? 1 :maxDepth);
 }
 
 void HTableData::setShowHierarchy(bool flag) {
@@ -183,7 +185,7 @@ void HTableData::spinBoxChanged(int depth) {
 
 
 void HTableData::showTableData(bool hideZeroRows) {
-    this->fillData(this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows);
+    this->fillData((this->showHierarchy->checkState()==Qt::Checked), hideZeroRows);
 
 }
 
@@ -196,6 +198,11 @@ void HTableData::showHierarchyChanged(int state) {
         this->showTableData();
 }
 
+
+/* This function toggels to show and display the zero rows of the functional
+ *tables
+ * @params true/false settings to enable or disable based on the Checkbox state
+ **/
 void HTableData::hideZeroRowsChanged(int state) {
     if(this->subWindow)
 //        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
@@ -206,10 +213,15 @@ void HTableData::hideZeroRowsChanged(int state) {
 }
 
 
-void HTableData::fillData(unsigned int maxDepth, int state, bool hideZeroRows) {
+/* This function will get the data row to display in the funcational table
+ \param  state is to hide or unhide zero rows
+ \param hideZeroRows   if this bool is true then the zero rows are not included
+ */
+
+void HTableData::fillData(bool state, bool hideZeroRows) {
      QList<ROWDATA *> data;
 
-     data =  this->htree->getRows(maxDepth, state, this->connectors);
+     data =  this->htree->getRows(this->showDepth->value(), state, this->connectors);
      QList<ROWDATA *> newdata;
 
      if(hideZeroRows) {
@@ -326,6 +338,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     else
        htable->subCategoryName->setText(htable->category);
 
+    // set the htable levels
     htable->depthLabelValue->setText(QString::number(htable->level));
     htable->depthLabelValue->setVisible(true);
   //  htable->connectors = this->connectors;
@@ -334,10 +347,15 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     Connector *modConnector ;
 
 
+    // create the subConnectors from the already existing connectors in the current
+    // htable
+
     foreach(Connector *connector, this->connectors) {
         modConnector = datamanager->createSubConnector(datamanager->getHTree(this->id.attrType), hnode, connector, this->id.attrType);
         htable->allConnectors[this->id.attrType].append(modConnector);
+      //  qDebug() << " submodCon size " << modConnector->getNumOfORFs() << " atr sub" << this->id.attrType ;
     }
+
 
     QList<ORF *>orfList;
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
@@ -346,11 +364,10 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
            orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
+         //  qDebug() << " get modCon size " << modConnector->getNumOfORFs() << " atr " << this->htableIdentities[i].attrType ;
 
         }
     }
-
-
 
     htable->setHeaders( this->headers);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
@@ -367,7 +384,11 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
 }
 
-
+/* this function is activated when the user switched the functional
+ *category--KEGG, COG, MetaCyc, SEED are functional categories--
+ *\param index : decides which of the categories is select from the drop down list at the
+ *               top of the Htable
+ **/
 void HTableData::switchCategory(int index) {
 
     DataManager *datamanager = DataManager::getDataManager();
@@ -382,10 +403,20 @@ void HTableData::switchCategory(int index) {
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
     this->setShowHierarchy(true);
 
+    /*
+    qDebug() << "KEGG " <<  this->allConnectors[KEGG][0]->getNumOfORFs();
+    qDebug() << "COG " <<  this->allConnectors[COG][0]->getNumOfORFs();
+    qDebug() << "MetaCyc " <<  this->allConnectors[METACYC][0]->getNumOfORFs();
+    qDebug() << "SEED " <<  this->allConnectors[SEED][0]->getNumOfORFs();
+
+    qDebug() << "Switched to " << this->id.attrType << "    " <<  this->htableIdentities[index].attrType;
+*/
+    this->level = datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth() + 1;
+
+
     if(this->id.attrType==this->htableIdentities[index].attrType) {
-        if( this->showSelectedTableData(this->category) !=0 ) {
+        if( this->showSelectedTableData(this->category) !=0 )
             this->show();
-        }
         else
             this->hide();
     }
@@ -393,7 +424,6 @@ void HTableData::switchCategory(int index) {
         this->showTableData();
     }
     this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
-
 
 }
 
@@ -445,31 +475,41 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
 }
 
 
-
+/* Saves the sequeces to a local file
+ * \param sampleName : name of the sample
+ * \param fileName : name of the file/folder to save it in, creates a new folder
+ * \param type: type of sequences to export to the file
+ */
 bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
     DataManager *datamanager = DataManager::getDataManager();
     HTree *htree = datamanager->getHTree(this->id.attrType);
 
-    Connector *connector =  datamanager->getConnector(sampleName, this->id.attrType);
-  //  qDebug() << htree <<" " <<  datamanager << " " << connector ;
+    // take any connector, since they all have the same set of ORFs
+    Connector *connector  = this->connectors[0];
     if( datamanager==0 || htree ==0 || connector == 0 ) return false;
-    QList<ORF *>orfList;
+    QList<ORF *>orfList = connector->getORFList();
 
     QHash<QString, bool> keyNames;
 
+ //   qDebug() << "total orfs " << connector->getORFList().size();
+   // foreach( ORF *o, connector->getORFList())
+     //   qDebug() << o->name;
 
-    for(int i =0; i < this->tableWidget->rowCount(); i++) {
-         HNODE *hnode = htree->getHNODE(this->tableWidget->item(i,0)->text());
-         orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+   // for(int i =0; i < this->tableWidget->rowCount(); i++) {
+       //  HNODE *hnode = htree->getHNODE(this->tableWidget->item(i,0)->text().trimmed());
+        // orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
          foreach(ORF *orf, orfList) {
-             if( type == NUCFNA || type == AMINOFAA)
+             if( type == NUCFNA || type == AMINOFAA) {
+              //   qDebug() << " orf name " << orf->name;
                  keyNames[orf->name] = true;
+             }
              if( type==NUCFASTA) {
+              //   qDebug() << "contig name " << orf->contig->name;
                  keyNames[orf->contig->name] = true;
              }
          }
-    }
+   // }
 
 
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();

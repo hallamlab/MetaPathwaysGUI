@@ -102,10 +102,10 @@ bool ExportSource::saveTableToFile(QString fileName, QChar delim, const QStringL
 
 bool ExportSource::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     switch(this->index) {
-        case 0:
+        case 0: // functional and tax tables
              return td0->saveSequencesToFile(fileName, type);
              break;
-        case 1:
+        case 1: //KEGG, COG, TABLE
              return td1->saveSequencesToFile(sampleName, fileName, type);
              break;
         default:

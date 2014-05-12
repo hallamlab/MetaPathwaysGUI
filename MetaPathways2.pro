@@ -70,7 +70,8 @@ SOURCES += main.cpp\
     caching/memorymanager.cpp \
     dataviews/statusview.cpp \
     datamodel/treeitem.cpp \
-    datamodel/treemodel.cpp
+    datamodel/treemodel.cpp \
+    types.cpp
 
 
 
