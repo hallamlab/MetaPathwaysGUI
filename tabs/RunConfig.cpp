@@ -33,6 +33,7 @@ RunConfig::RunConfig(QWidget *parent) :
 
     setStyling();
     loadRunParams();
+    loadSettings();
 
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample() ) );
     connect(skipAll, SIGNAL(clicked()), this, SLOT(toggleAllSkip()));
@@ -40,7 +41,6 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(runAll, SIGNAL(clicked()), this, SLOT(toggleAllRun()));
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
     connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
-
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 }
 
@@ -56,6 +56,22 @@ void RunConfig::receiveSelection(QList<QString> &selectedSamples) {
     this->rundata->setSamplesSubsetToRun(selectedSamples);
 }
 
+/* Loads the previously used settings
+ */
+
+void RunConfig::loadSettings() {
+    if( this->rundata->hasContext(INPUT_FOLDER) ) {
+       this->selectedFiles = this->rundata->getContext(INPUT_FOLDER).toString();
+       inputLine->setText(this->selectedFiles );
+       this->rundata->setValue("fileInput", this->selectedFiles, _PARAMS);
+    }
+
+    if( this->rundata->hasContext(OUTPUT_FOLDER) ) {
+        this->selectedFolder = this->rundata->getContext(OUTPUT_FOLDER).toString();
+        outputLine->setText(this->selectedFolder);
+        this->rundata->setValue("folderOutput", this->selectedFolder, _PARAMS);
+    }
+}
 
 void RunConfig::loadRunParams(){
     RunData *run = RunData::getRunData();
@@ -104,6 +120,7 @@ void RunConfig::browseFile(){
     if (!select.isEmpty()) {
         selectedFiles = select;
         inputLine->setText(selectedFiles);
+        this->rundata->saveContext(INPUT_FOLDER, QVariant(selectedFiles));
     }
 
     this->rundata->setCurrentSample(QString());
@@ -122,6 +139,7 @@ void RunConfig::browseFolder(){
     if(!folderSelect.isEmpty()){
         outputLine->setText(folderSelect);
         selectedFolder = folderSelect;
+        this->rundata->saveContext(OUTPUT_FOLDER, QVariant(selectedFolder));
     }
 
     this->rundata->setValue("folderOutput", selectedFolder, _PARAMS);

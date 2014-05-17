@@ -14,6 +14,8 @@
 #include <QLabel>
 #include <QPalette>
 #include <QTableWidgetItem>
+
+
 #include "datamodel/datamanager.h"
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/toolbarwidgets.h"
@@ -21,6 +23,7 @@
 #include "displaywidgets/widgetstacker.h"
 #include "popupviews/exportbox.h"
 #include "popupviews/searchwidget.h"
+#include "displaywidgets/progressview.h"
 
 
 typedef struct _HTABLE_IDENTITY {
@@ -48,7 +51,7 @@ public:
     void setNumCols(unsigned int numCols);
     void fillData(bool state, bool hideZeroRows);
 
-    void populateTable( QList<ROWDATA *> &data, const QStringList &headers, int state);
+    void populateTable(QList<ROWDATA *> &data, const QStringList &headers, bool hierarchyEnabled);
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
@@ -60,7 +63,7 @@ public:
     void showTableData(bool hideZeroRows = false);
     unsigned int  showSelectedTableData(QString categoryName, bool hideZeroRows = false);
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
-    unsigned int fillSelectedData(QString category, unsigned int maxDepth, int state, bool hideZeroRows);
+    unsigned int fillSelectedData(QString category, unsigned int maxDepth, bool showHierarchy, bool hideZeroRows);
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
@@ -100,6 +103,7 @@ private slots:
     void spinBoxChanged(int depth);
     void showHierarchyChanged(int state);
     void hideZeroRowsChanged(int state);
+    void showHierarchyOrZeroRowToggleChanged();
     void showInformativeTable(QTableWidgetItem *item);
     void switchCategory(int);
     void searchButtonPressed();

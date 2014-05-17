@@ -8,11 +8,14 @@
 #include <fstream>
 #include <QDebug>
 #include <QFileInfo>
-#include "types.h"
-#include "utilities.h"
 #include <QDir>
 #include <QSysInfo>
 #include <QtGlobal>
+
+#include "types.h"
+#include "utilities.h"
+#include "constants.h"
+
 
 class RunData: public QObject
 {
@@ -73,6 +76,10 @@ public:
     unsigned int getNumADB();
     QHash<QString, QString> getPARAMS();
     void emitloadSampleList();
+
+    bool saveContext(const QString &key, QVariant value);
+    bool hasContext(const QString &key);
+    QVariant getContext(const QString &key);
 
 signals:
     void loadSampleList();

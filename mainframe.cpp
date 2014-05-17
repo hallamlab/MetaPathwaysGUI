@@ -180,9 +180,12 @@ void MainFrame::updateWidgets(){
         QList<QWidget *>::iterator i;
         QList<QWidget *> *allWidgets = SettingsTab::allWidgets;
 
+        if( allWidgets ==0 ) return;
+
         // go through each widget in the settings tab
         // and cast them appropriately
         // retrieve their values and write them out
+       // qDebug() << "num widgets " << allWidgets->size();
         for (i = allWidgets->begin(); i != allWidgets->end(); ++i){
             QWidget *widget = *i;
 
@@ -190,6 +193,7 @@ void MainFrame::updateWidgets(){
             QString configName = rundata->getConfigMapping().key(objectName);
             QString value;
 
+           // qDebug() << configName;
             if (qobject_cast<QComboBox *>(widget)){
                 QComboBox *temp = qobject_cast<QComboBox *>(widget);
                 value = temp->currentText();
@@ -217,7 +221,7 @@ void MainFrame::updateWidgets(){
                 rdbs.clear();
               // qDebug() << "Before going through the annotation DBs";
                // qDebug() << "The number of databases that are already there "<< temp->count();
-                qDebug() << "\n\n";
+             //  qDebug() << "\n\n";
                 for (int i=0;i<temp->count();i++){
                     if (temp->item(i)->checkState() == Qt::Checked){
                         if (temp->objectName() == "annotationDBS"){

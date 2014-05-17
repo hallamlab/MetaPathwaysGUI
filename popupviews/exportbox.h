@@ -43,6 +43,7 @@ signals:
 public slots:
     void clickedChoice();
     bool saveAs();
+    bool cancelWindow();
 
 private:
     void createWidget();

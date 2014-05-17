@@ -57,6 +57,7 @@ signals:
 private:
     void loadRunParams();
     void setStyling();
+    void loadSettings();
 
     Ui::RunConfig *ui;
     QRadioButton *runAll;

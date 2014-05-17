@@ -54,8 +54,15 @@ HTableData::HTableData(QWidget *parent) :
     this->level = 0;
 
     connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT(spinBoxChanged(int) ) );
+    /*
     connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyChanged(int) ) );
     connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(hideZeroRowsChanged(int) ) );
+    */
+
+    connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+    connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+
+
     connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
     connect(categorySelector, SIGNAL(currentIndexChanged(int)), this, SLOT(switchCategory(int)) );
 
@@ -189,13 +196,29 @@ void HTableData::showTableData(bool hideZeroRows) {
 
 }
 
+
+void HTableData::showHierarchyOrZeroRowToggleChanged() {
+    if(this->subWindow) {
+        this->showSelectedTableData(this->category, (this->hideZeroRows->checkState()==Qt::Checked));
+        qDebug() << "Show seleced Table Data";
+    }
+    else {
+        qDebug() << "show Table Data";
+        this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
+    }
+}
+
+
 void HTableData::showHierarchyChanged(int state) {
-    if(this->subWindow)
+    if(this->subWindow) {
         this->showSelectedTableData(this->category);
 //    this->showTableData();
-
-    else
+        qDebug() << "Show seleced Table Data";
+    }
+    else {
+        qDebug() << "show Table Data";
         this->showTableData();
+    }
 }
 
 
@@ -237,6 +260,8 @@ void HTableData::fillData(bool state, bool hideZeroRows) {
 }
 
 unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
+
+     qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
      return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
 }
 
@@ -248,24 +273,25 @@ bool HTableData::isNonZero(ROWDATA *r) {
     return false;
 }
 
-unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth, int state, bool hideZeroRows) {
+unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth, bool showHierarchy, bool hideZeroRows) {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(categoryName, maxDepth, state, this->connectors);
+     data =  this->htree->getRows(categoryName, maxDepth, showHierarchy, this->connectors);
+     qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
      QList<ROWDATA *> newdata;
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
-        this->populateTable(newdata, this->headers, state );
+        this->populateTable(newdata, this->headers, showHierarchy );
         return newdata.size();
      }
      else {
-        this->populateTable(data, this->headers, state );
+        this->populateTable(data, this->headers, showHierarchy );
         return data.size();
      }
 }
 
-void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, int hierarchyEnabled){
+void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, bool hierarchyEnabled){
 
     tableWidget->clear();
     tableWidget->setColumnCount(headers.size());
@@ -491,7 +517,7 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
     QList<ORF *>orfList = connector->getORFList();
 
     QHash<QString, bool> keyNames;
-
+    ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
  //   qDebug() << "total orfs " << connector->getORFList().size();
    // foreach( ORF *o, connector->getORFList())
      //   qDebug() << o->name;
@@ -522,6 +548,8 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
         }
         outFile.close();
     }
+
+    progressbar.hide();
     return true;
 }
 

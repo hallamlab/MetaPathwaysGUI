@@ -331,3 +331,34 @@ void RunData::emitloadSampleList() {
 QString RunData::getSystem() {
     return this->system;
 }
+
+
+/* Saves the context against the key
+ * \param key: the value for the key
+ * \return the value of the key as a QVariant
+ */
+bool RunData::saveContext(const QString &key, QVariant value) {
+     QSettings settings("HallamLab", "MetaPathways");
+     settings.setValue(key, value);
+     return true;
+}
+
+/*
+ * Checks if the Qsettings has a context by the name of the key
+ * \param key : key for the value
+ * \return true
+ */
+bool RunData::hasContext(const QString &key) {
+     QSettings settings("HallamLab", "MetaPathways");
+     if( settings.value(key) == QVariant() ) return false;
+     return true;
+}
+
+/* Gets the context against the key
+ * \param key: the value for the key
+ * \return the value of the key as a QVariant
+ */
+QVariant RunData::getContext(const QString &key) {
+     QSettings settings("HallamLab", "MetaPathways");
+     return settings.value(key);
+}

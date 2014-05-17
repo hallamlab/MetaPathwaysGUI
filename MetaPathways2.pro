@@ -130,7 +130,8 @@ HEADERS  += \
     caching/memorymanager.h \
     dataviews/statusview.h\
     datamodel/treeitem.h\
-    datamodel/treemodel.h
+    datamodel/treemodel.h \
+    constants.h
 
 
 

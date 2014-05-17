@@ -1025,6 +1025,9 @@
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_calculationSKIP">
     <property name="enabled">
@@ -1040,6 +1043,12 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_calculationREDO">
@@ -1092,6 +1101,9 @@
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_imagemakerSKIP">
     <property name="enabled">
@@ -1107,6 +1119,12 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QRadioButton" name="mltreemap_imagemakerREDO">

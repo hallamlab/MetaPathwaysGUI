@@ -77,9 +77,8 @@ ResultWindow::ResultWindow(QWidget *parent) :
 }
 
 void ResultWindow::_loadResults() {
-
     if( this->rundata->getParams()["fileInput"].size()==0 || this->rundata->getParams()["folderOutput"].size()==0) {
-        QMessageBox::warning(this, "Input/Output Folder Missing", "Input or Output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
+        QMessageBox::warning(this, "Input/Output Folder Missing", "Input or output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
         return;
     }
 

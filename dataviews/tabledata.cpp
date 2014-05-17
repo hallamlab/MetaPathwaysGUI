@@ -494,10 +494,9 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
 
-        QProgressBar progressBar;
 
-        progressBar.setRange(0, this->largeTable->tableData.size());
-        progressBar.show();
+        ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
+
 
         unsigned int interval = this->largeTable->tableData.size()/100;
 
@@ -511,14 +510,18 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
 
             QString name, resultStr, shortname;
             QHash<QString, bool> alreadyWritten;
+          //  qDebug() << "Size to export " << this->largeTable->tableData.size();
             for(int i =0; i < this->largeTable->tableData.size();  i++) {
-               if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
-               name = this->largeTable->tableData[i]->strVar[ this->largeTable->index[col]];
+             //  if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
+             //  qDebug() << "col " << col << " strVar " <<  this->largeTable->index[col];
+              // qDebug() <<  "strVars " << this->largeTable->tableData[i]->strVar[0];
+               name = this->largeTable->tableData[i]->strVar[this->largeTable->index[col]];
                if(type==NUCFASTA)
                   shortname = Utilities::getShortContigId(name);
                if(type==NUCFNA || type==AMINOFAA)
                   shortname = Utilities::getShortORFId(name);
 
+             //  qDebug() << "short name " << shortname;
                if(alreadyWritten.contains(shortname) ) continue;
                alreadyWritten[shortname] = true;
                resultStr = fileIndex->getDataToDisplay(shortname);
@@ -526,7 +529,7 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
             }
         }
 
-        progressBar.hide();
+        progressbar.hide();
         outFile.close();
     }
     return true;

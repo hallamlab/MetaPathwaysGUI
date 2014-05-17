@@ -23,9 +23,13 @@ void ExportBox::createWidget() {
      resize(480, 200);
      this->setAttribute(Qt::WA_DeleteOnClose, true);
      connect(exportButton, SIGNAL(clicked()), this, SLOT(saveAs()) );
+     connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelWindow()) );
 
  }
 
+bool ExportBox::cancelWindow() {
+    this->close();
+}
 
 bool compareColumns(const EXPORT_SELECT a, const EXPORT_SELECT b) {
     //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
@@ -184,22 +188,7 @@ typedef struct _EXPORT_FILES_INFO {
 
      if (fileName.isEmpty())
          return false;
-/*
-     QList<QRegExp> invalidSuffixes;
-     invalidSuffixes << QRegExp("[.]csv$") << QRegExp("[.]txt$") << QRegExp("[.]fasta$")\
-                     << QRegExp("[.]faa$") << QRegExp("[.]fna$");
 
-
-
-
-     foreach( QRegExp reg, invalidSuffixes) {
-        if( fileName.indexOf(reg) >= 0  ) {
-            QMessageBox msg;
-            msg.warning(0,"Invalid file name to export !", "File/Folder name should not end in  .txt, .csv, .faa, .fna and .fasta ", QMessageBox::Ok);
-            return false;
-        }
-     }
-*/
      QStringList selectedHeaders = this->getCheckedHeaders();
      if( selectedHeaders.size() ==0 ) {
          selectedHeaders = this->getAllHeaders();
@@ -226,19 +215,20 @@ typedef struct _EXPORT_FILES_INFO {
      filesInfo.suffixes << ".fasta" << ".fna" << ".faa";
      filesInfo.resources << NUCFASTA << NUCFNA << AMINOFAA;
 
-     if( this->td->isMultiSampleMode() ) {
+   //  if( this->td->isMultiSampleMode() ) {
          QDir dir(fileName);
-         if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
          foreach( QString sampleName, this->td->getSampleNames())
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {
+                     if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
                      exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
 //                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
                      this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
                      //waitScreen->hide();
                  }
              }
-     }else {
+
+    /* }else {
          QDir dir(fileName);
          if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
          foreach( QString sampleName, this->td->getSampleNames())
@@ -251,7 +241,9 @@ typedef struct _EXPORT_FILES_INFO {
 
              }
          }
-     }
+
+
+     } */
 
 
      /*

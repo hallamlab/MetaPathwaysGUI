@@ -126,7 +126,8 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
         }
     }
 
-  //  qDebug() << showHierarchy << " " << currDepth << " " << maxDepth;
+   // qDebug() << r->name << " " << currDepth << " " << maxDepth;
+
     if( currDepth != 0 &&( (!showHierarchy && currDepth == maxDepth)  || (showHierarchy && currDepth <= maxDepth)) ) {
        data.append(r);
     }
@@ -182,7 +183,8 @@ QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, bool sh
    QList<ROWDATA *> data;
    this->connectors = connectors;
    HNODE *node = this->getHNODE(category);
+   qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
    if(node!=0)
-      this->countTree(node, maxDepth, showHierarchy, -1, data);
+      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data);
    return data;
 }
