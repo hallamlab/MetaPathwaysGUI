@@ -10,8 +10,8 @@
 #include <QTableView>
 #include <QProgressDialog>
 
-#include "rundata.h"
-#include "types.h"
+#include "helper/rundata.h"
+#include "helper/types.h"
 #include "ProgressDialog.h"
 #include "resultpage.h"
 #include "popupviews/displayinfo.h"

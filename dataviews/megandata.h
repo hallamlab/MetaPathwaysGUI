@@ -9,10 +9,10 @@
 #include <QHash>
 #include <QGraphicsWidget>
 #include <QEvent>
-#include "genebrowser/graphicsitemscollection.h"
-#include "types.h"
-
 #include <QGraphicsView>
+
+#include "genebrowser/graphicsitemscollection.h"
+#include "helper/types.h"
 
 
 typedef struct _TREENODE  TREENODE;

@@ -29,7 +29,7 @@ typedef struct _HNODE {
     short int depth;
 } HNODE;
 
-typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, TAXON}  ATTRTYPE;
+typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, TAXON, RPKM}  ATTRTYPE;
 
 typedef struct _ORF {
     QHash<ATTRTYPE, ATTRIBUTE*> attributes;
@@ -37,6 +37,7 @@ typedef struct _ORF {
     unsigned int start, end, length;
     QString name;
     bool strand;
+    float rpkm;
 
 
     ~_ORF() {

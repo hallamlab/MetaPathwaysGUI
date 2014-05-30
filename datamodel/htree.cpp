@@ -8,8 +8,6 @@ HTree::HTree()
 
 void HTree::loadFromFile(QString fileName) {
 
-
-
 }
 
 short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
@@ -88,16 +86,18 @@ HNODE *HTree::getHNODE(QString name) {
         return 0;
 }
 
-/* This function travels through the functional  hierarchies of several
+/** This function travels through the functional  hierarchies of several
  * samples simultaneously
  \param hnode this is the root node of the HTree
  \param maxDepth maximum depth of the the current HTree
  \param showHierarchy sets to show hierarcy or not
  \param currDepth a variable to keep track of the recursive depth
  \param data the ROWDATA list to show on the table
+ \param showRPKM shows/hides RPKM values instead of count
+
  \return vcount it is a vector of counts, one per sample
 */
-QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
+QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, bool showRPKM) {
     QVector<unsigned int> vcount;
     QVector<unsigned int> tempcount;
 
@@ -119,7 +119,10 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
     //    qDebug() << "Bottom " << hnode->attribute->name;
         for(unsigned int j=0; j < this->connectors.size(); j++) {
            if( this->connectors[j]->connected.contains(hnode->attribute)) {
-               vcount[j] = this->connectors[j]->connected[hnode->attribute].size();
+               if(showRPKM)
+                 vcount[j] = this->connectors[j]->getRPKMForAttribute(hnode->attribute);
+               else
+                 vcount[j] = this->connectors[j]->connected[hnode->attribute].size();
            }
            else
                vcount[j] = 0;
@@ -133,7 +136,7 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
     }
 
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
-        tempcount = this->countTree(*it, maxDepth, showHierarchy, currDepth, data);
+        tempcount = this->countTree(*it, maxDepth, showHierarchy, currDepth, data, showRPKM);
         for(unsigned int j=0; j < this->connectors.size(); j++) vcount[j] += tempcount[j];
     }
     r->counts= vcount;
@@ -141,10 +144,18 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
     return vcount;
 }
 
-QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors) {
+/** function to get the list of rowdata at a certain depth of the HTree
+ *\param maxDepth, the maximum depth to collect the categories
+ *\param showHierarchy, a bool to show/hide the hierarchy
+ *\param connectors, the list of conneectors for various samples
+ *\param showRPKM, a bool to show/hide the RPKM or counts to show
+ *
+ *\return the list of ROWDATA to show in the QTableWidget
+ **/
+QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors, bool showRPKM) {
    QList<ROWDATA *> data;
    this->connectors = connectors;
-   this->countTree(this->root, maxDepth, showHierarchy, -1, data);
+   this->countTree(this->root, maxDepth, showHierarchy, -1, data, showRPKM);
    return data;
 }
 
@@ -179,12 +190,21 @@ void HTree::copyDataToSubConnector(HNODE *hnode,  Connector *targetConnector, HT
 
 }
 
-QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors) {
+/** This function to get the data vector for the count/RPKM values for orfs in the category
+ *\param category, functional category
+ *\param maxDepth, the maximum depth of the functional category
+ *\param showHierarchy, a bool that hides/shows the hierachy
+ *\param connectors, the connectors that connects the ORFs to the different functional category
+ *\param showRPKM, shows/hides the RPKM values instead of the counts
+
+ *\return a list of ROWDATA that can be used to fill the QWidgetTable with counts/RPKM
+ **/
+QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors, bool showRPKM) {
    QList<ROWDATA *> data;
    this->connectors = connectors;
    HNODE *node = this->getHNODE(category);
-   qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
+  // qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
    if(node!=0)
-      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data);
+      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, showRPKM);
    return data;
 }

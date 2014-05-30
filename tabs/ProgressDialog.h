@@ -2,9 +2,9 @@
 #define ProgressDialog_H
 
 #include "qpushbutton.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 #include "resultpage.h"
-#include "progressdisplaydata.h"
+#include "helper/progressdisplaydata.h"
 #include "dataviews/statusview.h"
 
 #include <QTimer>

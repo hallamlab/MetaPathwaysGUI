@@ -113,7 +113,7 @@ QStringList ExportBox::getAllHeaders() {
      pvbox->addWidget(groupBox);
 
      if( this->td->isMultiSampleMode()) {
-         qDebug() << "multisample";
+        // qDebug() << "multisample";
          QGroupBox *sampleGroupBox = new QGroupBox(tr("Select Samples (to export sequences)"));
          sampleGroupBox->setFlat(true);
          QGridLayout *sampleGrid = new QGridLayout;

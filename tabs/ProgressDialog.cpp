@@ -1,8 +1,6 @@
-#include "ProgressDialog.h"
+
 #include "ui_ProgressDialog.h"
-#include "utilities.h"
-#include "rundata.h"
-#include "tabs/resultwindow.h"
+
 #include <QProcess>
 #include <QPushButton>
 #include <QDebug>
@@ -11,7 +9,12 @@
 #include <QMovie>
 #include <QTextStream>
 #include <QDir>
-#include "types.h"
+
+#include "helper/types.h"
+#include "helper/utilities.h"
+#include "helper/rundata.h"
+#include "tabs/resultwindow.h"
+#include "tabs/ProgressDialog.h"
 
 
 /*

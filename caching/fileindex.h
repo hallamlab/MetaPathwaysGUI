@@ -1,7 +1,7 @@
 #ifndef FILEINDEX_H
 #define FILEINDEX_H
-#include "types.h"
-#include "utilities.h"
+#include "helper/types.h"
+#include "helper/utilities.h"
 
 #include <QFile>
 #include <QTextStream>

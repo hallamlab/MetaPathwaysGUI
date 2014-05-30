@@ -1,7 +1,8 @@
 #ifndef __FILEINDEXMANAGER_H
 #define __FILEINDEXMANAGER_H
-#include "fileindex.h"
-#include "types.h"
+#include "helper/types.h"
+#include "caching/fileindex.h"
+
 
 class FileIndexManager
 {

@@ -1,8 +1,6 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
-#include "datamodel/datamodeltypes.h"
-#include "datamodel/htree.h"
-#include "datamodel/connector.h"
+
 #include <QStack>
 #include <QRegExp>
 #include <QFile>
@@ -10,7 +8,11 @@
 #include <QDebug>
 #include <QSettings>
 #include <QStringList>
-#include "rundata.h"
+
+#include "helper/rundata.h"
+#include "datamodel/datamodeltypes.h"
+#include "datamodel/htree.h"
+#include "datamodel/connector.h"
 
 class DataManager
 {
@@ -39,6 +41,7 @@ public:
     void createORFs(QString sampleName, QString fileName);
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
+    void addRPKMToORFs(QString sampleName, QString fileName);
 
     ORF* _createAnORF(QStringList &attributes);
     void destroyORFs(QString sampleName);

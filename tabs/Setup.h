@@ -10,8 +10,8 @@
 #include <QString>
 #include <QFileDialog>
 #include <QSettings>
-#include "rundata.h"
-#include "types.h"
+#include "helper/rundata.h"
+#include "helper/types.h"
 
 namespace Ui {
 class Setup;

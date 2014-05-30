@@ -7,9 +7,10 @@
 #include <QLabel>
 #include <QList>
 #include <QDialogButtonBox>
+
 #include "tabs/resultwindow.h"
 #include "tabs/RunConfig.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 
 
 class ResultWindow;

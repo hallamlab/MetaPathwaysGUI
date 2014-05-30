@@ -10,7 +10,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QChar>
-#include "types.h"
+
+#include "helper/types.h"
 
 
 typedef struct row{

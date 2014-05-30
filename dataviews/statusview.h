@@ -14,7 +14,7 @@
 #include <QList>
 
 #include "datamodel/samplercmanager.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 
 class StatusView : public QObject
 {

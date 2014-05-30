@@ -11,7 +11,7 @@
 #include "popupviews/displayinfo.h"
 #include "genebrowser/genomeview.h"
 #include "caching/tablemanager.h"
-#include "utilities.h"
+#include "helper/utilities.h"
 #include "datamodel/samplercmanager.h"
 
 #include <QStringList>

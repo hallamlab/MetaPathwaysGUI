@@ -7,11 +7,12 @@
 #include <QStackedWidget>
 #include <QPushButton>
 #include <QToolButton>
+
 #include "ec2grid.h"
 #include "gridchoice.h"
 #include "grid.h"
 #include "nonec2.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 
 namespace Ui {
 class GridSetup;

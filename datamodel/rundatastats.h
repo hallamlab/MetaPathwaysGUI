@@ -11,8 +11,9 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QPair>
-#include "rundata.h"
-#include "samplercmanager.h"
+
+#include "helper/rundata.h"
+#include "datamodel/samplercmanager.h"
 
 
 class RunDataStats : public QAbstractTableModel

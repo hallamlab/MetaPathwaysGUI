@@ -1,7 +1,7 @@
 #ifndef SAMPLERESOURCEMANAGER_H
 #define SAMPLERESOURCEMANAGER_H
 #include <QString>
-#include "types.h"
+#include "helper/types.h"
 #include "caching/fileindex.h"
 #include "caching/fileindexmanager.h"
 #include <QDir>

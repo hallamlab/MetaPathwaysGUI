@@ -18,6 +18,7 @@ HTableData::HTableData(QWidget *parent) :
     subCategoryName = this->findChild<QLabel *>("subCategoryName");
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
+    showRPKM = this->findChild<QCheckBox *>("showRPKM");
 
 
 #ifdef SECTION
@@ -61,6 +62,7 @@ HTableData::HTableData(QWidget *parent) :
 
     connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
     connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+    connect(showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
 
 
     connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
@@ -200,10 +202,10 @@ void HTableData::showTableData(bool hideZeroRows) {
 void HTableData::showHierarchyOrZeroRowToggleChanged() {
     if(this->subWindow) {
         this->showSelectedTableData(this->category, (this->hideZeroRows->checkState()==Qt::Checked));
-        qDebug() << "Show seleced Table Data";
+       // qDebug() << "Show seleced Table Data";
     }
     else {
-        qDebug() << "show Table Data";
+       // qDebug() << "show Table Data";
         this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
     }
 }
@@ -213,10 +215,10 @@ void HTableData::showHierarchyChanged(int state) {
     if(this->subWindow) {
         this->showSelectedTableData(this->category);
 //    this->showTableData();
-        qDebug() << "Show seleced Table Data";
+       // qDebug() << "Show seleced Table Data";
     }
     else {
-        qDebug() << "show Table Data";
+       // qDebug() << "show Table Data";
         this->showTableData();
     }
 }
@@ -236,15 +238,17 @@ void HTableData::hideZeroRowsChanged(int state) {
 }
 
 
-/* This function will get the data row to display in the funcational table
+/** This function will get the data row to display in the funcational table
  \param  state is to hide or unhide zero rows
  \param hideZeroRows   if this bool is true then the zero rows are not included
+ \param showRPKM, bool to show/hide RPKM values
+
  */
 
 void HTableData::fillData(bool state, bool hideZeroRows) {
      QList<ROWDATA *> data;
 
-     data =  this->htree->getRows(this->showDepth->value(), state, this->connectors);
+     data =  this->htree->getRows(this->showDepth->value(), state, this->connectors, (this->showRPKM->checkState()==Qt::Checked) ) ;
      QList<ROWDATA *> newdata;
 
      if(hideZeroRows) {
@@ -260,8 +264,7 @@ void HTableData::fillData(bool state, bool hideZeroRows) {
 }
 
 unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
-
-     qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
+    // qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
      return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
 }
 
@@ -273,10 +276,19 @@ bool HTableData::isNonZero(ROWDATA *r) {
     return false;
 }
 
+/** this function shows data for a functional category
+ *\param categoryName, the functional to show the count/rpkm values for
+ *\param maxDepth, the maximum depth of the corresponding functional category
+ *\param showHierarchy, a boolean to hide/show the hiearchy
+ *\param hideZeroRows, a bool to hide/show the rows with zero values
+ *
+ *\return the size of the data selected
+ **/
+
 unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth, bool showHierarchy, bool hideZeroRows) {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(categoryName, maxDepth, showHierarchy, this->connectors);
-     qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
+     data =  this->htree->getRows(categoryName, maxDepth, showHierarchy, this->connectors, this->showRPKM->checkState()==Qt::Checked);
+   //  qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
      QList<ROWDATA *> newdata;
      if(hideZeroRows) {
         foreach(ROWDATA *r, data) {
@@ -291,6 +303,11 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
      }
 }
 
+/** This function populates the QTableWidget wit the selected data
+ *\param data is the rows of data to be displayed
+ *\param headers headers for the table
+ *\param hierachyEnabled, a boolean used to hide/show the hierarchy of the functional group
+ **/
 void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, bool hierarchyEnabled){
 
     tableWidget->clear();
@@ -301,6 +318,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     tableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 
+
     if( hierarchyEnabled)
        tableWidget->setSortingEnabled(false);
     else
@@ -309,7 +327,6 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
     QTableWidgetItem *item;
     int k = 0;
-
 
     foreach( ROWDATA * datum,  data) {
         if(hierarchyEnabled)
@@ -351,12 +368,9 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->level = this->level +1;
     htable->types = this->types;
 
-
     htable->setWindowTitle(htable->category);
     HTree *htree = datamanager->getHTree(this->id.attrType);
     HNODE *hnode = htree->getHNODE(htable->category);
-
-
 
     htable->subCategoryName->setVisible(true);
     if(hnode != 0)
@@ -382,7 +396,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
       //  qDebug() << " submodCon size " << modConnector->getNumOfORFs() << " atr sub" << this->id.attrType ;
     }
 
-
     QList<ORF *>orfList;
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
         if( this->id.attrType== this->htableIdentities[i].attrType) continue;
@@ -391,7 +404,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
          //  qDebug() << " get modCon size " << modConnector->getNumOfORFs() << " atr " << this->htableIdentities[i].attrType ;
-
         }
     }
 
@@ -399,18 +411,17 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
     htable->switchCategory(this->id.attrType);
 
-
-    // kishori's changes
+    /* kishori's changes
 //    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
 //    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
 //    toolbarManager->addTab(htab,  htable);
 //    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
 //    wStacker->stackWidget(htable);
-  //  mdiAreaWidget->getMdiArea()->cascadeSubWindows();
+  //  mdiAreaWidget->getMdiArea()->cascadeSubWindows(); */
 
 }
 
-/* this function is activated when the user switched the functional
+/** this function is activated when the user switched the functional
  *category--KEGG, COG, MetaCyc, SEED are functional categories--
  *\param index : decides which of the categories is select from the drop down list at the
  *               top of the Htable
@@ -501,11 +512,11 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
 }
 
 
-/* Saves the sequeces to a local file
+/** Saves the sequeces to a local file
  * \param sampleName : name of the sample
  * \param fileName : name of the file/folder to save it in, creates a new folder
  * \param type: type of sequences to export to the file
- */
+ **/
 bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
     DataManager *datamanager = DataManager::getDataManager();

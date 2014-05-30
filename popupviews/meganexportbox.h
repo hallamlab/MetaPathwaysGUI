@@ -17,7 +17,7 @@
 
 #include "datamodel/samplercmanager.h"
 #include "displaywidgets/progressview.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 
 
 

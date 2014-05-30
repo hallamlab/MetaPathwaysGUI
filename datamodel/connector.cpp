@@ -53,6 +53,22 @@ QList<ORF *> Connector::getORFList(QList<ATTRIBUTE *> attributes) {
     return list;
 }
 
+/** sums the RPKM of the ORFs in the attribute
+ *\param attribute, the attribute to the compute the RPKMs
+ *
+ *\return the float value of the sum of the RPKM values for the RPKM value
+**/
+
+float Connector::getRPKMForAttribute(ATTRIBUTE *attribute) {
+
+    float rpkm = 0;
+    if(this->connected.contains(attribute)) {
+        foreach(ORF *orf, this->connected[attribute])
+           rpkm += orf->rpkm;
+    }
+    return rpkm;
+}
+
 
 
 QList<ORF *> Connector::getORFList() {

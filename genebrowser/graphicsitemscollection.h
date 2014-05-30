@@ -9,12 +9,13 @@
 #include <QGraphicsLineItem>
 #include <QList>
 #include <QGraphicsEllipseItem>
-#include "types.h"
 #include <QHash>
+
+
 #include "genebrowser/genebrowser.h"
 #include "dataviews/megandata.h"
-#include "utilities.h"
-
+#include "helper/utilities.h"
+#include "helper/types.h"
 
 
 class GraphicsNotchedLine: public QGraphicsItemGroup{

@@ -8,11 +8,12 @@
 #include <iostream>
 #include <QSettings>
 #include <QStylePainter>
+
 #include "tabs/Setup.h"
 #include "tabs/resultwindow.h"
 #include "tabs/RunConfig.h"
 #include "tabs/SettingsTab.h"
-#include "utilities.h"
+#include "helper/utilities.h"
 #include "tabs/ProgressDialog.h"
 #include "tabs/welcome.h"
 #include "grid/gridprogress.h"

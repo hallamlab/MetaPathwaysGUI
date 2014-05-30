@@ -401,11 +401,9 @@ void DataManager::destroyORFs(QString sampleName) {
 
 }
 
-
 void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
     QFile inputFile(fileName);
-
     ORF *temporf;
     QString name, alias;
     if (inputFile.open(QIODevice::ReadOnly)) {
@@ -413,6 +411,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
         foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
             orfHash[orf->name] = orf;
         }
+
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
@@ -448,8 +447,42 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
         }
         inputFile.close();
     }
-
     this->attributes[METACYC].clear();
+}
+
+/** This function added the RPKM values to the orfs in the sample
+ *\param sampleName, name of the sample
+ *\param fileName, name of the file name for the RPKM values
+ *
+ **/
+void DataManager::addRPKMToORFs(QString sampleName, QString fileName) {
+
+    QFile inputFile(fileName);
+    ORF *temporf;
+    QString orfName;
+
+    bool ok;
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QHash<QString, ORF *> orfHash;
+        foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
+            orfHash[orf->name] = orf;
+        }
+
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
+
+            if(line.size() < 2) continue;
+            orfName = Utilities::getShortORFId(line[0]);
+
+            if( !orfHash.contains(orfName))  continue;
+            temporf = orfHash[orfName];
+
+            line[1].toFloat(&ok);
+            if (ok) temporf->rpkm = line[1].toFloat();
+        }
+        inputFile.close();
+    }
 }
 
 
@@ -481,9 +514,13 @@ QList<ORF *> * DataManager::getORFList(QString sampleName) {
         return this->ORFList->value(sampleName);
     }
 
-    qDebug() << "did not find orf list " << this->ORFList->contains(sampleName) << sampleName;
     return 0;
 }
+
+/** deletes the connector for a sample
+ *\param sampleName, sample name whose connectors is deleted
+ *
+**/
 
 void DataManager::deleteConnector(QString sampleName) {
     foreach(ATTRTYPE attrType, this->connectors[sampleName].keys()) {

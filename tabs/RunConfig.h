@@ -10,8 +10,8 @@
 #include <QComboBox>
 #include <QTableWidget>
 #include "grid/gridsetup.h"
-#include "types.h"
-#include "rundata.h"
+#include "helper/types.h"
+#include "helper/rundata.h"
 #include "popupviews/selectsamples.h"
 
 class ParentWidget;

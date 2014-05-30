@@ -16,7 +16,7 @@
 #include "dataviews/megandata.h"
 #include "genebrowser/graphicsitemscollection.h"
 #include "datamodel/samplercmanager.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 #include "popupviews/meganexportbox.h"
 #include "displaywidgets/progressview.h"
 namespace Ui {

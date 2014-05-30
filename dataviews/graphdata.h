@@ -5,7 +5,8 @@
 #include <QLabel>
 #include <QVector>
 #include <QPushButton>
-#include "qcustomplot.h"
+
+#include "helper/qcustomplot.h"
 #include "caching/tablemanager.h"
 
 namespace Ui {

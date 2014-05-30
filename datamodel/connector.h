@@ -22,6 +22,8 @@ public:
     unsigned int getNumOfORFs(ATTRIBUTE *attribute);
     unsigned int getNumOfORFs();
     unsigned int getNumOfORFs(QList<ATTRIBUTE *> attributes);
+    float  getRPKMForAttribute(ATTRIBUTE *attribute);
+
     unsigned int getNumAttributes();
 private:
     ATTRTYPE attrType;

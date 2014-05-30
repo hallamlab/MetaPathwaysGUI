@@ -6,14 +6,15 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <QString>
-#include "dataviews/tabledata.h"
 #include <QList>
-#include "datamodel/htabledata.h"
-#include "popupviews/exportsource.h"
 #include <QRadioButton>
 #include <QFileDialog>
-#include "utilities.h"
-#include "types.h"
+
+#include "dataviews/tabledata.h"
+#include "datamodel/htabledata.h"
+#include "popupviews/exportsource.h"
+#include "helper/utilities.h"
+#include "helper/types.h"
 
 extern const QString SELECT_SAMPLE_TAG;
 

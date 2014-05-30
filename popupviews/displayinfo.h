@@ -6,13 +6,14 @@
 #include <QDialogButtonBox>
 #include <QDebug>
 #include <QTableWidgetItem>
-#include "types.h"
-#include "caching/fileindex.h"
 #include <QHash>
 #include <QPushButton>
 #include <QPlainTextEdit>
+
+#include "helper/types.h"
+#include "caching/fileindex.h"
 #include "genebrowser/genomeview.h"
-#include "utilities.h"
+#include "helper/utilities.h"
 
 namespace Ui {
 class DisplayInfo;

@@ -1,8 +1,6 @@
 #ifndef GENEBROWSER_H
 #define GENEBROWSER_H
 #include <QGraphicsView>
-#include "types.h"
-
 #include <QGraphicsItemGroup>
 #include <QRectF>
 #include <QPointF>
@@ -12,6 +10,8 @@
 #include <QObject>
 #include "genebrowser/graphicsitemscollection.h"
 #include <math.h>
+
+#include "helper/types.h"
 
 class GraphicsNotchedLine;
 class GraphicsGeneItems;

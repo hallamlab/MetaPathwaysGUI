@@ -2,10 +2,7 @@
 #define HTABLEDATA_H
 #include <QList>
 #include <QDialog>
-#include "types.h"
 #include <QTableWidget>
-#include "datamodel/connector.h"
-#include "datamodel/htree.h"
 #include <QDebug>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -15,7 +12,8 @@
 #include <QPalette>
 #include <QTableWidgetItem>
 
-
+#include "datamodel/connector.h"
+#include "datamodel/htree.h"
 #include "datamodel/datamanager.h"
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/toolbarwidgets.h"
@@ -24,6 +22,7 @@
 #include "popupviews/exportbox.h"
 #include "popupviews/searchwidget.h"
 #include "displaywidgets/progressview.h"
+#include "helper/types.h"
 
 
 typedef struct _HTABLE_IDENTITY {
@@ -128,6 +127,7 @@ private:
     QCheckBox *viewToggleBox;
     QComboBox *categorySelector;
     QCheckBox *hideZeroRows;
+    QCheckBox *showRPKM;
 
     bool multiSampleMode;
     QStringList headers;

@@ -1,11 +1,14 @@
-#include "tabledata.h"
-#include "ui_tabledata.h"
-#include "utilities.h"
+
 #include <QScrollBar>
 #include <QtCore>
 #include <QFile>
 #include <QRegExp>
 #include "QDebug"
+
+
+#include "dataviews/tabledata.h"
+#include "ui_tabledata.h"
+#include "helper/utilities.h"
 
 TableData::TableData(  QWidget *parent) :
     QWidget(parent),

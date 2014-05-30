@@ -8,7 +8,8 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QTimer>
-#include "rundata.h"
+
+#include "helper/rundata.h"
 
 namespace Ui {
 class ResultPage;

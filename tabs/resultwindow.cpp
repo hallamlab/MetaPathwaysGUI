@@ -206,16 +206,10 @@ void ResultWindow::updateFileNames(){
 
 
 void ResultWindow::sampleChanged(QString sampleName){
-
-
     QRegExp select_sample_regexp = QRegExp("Select sample");
-
     if( select_sample_regexp.indexIn(sampleName) != -1 ) return;
 
     this->rundata->setCurrentSample(sampleName);
-
-
-
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
 
@@ -229,7 +223,6 @@ void ResultWindow::sampleChanged(QString sampleName){
         this->indexSamples(true, true);
         reindex->setChecked(false);
     }
-
 
     ProgressView progressbar("Please wait! Loading sample " + sampleName + "...", 0, 0, this);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
@@ -249,10 +242,9 @@ void ResultWindow::sampleChanged(QString sampleName){
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
-
+    datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFRPKM) );
 
     QStringList selectedFileNames;
-
     selectedFileNames.append(sampleName);
 
     RunDataStats *rundatamodel =  CreateWidgets::getRunDataStats();
@@ -306,7 +298,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
 
-
     types.clear();
     types << STRING << STRING << INT;
     headers.clear();
@@ -322,7 +313,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
     resultTabs->addTab(m, "TAXONOMIC");
 #endif
-
 
     TableData *func_tax_table;
     //FUNCTION AND TAXONOMIC TABLE
@@ -343,11 +333,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     func_tax_table->setPopupListener(p);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
 
-
     progressbar.hide();
-
-
-
 
  //   if (nucStats.exists()) resultTabs->addTab(new TableData(true, true, nucFile, types), "CONT LEN TAB");
 
@@ -432,6 +418,7 @@ void ResultWindow::switchToComparativeMode() {
 
     QString orfTableName;
     QString orfMetaCycTableName;
+    QString orfRPKMFileName;
 
   //  qDebug() << "comparative mode";
 
@@ -471,6 +458,10 @@ void ResultWindow::switchToComparativeMode() {
         datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
+
+        orfRPKMFileName = samplercmgr->getFilePath(files[i], ORFRPKM);
+        datamanager->addRPKMToORFs(files[i], orfRPKMFileName);
+
         progressbar->updateprogress(i+1);
         qApp->processEvents();
         progressbar->update();

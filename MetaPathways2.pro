@@ -22,9 +22,9 @@ SOURCES += main.cpp\
         tabs/SettingsTab.cpp \
         tabs/RunConfig.cpp \
         tabs/ProgressDialog.cpp \
-        utilities.cpp \
-    rundata.cpp \
-    qcustomplot.cpp \
+    helper/utilities.cpp \
+    helper/rundata.cpp \
+    helper/qcustomplot.cpp \
     tabs/resultwindow.cpp \
     dataviews/tabledata.cpp \
     tabs/welcome.cpp \
@@ -65,13 +65,13 @@ SOURCES += main.cpp\
     displaywidgets/progressview.cpp \
     popupviews/meganexportbox.cpp \
     datamodel/rundatastats.cpp \
-    progressdisplaydata.cpp \
+    helper/progressdisplaydata.cpp \
     displaywidgets/createwidgets.cpp \
     caching/memorymanager.cpp \
     dataviews/statusview.cpp \
     datamodel/treeitem.cpp \
     datamodel/treemodel.cpp \
-    types.cpp
+    helper/types.cpp
 
 
 
@@ -80,9 +80,9 @@ HEADERS  += \
             tabs/SettingsTab.h \
             tabs/RunConfig.h \
             tabs/ProgressDialog.h \
-            utilities.h \
-    rundata.h \
-    qcustomplot.h \
+    helper/utilities.h \
+    helper/rundata.h \
+    helper/qcustomplot.h \
     tabs/resultwindow.h \
     dataviews/tabledata.h \
     tabs/welcome.h \
@@ -101,7 +101,7 @@ HEADERS  += \
     popupviews/selectsamples.h \
     caching/fileindexmanager.h \
     caching/fileindex.h \
-    types.h \
+    helper/types.h \
     caching/tablemanager.h \
     genebrowser/graphicsrepresentation.h \
     genebrowser/graphicsitemscollection.h \
@@ -125,13 +125,13 @@ HEADERS  += \
     displaywidgets/progressview.h \
     popupviews/meganexportbox.h \
     datamodel/rundatastats.h \
-    progressdisplaydata.h \
+    helper/progressdisplaydata.h \
     displaywidgets/createwidgets.h \
     caching/memorymanager.h \
     dataviews/statusview.h\
     datamodel/treeitem.h\
     datamodel/treemodel.h \
-    constants.h
+    helper/constants.h
 
 
 
@@ -152,7 +152,6 @@ FORMS    += \
     popupviews/searchwidget.ui \
     popupviews/selectsamples.ui \
     popupviews/exportwidget.ui \
-    displayText.ui \
     popupviews/displayinfo.ui \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \

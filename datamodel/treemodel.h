@@ -46,8 +46,9 @@
 #include <QVariant>
 #include <QHash>
 #include <QStringList>
+
 #include "datamodel/samplercmanager.h"
-#include "rundata.h"
+#include "helper/rundata.h"
 
  class TreeItem;
 

@@ -1,6 +1,9 @@
-#include "Setup.h"
+
 #include "ui_Setup.h"
-#include "utilities.h"
+
+#include "helper/utilities.h"
+#include "tabs/Setup.h"
+
 
 /*
  * Setups connections for all the buttons and checking mechanisms.

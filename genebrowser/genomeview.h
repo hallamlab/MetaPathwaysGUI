@@ -5,7 +5,7 @@
 #include <QTableWidgetItem>
 #include <QObject>
 #include <QGraphicsObject>
-#include "types.h"
+#include "helper/types.h"
 
 
 class GeneBrowser;
