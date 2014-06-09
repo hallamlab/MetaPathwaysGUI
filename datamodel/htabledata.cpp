@@ -501,7 +501,7 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
                  else {
                       if(delimOn)  out << delim;
                       delimOn = true;
-                      out << this->tableWidget->item(i,j)->text();
+                      out << Utilities::prepareToPrint(this->tableWidget->item(i,j)->text(), delim);
                  }
              }
              out << "\n";

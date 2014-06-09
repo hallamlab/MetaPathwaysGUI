@@ -432,3 +432,15 @@ QString Utilities::getShortContigId(const QString &contigname) {
     }
     return shortContigname;
 }
+
+QString Utilities::prepareToPrint(QString str, QChar delim) {
+     QRegExp delimExp(delim);
+
+     QString newStr = str.trimmed();
+
+     int pos1 = delimExp.indexIn(newStr);
+     if( pos1 > -1 ) {
+         newStr = QString("\"") + newStr + QString("\"");
+     }
+     return newStr;
+ }

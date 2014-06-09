@@ -45,6 +45,7 @@ public:
     static QString insertCharacterAtIntervals(QString string, QChar c, int n);
     static QString getShortORFId(const QString &orfname);
     static QString getShortContigId(const QString &orfname);
+    static QString prepareToPrint(QString str, QChar delim);
 };
 
 #endif // UTILITIES_H

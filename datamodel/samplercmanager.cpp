@@ -65,7 +65,7 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
             path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_table.txt";
             break;
          case ORFMETACYC:
-            path =OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_metacyc_table.txt";
+            path =OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + sampleName.toLower() + ".metacyc.orf.annots.txt";
             break;
          case ORFRPKM:
             path =OUTPUTPATH + "/" + sampleName + "/results/rpkm/" + sampleName + ".orf_rpkm.txt";
