@@ -2,3 +2,5 @@
 .DS_STORE
 *.pro.user
 MetaPathways.app
+ui_*.h
+*.o
