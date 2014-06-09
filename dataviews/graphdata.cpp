@@ -1,6 +1,6 @@
-#include "graphdata.h"
-#include "ui_graphdata.h"
+#include "dataviews/graphdata.h"
 #include <QFileDialog>
+#include "ui_graphdata.h"
 #include <QDebug>
 
 
