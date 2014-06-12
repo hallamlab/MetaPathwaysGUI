@@ -23,7 +23,7 @@ public:
     QList<QStringList>* parseFile(const QString &file, const QChar &DELIM, bool HAS_COMMENT);
     bool setFile(QString fileName) ;
     void plotSomeGraph(QCustomPlot *graph, GRAPHDATA *gdata);
-    bool prepareInput();
+    bool prepareInput(const QString &xlab = "-", const QString &ylab = "-");
 
     QCustomPlot* graph;
     QPushButton* exportButton;

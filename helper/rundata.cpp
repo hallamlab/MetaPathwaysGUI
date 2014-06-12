@@ -155,7 +155,7 @@ void RunData::setupDefaultConfig(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
     QFileInfo configFile(path);
     if (!configFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_CONFIG;
-    else path = path + QDir::separator() + this->TEMPLATE_CONFIG;
+    else path = path + QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_CONFIG;
     this->setConfig(Utilities::parseFile(path,"CONFIG"));
 }
 
@@ -168,9 +168,10 @@ void RunData::setupDefaultParams(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
     QFileInfo paramFile(path);
     if (!paramFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
-    else path = path + QDir::separator() + this->TEMPLATE_PARAM;
+    else path = path + QDir::separator() +"config" + QDir::separator()  + this->TEMPLATE_PARAM;
 
     QHash<QString,QString> parsed = Utilities::parseFile(path,"PARAMS");
+
     this->setParams(parsed);
 }
 void RunData::setCurrentSample(QString currentSample) {
@@ -183,7 +184,7 @@ QString RunData::getCurrentSample() {
 
 
 bool RunData::checkParams(){
-    QFile paramFile( this->CONFIG["METAPATHWAYS_PATH"] + "/" + this->TEMPLATE_PARAM);
+    QFile paramFile( this->CONFIG["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_PARAM);
 
     if (paramFile.exists()) return true;
     else return false;
@@ -207,7 +208,7 @@ void RunData::setNumADB(unsigned int n){
 
 bool RunData::checkConfig(){
   //  qDebug() << " config file ";
-    QFile configFile(  this->CONFIG["METAPATHWAYS_PATH"] + "/" +this->TEMPLATE_CONFIG);
+    QFile configFile(  this->CONFIG["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator()  +this->TEMPLATE_CONFIG);
 
     if (configFile.exists()) return true;
     else return false;
@@ -232,20 +233,20 @@ bool RunData::validate(QString &warningMsg) {
     }
 
     file.setFile(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG));
-    QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + "/MetaPathways.py");
+    QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + QDir::separator() + "bin" + QDir::separator() + "MetaPathways.py");
 
     if( !file.exists() || !file1.exists() ) {
         warningMsg = warningMsg + " - MetaPathways.py is missing from your specified MetaPathways directory. Please verify it exists!\n";
         correct = false;
     }
 
-    QFileInfo configFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) + QDir::separator() + this->TEMPLATE_CONFIG);
+    QFileInfo configFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) +  QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_CONFIG);
     if( !configFile.exists() ){
         warningMsg = warningMsg + "- template_config.txt does not exist in your specified MetaPathways Directory!\n";
         correct = false;
     }
 
-    QFileInfo paramFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) + QDir::separator() + this->TEMPLATE_PARAM);
+    QFileInfo paramFile(this->getValueFromHash("METAPATHWAYS_PATH",_CONFIG) + QDir::separator() + "config" + QDir::separator() +  this->TEMPLATE_PARAM);
     if( !paramFile.exists() ){
         warningMsg = warningMsg + "- template_param.txt does not exist in your specified MetaPathways Directory!\n";
         correct = false;

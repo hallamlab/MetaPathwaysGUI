@@ -39,14 +39,20 @@ bool GraphData::setFile(QString fileName) {
     this->file = fileName;
 }
 
-bool GraphData::prepareInput() {
+bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
     TableManager *tableManager = TableManager::getTableManager();
 
+    qDebug() << file;
     GRAPHDATA *gdata = tableManager->getGraphData(file);
     if(gdata ==0 )  {
        this->setupFromFile(file);
        gdata = new GRAPHDATA();
+       gdata->xlab = xlab;
+       gdata->ylab = ylab;
+       gdata->xmin = 0;
+       gdata->ymin = 0;
        gdata->numBuckets = 500;
+
        this->computeParams(gdata);
        this->computeHistoGram(gdata);
        tableManager->setGraphData(file, gdata);
@@ -96,6 +102,11 @@ void GraphData::setupFromFile(const QString &file){
 
 
 }
+
+/**
+ * @brief GraphData::computeHistoGram this function computes the histogram
+ * @param gdata
+ */
 void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     QVector<double> z;
     for(unsigned int i =0; i < gdata->numBuckets; i++) {
@@ -112,9 +123,17 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
 
     gdata->y[0] = (y[0] + y[1])/2;
     for( j = 1; j < gdata->numBuckets -1; j++) {
-        gdata->y[j] = (z[j-1] + z[j] + z[j+1]);
+        gdata->y[j-1] = (z[j-1] + z[j] + z[j+1]);
     }
-    gdata->y[j] = (z[j-1] + z[j])/2;
+    gdata->y[j-1] = (z[j-1] + z[j])/2;
+
+    int i = 0;
+    while( i < gdata->numBuckets && gdata->x[0] < gdata->xmin) {
+        gdata->x.remove(0);
+        gdata->y.remove(0);
+       // if( gdata->x[0] < gdata->xmin) gdata->x[0] = gdata->xmin;
+    }
+
 
     double _ymax = 0;
     foreach(double v, gdata->y){
@@ -141,8 +160,9 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
     customPlot->graph()->setLineStyle(QCPGraph::lsLine);
     customPlot->graph()->setData(gdata->x, gdata->y);
     // give the axes some labels:
-    customPlot->xAxis->setLabel("x");
-    customPlot->yAxis->setLabel("y");
+    customPlot->xAxis->setLabel(gdata->xlab);
+    customPlot->yAxis->setLabel(gdata->ylab);
+
     // set axes ranges, so we see all data:
  //   qDebug() << "yaxis range " << customPlot->yAxis->range().maxRange << " xaxis range " << customPlot->xAxis->range().minRange << " - " << customPlot->xAxis->range().maxRange;
     customPlot->yAxis->setRange(0,gdata->ymax);

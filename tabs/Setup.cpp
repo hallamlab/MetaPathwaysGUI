@@ -145,7 +145,7 @@ void Setup::saveSetup(){
         // at this point, we check if there's a template_config file in the METAPATHWAYS_PATH
         // if there isn't we need to copy the default_template_config file as it
 
-        QString template_config = temp["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_CONFIG;
+        QString template_config = temp["METAPATHWAYS_PATH"] + QDir::separator() +"config" + QDir::separator() + RunData::TEMPLATE_CONFIG;
         QFile template_config_file(template_config);
         QFile default_template_config_file(":/text/" + RunData::DEFAULT_TEMPLATE_CONFIG);
         QFileInfo t_file(template_config);
@@ -160,12 +160,16 @@ void Setup::saveSetup(){
             }
         }else{
             // it doesn't exist, so copy it
+          //  qDebug() << "Copyintg " << template_config;
             default_template_config_file.copy(template_config);
         }
+        template_config_file.close();
+        default_template_config_file.close();
+
 
         // do the same for template_param
 
-        QString template_param = temp["METAPATHWAYS_PATH"] + QDir::separator() + RunData::TEMPLATE_PARAM;
+        QString template_param = temp["METAPATHWAYS_PATH"] + QDir::separator() +"config" + QDir::separator() + RunData::TEMPLATE_PARAM;
         QFile template_param_file(template_param);
         QFile default_template_param_file(":/text/" + RunData::DEFAULT_TEMPLATE_PARAM);
         QFileInfo p_file(template_param);
@@ -182,25 +186,27 @@ void Setup::saveSetup(){
             // it doesn't exist, so copy it
             default_template_param_file.copy(template_param);
         }
+        template_param_file.close();
+        default_template_config_file.close();
 
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "METAPATHWAYS_PATH", pathMetaPathwaysTxt->text(), false, false);
     }
     if (!pythonExecTxt->text().isEmpty()) {
         temp["PYTHON_EXECUTABLE"] = pythonExecTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
     }
     if (!perlExecTxt->text().isEmpty()) {
         temp["PERL_EXECUTABLE"] = perlExecTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
     }
     if (!dbDirectoryTxt->text().isEmpty()) {
         temp["REFDBS"] = dbDirectoryTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "REFDBS", dbDirectoryTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "REFDBS", dbDirectoryTxt->text(), false, false);
     }
 
     if( !pathologicTxt->text().isEmpty()) {
         temp["PATHOLOGIC_EXECUTABLE"] = pathologicTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
     }
     rundata->setConfig(temp); // update our run config's representation with our (possibly) newly created configs
     emit continueFromSetup(); // sends a signal back to the mainframe to perform checking with validateSetup()

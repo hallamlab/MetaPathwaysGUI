@@ -71,7 +71,8 @@ SOURCES += main.cpp\
     dataviews/statusview.cpp \
     datamodel/treeitem.cpp \
     datamodel/treemodel.cpp \
-    helper/types.cpp
+    helper/types.cpp \
+    tabs/simpletabgroups.cpp
 
 
 
@@ -131,7 +132,8 @@ HEADERS  += \
     dataviews/statusview.h\
     datamodel/treeitem.h\
     datamodel/treemodel.h \
-    helper/constants.h
+    helper/constants.h \
+    tabs/simpletabgroups.h
 
 
 

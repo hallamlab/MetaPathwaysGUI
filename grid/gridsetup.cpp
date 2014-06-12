@@ -21,7 +21,7 @@ GridSetup::GridSetup(QWidget *parent) :
     deleteGrid = this->findChild<QToolButton *>("deleteGrid");
     cancelButton = this->findChild<QPushButton *>("cancelButton");
     saveButton = this->findChild<QPushButton *>("saveButton");
-
+    this->setDefaultParamValues();
     RunData *rundata = RunData::getRunData();
     rundata->setupDefaultParams();
 
@@ -43,7 +43,6 @@ GridSetup::GridSetup(QWidget *parent) :
        it.next();
        initForm(it.key());
     }
-    qDebug() << "asdf";
 
     if (Grids->keys().count()>0) changeForm(Grids->keys().first());
 
@@ -52,6 +51,23 @@ GridSetup::GridSetup(QWidget *parent) :
     connect(deleteGrid, SIGNAL(clicked()), this, SLOT(deleteExistingGrid()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveAndClose()));
+
+
+}
+
+void GridSetup::setDefaultParamValues() {
+    this->defaultParamValues.insert("bit", "bit64");
+    this->defaultParamValues.insert("os","linux");
+    this->defaultParamValues.insert("max_parallel_jobs","20");
+    this->defaultParamValues.insert("batch_size","100");
+
+    this->allowedParams["user"] = true;
+    this->allowedParams["server"] = true;
+    this->allowedParams["bit"] = true;
+    this->allowedParams["sshKey"] = true;
+    this->allowedParams["os"] = true;
+    this->allowedParams["optional_string"] = true;
+
 }
 
 void GridSetup::addNewGrid(){
@@ -60,12 +76,12 @@ void GridSetup::addNewGrid(){
 }
 
 void GridSetup::newNonEC2Form(){
-    qDebug() << "new non-ec2 form";
-
-    QString name = QString("grid_engine%1").arg(gridSelection->count());
+    unsigned int i =0;
+    while( Grids->contains(QString("grid_engine%1").arg(i)) ) i++;
+    QString name = QString("grid_engine%1").arg(i);
 
     Grid *g = Grids->value(name);
-    if (!g){
+    if (g==0){
         g = new Grid();
         g->newGrid = true;
         g->deleted = false;
@@ -77,9 +93,12 @@ void GridSetup::newNonEC2Form(){
 }
 
 void GridSetup::newEC2Form(){
-    qDebug() << "new ec2 form";
 
-    QString name = QString("grid_engine%1").arg(gridSelection->count());
+    unsigned int i =0;
+    while( Grids->contains(QString("grid_engine%1").arg(i)) ) i++;
+
+
+    QString name = QString("grid_engine%1").arg(i);
 
     Grid *g = Grids->value(name);
     if (!g){
@@ -129,46 +148,114 @@ void GridSetup::getWidgetValues(const Grid &g){
 }
 
 void GridSetup::saveAndClose(){
-    QHashIterator<QString,Grid *> grids(*Grids);
+
     RunData *rundata = RunData::getRunData();
+    this->writeGridSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator() + RunData::TEMPLATE_PARAM);
 
-    while (grids.hasNext()){
-        //get next grid in hash
-        grids.next();
-
-        //grids.key() gives us the name of the grid
-        //grids.value()->values gives us the hash with the key being the setting, value
-
-        getWidgetValues(*grids.value());
-        //refresh the values stored for each grid, they may have changed
-
-        QHashIterator<QString,QString> gridValues(*grids.value()->values);
-
-        while (gridValues.hasNext()){
+       /* while (gridValues.hasNext()){
             gridValues.next();
-            qDebug() << grids.key() << grids.value()->deleted;
-
             if (grids.value()->deleted){
                 //if it is set to be scheduled, skip writing out the params
                 //need to implement deletion from file using utilities
                 qDebug() << "deleting grid" <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
             }else if(grids.value()->newGrid){
                 qDebug() << "new grid writing " <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
             }else{
                 qDebug() << "old grid writing" << grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
+                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator() + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
             }
         }
-    }
+        */
     rundata->setupDefaultParams();
+    this->close();
     // since we've added a new grid, need to update the hash
 }
 
 
+/*
+ * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
+ * pairing for settings. TYPE specifies if it is a config or param file, as the first will require all values
+ * to be wrapped in single quotations, and params do not.
+ */
+
+void GridSetup::writeGridSettingToFile(const QString &TEMPLATE_FILE){
+    QFile inputFile(TEMPLATE_FILE);
+    QFile newFile( TEMPLATE_FILE + "_new" );
+    bool prevLineNonEmpty = true;
+    QRegExp gridLine("^grid_");
+
+
+    if (inputFile.open(QIODevice::ReadOnly) && newFile.open(QIODevice::ReadWrite))
+    {
+       QTextStream in(&inputFile);
+       QTextStream out(&newFile);
+
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine();
+
+            if (gridLine.indexIn(line)==-1 ){
+                //if the line doesn't begin with a comment hash
+                if( !line.trimmed().isEmpty()  ||  prevLineNonEmpty == false) {
+                    out << line << "\n";
+                }
+                if(line.trimmed().isEmpty()) prevLineNonEmpty = true;
+                else prevLineNonEmpty = false;
+            }
+       }
+
+       QHashIterator<QString,  Grid *> grids(*Grids);
+
+       out << "\n";
+       while (grids.hasNext()){
+           out << "\n";
+           //get next grid in hash
+           grids.next();
+
+           //grids.key() gives us the name of the grid
+           //grids.value()->values gives us the hash with the key being the setting, value
+
+           getWidgetValues(*grids.value());
+           //refresh the values stored for each grid, they may have changed
+           QHashIterator<QString,QString> gridValues(*grids.value()->values);
+           while( gridValues.hasNext() ) {
+               gridValues.next();
+               out <<  grids.key() + ":" + gridValues.key() + " " +  gridValues.value() << "\n";
+           }
+       }
+
+
+       inputFile.close();
+       inputFile.remove(TEMPLATE_FILE);
+       //delete old file
+
+       newFile.rename(TEMPLATE_FILE + "_new", TEMPLATE_FILE);
+       newFile.close();
+       //set new file with the proper name and close
+
+    }else{
+        QMessageBox msg;
+        msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
+    }
+
+}
+
 void GridSetup::changeForm(QString selected){
     Grid *g = Grids->value(selected);
+
+    foreach(QString param, g->values->keys()) {
+      QString value = g->values->value(param);
+
+      if( value.isEmpty()) {
+          if( this->defaultParamValues.contains(param) )
+             value = this->defaultParamValues[param];
+          if( param=="name") value = g->name;
+          g->values->insert(param, value);
+      }
+    }
+
     if (!g) return;
     if (!g->values->value("type").isEmpty()){
         wid->setCurrentWidget(g->ec2);
@@ -183,10 +270,9 @@ void GridSetup::closeWindow(){
 void GridSetup::deleteExistingGrid(){
     if (QMessageBox::Yes == QMessageBox::question(0,"Delete grid?","Do you really want to remove this grid?", QMessageBox::Yes|QMessageBox::No)){
         Grid *g = Grids->value(gridSelection->currentText());
-        g->deleted = true;
-        qDebug() << g->values << g->deleted;
+        delete g;
+        Grids->remove(gridSelection->currentText());
         gridSelection->removeItem(gridSelection->currentIndex());
-
     }
 }
 
@@ -222,16 +308,22 @@ void GridSetup::initSelectChoices(){
     }
 }
 
-/*
+
+/**
  * Parse the parameters file and find any settings we can for any given grid.
  * Initialize grids if they don't exist, adding in values into the values hash as we go.
+ * @brief GridSetup::initGridValues
  */
 void GridSetup::initGridValues(){
     RunData *rundata = RunData::getRunData();
     QHashIterator<QString,QString> it(rundata->getParams());
 
+
+
+   // qDebug() << rundata->getParams();
     while(it.hasNext()){
         it.next();
+
 
         QRegExp gridRegExp("grid_engine\\d+:");
         if (it.key().contains(gridRegExp)){
@@ -239,20 +331,33 @@ void GridSetup::initGridValues(){
             QStringList split = it.key().split(splitReg);
 
             //check if this grid exists in our hash, if not, add it
+
             QString gridName = split[0];
             QString param = split[1]; //setting name (eg type)
 
             Grid *g = Grids->value(gridName);
-            if (!g){
+            if (g==0){
                 g = new Grid();
                 Grids->operator [](gridName) = g;
                 g->name = gridName;
-                g->enabled = true;
+                g->enabled = false;
                 g->newGrid = false;
                 g->deleted = false;
             }
 
-            g->values->insert(param,it.value());
+
+            if( !this->allowedParams.contains(param)) continue;
+
+            QString value;
+            if( it.value().isEmpty() ) {
+                if( this->defaultParamValues.contains(param) )
+                    value = this->defaultParamValues[param];
+                if( param=="name") value = g->name;
+            } else {
+                value = it.value();
+            }
+
+            g->values->insert(param, value);
             Grids->insert(gridName,g); //update our hash of grids
         }
     }

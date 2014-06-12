@@ -148,6 +148,16 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
 }
 
 //selected columns read data file
+/**
+ * @brief LargeTable::readDataFile
+ * @param fileName
+ * @param delim
+ * @param columns
+ * @param filter
+ * @param ignoreComments
+ * @param firstRowAsHeaders
+ * @return
+ */
 
 int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments, const bool firstRowAsHeaders ){
     QFile inputFile(fileName);
@@ -176,18 +186,21 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
         while ( !in.atEnd() )  {
             QString line = in.readLine().trimmed();
 
-
             if(i== -1 && firstRowAsHeaders ) {
-                fields = line.split(QRegExp(delim));
+                fields = line.split(QRegExp(delim), QString::KeepEmptyParts);
+           //       qDebug() << line << firstRowAsHeaders << lastColumn << fields.size();
                 if(fields.size() <= lastColumn) continue;
 
+         //         qDebug() << line << firstRowAsHeaders << lastColumn << fields.size() << numCols;
                 for(unsigned int j=0; j < numCols; j++){
                     colNames << fields[columns[j]] ;
                 }
                 i++;
                 continue;
             }
+
             if (ignoreComments && comment.exactMatch(line)) continue;
+
             if(filter.indexIn(line,0)==-1) continue;
 
             ROW *list = new ROW;

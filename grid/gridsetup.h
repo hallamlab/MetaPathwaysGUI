@@ -35,6 +35,8 @@ public:
     QToolButton* deleteGrid;
     QPushButton* cancelButton;
     QPushButton* saveButton;
+    QHash<QString, QString> defaultParamValues;
+    QHash<QString, bool> allowedParams;
 
     QHash<QString, Grid*> *Grids;
     QList<QWidget *> *allWidgets;
@@ -45,6 +47,9 @@ public:
     void initGridValues();
     void initSelectChoices();
     void populateValues();
+    void setDefaultParamValues() ;
+
+    void writeGridSettingToFile(const QString &TEMPLATE_FILE);
 
 public slots:
     void initForm(const QString &selected);
@@ -54,6 +59,7 @@ public slots:
     void deleteExistingGrid();
     void closeWindow();
     void saveAndClose();
+
 
     void newEC2Form();
     void newNonEC2Form();

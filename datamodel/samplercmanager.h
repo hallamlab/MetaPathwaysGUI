@@ -4,6 +4,7 @@
 #include "helper/types.h"
 #include "caching/fileindex.h"
 #include "caching/fileindexmanager.h"
+
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -17,9 +18,12 @@ public:
     static SampleResourceManager *getSampleResourceManager();
     void setOutPutPath(QString outputDir);
     void setUseResourceFolder(bool flag);
-    QString getFilePath(QString sampleName,  RESOURCE resource);
+    QString getFilePath(const QString &sampleName,  RESOURCE resource);
+    QStringList getFilePaths(const QString &sampleName,  RESOURCE resource);
     FileIndex *getFileIndex(QString sampleName, RESOURCE resource, bool reindex = false);
     bool createFileIndex(QString sampleName, RESOURCE resname);
+
+    QString extractDBName(const QString &sampleName, const QString &TableFile, RESOURCE type);
 
 private:
     SampleResourceManager();

@@ -16,14 +16,17 @@ NonEC2::NonEC2(QWidget *parent) : QWidget(parent), ui(new Ui::NonEC2)
     working_dir = this->findChild<QLineEdit *>("working_directory");
 }
 
+
 void NonEC2::populateValues(const Grid *g, const QString &selected){
-    QHash<QString,QString>* values = g->values;
+    QHash<QString,  QString>* values = g->values;
+
     QList<QWidget *>::iterator i;
     QList<QWidget *> formValues = this->findChildren<QWidget *>();
 
     for (i=formValues.begin(); i!= formValues.end(); ++i){
         QWidget *widget = *i;
         QString value = values->value(widget->objectName());
+
 
         if (qobject_cast<QComboBox *>(widget)!=0){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);

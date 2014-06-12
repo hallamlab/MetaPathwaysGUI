@@ -372,10 +372,10 @@ void ProgressDialog::startRun(){
     // qDebug() << rRNArefdbs << annotationDBS;
 
     if(rRNArefdbs.isEmpty()){
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs","",false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs","",false,false);
     }
     if(annotationDBS.isEmpty()){
-        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + "/" + RunData::TEMPLATE_PARAM,"PARAMS", "annotation:dbs","",false,false);
+        Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM,"PARAMS", "annotation:dbs","",false,false);
     }
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
@@ -447,12 +447,12 @@ void ProgressDialog::initProcess(){
 
     // arguments to the python execution process call
     // recall : python code is run as python MetaPathways.py -i input -o output -p paramfile -c configfile -r writemode
-    arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "MetaPathways.py");
+    arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "bin" + QDir::separator() +  "MetaPathways.py");
     if(runVerbose->isChecked()) arguments << "-v";
     arguments << "-i" << QDir::toNativeSeparators(this->rundata->getParams()["fileInput"]);
     arguments << "-o" << QDir::toNativeSeparators(this->rundata->getParams()["folderOutput"]);
-    arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_param.txt");
-    arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "template_config.txt");
+    arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "config" + QDir::separator() + "template_param.txt");
+    arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator()  + "config" + QDir::separator() + "template_config.txt");
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
     if(computeStats->isChecked())  arguments << "--stats" << "on";
     //add the specific samples

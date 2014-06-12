@@ -11,8 +11,14 @@ typedef struct _TABLEACCESSINFO {
 } TABLEACCESSINFO;
 
 typedef struct _GRAPHDATA {
+    _GRAPHDATA() {
+        xlab = QString("-");
+        ylab =  QString("-");
+
+    }
     QVector<double> x;
     QVector<double> y;
+    QString xlab, ylab;
     double ymax, ymin, xmax, xmin;
     unsigned int numBuckets;
     double bucketSize;

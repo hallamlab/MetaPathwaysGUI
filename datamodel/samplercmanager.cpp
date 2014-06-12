@@ -27,7 +27,7 @@ SampleResourceManager* SampleResourceManager::getSampleResourceManager() {
 
 
 
-QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
+QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE type) {
      QString path;
 
      switch(type) {
@@ -79,6 +79,12 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
          case RUNSTATS:
             path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
             break;
+         case rRNATABLES:
+            path =OUTPUTPATH + "/" + sampleName + "/results/rRNA/";
+            break;
+         case tRNATABLES:
+            path =OUTPUTPATH + "/" + sampleName + "/results/tRNA/";
+            break;
          case ERRORS:
             path = OUTPUTPATH + "/" + sampleName + "/"+ "errors_warnings_log.txt";
             break;
@@ -93,6 +99,69 @@ QString SampleResourceManager::getFilePath(QString sampleName,  RESOURCE type) {
 
  }
 
+/**
+ * @brief SampleResourceManager::extractDBName, extracts the database name from the file name
+ * @param sampleName, name of the sample
+ * @param TableFile, the actual text file
+ * @return
+ */
+
+QString SampleResourceManager::extractDBName(const QString &sampleName, const QString &TableFile, RESOURCE type) {
+
+    QRegExp pattern;
+    switch(type) {
+        case rRNATABLE:
+             pattern.setPattern(sampleName + "[.](.*)[.]rRNA.stats.txt$");
+             break;
+         default:
+             return QString();
+             break;
+    }
+
+
+
+    unsigned int pos = pattern.indexIn(TableFile, 0);
+    if( pos >= 0 )
+        return pattern.cap(1);
+
+    return QString();
+}
+
+
+
+/**
+ * @brief SampleResourceManager::getFilePaths gets the list of filenames in a sample of certain RESOURCE type
+ * @param sampleName, the sample name
+ * @param type, the resource type
+ * @return
+ */
+
+QStringList SampleResourceManager::getFilePaths(const QString &sampleName,  RESOURCE type) {
+
+     QString folderpath;
+     QRegExp pattern;
+     switch(type) {
+         case rRNATABLES:
+              folderpath = this->getFilePath(sampleName, rRNATABLES);
+              pattern.setPattern( sampleName + "[.].*.[.]rRNA.stats.txt$");
+              break;
+
+         case tRNATABLES:
+              folderpath = this->getFilePath(sampleName, tRNATABLES);
+              pattern.setPattern(sampleName + "[.]tRNA.stats.txt$");
+              break;
+         default:
+              return QStringList();
+              break;
+     }
+
+     QStringList files = Utilities::getFilesWithPattern(folderpath, pattern);
+  //   qDebug() << folderpath << files;
+     return files;
+
+
+
+}
 bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname) {
     FileIndexManager *fileindexmanager = FileIndexManager::getFileIndexManager();
     FileIndex *fileIndex =0;

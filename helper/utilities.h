@@ -17,6 +17,7 @@
 #include <fstream>
 #include <sstream>
 #include <QMessageBox>
+#include <QDir>
 
 class TableNumberItem : public QTableWidgetItem{
 
@@ -46,6 +47,8 @@ public:
     static QString getShortORFId(const QString &orfname);
     static QString getShortContigId(const QString &orfname);
     static QString prepareToPrint(QString str, QChar delim);
+    static QStringList getFilesWithPattern(const QString &folderName, const QRegExp &pattern);
+
 };
 
 #endif // UTILITIES_H

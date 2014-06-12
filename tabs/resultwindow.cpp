@@ -34,6 +34,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
 
     resultTabs->clear();
+    resultTabs->setUsesScrollButtons(true);
     getFileNames = new QTimer();
     getFileNames->start(500);
 
@@ -47,27 +48,13 @@ ResultWindow::ResultWindow(QWidget *parent) :
 //    tables["PATHWAYS"] = new TableData();
 //    tables["REACTIONS"] = new TableData();
     tables["FUNC & TAX"] = new TableData();
-//    tables["FUNC SRC"] = new TableData();
-//    tables["FUNC KEGG 1"] = new TableData();
-//    tables["FUNC KEGG 2"] = new TableData();
-//    tables["FUNC KEGG 3"] = new TableData();
-//    tables["FUNC KEGG 4"] = new TableData();
-//    tables["FUNC COG 1"] = new TableData();
-//    tables["FUNC COG 2"] = new TableData();
-//    tables["FUNC COG 3"] = new TableData();
+    tables["rRNA"] = new TableData();
 
     displayInfos["FUNC & TAX"] = new DisplayInfo();
-//    displayInfos["FUNC SRC"] = new DisplayInfo();
-//    displayInfos["FUNC KEGG 1"] = new DisplayInfo();
-//    displayInfos["FUNC KEGG 2"] = new DisplayInfo();
-//    displayInfos["FUNC KEGG 3"] = new DisplayInfo();
-//    displayInfos["FUNC KEGG 4"] = new DisplayInfo();
-//    displayInfos["FUNC COG 1"] = new DisplayInfo();
-//    displayInfos["FUNC COG 2"] = new DisplayInfo();
-//    displayInfos["FUNC COG 3"] = new DisplayInfo();
 
-//    graphs["CONT LEN HIST"] = new GraphData();
-//    graphs["ORF LEN HIST"] = new GraphData();
+
+    graphs["CONT LEN HIST"] = new GraphData();
+    graphs["ORF LEN HIST"] = new GraphData();
 
 #ifdef MEGAN_VIEW
     meganviews["MEGAN_TAXONOMIC"]= new MeganView();
@@ -257,6 +244,25 @@ void ResultWindow::sampleChanged(QString sampleName){
     statTableView->setAlternatingRowColors(true);
     statTableView->show();
     resultTabs->addTab(statTableView, "RUN STATS");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
+
+
+    GraphData *g;
+    g = graphs["CONT LEN HIST"];
+
+
+    g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
+    g->prepareInput("Contig Length (nucleotides)", "Frequencey");
+
+    resultTabs->addTab(g,"CONT LEN HIST");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "Contig Length Distributions");
+
+    g  = graphs["ORF LEN HIST"];
+    g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
+    g->prepareInput("ORF Length (amino)", "Frequencey");
+    resultTabs->addTab(g,"ORF LEN HIST");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "ORF Length (amino) Distribution ");
+
 
  #ifdef SECTION
      statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
@@ -278,6 +284,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "KEGG");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "KEGG");
 
 
     types.clear();
@@ -288,6 +295,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "COG");
 
     types.clear();
     types << STRING << STRING << INT;
@@ -297,6 +305,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "METACYC");
 
     types.clear();
     types << STRING << STRING << INT;
@@ -306,6 +315,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "SEED");
 
 #ifdef MEGAN_VIEW
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
@@ -313,6 +323,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     m->setDataFromFile(samplercmgr->getFilePath(sampleName, MEGANTREE));
     resultTabs->addTab(m, "TAXONOMIC");
 #endif
+
 
     TableData *func_tax_table;
     //FUNCTION AND TAXONOMIC TABLE
@@ -332,23 +343,74 @@ void ResultWindow::sampleChanged(QString sampleName){
     func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
     func_tax_table->setPopupListener(p);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
 
     progressbar.hide();
+
+
+    ////////////////////////
+    //   rRNA  TABLE
+
+    QStringList rRNATableFiles = samplercmgr->getFilePaths(sampleName, rRNATABLES);
+
+    TableData *t;
+    foreach(QString rRNATableFile, rRNATableFiles) {
+        types.clear();
+        types << STRING << STRING<< STRING << STRING << STRING << STRING << STRING;
+        columns.clear();
+        columns << 0 << 1 << 2 << 3 << 4<<  5 << 6;
+        QString rRNADatabase = samplercmgr->extractDBName(sampleName, rRNATableFile, rRNATABLE);
+        if(rRNADatabase.size() == 0) return;
+
+        if( this->simpleTabGroups.tableExists(sampleName, rRNATableFile)) {
+            t = this->simpleTabGroups.getTable(sampleName, rRNATableFile);
+        }
+        else { // table has to be created a new
+            t = new TableData;
+            t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
+            this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
+        }
+        resultTabs->addTab(t, rRNADatabase);
+        resultTabs->setTabToolTip(resultTabs->count()-1, rRNADatabase);
+    }
+
+    // tRNA TABLE
+    QStringList tRNATableFiles = samplercmgr->getFilePaths(sampleName, tRNATABLES);
+
+    foreach(QString tRNATableFile,tRNATableFiles) {
+        types.clear();
+        types << STRING << STRING<< STRING << STRING << STRING << STRING << STRING;
+        columns.clear();
+        columns << 0 << 1 << 2 << 3 << 4<<  5 ;
+
+        if( this->simpleTabGroups.tableExists(sampleName, tRNATableFile)) {
+            t = this->simpleTabGroups.getTable(sampleName, tRNATableFile);
+        }
+        else { // table has to be created a new
+            t = new TableData;
+            t->setParameters(false, tRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
+            this->simpleTabGroups.addTable(t, sampleName, tRNATableFile);
+        }
+        resultTabs->addTab(t, "tRNA-Scan");
+        resultTabs->setTabToolTip(resultTabs->count()-1, "tRNA-Scan");
+    }
+
+
 
  //   if (nucStats.exists()) resultTabs->addTab(new TableData(true, true, nucFile, types), "CONT LEN TAB");
 
    // if (aminoStats.exists()) resultTabs->addTab(new TableData(true, true, aminoFile, types), "CONT LEN TAB");
-//    GraphData *g;
-//    g = graphs["CONT LEN HIST"];
+ //    GraphData *g;
+ //   g = graphs["CONT LEN HIST"];
 
-//    g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
-//    g->prepareInput();
-//    resultTabs->addTab(g,"CONT LEN HIST");
+  //  g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
+  //  g->prepareInput();
+  //  resultTabs->addTab(g,"CONT LEN HIST");
 
-//    g  = graphs["ORF LEN HIST"];
-//    g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
-//    g->prepareInput();
-//    resultTabs->addTab(g,"ORF LEN HIST");
+   // g  = graphs["ORF LEN HIST"];
+  //  g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
+   // g->prepareInput();
+ //   resultTabs->addTab(g,"ORF LEN HIST");
 
 //    // PATHWAY TABLE
 //     types.clear();

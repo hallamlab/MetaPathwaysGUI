@@ -74,6 +74,17 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
 }
 
 // with select columns
+/**
+ * @brief TableData::setParameters
+ * @param HAS_COMMENT
+ * @param file
+ * @param _types
+ * @param _columns
+ * @param CACHE
+ * @param filter
+ * @return
+ */
+
 bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter) {
 
     top = 0;

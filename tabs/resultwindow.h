@@ -9,31 +9,37 @@
 #include <QMdiArea>
 #include <QTableView>
 #include <QProgressDialog>
-
-#include "helper/rundata.h"
-#include "helper/types.h"
-#include "ProgressDialog.h"
-#include "resultpage.h"
-#include "popupviews/displayinfo.h"
-#include "ui_resultwindow.h"
-#include "dataviews/graphdata.h"
-#include "dataviews/tabledata.h"
 #include <QFileDialog>
 #include <QDebug>
-#include "dataviews/meganview.h"
-#include "genebrowser/genomeview.h"
 
+
+#include "ProgressDialog.h"
+#include "resultpage.h"
+#include "ui_resultwindow.h"
 
 //#include "genebrowser/graphicsrepresentation.h"
 #include "caching/fileindexmanager.h"
 #include "datamodel/datamanager.h"
 #include "datamodel/rundatastats.h"
-#include "popupviews/selectsamples.h"
+#include "datamodel/samplercmanager.h"
 
+#include "dataviews/graphdata.h"
+#include "dataviews/tabledata.h"
+#include "dataviews/meganview.h"
+
+#include "displaywidgets/createwidgets.h"
 #include "displaywidgets/mdiareawidget.h"
 #include "displaywidgets/progressview.h"
-#include "datamodel/samplercmanager.h"
-#include "displaywidgets/createwidgets.h"
+
+#include "genebrowser/genomeview.h"
+
+#include "helper/rundata.h"
+#include "helper/types.h"
+
+#include "popupviews/displayinfo.h"
+#include "popupviews/selectsamples.h"
+
+#include "tabs/simpletabgroups.h"
 
 
 extern const QString SELECT_SAMPLE_TAG;
@@ -88,6 +94,8 @@ private:
     QLabel *currentSampleLabel;
 
     QTabWidget *resultTabs;
+    SimpleTabGroups simpleTabGroups;
+
     QSignalMapper *signal;
     QTimer *getFileNames;
     QStringList files;

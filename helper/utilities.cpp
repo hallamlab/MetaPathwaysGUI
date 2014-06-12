@@ -218,6 +218,12 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
     return false;
 }
 
+
+
+
+
+
+
 /*
  * Returns db names that are unique in a list.
  * 1.) Sort all files alphabetically
@@ -241,6 +247,7 @@ QStringList Utilities::getUniqueDBS(QStringList dbs){
  */
 QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const QString TYPE){
     QFile inputFile(TEMPLATE_FILE);
+
     QHash<QString, QString> configs;
 
     if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
@@ -261,30 +268,25 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
                     QString wrappedValue = line.mid(position).trimmed();
                     line.remove(position,wrappedValue.length());
                     line = line.trimmed();
-                    splitList << line << wrappedValue;
                 }else{
-                    line = line.remove(QRegExp("[,\\s]*$"));
                     splitList = line.split(splitRegex);
-                    //then, split the line up by white space
-                    splitList = splitList.filter(keepRegex);
-                    //filter the line into a list, keeping only non-whitespace characters
                 }
 
                 QString key;
-                QString value;
 
                 if (!splitList.isEmpty()){
                     //qDebug() << splitList;
                     //if the list has a key and value for us to use
                     key = splitList.at(0);
 
-                    if (splitList.size()>1){
-                        value = splitList.at(1);
-                        value.replace("'","");
+                    QString value;
+                    splitList.removeFirst();
+
+                    foreach(QString part, splitList) {
+                        value += " " + part;
                     }
-                    else{
-                        value = "";
-                    }
+                    value = value.trimmed();
+
                     configs.insert(key,value);
                 }
             }
@@ -444,3 +446,28 @@ QString Utilities::prepareToPrint(QString str, QChar delim) {
      }
      return newStr;
  }
+
+/**
+ * @brief Utilities::getFilesWithPattern files the list of files in a folder with some required text appearing in the anem
+ * @param folderName, the folder to search in
+ * @param text, the text should appear in the file name
+ * @return
+ */
+
+QStringList Utilities::getFilesWithPattern(const QString &folderName, const QRegExp &pattern)
+{
+    QStringList foundFiles;
+    QDir folder(folderName);
+
+    if( ! folder.exists() ) return QStringList();
+    QStringList files = folder.entryList();
+
+    for (int i = 0; i <  files.size(); ++i) {
+        int pos = pattern.indexIn(files[i]);
+
+        if(pos != -1 ) {
+          foundFiles.append(folder.absoluteFilePath(files[i]));
+        }
+    }
+    return foundFiles;
+}
