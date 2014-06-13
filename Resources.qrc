@@ -8,5 +8,6 @@
         <file>images/cross1.jpg</file>
         <file>text/default_template_param.txt</file>
         <file>text/default_template_config.txt</file>
+        <file>images/running.png</file>
     </qresource>
 </RCC>

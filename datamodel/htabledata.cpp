@@ -54,7 +54,8 @@ HTableData::HTableData(QWidget *parent) :
 
     this->level = 0;
 
-    connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT(spinBoxChanged(int) ) );
+   // connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+        connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT( switchCategory(int))  );
     /*
     connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyChanged(int) ) );
     connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(hideZeroRowsChanged(int) ) );
@@ -111,7 +112,9 @@ void HTableData::setMultiSampleMode(bool multisample) {
     this->multiSampleMode = multisample;
 }
 
-void HTableData::addSampleName(QString sampleName) {
+void HTableData::addSampleName(QString sampleName, bool clearPrev) {
+    if( clearPrev) this->sampleNames.clear();
+
     if( !this->sampleNames.contains(sampleName))
         this->sampleNames.append(sampleName);
 }
@@ -201,11 +204,11 @@ void HTableData::showTableData(bool hideZeroRows) {
 
 void HTableData::showHierarchyOrZeroRowToggleChanged() {
     if(this->subWindow) {
+        qDebug() << " toggling in subwindow ";
         this->showSelectedTableData(this->category, (this->hideZeroRows->checkState()==Qt::Checked));
-       // qDebug() << "Show seleced Table Data";
     }
     else {
-       // qDebug() << "show Table Data";
+        qDebug() << " I am not a subwindow ";
         this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
     }
 }
@@ -238,7 +241,7 @@ void HTableData::hideZeroRowsChanged(int state) {
 }
 
 
-/** This function will get the data row to display in the funcational table
+/** This function will get the data row to display in the functional table
  \param  state is to hide or unhide zero rows
  \param hideZeroRows   if this bool is true then the zero rows are not included
  \param showRPKM, bool to show/hide RPKM values
@@ -263,18 +266,7 @@ void HTableData::fillData(bool state, bool hideZeroRows) {
      }
 }
 
-unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
-    // qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
-     return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
-}
 
-bool HTableData::isNonZero(ROWDATA *r) {
-    QVector<unsigned int>::const_iterator  it;
-    for(it = r->counts.begin(); it!=r->counts.end(); it++) {
-        if(*it > 0) return true;
-    }
-    return false;
-}
 
 /** this function shows data for a functional category
  *\param categoryName, the functional to show the count/rpkm values for
@@ -302,6 +294,20 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
         return data.size();
      }
 }
+
+unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
+    // qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
+     return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
+}
+
+bool HTableData::isNonZero(ROWDATA *r) {
+    QVector<unsigned int>::const_iterator  it;
+    for(it = r->counts.begin(); it!=r->counts.end(); it++) {
+        if(*it > 0) return true;
+    }
+    return false;
+}
+
 
 /** This function populates the QTableWidget wit the selected data
  *\param data is the rows of data to be displayed
@@ -438,7 +444,7 @@ void HTableData::switchCategory(int index) {
     this->setParameters(datamanager->getHTree(htableIdentities[index].attrType), this->types);
 
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
-    this->setShowHierarchy(true);
+    //this->setShowHierarchy(true);
 
     /*
     qDebug() << "KEGG " <<  this->allConnectors[KEGG][0]->getNumOfORFs();
@@ -452,13 +458,17 @@ void HTableData::switchCategory(int index) {
 
 
     if(this->id.attrType==this->htableIdentities[index].attrType) {
-        if( this->showSelectedTableData(this->category) !=0 )
+        if( this->showSelectedTableData(this->category) !=0 ) {
             this->show();
-        else
+        }
+        else {
+            qDebug() << " Hide  " << this->id.attrType <<  " to " << this->htableIdentities[index].attrType;
             this->hide();
+        }
     }
     else {
-        this->showTableData();
+        qDebug() << " You switched from  " << this->id.attrType <<  " to " << this->htableIdentities[index].attrType;
+        this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
     }
     this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
 
@@ -519,6 +529,7 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
  **/
 bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
+    qDebug() << "Exporting to " << fileName;
     DataManager *datamanager = DataManager::getDataManager();
     HTree *htree = datamanager->getHTree(this->id.attrType);
 

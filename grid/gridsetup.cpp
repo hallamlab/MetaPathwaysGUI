@@ -55,6 +55,11 @@ GridSetup::GridSetup(QWidget *parent) :
 
 }
 
+
+/**
+ * @brief GridSetup::setDefaultParamValues
+ * initialize the default values for some of the grid services parameters
+ */
 void GridSetup::setDefaultParamValues() {
     this->defaultParamValues.insert("bit", "bit64");
     this->defaultParamValues.insert("os","linux");
@@ -70,11 +75,17 @@ void GridSetup::setDefaultParamValues() {
 
 }
 
+/**
+ * @brief GridSetup::addNewGrid Add a regular grid (non-EC type)
+ */
 void GridSetup::addNewGrid(){
     //remove ability to specify amazon ec2 grids
     newNonEC2Form();
 }
 
+/**
+ * @brief GridSetup::newNonEC2Form Add a non-ec type grid
+ */
 void GridSetup::newNonEC2Form(){
     unsigned int i =0;
     while( Grids->contains(QString("grid_engine%1").arg(i)) ) i++;
@@ -92,6 +103,10 @@ void GridSetup::newNonEC2Form(){
     gridSelection->setCurrentIndex(gridSelection->count()-1);
 }
 
+
+/**
+ * @brief GridSetup::newEC2Form not in use anymore
+ */
 void GridSetup::newEC2Form(){
 
     unsigned int i =0;
@@ -112,6 +127,12 @@ void GridSetup::newEC2Form(){
     gridSelection->addItem(name);
 }
 
+
+/**
+ * @brief GridSetup::getWidgetValues read the parameters of a grid as provided by the user
+ * from the GUI
+ * @param g, the grid
+ */
 void GridSetup::getWidgetValues(const Grid &g){
     //get all the widgets on a form
     QList<QWidget *>::iterator i;
@@ -152,22 +173,7 @@ void GridSetup::saveAndClose(){
     RunData *rundata = RunData::getRunData();
     this->writeGridSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator() + RunData::TEMPLATE_PARAM);
 
-       /* while (gridValues.hasNext()){
-            gridValues.next();
-            if (grids.value()->deleted){
-                //if it is set to be scheduled, skip writing out the params
-                //need to implement deletion from file using utilities
-                qDebug() << "deleting grid" <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, true);
-            }else if(grids.value()->newGrid){
-                qDebug() << "new grid writing " <<  grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), true,false);
-            }else{
-                qDebug() << "old grid writing" << grids.key() + ":" + gridValues.key() << gridValues.value();
-                Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator() + RunData::TEMPLATE_PARAM, "PARAMS", grids.key() + ":" + gridValues.key(), gridValues.value(), false, false);
-            }
-        }
-        */
+
     rundata->setupDefaultParams();
     this->close();
     // since we've added a new grid, need to update the hash
@@ -363,6 +369,9 @@ void GridSetup::initGridValues(){
     }
 }
 
+/**
+ * @brief GridSetup::~GridSetup destroy the grid, widgets, and grid configurations
+ */
 GridSetup::~GridSetup()
 {
     delete Grids;

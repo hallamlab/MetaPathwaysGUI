@@ -245,11 +245,6 @@
    </row>
    <row>
     <property name="text">
-     <string>rRNA Statistics</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
      <string>Annotate</string>
     </property>
    </row>
@@ -286,6 +281,11 @@
    <row>
     <property name="text">
      <string>Pathway Tools</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>RPKM</string>
     </property>
    </row>
    <column>

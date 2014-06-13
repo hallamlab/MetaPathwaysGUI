@@ -70,7 +70,7 @@ public:
     void setMultiSampleMode(bool multisample);
     bool isMultiSampleMode();
     QStringList getSampleNames();
-    void addSampleName(QString sampleName) ;
+    void addSampleName(QString sampleName, bool clearPrev = false) ;
     void setSampleNames(QStringList sampleNames);
     QString getSampleName(unsigned int i);
 

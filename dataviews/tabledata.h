@@ -58,6 +58,7 @@ public:
     QStringList getSampleNames();
     QString getSampleName(unsigned int i);
     void setSampleNames(QStringList sampleNames);
+    void setType(TABLETYPE type);
 
 
     QList<enum TYPE> types;
@@ -78,6 +79,7 @@ public:
     ~TableData();
 
     QTableWidget* tableWidget;
+    TABLETYPE  type;
 
 
 public slots:

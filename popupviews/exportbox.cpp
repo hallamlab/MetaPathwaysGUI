@@ -1,9 +1,11 @@
 #include "exportbox.h"
 
-ExportBox::ExportBox(TableData* td, QWidget *parent)
+ExportBox::ExportBox(TableData* td, QWidget *parent, TABLETYPE type)
     // : QWidget(parent)
 {
     this->td = new ExportSource(td);
+    this->type = type;
+
     this->createWidget();
 }
 
@@ -11,6 +13,8 @@ ExportBox::ExportBox(HTableData* td, QWidget *parent)
     // : QWidget(parent)
 {
     this->td = new ExportSource(td);
+    this->type = OTHERSTABLEEXP;
+
     this->createWidget();
 }
 
@@ -26,6 +30,11 @@ void ExportBox::createWidget() {
      connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelWindow()) );
 
  }
+
+
+void ExportBox::setType(TABLETYPE type) {
+    this->type = type;
+}
 
 bool ExportBox::cancelWindow() {
     this->close();
@@ -91,6 +100,7 @@ QStringList ExportBox::getAllHeaders() {
 
  }
 
+
  QGroupBox *ExportBox::createNonExclusiveGroup(QVBoxLayout *pvbox)
  {
      QGroupBox *groupBox = new QGroupBox(tr("Select Columns to Export"));
@@ -143,6 +153,16 @@ QStringList ExportBox::getAllHeaders() {
      vbox->addWidget(fna);
      vbox->addWidget(faa);
 
+     if(this->type == rRNATABLEEXP || this->type == tRNATABLEEXP ) {
+         fasta->hide();
+         fna->hide();
+         faa->hide();
+     }
+     else {
+         fasta->show();
+         fna->show();
+         faa->show();
+     }
 
      vbox->addStretch(1);
      exportFormat->setLayout(vbox);
@@ -228,47 +248,7 @@ typedef struct _EXPORT_FILES_INFO {
                  }
              }
 
-    /* }else {
-         QDir dir(fileName);
-         if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
-         foreach( QString sampleName, this->td->getSampleNames())
-             for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
-                 if( filesInfo.checkBoxes[i]->isChecked() ) {
-                    exportFileName =  fileName + "/" + sampleName +QString(filesInfo.suffixes[i]);
-//                    QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-                    this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
-                    //waitScreen->hide();
 
-             }
-         }
-
-
-     } */
-
-
-     /*
-     if( faa->isChecked()) {
-         exportFileName = fileName + QString(".faa");
-         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-         this->td->saveSequencesToFile(exportFileName, AMINOFAA);
-         waitScreen->hide();
-     }
-
-
-     if( fasta->isChecked()) {
-         exportFileName = fileName + QString(".fasta");
-         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-         this->td->saveSequencesToFile(exportFileName, NUCFASTA);
-         waitScreen->hide();
-     }
-
-     if( fna->isChecked()) {
-         exportFileName = fileName + QString(".fna");
-         QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
-         this->td->saveSequencesToFile(exportFileName, NUCFNA);
-         waitScreen->hide();
-     }
-*/
      this->hide();
      this->destroy();
 

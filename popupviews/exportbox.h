@@ -18,6 +18,7 @@
 
 extern const QString SELECT_SAMPLE_TAG;
 
+
 typedef struct _export {
     QString name;
     int rank;
@@ -34,8 +35,10 @@ class ExportBox : public QWidget
     Q_OBJECT
 public:
      void setTableData(TableData *td);
-     ExportBox(TableData *td = 0, QWidget *parent = 0);
+     ExportBox(TableData *td = 0, QWidget *parent = 0, TABLETYPE type = OTHERSTABLEEXP);
      ExportBox(HTableData *td = 0, QWidget *parent =0);
+
+     void setType( TABLETYPE type);
 
     ~ExportBox() ;
 
@@ -64,6 +67,7 @@ private:
     QCheckBox *faa ;
 
     QList<EXPORT_SELECT> Columns;
+    TABLETYPE type;
 
 };
 

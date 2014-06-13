@@ -214,7 +214,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     ProgressView progressbar("Please wait! Loading sample " + sampleName + "...", 0, 0, this);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
     pgdbname = pgdbname.at(0).isLetter() ? pgdbname : QString("e") + pgdbname;
-    const QString pathwaysTable = OUTPUTPATH + "/" + sampleName + "/results/pgdb/" + pgdbname + ".pathway.txt";
+
 
     resultTabs->clear();
     for (unsigned int i=0; i< resultTabs->count(); i++){
@@ -246,22 +246,42 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->addTab(statTableView, "RUN STATS");
     resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
+    QString contigLengthsFile = samplercmgr->getFilePath(sampleName, CONTIGLENGTH);
+    QFile file(contigLengthsFile);
 
     GraphData *g;
-    g = graphs["CONT LEN HIST"];
+    if( file.exists() ) {
+        if( this->simpleGraphGroups.tableExists(sampleName, contigLengthsFile)) {
+            g = this->simpleGraphGroups.getTable(sampleName, contigLengthsFile);
+        }
+        else { // table has to be created a new
+            g = new GraphData;
+            g->setFile(contigLengthsFile);
+            g->prepareInput("Contig Length (nucleotides)", "Frequencey");
+            this->simpleGraphGroups.addTable(g, sampleName, contigLengthsFile);
+        }
+        resultTabs->addTab(g,"CONT LEN HIST");
+        resultTabs->setTabToolTip(resultTabs->count()-1, "Contig Length Distributions");
+    }
 
 
-    g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
-    g->prepareInput("Contig Length (nucleotides)", "Frequencey");
+    QString orfsLengthsFile = samplercmgr->getFilePath(sampleName, ORFLENGTH);
+    file.setFileName(orfsLengthsFile);
+    if( file.exists() ) {
+        if( this->simpleGraphGroups.tableExists(sampleName, orfsLengthsFile)) {
+            g = this->simpleGraphGroups.getTable(sampleName, orfsLengthsFile);
+        }
+        else { // table has to be created a new
+            g = new GraphData;
+            g->setFile(orfsLengthsFile);
+            g->prepareInput("ORF Length (amino)", "Frequencey");
+            this->simpleGraphGroups.addTable(g, sampleName, orfsLengthsFile);
+        }
+        resultTabs->addTab(g,"ORF LEN HIST");
+        resultTabs->setTabToolTip(resultTabs->count()-1, "ORF Length (amino) Distribution");
+    }
 
-    resultTabs->addTab(g,"CONT LEN HIST");
-    resultTabs->setTabToolTip(resultTabs->count()-1, "Contig Length Distributions");
 
-    g  = graphs["ORF LEN HIST"];
-    g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
-    g->prepareInput("ORF Length (amino)", "Frequencey");
-    resultTabs->addTab(g,"ORF LEN HIST");
-    resultTabs->setTabToolTip(resultTabs->count()-1, "ORF Length (amino) Distribution ");
 
 
  #ifdef SECTION
@@ -281,7 +301,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, KEGG, types, headers, datamanager);
-    htable->addSampleName(sampleName);
+    htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "KEGG");
     resultTabs->setTabToolTip(resultTabs->count()-1, "KEGG");
@@ -292,7 +312,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, COG, types, headers,  datamanager);
-    htable->addSampleName(sampleName);
+    htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
     resultTabs->setTabToolTip(resultTabs->count()-1, "COG");
@@ -302,7 +322,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "Pathway/Reaction" << "Common name" << "ORF Count";
     htable = this->getHTableData(sampleName, METACYC, types, headers, datamanager);
-    htable->addSampleName(sampleName);
+    htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
     resultTabs->setTabToolTip(resultTabs->count()-1, "METACYC");
@@ -312,7 +332,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     headers.clear();
     headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, SEED, types, headers, datamanager);
-    htable->addSampleName(sampleName);
+    htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
     resultTabs->setTabToolTip(resultTabs->count()-1, "SEED");
@@ -342,6 +362,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     func_tax_table->setSampleName(sampleName);
     func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
     func_tax_table->setPopupListener(p);
+    func_tax_table->setType(OTHERSTABLEEXP);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
     resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
 
@@ -370,6 +391,7 @@ void ResultWindow::sampleChanged(QString sampleName){
             t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
         }
+        t->setType(rRNATABLEEXP);
         resultTabs->addTab(t, rRNADatabase);
         resultTabs->setTabToolTip(resultTabs->count()-1, rRNADatabase);
     }
@@ -391,6 +413,7 @@ void ResultWindow::sampleChanged(QString sampleName){
             t->setParameters(false, tRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, tRNATableFile);
         }
+        t->setType(tRNATABLEEXP);
         resultTabs->addTab(t, "tRNA-Scan");
         resultTabs->setTabToolTip(resultTabs->count()-1, "tRNA-Scan");
     }

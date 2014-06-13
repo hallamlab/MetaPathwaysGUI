@@ -42,7 +42,6 @@ bool GraphData::setFile(QString fileName) {
 bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
     TableManager *tableManager = TableManager::getTableManager();
 
-    qDebug() << file;
     GRAPHDATA *gdata = tableManager->getGraphData(file);
     if(gdata ==0 )  {
        this->setupFromFile(file);
@@ -51,7 +50,13 @@ bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
        gdata->ylab = ylab;
        gdata->xmin = 0;
        gdata->ymin = 0;
-       gdata->numBuckets = 500;
+       gdata->numBuckets = 100;
+
+
+       /*double buckets =   static_cast<double>(gdata->x.size())/10.0 > 1.0 ? static_cast<double>(gdata->x.size())/10.0  : 2 ;
+       if( gdata->numBuckets > static_cast<int>(buckets) ) gdata->numBuckets = static_cast<int>(buckets);
+       qDebug() << gdata->numBuckets;
+*/
 
        this->computeParams(gdata);
        this->computeHistoGram(gdata);
@@ -128,7 +133,7 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     gdata->y[j-1] = (z[j-1] + z[j])/2;
 
     int i = 0;
-    while( i < gdata->numBuckets && gdata->x[0] < gdata->xmin) {
+    while( i < gdata->numBuckets && gdata->x[0] < gdata->xmin && gdata->x.size() > 2) {
         gdata->x.remove(0);
         gdata->y.remove(0);
        // if( gdata->x[0] < gdata->xmin) gdata->x[0] = gdata->xmin;

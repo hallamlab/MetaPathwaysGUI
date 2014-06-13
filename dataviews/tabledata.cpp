@@ -47,10 +47,10 @@ TableData::TableData(  QWidget *parent) :
 
     //this->exportBox = new ExportBox(this);
     //this->exportBox->hide();
-
-
     this->p =0;
     this->g =0;
+
+    this->type = OTHERSTABLEEXP;
 }
 
 
@@ -206,6 +206,10 @@ QString TableData::getSampleName(unsigned int i) {
 }
 
 
+void TableData::setType(TABLETYPE type) {
+    this->type = type;
+}
+
 void TableData::setSampleNames(QStringList sampleNames) {
     this->sampleNames = sampleNames;
 }
@@ -266,7 +270,7 @@ void TableData::searchButtonPressed(){
 }
 
 void TableData::exportButtonPressed(){
-    this->exportBox = new ExportBox(this);
+    this->exportBox = new ExportBox(this, 0 , this->type);
     this->exportBox->show();
 }
 
@@ -318,7 +322,7 @@ void TableData::setupFromFile(const QString &file){
            this->populateTable(*tableWidget, bigdata, headers, top);
         }
 
-        this->exportBox = new ExportBox(this);
+        //this->exportBox = new ExportBox(this);
 }
 
 
@@ -343,7 +347,7 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
            this->populateTable(*tableWidget, bigdata, headers, top);
         }
 
-        this->exportBox = new ExportBox(this);
+      //  this->exportBox = new ExportBox(this);
 }
 
 /*

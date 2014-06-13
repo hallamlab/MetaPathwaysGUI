@@ -94,7 +94,8 @@ private:
     QLabel *currentSampleLabel;
 
     QTabWidget *resultTabs;
-    SimpleTabGroups simpleTabGroups;
+    SimpleTabGroups<TableData> simpleTabGroups;
+    SimpleTabGroups<GraphData> simpleGraphGroups;
 
     QSignalMapper *signal;
     QTimer *getFileNames;

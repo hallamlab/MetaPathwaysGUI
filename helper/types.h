@@ -22,6 +22,15 @@ typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, NUCFNA, CONTIGLENGTH, ORFLENGTH
                              FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, ORFRPKM, MEGANLASTFILE,\
                              MEGANBLASTFILE, RUNSTATS, ERRORS, GLOBAL_ERRORS , rRNATABLES, rRNATABLE, tRNATABLE, tRNATABLES} RESOURCE;
 
+
+/**
+ * the types for the export boxes
+ */
+typedef enum _TABLETYPE {
+    rRNATABLEEXP, tRNATABLEEXP, OTHERSTABLEEXP
+} TABLETYPE;
+
+
 typedef struct _RANK_BEGIN_PAIR {
     unsigned int rank, begin;
 } RANK_BEGIN_PAIR;
