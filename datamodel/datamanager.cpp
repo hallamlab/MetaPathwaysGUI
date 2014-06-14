@@ -304,7 +304,11 @@ void DataManager::destroyHTree(ATTRTYPE refDB ) {
      this->htrees.remove(refDB);
 
 }
-
+/**
+ * @brief DataManager::_createAnORF creates and ORF from the attributes
+ * @param attributes attribute list as provided from the orf list tables, orf_annotation
+ * @return
+ */
 ORF *DataManager::_createAnORF(QStringList &attributes) {
 
     ORF *orf = new ORF;
@@ -322,6 +326,8 @@ ORF *DataManager::_createAnORF(QStringList &attributes) {
         contigHash[shortContigName] = contig;
         orf->contig = contig;
     }
+
+   // qDebug() << orf->contig->name  << "   " << orf->name << "    ";
 
     if(this->attributes[COG].contains(attributes[2]))
         orf->attributes[COG] = this->attributes[COG][attributes[2]];
@@ -403,9 +409,12 @@ void DataManager::destroyORFs(QString sampleName) {
 
 void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
+
     QFile inputFile(fileName);
     ORF *temporf;
     QString name, alias;
+
+
     if (inputFile.open(QIODevice::ReadOnly)) {
         QHash<QString, ORF *> orfHash;
         foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
@@ -413,6 +422,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
         }
 
         QTextStream in(&inputFile);
+        QString orfName;
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
 
@@ -422,7 +432,9 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
             line.removeFirst();
             line.removeFirst();
-            foreach(QString orfName, line) {
+            foreach(QString _orfName, line) {
+               orfName = Utilities::getShortORFId(_orfName);
+
                if( orfHash.contains(orfName)) {
                    temporf = orfHash[orfName];
                }
@@ -441,9 +453,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
                    temporf->attributes[METACYC]->alias = alias;
                    this->attributes[METACYC][name] = temporf->attributes[METACYC];
                }
-
             }
-
         }
         inputFile.close();
     }

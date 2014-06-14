@@ -42,15 +42,15 @@ class HTableData : public QDialog
     Q_OBJECT
     
 public:
-    explicit HTableData(QWidget *parent = 0);
+    explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = false, bool _hideZeroRows = false, bool _showRPKM =false);
     ~HTableData();
     bool setParameters(HTree *htree, QList<enum TYPE> _types);
     void addConnector(Connector *connector);
     void clearConnectors();
     void setNumCols(unsigned int numCols);
-    void fillData(bool state, bool hideZeroRows);
+    void fillData();
 
-    void populateTable(QList<ROWDATA *> &data, const QStringList &headers, bool hierarchyEnabled);
+    void populateTable(QList<ROWDATA *> &data, const QStringList &headers);
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
@@ -59,10 +59,10 @@ public:
     QString getHeader(unsigned int i);
     enum TYPE getFieldType(unsigned int i);
 
-    void showTableData(bool hideZeroRows = false);
-    unsigned int  showSelectedTableData(QString categoryName, bool hideZeroRows = false);
+    void showTableData();
+    unsigned int  showSelectedTableData(QString categoryName);
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
-    unsigned int fillSelectedData(QString category, unsigned int maxDepth, bool showHierarchy, bool hideZeroRows);
+    unsigned int fillSelectedData(QString category, unsigned int maxDepth);
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
@@ -124,7 +124,7 @@ private:
     QList<QFont> fonts;
     QCheckBox *showHierarchy;
     QSpinBox *showDepth;
-    QCheckBox *viewToggleBox;
+    QLabel *numOrfsLabel;
     QComboBox *categorySelector;
     QCheckBox *hideZeroRows;
     QCheckBox *showRPKM;

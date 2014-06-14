@@ -18,6 +18,7 @@
 #include <sstream>
 #include <QMessageBox>
 #include <QDir>
+#include <QVector>
 
 class TableNumberItem : public QTableWidgetItem{
 
@@ -25,6 +26,7 @@ public:
     TableNumberItem(const QString txt = QString("0")) :QTableWidgetItem(txt) {}
     bool operator <(const QTableWidgetItem &other) const;
 };
+
 
 class Utilities
 {
@@ -48,7 +50,11 @@ public:
     static QString getShortContigId(const QString &orfname);
     static QString prepareToPrint(QString str, QChar delim);
     static QStringList getFilesWithPattern(const QString &folderName, const QRegExp &pattern);
-
+    static unsigned int numNonZeros(const QVector<double> &v);
+    static void removeZeros(QVector<double> &x, QVector<double> &y, unsigned int index = 0 );
 };
+
+
+
 
 #endif // UTILITIES_H

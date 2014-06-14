@@ -33,6 +33,7 @@ ResultWindow::ResultWindow(QWidget *parent) :
     selectSamplesButton->setEnabled(false);
 
 
+    resultTabs->setUsesScrollButtons ( true );
     resultTabs->clear();
     resultTabs->setUsesScrollButtons(true);
     getFileNames = new QTimer();

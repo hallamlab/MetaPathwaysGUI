@@ -2,7 +2,7 @@
 #include "ui_htabledata.h"
 #include <QTableWidget>
 
-HTableData::HTableData(QWidget *parent) :
+HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bool _hideZeroRows, bool _showRPKM) :
     QDialog(parent),
     ui(new Ui::HTableData)
 {
@@ -13,7 +13,7 @@ HTableData::HTableData(QWidget *parent) :
     tableWidget = this->findChild<QTableWidget *>("tableWidget");
     showHierarchy  = this->findChild<QCheckBox *>("showHierarchy");
     showDepth = this->findChild<QSpinBox *>("showDepth");
-    viewToggleBox  = this->findChild<QCheckBox *>("viewToggleBox");
+    numOrfsLabel  = this->findChild<QLabel *>("numOrfsLabel");
     categorySelector = this->findChild<QComboBox *>("categorySelector");
     subCategoryName = this->findChild<QLabel *>("subCategoryName");
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
@@ -47,23 +47,29 @@ HTableData::HTableData(QWidget *parent) :
 
     depthLabelValue->hide();
     subCategoryName->hide();
-    viewToggleBox->hide();
+    numOrfsLabel->hide();
     categorySelector->hide();
 
     this->subWindow = false;
 
     this->level = 0;
 
-   // connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-        connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT( switchCategory(int))  );
+
+    this->hideZeroRows->setChecked(_hideZeroRows);
+    this->showRPKM->setChecked(_showRPKM);
+    this->showHierarchy->setChecked(_showHierachy);
+
+    this->showDepth->setValue(spinBoxValue);
+    connect(this->showDepth, SIGNAL(valueChanged(int) ), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+   //     connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT( switchCategory(int))  );
     /*
     connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyChanged(int) ) );
     connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(hideZeroRowsChanged(int) ) );
     */
 
-    connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-    connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-    connect(showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+    connect(this->showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+    connect(this->hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+    connect(this->showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
 
 
     connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
@@ -196,20 +202,19 @@ void HTableData::spinBoxChanged(int depth) {
 }
 
 
-void HTableData::showTableData(bool hideZeroRows) {
-    this->fillData((this->showHierarchy->checkState()==Qt::Checked), hideZeroRows);
-
+void HTableData::showTableData() {
+    this->fillData();
 }
 
 
 void HTableData::showHierarchyOrZeroRowToggleChanged() {
     if(this->subWindow) {
         qDebug() << " toggling in subwindow ";
-        this->showSelectedTableData(this->category, (this->hideZeroRows->checkState()==Qt::Checked));
+        this->showSelectedTableData(this->category);
     }
     else {
         qDebug() << " I am not a subwindow ";
-        this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
+        this->showTableData();
     }
 }
 
@@ -234,10 +239,10 @@ void HTableData::showHierarchyChanged(int state) {
 void HTableData::hideZeroRowsChanged(int state) {
     if(this->subWindow)
 //        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
-    this->showTableData( (this->hideZeroRows->checkState()==Qt::Checked));
+    this->showTableData();
 
     else
-        this->showTableData( (this->hideZeroRows->checkState()==Qt::Checked));
+        this->showTableData();
 }
 
 
@@ -248,20 +253,20 @@ void HTableData::hideZeroRowsChanged(int state) {
 
  */
 
-void HTableData::fillData(bool state, bool hideZeroRows) {
+void HTableData::fillData() {
      QList<ROWDATA *> data;
 
-     data =  this->htree->getRows(this->showDepth->value(), state, this->connectors, (this->showRPKM->checkState()==Qt::Checked) ) ;
+     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->checkState() ) ;
      QList<ROWDATA *> newdata;
 
-     if(hideZeroRows) {
+     if(hideZeroRows->isChecked()) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
-        this->populateTable(newdata, this->headers, state );
+        this->populateTable(newdata, this->headers);
      }
      else {
-        this->populateTable(data, this->headers, state );
+        this->populateTable(data, this->headers);
 
      }
 }
@@ -277,27 +282,38 @@ void HTableData::fillData(bool state, bool hideZeroRows) {
  *\return the size of the data selected
  **/
 
-unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth, bool showHierarchy, bool hideZeroRows) {
+unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth) {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(categoryName, maxDepth, showHierarchy, this->connectors, this->showRPKM->checkState()==Qt::Checked);
-   //  qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
+     qDebug() << categoryName;
+     if( false )
+     data =  this->htree->getRows(categoryName, maxDepth, this->connectors, this->showHierarchy->isChecked(),  this->hideZeroRows->isChecked(), this->showRPKM->isChecked());
+
+     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(),  this->showRPKM->isChecked() ) ;
+
+
+     qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
+
+
+
      QList<ROWDATA *> newdata;
-     if(hideZeroRows) {
+     if(hideZeroRows->isChecked()) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
-        this->populateTable(newdata, this->headers, showHierarchy );
+        this->populateTable(newdata, this->headers );
         return newdata.size();
      }
      else {
-        this->populateTable(data, this->headers, showHierarchy );
+        this->populateTable(data, this->headers );
         return data.size();
      }
 }
 
-unsigned int HTableData::showSelectedTableData(QString categoryName, bool hideZeroRows) {
-    // qDebug() << "show hieracrhy " << (this->showHierarchy->checkState()==Qt::Checked);
-     return this->fillSelectedData(categoryName, this->showDepth->value(), (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
+unsigned int HTableData::showSelectedTableData(QString categoryName) {
+     qDebug() << "show hieracrhy " << this->showHierarchy->isChecked();
+     qDebug() << " retrieving with showDepth value " << this->showDepth->value() <<  " category " << categoryName;
+    // return this->fillSelectedData(this->showDepth->value()-1, (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
+     return this->fillSelectedData(categoryName, this->showDepth->value()-1);
 }
 
 bool HTableData::isNonZero(ROWDATA *r) {
@@ -314,7 +330,7 @@ bool HTableData::isNonZero(ROWDATA *r) {
  *\param headers headers for the table
  *\param hierachyEnabled, a boolean used to hide/show the hierarchy of the functional group
  **/
-void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers, bool hierarchyEnabled){
+void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &headers){
 
     tableWidget->clear();
     tableWidget->setColumnCount(headers.size());
@@ -325,7 +341,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
 
 
-    if( hierarchyEnabled)
+    if( this->showHierarchy->isChecked() )
        tableWidget->setSortingEnabled(false);
     else
        tableWidget->setSortingEnabled(true);
@@ -335,7 +351,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     int k = 0;
 
     foreach( ROWDATA * datum,  data) {
-        if(hierarchyEnabled)
+        if(this->showHierarchy->isChecked())
             item = new QTableWidgetItem(this->indents[datum->depth] + QString(datum->name));
         else
             item = new QTableWidgetItem( QString(datum->name));
@@ -358,15 +374,21 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
 void HTableData::showInformativeTable(QTableWidgetItem *item) {
     unsigned int row = item->row();
-
+    qDebug() << "Opening a subwindow";
     DataManager *datamanager = DataManager::getDataManager();
-    HTableData *htable = new HTableData;
+    // this showdepth value is passed now before a valueChanged signal is connected to the spinbox slot
+    HTableData *htable = new HTableData(0, this->showDepth->value()+ 1 , this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->isChecked());
     htable->setAttribute(Qt::WA_DeleteOnClose); // frees up memory once it's closed
     htable->setMultiSampleMode(this->isMultiSampleMode());
     htable->setSampleNames(this->sampleNames);
+
+
+
+
+
+ //   htable->setMaxSpinBoxDepth(datamanager->getHTree(this->id.attrType)->getTreeDepth());
     htable->clearConnectors();
 
-    htable->viewToggleBox->setVisible(true);
     htable->categorySelector->setVisible(true);
     htable->categorySelector->setCurrentIndex(this->id.attrType);
     htable->subWindow = true;
@@ -385,6 +407,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
        htable->subCategoryName->setText(htable->category);
 
     // set the htable levels
+  //  qDebug() << "depthhh " << htable->showDepth->value() << "  " << this->showDepth->value();
     htable->depthLabelValue->setText(QString::number(htable->level));
     htable->depthLabelValue->setVisible(true);
   //  htable->connectors = this->connectors;
@@ -403,27 +426,46 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     }
 
     QList<ORF *>orfList;
+    unsigned int totNumOrfs =0 ;
+     qDebug() << "type 1 " <<  this->htableIdentities.size();
+     qDebug() << "type 2 " << this->connectors.size();
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
-        if( this->id.attrType== this->htableIdentities[i].attrType) continue;
+
+        totNumOrfs = 0;
         foreach(Connector *connector, this->connectors) {
            orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+          // qDebug() << "Number of orfs transferring " << orfList.size();
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
+           totNumOrfs += orfList.size();
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
          //  qDebug() << " get modCon size " << modConnector->getNumOfORFs() << " atr " << this->htableIdentities[i].attrType ;
         }
+        qDebug() << "num orfs " <<  totNumOrfs;
     }
 
+   // qDebug() << "Category depth " << this->id.attrType << "  " << datamanager->getHTree(this->id.attrType)->getTreeDepth();
+    htable->numOrfsLabel->setText(QString("ORFs count : " + QString::number( totNumOrfs)));
+    htable->numOrfsLabel->setVisible(true);
     htable->setHeaders( this->headers);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
+
+  /*
+    htable->showRPKM->setChecked(this->showRPKM->isChecked());
+    htable->hideZeroRows->setChecked(this->hideZeroRows->isChecked());
+    htable->showHierarchy->setChecked(this->showHierarchy->isChecked());
+
+    */
     htable->switchCategory(this->id.attrType);
 
-    /* kishori's changes
-//    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
-//    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
-//    toolbarManager->addTab(htab,  htable);
-//    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
-//    wStacker->stackWidget(htable);
-  //  mdiAreaWidget->getMdiArea()->cascadeSubWindows(); */
+
+
+    /** kishori's changes
+    HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
+    ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
+    toolbarManager->addTab(htab,  htable);
+    WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
+    wStacker->stackWidget(htable);
+    mdiAreaWidget->getMdiArea()->cascadeSubWindows(); */
 
 }
 
@@ -454,7 +496,7 @@ void HTableData::switchCategory(int index) {
 
     qDebug() << "Switched to " << this->id.attrType << "    " <<  this->htableIdentities[index].attrType;
 */
-    this->level = datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth() + 1;
+   // this->level = this + 1;
 
 
     if(this->id.attrType==this->htableIdentities[index].attrType) {
@@ -468,7 +510,7 @@ void HTableData::switchCategory(int index) {
     }
     else {
         qDebug() << " You switched from  " << this->id.attrType <<  " to " << this->htableIdentities[index].attrType;
-        this->showTableData((this->hideZeroRows->checkState()==Qt::Checked));
+        this->showTableData();
     }
     this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
 

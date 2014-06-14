@@ -29,8 +29,8 @@ public:
     void printTree(HNODE *hnode, unsigned int d =0);
     QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, bool showRPKM = false);
 
-    QList<ROWDATA *> getRows(unsigned int maxDepth, bool showHierarchy, QList< Connector *> &connectors, bool showRPKM);
-    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, bool showHierarchy, QList< Connector *> &connectors, bool showRPKM);
+    QList<ROWDATA *> getRows(unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, bool hideZeroRows, bool showRPKM);
+    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, bool hideZeroRows, bool showRPKM);
     HNODE *getHNODE(QString name);
     void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
     void copyDataToSubConnector(HNODE *hnode, Connector *targetConnector, HTree* targetTree, QHash<ORF *, bool> & orfHash);

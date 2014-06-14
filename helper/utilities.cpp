@@ -471,3 +471,44 @@ QStringList Utilities::getFilesWithPattern(const QString &folderName, const QReg
     }
     return foundFiles;
 }
+
+
+
+unsigned int Utilities::numNonZeros(const QVector<double> &v) {
+    unsigned int count =0;
+    for(int i =0; i < v.size(); i++)
+        if( v[i] > 1e-100) count++;
+
+    return count;
+}
+
+
+void Utilities::removeZeros(QVector<double> &x, QVector<double> &y, unsigned int index  ) {
+    QVector<double> _x, _y;
+    for(int i =0; i < x.size(); i++ ) {
+        if( index ==0 ) {
+            if( x[i] > 0.0 )  {
+                _x.push_back(x[i]); _y.push_back(y[i]);
+            }
+        }
+        else {
+            if( y[i] > 0.0 )  {
+                _x.push_back(x[i]); _y.push_back(y[i]);
+            }
+        }
+    }
+
+    x = _x;
+    y = _y;
+}
+
+
+
+
+
+
+
+
+
+
+

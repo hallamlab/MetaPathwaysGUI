@@ -144,20 +144,25 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
     return vcount;
 }
 
-/** function to get the list of rowdata at a certain depth of the HTree
- *\param maxDepth, the maximum depth to collect the categories
- *\param showHierarchy, a bool to show/hide the hierarchy
- *\param connectors, the list of conneectors for various samples
- *\param showRPKM, a bool to show/hide the RPKM or counts to show
- *
- *\return the list of ROWDATA to show in the QTableWidget
- **/
-QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors, bool showRPKM) {
+
+QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, QList<Connector *> &connectors, bool showHierarchy, bool hideZeroRows,  bool showRPKM) {
    QList<ROWDATA *> data;
    this->connectors = connectors;
    this->countTree(this->root, maxDepth, showHierarchy, -1, data, showRPKM);
    return data;
 }
+
+
+QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth,  QList<Connector *> &connectors, bool showHierarchy,  bool hideZeroRows, bool showRPKM) {
+   QList<ROWDATA *> data;
+   this->connectors = connectors;
+   HNODE *node = this->getHNODE(category);
+  // qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
+   if(node!=0)
+      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, showRPKM);
+   return data;
+}
+
 
 
 void HTree::copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector) {
@@ -190,21 +195,5 @@ void HTree::copyDataToSubConnector(HNODE *hnode,  Connector *targetConnector, HT
 
 }
 
-/** This function to get the data vector for the count/RPKM values for orfs in the category
- *\param category, functional category
- *\param maxDepth, the maximum depth of the functional category
- *\param showHierarchy, a bool that hides/shows the hierachy
- *\param connectors, the connectors that connects the ORFs to the different functional category
- *\param showRPKM, shows/hides the RPKM values instead of the counts
 
- *\return a list of ROWDATA that can be used to fill the QWidgetTable with counts/RPKM
- **/
-QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth, bool showHierarchy, QList<Connector *> &connectors, bool showRPKM) {
-   QList<ROWDATA *> data;
-   this->connectors = connectors;
-   HNODE *node = this->getHNODE(category);
-  // qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
-   if(node!=0)
-      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, showRPKM);
-   return data;
-}
+

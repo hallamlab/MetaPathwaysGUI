@@ -62,6 +62,8 @@ bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
        this->computeHistoGram(gdata);
        tableManager->setGraphData(file, gdata);
     }
+
+
     this->plotSomeGraph(this->graph, gdata);
 }
 
@@ -69,7 +71,7 @@ bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
 
 
 void GraphData::computeParams(GRAPHDATA *gdata) {
-    double _min= 999999, _max = -999999;
+    double _min= 1e+20 , _max = -999999;
     foreach(double v, graphData) {
         if( v > _max ) _max = v;
         if( v < _min ) _min= v;
@@ -112,31 +114,24 @@ void GraphData::setupFromFile(const QString &file){
  * @brief GraphData::computeHistoGram this function computes the histogram
  * @param gdata
  */
+
 void GraphData::computeHistoGram(GRAPHDATA *gdata) {
+
     QVector<double> z;
-    for(unsigned int i =0; i < gdata->numBuckets; i++) {
+
+    double deltaw = (gdata->xmax -gdata->xmin) / gdata->numBuckets;
+
+    for(int i = 0; i < gdata->numBuckets; i++) {
+        gdata->x.push_back( gdata->xmin  + (i + 0.5)*deltaw);
         gdata->y.push_back(0);
-        z.push_back(0);
-        gdata->x.push_back(gdata->bucketSize*(i));
     }
+
 
     unsigned int j;
     foreach(double v, graphData) {
         j = (unsigned int)((v - gdata->xmin)/gdata->bucketSize);
-        z[j]++;
-    }
-
-    gdata->y[0] = (y[0] + y[1])/2;
-    for( j = 1; j < gdata->numBuckets -1; j++) {
-        gdata->y[j-1] = (z[j-1] + z[j] + z[j+1]);
-    }
-    gdata->y[j-1] = (z[j-1] + z[j])/2;
-
-    int i = 0;
-    while( i < gdata->numBuckets && gdata->x[0] < gdata->xmin && gdata->x.size() > 2) {
-        gdata->x.remove(0);
-        gdata->y.remove(0);
-       // if( gdata->x[0] < gdata->xmin) gdata->x[0] = gdata->xmin;
+        if(j > gdata->numBuckets) j = gdata->numBuckets -1;
+        gdata->y[j]++;
     }
 
 
@@ -146,23 +141,48 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     }
     gdata->ymax = _ymax;
 
+    qDebug() << gdata->xmin << " " << gdata->xmax << "  " << gdata->ymin << "  " << gdata->ymax;
 }
 
 
 
-void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
-  //  QCPBars *barGraph = new QCPBars(customPlot->xAxis, customPlot->yAxis);
-    // QCPCurve *barGraph = new QCPCurve(customPlot->xAxis, customPlot->yAxis);
-    // create graph and assign data to it:
-    customPlot->clearGraphs();
-    customPlot->addGraph();
-    //customPlot->addPlottable(barGraph);
 
-   // customPlot->graph(0)->setPen(pen);
+void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
 
 
-    customPlot->graph()->setBrush(QBrush(QColor(255,255,255)));
-    customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+    qDebug() << gdata->x;
+    qDebug() << gdata->y;
+
+    QVector<double> x3, y3;
+    x3 = gdata->x;
+    y3 = gdata->y;
+
+    double width = ( gdata->xmax - gdata->xmin)/100;
+    if( width < 5) width = 5;
+
+    customPlot->yAxis->setRange(gdata->ymin, gdata->ymax);
+    customPlot->xAxis->setRange(gdata->xmin , gdata->xmax);
+
+    QCPBars *bars1 = new QCPBars(customPlot->xAxis, customPlot->yAxis );
+    customPlot->addPlottable(bars1);
+    bars1->setWidth(width);
+    bars1->setData(x3, y3);
+
+    bars1->setPen(QPen(Qt::black));
+    bars1->setAntialiased(true);
+    bars1->setAntialiasedFill(false);
+   // bars1->setBrush(QColor("#705BE8"));
+    bars1->keyAxis()->setAutoTicks(false);
+  //  bars1->keyAxis()->setTickVector(x3);
+    bars1->keyAxis()->setSubTickCount(0);
+
+
+
+}
+
+void GraphData::plotLineGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
+
+
     customPlot->graph()->setData(gdata->x, gdata->y);
     // give the axes some labels:
     customPlot->xAxis->setLabel(gdata->xlab);
@@ -173,6 +193,50 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
     customPlot->yAxis->setRange(0,gdata->ymax);
     customPlot->xAxis->setRange(gdata->xmin -1 , gdata->xmax + 1);
 
+}
+
+void GraphData::updateMinMax(GRAPHDATA *gdata) {
+    double _min= 1e+20 , _max = -999999;
+    foreach(double v, gdata->x) {
+        if( v > _max ) _max = v;
+        if( v < _min ) _min= v;
+    }
+    gdata->xmin = _min;
+    gdata->xmax = _max;
+
+    foreach(double v, gdata->y) {
+        if( v > _max ) _max = v;
+        if( v < _min ) _min= v;
+    }
+    gdata->ymin = _min;
+    gdata->ymax = _max;
+
+}
+
+void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
+  //  QCPBars *barGraph = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+    // QCPCurve *barGraph = new QCPCurve(customPlot->xAxis, customPlot->yAxis);
+    // create graph and assign data to it:
+    customPlot->clearGraphs();
+    customPlot->addGraph();
+    //customPlot->addPlottable(barGraph);
+
+   // customPlot->graph(0)->setPen(pen);
+    customPlot->graph()->setBrush(QBrush(QColor(255,255,255)));
+    customPlot->graph()->setLineStyle(QCPGraph::lsLine);
+    //qDebug() << gdata->x;
+
+    unsigned int nonzeroSize = Utilities::numNonZeros(gdata->y);
+
+    Utilities::removeZeros(gdata->x, gdata->y, 1);
+
+    this->updateMinMax(gdata);
+    if( nonzeroSize < 10) {
+         this->plotBarGraph(customPlot, gdata);
+    }
+    else {
+         this->plotLineGraph(customPlot, gdata);
+    }
     customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
     //customPlot->setInteractions(QCP::iRangeZoom | QCP::iSelectPlottables);
 

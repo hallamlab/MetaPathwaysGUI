@@ -7,6 +7,7 @@
 #include <QPushButton>
 
 #include "helper/qcustomplot.h"
+#include "helper/utilities.h"
 #include "caching/tablemanager.h"
 
 namespace Ui {
@@ -24,6 +25,9 @@ public:
     bool setFile(QString fileName) ;
     void plotSomeGraph(QCustomPlot *graph, GRAPHDATA *gdata);
     bool prepareInput(const QString &xlab = "-", const QString &ylab = "-");
+    void plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) ;
+    void plotLineGraph(QCustomPlot *customPlot, GRAPHDATA *gdata);
+    void updateMinMax(GRAPHDATA *gdata);
 
     QCustomPlot* graph;
     QPushButton* exportButton;
