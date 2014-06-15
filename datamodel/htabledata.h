@@ -57,7 +57,7 @@ public:
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
-    void setHeaders(QStringList &headers);
+   // void setHeaders(QStringList &headers);
     QStringList getHeaders();
     QString getHeader(unsigned int i);
     enum TYPE getFieldType(unsigned int i);
@@ -66,6 +66,7 @@ public:
     unsigned int  showSelectedTableData(QString categoryName);
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
     unsigned int fillSelectedData(QString category, unsigned int maxDepth);
+    QStringList multiSampleHeaders() ;
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
@@ -144,7 +145,7 @@ private:
     QCheckBox *showRPKM;
 
     bool multiSampleMode;
-    QStringList headers;
+ //   QStringList headers;
     QStringList sampleNames;
     unsigned int maxSpinBoxDepth;
 

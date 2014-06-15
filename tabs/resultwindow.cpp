@@ -635,7 +635,7 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     htable->setShowHierarchy(true);
-    htable->setHeaders(headers);
+   // htable->setHeaders(headers);
     htable->setTableIdentity(sampleName, attr);
     htable->showTableData();
     return htable;
@@ -737,9 +737,6 @@ void ResultWindow::switchToComparativeMode() {
     HTableData *htable = new HTableData;
     types.clear();
     types << STRING << STRING;
-    headers.clear();
-    headers << "COG Category" << "COG Category (Alias)";
-    htable->clearConnectors();
 
     progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
     progressbar->show();
@@ -757,10 +754,11 @@ void ResultWindow::switchToComparativeMode() {
     htable->setParameters(datamanager->getHTree(COG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
     htable->setShowHierarchy(true);
-    htable->setHeaders(headers);
+   // htable->setHeaders(headers);
     htable->setTableIdentity("COG", COG);
-    htable->showTableData();
     htable->setMultiSampleMode(true);
+    htable->showTableData();
+
 
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -776,8 +774,11 @@ void ResultWindow::switchToComparativeMode() {
     htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
     types.clear();
     types << STRING << STRING;
+
+    /*
     headers.clear();
     headers << "KEGG Function" << "KEGG function (alias)" ;
+    */
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
     progressbar->show();
@@ -796,10 +797,11 @@ void ResultWindow::switchToComparativeMode() {
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
 
     htable->setShowHierarchy(true);
-    htable->setHeaders(headers);
+
     htable->setTableIdentity("KEGG", KEGG);
-    htable->showTableData();
     htable->setMultiSampleMode(true);
+    htable->showTableData();
+
 
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -820,9 +822,13 @@ void ResultWindow::switchToComparativeMode() {
     htable = CreateWidgets::getHtableData(METACYC); //new HTableData;
     types.clear();
     types << STRING << STRING;
+
+    /*
     headers.clear();
     headers << "Pathway/Reaction" << "Common name" ;
     htable->clearConnectors();
+*/
+
 
     for(int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
@@ -835,10 +841,11 @@ void ResultWindow::switchToComparativeMode() {
     htable->setParameters(datamanager->getHTree(METACYC),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
     htable->setShowHierarchy(true);
-    htable->setHeaders(headers);
+
     htable->setTableIdentity("METACYC", METACYC);
-    htable->showTableData();
     htable->setMultiSampleMode(true);
+    htable->showTableData();
+
     htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -855,8 +862,12 @@ void ResultWindow::switchToComparativeMode() {
     htable = CreateWidgets::getHtableData(SEED);;
     types.clear();
     types << STRING << STRING;
+
+    /*
     headers.clear();
     headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) ";
+    */
+
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
     progressbar->show();
@@ -873,10 +884,11 @@ void ResultWindow::switchToComparativeMode() {
     htable->setParameters(datamanager->getHTree(SEED),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(SEED)->getTreeDepth());
     htable->setShowHierarchy(true);
-    htable->setHeaders(headers);
+
     htable->setTableIdentity("SEED", SEED);
-    htable->showTableData();
     htable->setMultiSampleMode(true);
+    htable->showTableData();
+
 
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);

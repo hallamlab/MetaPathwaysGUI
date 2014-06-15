@@ -90,6 +90,17 @@ QStringList ExportBox::getCheckedHeaders() {
  }
 
 
+QStringList ExportBox::getCheckedSamples() {
+    QStringList selectedSamples;
+
+    foreach(QCheckBox *chbox, this->samplesCheckboxes)
+        if( chbox->isChecked() )
+            selectedSamples << chbox->text();
+
+    return selectedSamples;
+
+ }
+
 QStringList ExportBox::getAllHeaders() {
     QStringList selectedHeaders;
 
@@ -122,7 +133,9 @@ QStringList ExportBox::getAllHeaders() {
      groupBox->setLayout(grid);
      pvbox->addWidget(groupBox);
 
+
      if( this->td->isMultiSampleMode()) {
+         this->samplesCheckboxes.clear();
         // qDebug() << "multisample";
          QGroupBox *sampleGroupBox = new QGroupBox(tr("Select Samples (to export sequences)"));
          sampleGroupBox->setFlat(true);
@@ -131,6 +144,7 @@ QStringList ExportBox::getAllHeaders() {
              QCheckBox *checkBox1 = new QCheckBox(this->td->getSampleName(i));
              connect(checkBox1, SIGNAL( clicked()), this, SLOT(clickedChoice()) );
              sampleGrid->addWidget(checkBox1,(int)i/5, i%5);
+             this->samplesCheckboxes.append(checkBox1);
          }
          sampleGroupBox->setLayout(sampleGrid);
          pvbox->addWidget(sampleGroupBox);
@@ -200,11 +214,18 @@ typedef struct _EXPORT_FILES_INFO {
 
 } EXPORT_FILES_INFO;
 
+
+ /**
+  * @brief ExportBox::saveAs saves the selected table columns to txt or csv file and also save the
+  * fna, fasta and faa sequences for the selected samples.
+  * @return
+  */
  bool ExportBox::saveAs()
  {
      QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"));
      QString exportFileName;
      QChar delim;
+     QHash<QString, bool> sampleSequencesToExport;
 
      if (fileName.isEmpty())
          return false;
@@ -212,6 +233,11 @@ typedef struct _EXPORT_FILES_INFO {
      QStringList selectedHeaders = this->getCheckedHeaders();
      if( selectedHeaders.size() ==0 ) {
          selectedHeaders = this->getAllHeaders();
+     }
+
+     // make a hash of the selected samples
+     foreach(QString item,  this->getCheckedSamples()) {
+         sampleSequencesToExport.insert(item, true);
      }
 
      if( csvRadio->isChecked()) {
@@ -236,8 +262,9 @@ typedef struct _EXPORT_FILES_INFO {
      filesInfo.resources << NUCFASTA << NUCFNA << AMINOFAA;
 
    //  if( this->td->isMultiSampleMode() ) {
-         QDir dir(fileName);
-         foreach( QString sampleName, this->td->getSampleNames())
+      QDir dir(fileName);
+      foreach( QString sampleName, this->td->getSampleNames() ) {
+            if( this->td->isMultiSampleMode() && !sampleSequencesToExport.contains(sampleName)) continue;  // skip the sample if it is not selected
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {
                      if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
@@ -247,6 +274,7 @@ typedef struct _EXPORT_FILES_INFO {
                      //waitScreen->hide();
                  }
              }
+       }
 
 
      this->hide();

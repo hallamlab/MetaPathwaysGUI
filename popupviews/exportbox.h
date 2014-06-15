@@ -53,6 +53,7 @@ private:
     void createWidget();
     QStringList getCheckedHeaders();
     QStringList getAllHeaders();
+    QStringList getCheckedSamples();
 private:
     QGroupBox *createNonExclusiveGroup(QVBoxLayout *grid);
     ExportSource *td;
@@ -67,6 +68,7 @@ private:
     QCheckBox *faa ;
 
     QList<EXPORT_SELECT> Columns;
+    QList<QCheckBox *> samplesCheckboxes;
     TABLETYPE type;
 
 };

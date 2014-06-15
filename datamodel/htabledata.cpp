@@ -180,12 +180,25 @@ void HTableData::setNumCols(unsigned int numCols) {
 }
 
 QStringList HTableData::getHeaders(){
-    return this->headers;
+
+    QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+    if(multiSampleMode) {
+        _headers = this->multiSampleHeaders();
+    }
+
+    return _headers;
 }
 
 QString HTableData::getHeader(unsigned int i){
-    if(i >= this->headers.size()) return QString();
-    return this->headers.at(i);
+    QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+    if(multiSampleMode) {
+        _headers = this->multiSampleHeaders();
+    }
+
+    if(i >= _headers.size()) return QString();
+    return _headers.at(i);
 }
 
 enum TYPE HTableData::getFieldType(unsigned int i) {
@@ -194,10 +207,11 @@ enum TYPE HTableData::getFieldType(unsigned int i) {
     return this->types.at(i);
 }
 
+/*
 void HTableData::setHeaders(QStringList &headers) {
-    this->headers = headers;
+   ;// this->headers = headers;
 }
-
+*/
 void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
    this->id.attrType = attrType;
    this->id.sampleName = sampleName;
@@ -269,14 +283,21 @@ void HTableData::fillData() {
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->checkState() ) ;
      QList<ROWDATA *> newdata;
 
+
+     QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+     if(multiSampleMode) {
+         _headers = this->multiSampleHeaders();
+     }
+
      if(hideZeroRows->isChecked()) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
-        this->populateTable(newdata, this->headers);
+        this->populateTable(newdata, _headers);
      }
      else {
-        this->populateTable(data, this->headers);
+         this->populateTable(data, _headers);
 
      }
 }
@@ -295,23 +316,42 @@ void HTableData::fillData() {
 unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth) {
      QList<ROWDATA *> data;
      qDebug() << categoryName;
-     if( false )
-     data =  this->htree->getRows(categoryName, maxDepth, this->connectors, this->showHierarchy->isChecked(),  this->hideZeroRows->isChecked(), this->showRPKM->isChecked());
 
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(),  this->showRPKM->isChecked() ) ;
+
+     QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+     if(multiSampleMode) {
+         _headers = this->multiSampleHeaders();
+     }
 
      QList<ROWDATA *> newdata;
      if(hideZeroRows->isChecked()) {
         foreach(ROWDATA *r, data) {
             if( isNonZero(r)) newdata.append(r);
         }
-        this->populateTable(newdata, this->headers );
+        this->populateTable(newdata, _headers );
         return newdata.size();
      }
      else {
-        this->populateTable(data, this->headers );
+        this->populateTable(data, _headers);
         return data.size();
      }
+}
+
+/**
+ * @brief HTableData::multiSampleHeaders creates headers for the multisample mode by
+ * adding the list of samples names
+ * @return
+ */
+QStringList HTableData::multiSampleHeaders() {
+     QStringList headers;
+     headers.append(this->tableParams.headers[this->id.attrType][0]);
+     headers.append(this->tableParams.headers[this->id.attrType][1]);
+     foreach( QString sampleName, this->sampleNames)
+         headers.append(sampleName);
+
+     return headers;
 }
 
 unsigned int HTableData::showSelectedTableData(QString categoryName) {
@@ -410,8 +450,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     else
        htable->subCategoryName->setText(htable->category);
 
-    // set the htable levels
-  //  qDebug() << "depthhh " << htable->showDepth->value() << "  " << this->showDepth->value();
     htable->depthLabelValue->setText(QString::number(htable->level));
     htable->depthLabelValue->setVisible(true);
   //  htable->connectors = this->connectors;
@@ -432,8 +470,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     QList<ORF *>orfList;
     unsigned int totNumOrfs =0 , _totNumOrfs =0;
 
-   //  qDebug() << "type 1 " <<  this->htableIdentities.size();
-   //  qDebug() << "type 2 " << this->connectors.size();
 
 
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
@@ -447,27 +483,14 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
            _totNumOrfs += Utilities::uniqueORFsCount(orfList);
            totNumOrfs += orfList.size();
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
-         //  qDebug() << " get modCon size " << modConnector->getNumOfORFs() << " atr " << this->htableIdentities[i].attrType ;
         }
-      //  qDebug() << "num orfs " <<  totNumOrfs;
     }
 
    // qDebug() << "Category depth " << this->id.attrType << "  " << datamanager->getHTree(this->id.attrType)->getTreeDepth();
     htable->numOrfsLabel->setText(QString("ORFs count : " + QString::number( totNumOrfs) + " | " + QString::number(_totNumOrfs) ));
     htable->setToolTip("Total number of ORFs | Number of distinct ORFs");
     htable->numOrfsLabel->setVisible(true);
-    htable->setHeaders( this->headers);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
-
-  /*
-    htable->showRPKM->setChecked(this->showRPKM->isChecked());
-    htable->hideZeroRows->setChecked(this->hideZeroRows->isChecked());
-    htable->showHierarchy->setChecked(this->showHierarchy->isChecked());
-
-    */
-
-
-
     htable->switchCategory(this->id.attrType);
 
 
@@ -511,42 +534,46 @@ void HTableData::switchCategory(int index) {
     this->setMaxSpinBoxDepth(datamanager->getHTree(htableIdentities[index].attrType)->getTreeDepth());
     //this->setShowHierarchy(true);
 
-    /*
-    qDebug() << "KEGG " <<  this->allConnectors[KEGG][0]->getNumOfORFs();
-    qDebug() << "COG " <<  this->allConnectors[COG][0]->getNumOfORFs();
-    qDebug() << "MetaCyc " <<  this->allConnectors[METACYC][0]->getNumOfORFs();
-    qDebug() << "SEED " <<  this->allConnectors[SEED][0]->getNumOfORFs();
-
-    qDebug() << "Switched to " << this->id.attrType << "    " <<  this->htableIdentities[index].attrType;
-*/
-   // this->level = this + 1;
-
 
     if(this->id.attrType==this->htableIdentities[index].attrType) {
         if( this->showSelectedTableData(this->category) !=0 ) {
             this->show();
         }
         else {
-            qDebug() << " Hide  " << this->id.attrType <<  " to " << this->htableIdentities[index].attrType;
+            this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
             this->hide();
         }
     }
     else {
-        qDebug() << " You switched from  " << this->id.attrType <<  " to " << this->htableIdentities[index].attrType;
+        this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
         this->showTableData();
     }
-    this->setTableIdentity(this->id.sampleName, this->htableIdentities[index].attrType);
+
 
 }
 
+/**
+ * @brief HTableData::saveTableToFile saves the table to the file
+ * @param fileName, to save to
+ * @param delim, the delimiter to use
+ * @param selectedHeaders, the columns to export
+ * @return
+ */
 bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders) {
     QFile outFile(fileName);
+
+    QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+    if(multiSampleMode) {
+        _headers = this->multiSampleHeaders();
+    }
+
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
         bool delimOn;
 
         QHash<QString, bool> includeColumn;
-        foreach(QString header, this->headers) {
+        foreach(QString header, _headers) {
             includeColumn[header] = false;
         }
 
@@ -556,7 +583,7 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
 
         int j = 0;
         delimOn = false;
-        foreach(QString header, this->headers) {
+        foreach(QString header, _headers) {
             if(delimOn)  out << delim;
             if( !includeColumn[header])
                 continue;
@@ -571,7 +598,7 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
             if( this->tableWidget->isRowHidden(i) ) continue;
              delimOn = false;
              for(int j =0; j < this->tableWidget->columnCount(); j++)  {
-                 if( !includeColumn[this->headers[j]])
+                 if( !includeColumn[_headers[j]])
                      continue;
                  else {
                       if(delimOn)  out << delim;
@@ -594,7 +621,6 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
  **/
 bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
-    qDebug() << "Exporting to " << fileName;
     DataManager *datamanager = DataManager::getDataManager();
     HTree *htree = datamanager->getHTree(this->id.attrType);
 
