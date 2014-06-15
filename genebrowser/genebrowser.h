@@ -15,6 +15,8 @@
 
 class GraphicsNotchedLine;
 class GraphicsGeneItems;
+class GraphicsNameItem;
+class GraphicsTextItems;
 
 class GeneBrowser
 {
@@ -35,13 +37,16 @@ public:
     static bool sortRankBeginPair(const RANK_BEGIN_PAIR &a, const RANK_BEGIN_PAIR &b);
 private:
     unsigned int computeORFLevels(QList<ORFData> &orfs, STRAND strand);
+    void computeCaptionParams(QList<ORFData> &orfs, CAPTIONPARAMS &captionParams);
     QGraphicsView *view;
     QGraphicsScene *gscene;
+    GraphicsTextItems *captionItems;
     double  XSIZE, YSIZE;
     GeneBrowserData data;
     double scale, basePairToPixelRatio;
     double xstart, ystart;
     GraphicsNotchedLine *line;
+
     GraphicsGeneItems *revorfs, *fwdorfs;
 };
 

@@ -48,8 +48,8 @@ public:
     void reRank();
     void getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & selectrows, QString search, unsigned int col, enum TYPE type);
 
-    QList< ROW *> tableData;
-    QList<ROW *>  wholeTableData;
+    QList< ROW *> tableData;   // stores the filtered data
+    QList<ROW *>  wholeTableData;  //stores all the data, and copied to the tableData when filtered
     QStringList colNames;
 
     unsigned int lastUsedField;

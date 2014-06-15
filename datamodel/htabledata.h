@@ -23,6 +23,7 @@
 #include "popupviews/searchwidget.h"
 #include "displaywidgets/progressview.h"
 #include "helper/types.h"
+#include "helper/globaldatatransit.h"
 
 
 typedef struct _HTABLE_IDENTITY {
@@ -36,6 +37,8 @@ class HTableData;
 }
 class ExportBox;
 class SearchWidget;
+class ResultWindow;
+
 
 class HTableData : public QDialog
 {
@@ -76,6 +79,9 @@ public:
 
     void initializeSearchFilter(QString query, int column, bool caseSensitive);
 
+
+
+
     QTableWidget* tableWidget;
     unsigned int numCols;
     QList<enum TYPE> types;
@@ -94,6 +100,8 @@ public:
 
 
     HTABLEIDENTITY id;
+
+    HTABLE_PARAMS tableParams;
 private:
      bool isNonZero(ROWDATA *r);
 
@@ -107,9 +115,15 @@ private slots:
     void switchCategory(int);
     void searchButtonPressed();
     void exportButtonPressed();
+    void ProvideContexMenu(QPoint pos);
+
+signals:
+    void showTable(QString sampleName, ATTRTYPE type);
+
 
 public slots:
     void searchQuery(QString query, int column, bool caseSensitive);
+
 
 private:
 

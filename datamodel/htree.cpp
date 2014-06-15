@@ -48,7 +48,11 @@ QList<HNODE *> HTree::getChildrenOf(QString name) {
    return results;
 }
 
-
+/**
+ * @brief HTree::getLeafAttributesOf, gets the leaf attributes or the lowest level attributes of the tree
+ * @param hnode
+ * @return  at list of attributes
+ */
 QList<ATTRIBUTE *> HTree::getLeafAttributesOf(HNODE *hnode) {
     QList<ATTRIBUTE *> attrList;
     this->_getLeafAttributesOf(hnode, attrList);
@@ -63,7 +67,10 @@ void HTree::_getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList) {
         this->_getLeafAttributesOf(*it, attrList);
     }
 }
-
+/**
+ * @brief HTree::getRootHNODE, retuns the root node of the tree
+ * @return the pointer to the root HNODE
+ */
 HNODE *HTree::getRootHNODE() {
     return root;
 }
@@ -79,9 +86,17 @@ void HTree::printTree(HNODE *hnode, unsigned int d) {
 }
 
 
+/**
+ * @brief HTree::getHNODE, it retrieves a new node in a tree based on the name of the category
+ * @param name, the category name
+ * @return
+ */
 HNODE *HTree::getHNODE(QString name) {
-    if( nodes.contains(name))
-        return nodes[name];
+    QString trimmedName = name.trimmed();
+
+    if( nodes.contains(trimmedName)) {
+        return nodes[trimmedName];
+    }
     else
         return 0;
 }

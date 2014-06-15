@@ -20,6 +20,9 @@
 #include <QDir>
 #include <QVector>
 
+#include "datamodel/datamodeltypes.h"
+
+
 class TableNumberItem : public QTableWidgetItem{
 
 public:
@@ -52,6 +55,7 @@ public:
     static QStringList getFilesWithPattern(const QString &folderName, const QRegExp &pattern);
     static unsigned int numNonZeros(const QVector<double> &v);
     static void removeZeros(QVector<double> &x, QVector<double> &y, unsigned int index = 0 );
+    static unsigned int uniqueORFsCount(const QList<ORF *> &orfList);
 };
 
 

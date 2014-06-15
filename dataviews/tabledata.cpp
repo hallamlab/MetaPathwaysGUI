@@ -10,6 +10,8 @@
 #include "ui_tabledata.h"
 #include "helper/utilities.h"
 
+
+
 TableData::TableData(  QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TableData)
@@ -69,8 +71,15 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
     this->file = file;
     this->HAS_COMMENT = HAS_COMMENT;
 
-    this->setupFromFile(file);
+}
 
+/**
+ * @brief TableData::loadData loads the data into the table, but if it finds a cached table
+ * then it always uses it
+ */
+
+void TableData::loadData() {
+    this->setupFromFile(this->file);
 }
 
 // with select columns
@@ -123,13 +132,12 @@ void TableData::createGeneViewData(QTableWidgetItem *item) {
     s.name = key;
 
     foreach(ROW *row, rows) {
-
+        orf.name = row->strVar[largeTable->index[0]];
         orf.start = row->intVar[largeTable->index[2]];
         orf.end = row->intVar[largeTable->index[3]];
         if(s.length < row->intVar[largeTable->index[5]] ) {
             s.length = row->intVar[largeTable->index[5]];
         }
-
 
         if( row->strVar[largeTable->index[6]] == QString("+"))
            orf.strand = FORWARD;
@@ -297,7 +305,7 @@ void TableData::updateData(double top, bool reload){
          largeTable->setPivot(pivot);
          int from = pivot > dw ? pivot -dw : 0;
          largeTable->getData(bigdata, from, dw);
-         this->populateTable(*tableWidget, bigdata, headers, from );
+         this->populateTable(from );
     }
 }
 
@@ -319,10 +327,25 @@ void TableData::setupFromFile(const QString &file){
         headers = largeTable->colNames;
 
         if(!bigdata.empty() ) {
-           this->populateTable(*tableWidget, bigdata, headers, top);
+           this->populateTable(top);
         }
 
         //this->exportBox = new ExportBox(this);
+}
+
+
+void TableData::setupFromFile(){
+
+        largeTable->getData(bigdata, 0,dw);
+
+        tableWidget->setRowCount(largeTable->tableData.length());
+        tableWidget->setColumnCount(largeTable->colNames.length());
+        headers = largeTable->colNames;
+
+        if(!bigdata.empty() ) {
+           this->populateTable(0);
+        }
+
 }
 
 
@@ -338,13 +361,13 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
            if (CACHE) tableManager->setTable(file, largeTable);
         }
 
-        largeTable->getData(bigdata, 0,dw);
+        largeTable->getData(bigdata, 0, dw);
         tableWidget->setRowCount(largeTable->tableData.length());
         tableWidget->setColumnCount(largeTable->colNames.length());
         headers = largeTable->colNames;
 
         if(!bigdata.empty() ) {
-           this->populateTable(*tableWidget, bigdata, headers, top);
+            this->populateTable(this->top);
         }
 
       //  this->exportBox = new ExportBox(this);
@@ -355,25 +378,35 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
  * the pointer to the table given.
  */
 
-//BIG DATA
-void TableData::populateTable(QTableWidget &table,  QList<ROW *> &data, const QStringList &headers, int from){
+/**
+ * @brief TableData::populateTable Creates the actual table widget the data given to it, and populates
+ * the table with data and headers given with the pointer to the table given.
+ * @param table
+ * @param data
+ * @param headers
+ * @param from
+ */
+void TableData::populateTable(int top){
 
-    table.setColumnCount(headers.size());
-    table.setHorizontalHeaderLabels(headers);
+    tableWidget->setColumnCount(this->headers.size());
+    tableWidget->setHorizontalHeaderLabels(this->headers);
 
-    int k = from;
-    table.clearContents();
-    foreach( ROW *datum,  data) {
+    int k = top;
+    tableWidget->clearContents();
+    foreach( ROW *datum,  bigdata) {
       for( unsigned int i = 0; i < largeTable->numCols; i++) {
           try{
+
               //table.setItem(k,i,new QTableWidgetItem("aldkfjglkjdsfgjdfsjglkjdsfgjldfkgjjdfglkdfgjldfjgljdsflkjlsdkfjglkjsdflgjlkdsfjgljdfslgjldfgljdsflkgjkdfsjlgkja;sdkfj;alwkj;l435u3209"));
               if( types[i] == INT) {
-                 table.setItem(k,i, new QTableWidgetItem(QString::number(datum->intVar.at(largeTable->index[i]))));
+                 tableWidget->setItem(k,i, new QTableWidgetItem(QString::number(datum->intVar.at(largeTable->index[i]))));
               }
-              if( types[i] == DOUBLE) table.setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
-
+              if( types[i] == DOUBLE) {
+                  tableWidget->setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
+              }
               if(types[i] == STRING) {
-                  table.setItem(k,i,new QTableWidgetItem(QString(datum->strVar.at(largeTable->index[i]))));
+
+                  tableWidget->setItem(k,i,new QTableWidgetItem(QString(datum->strVar.at(largeTable->index[i]))));
               }
 
           }
@@ -384,9 +417,9 @@ void TableData::populateTable(QTableWidget &table,  QList<ROW *> &data, const QS
       }
       k++;
     }
-    table.resizeColumnsToContents();
+    tableWidget->resizeColumnsToContents();
     //table.resizeRowsToContents();
-    table.horizontalHeader()->setStretchLastSection(true);
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 
 

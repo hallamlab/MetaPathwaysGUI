@@ -72,7 +72,8 @@ SOURCES += main.cpp\
     datamodel/treeitem.cpp \
     datamodel/treemodel.cpp \
     helper/types.cpp \
-    tabs/simpletabgroups.cpp
+    tabs/simpletabgroups.cpp \
+    helper/globaldatatransit.cpp
 
 
 
@@ -133,7 +134,8 @@ HEADERS  += \
     datamodel/treeitem.h\
     datamodel/treemodel.h \
     helper/constants.h \
-    tabs/simpletabgroups.h
+    tabs/simpletabgroups.h \
+    helper/globaldatatransit.h
 
 
 

@@ -91,6 +91,27 @@ public:
 
 };
 
+
+class GraphicsTextItems: public QGraphicsItemGroup{
+
+public:
+    GraphicsTextItems() {
+
+    }
+
+    void createTextItems(CAPTIONPARAMS captionParams);
+
+
+private:
+    QVector<QGraphicsTextItem *> textItems;
+    PENPOSITION pen;
+    double scale;
+
+};
+
+
+
+
 class GraphicsTaxonItem: public QGraphicsEllipseItem {
 
 public:
@@ -118,6 +139,7 @@ class GraphicsItemsCollection
 public:
     static GraphicsItemsCollection *getGraphicsItemsCollection();
     GraphicsNotchedLine *getNotchedLine(NotchedLineParams &params);
+    GraphicsTextItems *getCaptionItems(CAPTIONPARAMS &captionParams);
     static QGraphicsRectItem *getLineShape(LINEPROPERTY &linesize);
     QGraphicsPolygonItem *getGeneShape(GENEPROPERTY &gene, STRAND strand = FORWARD);
     GraphicsGeneItems *getORFDiagrams(QList<ORFData> &orfs, STRAND strand, GENEPROPERTY &geneProp, PENPOSITION &pen);
@@ -126,6 +148,8 @@ public:
 
     GraphicsTaxonItem *getTaxonNode(TREENODE *node, double STARTX=0, double STARTY=0);
     GraphicsNameItem *getNameNode(GraphicsTaxonItem *taxon, double STARTX=0, double STARTY=0);
+
+
 
 private:
 

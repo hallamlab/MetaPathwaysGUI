@@ -7,6 +7,8 @@
 #include "dataviews/graphdata.h"
 
 
+class TableData;
+class GraphData;
 
 template <class T>
 class SimpleTabGroups
@@ -123,5 +125,7 @@ void SimpleTabGroups<T>::removeGroup(const QString &groupName) {
     delete this->simpleTableGroups[groupName];
     this->simpleTableGroups.remove(groupName);
 }
+
+
 
 #endif // SIMPLETABGROUPS_H

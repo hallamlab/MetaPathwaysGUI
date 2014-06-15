@@ -3,6 +3,7 @@
 #include <QString>
 #include <QHash>
 #include <QList>
+#include <QPair>
 #include <QGraphicsItem>
 
 typedef enum _STATUS_SYMBOL {REDCROSS, GREENCHECK, LOADING}  STATUS_SYMBOL;
@@ -44,6 +45,7 @@ typedef struct _PENPOSITION {
 typedef struct _ORFData {
     unsigned int start, end;
     STRAND strand;
+    QString name;
     QString func_annot, tax_annot, note;
     short int _level;
 
@@ -55,6 +57,9 @@ typedef struct _SEQUENCEDATA {
     QString name;
 
 } SequenceData;
+
+
+typedef QPair<QString, unsigned int > TaxonFreqQPair;
 
 typedef struct _GeneBrowserData {
     QList<ORFData>  orfData;
@@ -83,6 +88,14 @@ typedef struct LineProp {
     double width, thickness;
 } LINEPROPERTY;
 
+// hold caption information for a geneviewer
+typedef struct _CAPTION_PARAMS {
+    QString contigName;
+    QList<QPair< QString, unsigned int> > taxonFreq;
+    int maxpairs;
+    double x, y;
+    double spaceAbove, spaceBelow;
+} CAPTIONPARAMS;
 
 typedef struct GeneProperty {
     double x, y;

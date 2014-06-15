@@ -503,6 +503,18 @@ void Utilities::removeZeros(QVector<double> &x, QVector<double> &y, unsigned int
 }
 
 
+unsigned int Utilities::uniqueORFsCount(const  QList<ORF *> &orfList) {
+    QHash<QString, bool> _names;
+
+    foreach(ORF *orf, orfList) {
+        if( !_names.contains(orf->name)) _names.insert(orf->name, true);
+    }
+
+    return _names.size();
+
+
+}
+
 
 
 

@@ -44,7 +44,7 @@ void MeganData::printTree(TREENODE *root, int i) {
     if(root==0) return;
 
     QString space;
-    for(unsigned int j =0; j < i; j++) space.append(' ');
+    for(int j =0; j < i; j++) space.append(' ');
    // qDebug() << i <<" " << space  << root->name << " " << root->count ;
 
     foreach(TREENODE *child, root->children) {
@@ -107,7 +107,7 @@ void MeganData::setStyleVisible(GraphicsTaxonItem *taxon, LineStyle style,  bool
        // qDebug() << " synchro " << node->depth << " " << node->deltaX << " (" << node->depth*node->deltaX <<"," << node->deltaY*(node->Ydown + node->Yup)/2 << ")  " << taxon->pos();
     }
 
-    for(unsigned int i=0; i < taxon->Children.size(); i++) {
+    for(int i=0; i < taxon->Children.size(); i++) {
         if( currDepth < maxDepth && visible) {
             taxon->Lines[style][i]->inscene = true;
             this->setLines(taxon->Lines[style][i], style, taxon, taxon->Children[i]);
@@ -127,7 +127,7 @@ void MeganData::synchronizeConnectingLines(GraphicsTaxonItem *taxon, unsigned in
         return;
     }
 
-    for(unsigned int i=0; i < taxon->Children.size(); i++) {
+    for(int i=0; i < taxon->Children.size(); i++) {
         this->setLines(taxon->Lines[style][i], style, taxon, taxon->Children[i]);
         synchronizeConnectingLines( taxon->Children[i], currDepth + 1, maxDepth, style);
     }
@@ -157,7 +157,7 @@ void MeganData::synchronizeNodeAndTaxonItems(TREENODE *node, GraphicsTaxonItem *
 
     taxon->setRect(this->STARTX + (node->depth*this->deltaX -  taxon->radius/2)*this->scale, (this->STARTY + this->deltaY*(node->Ydown + node->Yup)/2 - taxon->radius/2)*this->scale*this->yscale, taxon->radius, taxon->radius);
 
-    for(unsigned int i=0; i < node->children.size(); i++) {
+    for(int i=0; i < node->children.size(); i++) {
         synchronizeNodeAndTaxonItems(node->children[i], taxon->Children[i], currDepth + 1, maxDepth);
     }
 }

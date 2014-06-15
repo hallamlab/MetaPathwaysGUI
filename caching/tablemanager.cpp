@@ -23,7 +23,7 @@ LargeTable *TableManager::getTable(QString fileName) {
     if( tables.contains(fileName) ) {
         tables[fileName].accessed = timeAccessed;
         timeAccessed++;
-        qDebug() << "Found cached table " << fileName;
+
         return tables[fileName].table;
     }
     return 0;
@@ -90,7 +90,6 @@ GRAPHDATA *TableManager::getGraphData(QString fileName) {
     if( graphData.contains(fileName) ) {
         graphData[fileName]->accessed = timeAccessed;
         timeAccessed++;
-        qDebug() << "Found cached graph data " << fileName;
         return graphData[fileName];
     }
     return 0;

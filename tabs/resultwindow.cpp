@@ -62,6 +62,13 @@ ResultWindow::ResultWindow(QWidget *parent) :
     DataManager *datamanager = DataManager::getDataManager();
     datamanager->createDataModel();
 #endif
+
+    /*
+    tableParams.headers[KEGG] << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
+    tableParams.headers[COG] << "COG Category" << "COG Category (Alias) " << "ORF Count";
+    tableParams.headers[METACYC] << "Pathway/Reaction" << "Common name" << "ORF Count";
+    tableParams.headers[SEED] << "SEED Subsystem Category" << "SEED Subsystem (Alias) " << "ORF Count";
+*/
 }
 
 void ResultWindow::_loadResults() {
@@ -283,8 +290,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     }
 
 
-
-
  #ifdef SECTION
      statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
      statTableView->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
@@ -299,7 +304,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     types.clear();
     types << STRING << STRING << INT;
-    headers.clear();
+    //headers = this->tableParams.headers[KEGG];
     headers << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, KEGG, types, headers, datamanager);
     htable->addSampleName(sampleName, true);
@@ -307,9 +312,17 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->addTab(htable, "KEGG");
     resultTabs->setTabToolTip(resultTabs->count()-1, "KEGG");
 
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
 
     types.clear();
     types << STRING << STRING << INT;
+
     headers.clear();
     headers << "COG Category" << "COG Category (Alias) " << "ORF Count";
     htable = this->getHTableData(sampleName, COG, types, headers,  datamanager);
@@ -317,6 +330,13 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
     resultTabs->setTabToolTip(resultTabs->count()-1, "COG");
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
 
     types.clear();
     types << STRING << STRING << INT;
@@ -327,6 +347,14 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
     resultTabs->setTabToolTip(resultTabs->count()-1, "METACYC");
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
+
 
     types.clear();
     types << STRING << STRING << INT;
@@ -337,6 +365,12 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "SEED");
     resultTabs->setTabToolTip(resultTabs->count()-1, "SEED");
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
 
 #ifdef MEGAN_VIEW
     MeganView *m = this->meganviews["MEGAN_TAXONOMIC"];
@@ -345,13 +379,12 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->addTab(m, "TAXONOMIC");
 #endif
 
-
     TableData *func_tax_table;
-    //FUNCTION AND TAXONOMIC TABLE
+
+    /*//FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = displayInfos["FUNC & TAX"];
     p->removeFileIndexes();
-    FileIndex *fileIndex;
-    fileIndex = samplercmgr->getFileIndex(sampleName, NUCFASTA);
+    FileIndex *fileIndex = samplercmgr->getFileIndex(sampleName, NUCFASTA);
 
     p->addFileIndex(fileIndex,4);
     fileIndex = samplercmgr->getFileIndex(sampleName, AMINOFAA);
@@ -364,6 +397,9 @@ void ResultWindow::sampleChanged(QString sampleName){
     func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
     func_tax_table->setPopupListener(p);
     func_tax_table->setType(OTHERSTABLEEXP);
+    */
+
+    func_tax_table = this->getFunctionalAndTaxTable(sampleName);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
     resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
 
@@ -421,20 +457,6 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
 
- //   if (nucStats.exists()) resultTabs->addTab(new TableData(true, true, nucFile, types), "CONT LEN TAB");
-
-   // if (aminoStats.exists()) resultTabs->addTab(new TableData(true, true, aminoFile, types), "CONT LEN TAB");
- //    GraphData *g;
- //   g = graphs["CONT LEN HIST"];
-
-  //  g->setFile(samplercmgr->getFilePath(sampleName,  CONTIGLENGTH));
-  //  g->prepareInput();
-  //  resultTabs->addTab(g,"CONT LEN HIST");
-
-   // g  = graphs["ORF LEN HIST"];
-  //  g->setFile(samplercmgr->getFilePath(sampleName, ORFLENGTH));
-   // g->prepareInput();
- //   resultTabs->addTab(g,"ORF LEN HIST");
 
 //    // PATHWAY TABLE
 //     types.clear();
@@ -473,6 +495,130 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     emit fileChanged(sampleName);
 }
+
+/*
+void ResultWindow::displayMenu(const QPoint &pos)
+{
+    QMenu menu(this);
+    QAction *u = menu.addAction("remove"); // there can be more than one
+    QAction *a = menu.exec(ui->tableWidget->viewport()->mapToGlobal(pos));
+    if (a == u)
+    {
+        // do what you want or call another function
+    }
+}
+*/
+
+/**
+ * @brief ResultWindow::addFunctionalAndTaxTable, add the functional and taxonomic table for the sample sampleName
+ * @param sampleName, name of the sample
+ * @return  ponter to the functiona and tax table
+ */
+TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCache, bool loadData) {
+
+
+    TableData *func_tax_table;
+    //FUNCTION AND TAXONOMIC TABLE
+    DisplayInfo *p = this->displayInfos["FUNC & TAX"];
+    p->removeFileIndexes();
+
+    SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
+
+    FileIndex *fileIndex = samplercmgr->getFileIndex(sampleName, NUCFASTA);
+    p->addFileIndex(fileIndex,4);
+    fileIndex = samplercmgr->getFileIndex(sampleName, AMINOFAA);
+    p->addFileIndex(fileIndex,0);
+
+    QList<enum TYPE> types;
+    types.clear();
+    types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
+
+    if(useCache )
+       func_tax_table = this->tables["FUNC & TAX"];
+    else {
+       func_tax_table = new TableData;
+       func_tax_table->largeTable  = new LargeTable();
+    }
+    func_tax_table->setSampleName(sampleName);
+    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+
+    // if loaded then it always loads from cache table
+    if(loadData)  func_tax_table->loadData();
+    func_tax_table->setPopupListener(p);
+    func_tax_table->setType(OTHERSTABLEEXP);
+    return func_tax_table;
+}
+
+
+void ResultWindow::ProvideContexMenu(QPoint position)
+{
+
+        QMenu menu(this);
+        QAction *u = menu.addAction(tr("remove"));
+
+        /*
+        QAction *a = menu.exec(tablewidget->viewport()->mapToGlobal(pos));
+        if (a == u)
+        {
+        if (tablewidget->itemAt(pos).column() ==1) // your desired column
+        {
+            qDebug() << "clickecd on 1";
+        }
+
+         }
+         */
+
+    qDebug() << " something index";
+    //context->exec(*position);
+}
+
+
+
+/**
+ * @brief ResultWindow::showTable, shows the table
+ * @param sampleName
+ * @param attrType
+ */
+void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
+
+    TableData *originalTable  = getFunctionalAndTaxTable(sampleName);
+
+    TableData *newTable  = getFunctionalAndTaxTable(sampleName, false, false);
+
+    GlobalDataTransit *globalDataTransit = GlobalDataTransit::getGlobalDataTransit();
+
+    newTable->setWindowTitle("Functional and Taxonomic Table - " +  sampleName);
+    newTable->largeTable->tableData.clear();
+    this->copyROWData(originalTable->largeTable->tableData,  newTable->largeTable->tableData, globalDataTransit->orfList);
+    this->copyROWData(originalTable->largeTable->wholeTableData,  newTable->largeTable->wholeTableData, globalDataTransit->orfList);
+
+    newTable->types = originalTable->types;
+    newTable->largeTable->types = originalTable->largeTable->types;
+    newTable->largeTable->colNames  = originalTable->largeTable->colNames;
+    newTable->largeTable->index = originalTable->largeTable->index;
+    newTable->largeTable->numCols = originalTable->largeTable->numCols;
+    newTable->setupFromFile( );
+    newTable->show();
+
+}
+
+
+void ResultWindow::copyROWData( QList<ROW *> &src, QList<ROW *> &tar, QList<ORF *> &selectORFs) {
+
+    QHash<QString, bool> orfNames;
+    foreach(ORF *orf, selectORFs) {
+        orfNames.insert(orf->name, true);
+    }
+
+
+    QString name;
+    foreach(ROW *r , src) {
+      //  qDebug() << r->strVar[0];
+        name = Utilities::getShortORFId(r->strVar[0]);
+        if( orfNames.contains(name)) tar.append(r);
+    }
+}
+
 
 HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QList<enum TYPE> types, QStringList headers,  DataManager *datamanager) {
     HTableData *htable = CreateWidgets::getHtableData(attr);
@@ -531,14 +677,14 @@ void ResultWindow::switchToComparativeMode() {
 
 
     unsigned int numSamplesToLoad = 0;
-    for(unsigned int i=0; i < files.size(); i++) {
+    for(int i=0; i < files.size(); i++) {
         if(this->selectedSamples[i])  numSamplesToLoad++;
     }
     ProgressView *progressbar = new ProgressView("creating ORFs for samples ", 0, numSamplesToLoad, this);
    // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
 
-    for(unsigned int i=0; i < files.size(); i++) {
+    for(int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
         datamanager->createORFs(files[i], orfTableName);
@@ -557,26 +703,6 @@ void ResultWindow::switchToComparativeMode() {
 
 
 
-
-    HTableData *htable = new HTableData;
-    types.clear();
-    types << STRING << STRING;
-    headers.clear();
-    headers << "COG Category" << "COG Category (Alias)";
-    htable->clearConnectors();
-
-    progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
-    progressbar->show();
-    for(unsigned int i=0; i < files.size(); i++) {
-       if( !this->selectedSamples[i])  continue; 
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
-       htable->addConnector(connect);
-       headers << files[i];
-       htable->addSampleName(files[i]);
-       types << INT;
-    }
-    progressbar->hide();
-    delete progressbar;
 
 
    QStringList selectedFileNames;
@@ -606,6 +732,28 @@ void ResultWindow::switchToComparativeMode() {
 #endif
 
 
+
+    ////////////////////////   COG
+    HTableData *htable = new HTableData;
+    types.clear();
+    types << STRING << STRING;
+    headers.clear();
+    headers << "COG Category" << "COG Category (Alias)";
+    htable->clearConnectors();
+
+    progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
+    progressbar->show();
+    for(int i=0; i < files.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+       connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
+       htable->addConnector(connect);
+       headers << files[i];
+       htable->addSampleName(files[i]);
+       types << INT;
+    }
+    progressbar->hide();
+    delete progressbar;
+
     htable->setParameters(datamanager->getHTree(COG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(COG)->getTreeDepth());
     htable->setShowHierarchy(true);
@@ -613,8 +761,18 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("COG", COG);
     htable->showTableData();
     htable->setMultiSampleMode(true);
+
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
     resultTabs->addTab(htable, "COG");
 
+
+    /////////////////  KEGG
     htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
     types.clear();
     types << STRING << STRING;
@@ -623,7 +781,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
     progressbar->show();
-    for(unsigned int i=0; i < files.size(); i++) {
+    for( int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
@@ -637,17 +795,28 @@ void ResultWindow::switchToComparativeMode() {
     htable->setParameters(datamanager->getHTree(KEGG),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
 
-
-
-
     htable->setShowHierarchy(true);
     htable->setHeaders(headers);
     htable->setTableIdentity("KEGG", KEGG);
     htable->showTableData();
     htable->setMultiSampleMode(true);
+
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
+
+  //  htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+   // QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT(  ProvideContexMenu(QPoint) )  );
+   // QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
     resultTabs->addTab(htable, "KEGG");
 
-    // METACYC
+
+
+    ////////////////// METACYC
     htable = CreateWidgets::getHtableData(METACYC); //new HTableData;
     types.clear();
     types << STRING << STRING;
@@ -655,7 +824,7 @@ void ResultWindow::switchToComparativeMode() {
     headers << "Pathway/Reaction" << "Common name" ;
     htable->clearConnectors();
 
-    for(unsigned int i=0; i < files.size(); i++) {
+    for(int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
        htable->addConnector(connect);
@@ -670,10 +839,19 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("METACYC", METACYC);
     htable->showTableData();
     htable->setMultiSampleMode(true);
+    htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
+
     resultTabs->addTab(htable, "METACYC");
 
 
-    // SEED
+    ////////////////////// SEED
     htable = CreateWidgets::getHtableData(SEED);;
     types.clear();
     types << STRING << STRING;
@@ -682,7 +860,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
     progressbar->show();
-    for(unsigned int i=0; i < files.size(); i++) {
+    for(int i=0; i < files.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );
        htable->addConnector(connect);
@@ -699,6 +877,15 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("SEED", SEED);
     htable->showTableData();
     htable->setMultiSampleMode(true);
+
+    if( !this->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       this->htablesAddSignals.insert(htable, true);
+    }
+
+
     resultTabs->addTab(htable, "SEED");
 
 

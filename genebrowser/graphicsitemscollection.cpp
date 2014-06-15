@@ -7,7 +7,11 @@ GraphicsItemsCollection::GraphicsItemsCollection() {
 
 }
 
-
+/**
+ * @brief GraphicsItemsCollection::getGraphicsItemsCollection, the constructor to
+ * GraphicsItemsCollection that creates different graphics items
+ * @return the pointer to the graphicsitemscollection (the creator of objects to draw)
+ */
 GraphicsItemsCollection *GraphicsItemsCollection::getGraphicsItemsCollection() {
     if( graphicsItemsCreator==0 )
         graphicsItemsCreator = new GraphicsItemsCollection();
@@ -15,7 +19,43 @@ GraphicsItemsCollection *GraphicsItemsCollection::getGraphicsItemsCollection() {
     return graphicsItemsCreator;
 
 }
+/**
+  * @brief GraphicsItemsCollection::getCaptionItems, gets a colection of texts for contig name
+  * and tthe taxonomic distribution
+  * @param captionParams
+  * @return the group of textitems.
+  */
 
+ GraphicsTextItems *GraphicsItemsCollection::getCaptionItems(CAPTIONPARAMS &captionParams) {
+     GraphicsTextItems *nameItem = new GraphicsTextItems();
+
+
+     QGraphicsTextItem *p;
+     p = new QGraphicsTextItem();
+     p->setPlainText(QString("Contig : " ) + captionParams.contigName);
+     p->setPos( QPointF(captionParams.x, captionParams.y) );
+     nameItem->addToGroup(p);
+     captionParams.y += p->boundingRect().width()/8 + captionParams.spaceBelow;
+
+     if( captionParams.taxonFreq.size() > 0 ) {
+         p = new QGraphicsTextItem();
+         p->setPlainText( QString("Dominant Taxons") );
+         p->setPos( QPointF(captionParams.x, captionParams.y) );
+         nameItem->addToGroup(p);
+         captionParams.y += p->boundingRect().width()/8 + captionParams.spaceBelow/2;
+     }
+
+     foreach( TaxonFreqQPair pair, captionParams.taxonFreq ) {
+         p = new QGraphicsTextItem();
+         p->setPlainText( QString("   %1 : %2").arg(  QString(pair.first + QString("                    ") ).left(20), QString::number(pair.second))  );
+         p->setPos( QPointF(captionParams.x, captionParams.y) );
+         nameItem->addToGroup(p);
+         captionParams.y += p->boundingRect().width()/8 + captionParams.spaceBelow/2;
+     }
+
+
+     return nameItem;
+ }
 
 GraphicsNotchedLine *GraphicsItemsCollection::getNotchedLine(NotchedLineParams &p) {
 
@@ -47,11 +87,10 @@ void  GraphicsNotchedLine::insertMarkers(double scale) {
     hline = GraphicsItemsCollection::getLineShape(lineSize);
     this->addToGroup(hline);
 
-
-    /*
     MARKER marker;
     double deltax;
-    for(unsigned int i=0; i*adjNomInterval < this->params.nomWidth; i++) {
+    int j =0;
+    for(unsigned int i=0; i*adjNomInterval < this->params.nomWidth; i = i + static_cast<int>(this->params.nomWidth/adjNomInterval) ) {
         lineSize.x = this->params.x + i*adjNomInterval*this->scale*this->params.basePairToPixelRatio;
         lineSize.thickness = this->params.height;
 
@@ -60,14 +99,21 @@ void  GraphicsNotchedLine::insertMarkers(double scale) {
         marker.text->setPlainText( QString::number( (unsigned int)(i*adjNomInterval)));
 
         deltax =  marker.text->boundingRect().width()/2;
-        marker.text->setPos( QPointF(lineSize.x -deltax, lineSize.y) );
+
+        marker.text->setPos( QPointF(lineSize.x + (j-1)*deltax, lineSize.y) );
+        j++;
 
         this->addToGroup(marker.notch);
         this->addToGroup(marker.text);
         this->addMarker(marker);
-    }*/
-
+    }
 }
+
+
+/**
+ * @brief GraphicsNotchedLine::addMarker, adds a marker
+ * @param item
+ */
 
 void GraphicsNotchedLine::addMarker(MARKER &item) {
     this->markers.push_back(item);
@@ -95,6 +141,13 @@ GraphicsTaxonItem::GraphicsTaxonItem() {
 
 }
 
+/***********************   GRAPHICSTEXTITEMS ***********************/
+ void GraphicsTextItems::createTextItems(CAPTIONPARAMS captionParams) {
+
+
+
+ }
+
 
 /***********************   GRAPHICS CONNECTOR LINE ****************/
 GraphicsConnectorLines::GraphicsConnectorLines() {
@@ -118,6 +171,7 @@ GraphicsConnectorLines::~GraphicsConnectorLines() {
 }
 
 /************************  GRAPHICS GENE ITEM *********************/
+
 
 void GraphicsGeneItems::insertORFs(double scale) {
     this->scale = scale;
@@ -157,6 +211,11 @@ void GraphicsGeneItems::drawORFDiagrams()  {
         p = itemCreator->getGeneShape(this->geneProp, strand);
         QList<QString> list2;
         QList< QList< QString > > list1;
+
+        list2.append("ORF Name");
+        list2.append(orf.name);
+        list1.append(list2);
+        list2.clear();
 
         list2.append("Function");
         list2.append(orf.func_annot);

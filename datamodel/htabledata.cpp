@@ -2,6 +2,7 @@
 #include "ui_htabledata.h"
 #include <QTableWidget>
 
+
 HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bool _hideZeroRows, bool _showRPKM) :
     QDialog(parent),
     ui(new Ui::HTableData)
@@ -79,12 +80,21 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     colors  << QBrush(Qt::black) <<  QBrush(Qt::red) << QBrush(Qt::blue) << QBrush(QColor(0,153,0)) << QBrush(QColor(255,128,0)) <<  QBrush(QColor(102,0,102)) << QBrush(QColor(76,0,183)) << QBrush(QColor(204,0,102))   << QBrush(Qt::gray);
     indents << QString("")       << QString("\t")    << QString("\t\t")  << QString("\t\t\t")       << QString("\t\t\t\t")       <<  QString("\t\t\t\t\t")     << QString("\t\t\t\t\t\t")  << QString("\t\t\t\t\t\t\t")   << QString("\t\t\t\t\t\t\t\t")   ;
 
+    tableParams.headers[KEGG] << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
+    tableParams.headers[COG] << "COG Category" << "COG Category (Alias) " << "ORF Count";
+    tableParams.headers[METACYC] << "Pathway/Reaction" << "Common name" << "ORF Count";
+    tableParams.headers[SEED] << "SEED Subsystem Category" << "SEED Subsystem (Alias) " << "ORF Count";
+
+
     searchButton = this->findChild<QPushButton *>("searchButton");
     exportButton = this->findChild<QPushButton *>("exportButton");
 
 
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
+
+
+
 }
 
 HTableData::~HTableData()
@@ -209,11 +219,9 @@ void HTableData::showTableData() {
 
 void HTableData::showHierarchyOrZeroRowToggleChanged() {
     if(this->subWindow) {
-        qDebug() << " toggling in subwindow ";
         this->showSelectedTableData(this->category);
     }
     else {
-        qDebug() << " I am not a subwindow ";
         this->showTableData();
     }
 }
@@ -230,6 +238,8 @@ void HTableData::showHierarchyChanged(int state) {
         this->showTableData();
     }
 }
+
+
 
 
 /* This function toggels to show and display the zero rows of the functional
@@ -290,11 +300,6 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
 
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(),  this->showRPKM->isChecked() ) ;
 
-
-     qDebug() << " Data size retrieved " << data.size() << " at depth " << maxDepth << " category " << categoryName;
-
-
-
      QList<ROWDATA *> newdata;
      if(hideZeroRows->isChecked()) {
         foreach(ROWDATA *r, data) {
@@ -310,8 +315,7 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
 }
 
 unsigned int HTableData::showSelectedTableData(QString categoryName) {
-     qDebug() << "show hieracrhy " << this->showHierarchy->isChecked();
-     qDebug() << " retrieving with showDepth value " << this->showDepth->value() <<  " category " << categoryName;
+
     // return this->fillSelectedData(this->showDepth->value()-1, (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
      return this->fillSelectedData(categoryName, this->showDepth->value()-1);
 }
@@ -371,19 +375,19 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 //    tableWidget->resize(tableWidget->sizeHint());
 }
 
-
+/**
+ * @brief HTableData::showInformativeTable this creates a new table from the item, that what selected
+ * @param item, the item that was clicked.
+ */
 void HTableData::showInformativeTable(QTableWidgetItem *item) {
     unsigned int row = item->row();
-    qDebug() << "Opening a subwindow";
+
     DataManager *datamanager = DataManager::getDataManager();
     // this showdepth value is passed now before a valueChanged signal is connected to the spinbox slot
     HTableData *htable = new HTableData(0, this->showDepth->value()+ 1 , this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->isChecked());
     htable->setAttribute(Qt::WA_DeleteOnClose); // frees up memory once it's closed
     htable->setMultiSampleMode(this->isMultiSampleMode());
     htable->setSampleNames(this->sampleNames);
-
-
-
 
 
  //   htable->setMaxSpinBoxDepth(datamanager->getHTree(this->id.attrType)->getTreeDepth());
@@ -426,25 +430,31 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     }
 
     QList<ORF *>orfList;
-    unsigned int totNumOrfs =0 ;
-     qDebug() << "type 1 " <<  this->htableIdentities.size();
-     qDebug() << "type 2 " << this->connectors.size();
+    unsigned int totNumOrfs =0 , _totNumOrfs =0;
+
+   //  qDebug() << "type 1 " <<  this->htableIdentities.size();
+   //  qDebug() << "type 2 " << this->connectors.size();
+
+
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
 
         totNumOrfs = 0;
+        _totNumOrfs = 0;
         foreach(Connector *connector, this->connectors) {
            orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
           // qDebug() << "Number of orfs transferring " << orfList.size();
            modConnector = datamanager->createConnector("temp", datamanager->getHTree(this->htableIdentities[i].attrType), this->htableIdentities[i].attrType, &orfList);
+           _totNumOrfs += Utilities::uniqueORFsCount(orfList);
            totNumOrfs += orfList.size();
            htable->allConnectors[this->htableIdentities[i].attrType].append(modConnector);
          //  qDebug() << " get modCon size " << modConnector->getNumOfORFs() << " atr " << this->htableIdentities[i].attrType ;
         }
-        qDebug() << "num orfs " <<  totNumOrfs;
+      //  qDebug() << "num orfs " <<  totNumOrfs;
     }
 
    // qDebug() << "Category depth " << this->id.attrType << "  " << datamanager->getHTree(this->id.attrType)->getTreeDepth();
-    htable->numOrfsLabel->setText(QString("ORFs count : " + QString::number( totNumOrfs)));
+    htable->numOrfsLabel->setText(QString("ORFs count : " + QString::number( totNumOrfs) + " | " + QString::number(_totNumOrfs) ));
+    htable->setToolTip("Total number of ORFs | Number of distinct ORFs");
     htable->numOrfsLabel->setVisible(true);
     htable->setHeaders( this->headers);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
@@ -455,8 +465,21 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->showHierarchy->setChecked(this->showHierarchy->isChecked());
 
     */
+
+
+
     htable->switchCategory(this->id.attrType);
 
+
+
+    ResultWindow *resultwindow = ResultWindow::getResultWindow();
+
+    if( !resultwindow->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), resultwindow, SLOT( showTable(QString, ATTRTYPE)  ));
+       resultwindow->htablesAddSignals.insert(htable, true);
+    }
 
 
     /** kishori's changes
@@ -620,9 +643,7 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
 
 void HTableData::searchQuery(QString query, int column, bool caseSensitive){
 
-    qDebug() << "Searching in Htable ";
    // this->initializeSearchFilter(query, column, caseSensitive);
-
     for( int i = 0; i < tableWidget->rowCount(); ++i )
     {
         bool match = false;
@@ -672,4 +693,41 @@ void HTableData::initializeSearchFilter(QString query, int column, bool caseSens
 
     this->searchFilter.caseSensitive = caseSensitive;
 
+}
+
+
+
+void HTableData::ProvideContexMenu(QPoint pos)
+{
+
+
+     //   QMenu menu(this);
+      //  QAction *u = menu.addAction(tr("remove"));
+
+
+ //       QAction *a = menu.exec(tablewidget->viewport()->mapToGlobal(pos));
+        //if (a == u)
+       // {
+
+        unsigned int col = this->tableWidget->itemAt(pos)->column();
+        unsigned int row = this->tableWidget->itemAt(pos)->row();
+
+        if( col < 2 || col >= this->sampleNames.size() +  2) return;
+
+        QString category = this->tableWidget->item(row, 0)->text();
+
+        DataManager *datamanager = DataManager::getDataManager();
+        HTree *htree = datamanager->getHTree(this->id.attrType);
+        HNODE *hnode = htree->getHNODE(category);
+
+        GlobalDataTransit *dataTransit = GlobalDataTransit::getGlobalDataTransit();
+
+        if( htree==0 || hnode ==0 ) return;
+
+        Connector *connector =   this->connectors[col - 2];
+        dataTransit->orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+
+        emit showTable( this->sampleNames[col-2], this->id.attrType);
+
+    //context->exec(*position);
 }

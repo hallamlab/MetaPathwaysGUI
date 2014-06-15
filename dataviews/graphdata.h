@@ -14,6 +14,10 @@ namespace Ui {
 class GraphData;
 }
 
+
+
+
+
 class GraphData : public QWidget
 {
     Q_OBJECT

@@ -31,7 +31,7 @@ void GeneBrowser::setQGraphicsViewer(QGraphicsView *view) {
 }
 
 void GeneBrowser::sanitizeORFData() {
-    for(unsigned int i =0; i < this->data.orfData.size(); i++) {
+    for(int i =0; i < this->data.orfData.size(); i++) {
         if( this->data.orfData[i].start > this->data.orfData[i].end ) {
             unsigned int temp;
             temp = this->data.orfData[i].start;
@@ -61,9 +61,7 @@ void GeneBrowser::drawGenomeBrowser() {
     if( gscene==0) gscene = new QGraphicsScene(0,0,this->XSIZE*1.2, this->YSIZE*1.2, this->view);
     view->setStyleSheet("QWidget {padding:10px; margin-left:0px;}");
 
-
     view->setScene(gscene);
-
 
 
     PENPOSITION pen;
@@ -72,24 +70,44 @@ void GeneBrowser::drawGenomeBrowser() {
 
     GraphicsItemsCollection *itemCreator  = GraphicsItemsCollection::getGraphicsItemsCollection();
 
+    // Create the CAPTION
+    CAPTIONPARAMS captionParams;
+    captionParams.x = pen.xstart;
+    captionParams.y = pen.ystart + 5;
+    captionParams.spaceAbove = 1;
+    captionParams.spaceBelow = 1;
+
+    this->computeCaptionParams(data.orfData, captionParams);
+    this->captionItems = itemCreator->getCaptionItems(captionParams);
+    gscene->addItem(this->captionItems);
+
+
+    pen.ystart = captionParams.y;
+
+    // Compute the Levels of the ORFs for both forward and reverse
     unsigned int fwdMaxLevel = this->computeORFLevels(data.orfData, FORWARD);
     this->computeORFLevels(data.orfData, REVERSE);
 
+
+    // Prepare the ORF properties
     GENEPROPERTY geneProp;
     geneProp.tipLen = 10;
     geneProp.height = 10;
     geneProp.spaceAbove = 5;
     geneProp.spaceBelow = 5;
-    geneProp.color = Qt::blue;
     geneProp.basePairToPixelRatio = basePairToPixelRatio;
 
 
+    // Draw the forward ORFs
+    geneProp.color = Qt::blue;
     fwdorfs = itemCreator->getORFDiagrams(data.orfData, FORWARD,geneProp, pen);
     gscene->addItem(this->fwdorfs);
 
-    pen.ystart = pen.ystart + (fwdMaxLevel +1)*(geneProp.spaceAbove + geneProp.height + geneProp.spaceBelow);
 
+   // Draw the notched line with contig and  notches
+    pen.ystart = pen.ystart + (fwdMaxLevel +1)*(geneProp.spaceAbove + geneProp.height + geneProp.spaceBelow);
     pen.ystart = pen.ystart +  2 + 1*basePairToPixelRatio;
+
     NotchedLineParams nparams;
     nparams.x = pen.xstart;
     nparams.y = pen.ystart;
@@ -97,22 +115,23 @@ void GeneBrowser::drawGenomeBrowser() {
     nparams.width = basePairToPixelRatio*data.seq.length;
     nparams.pixInterval = nomInterval*basePairToPixelRatio;
     nparams.nomWidth = data.seq.length;
-    nparams.notchHeight = 2 + 1*basePairToPixelRatio;
+    nparams.notchHeight = 10 + 1*basePairToPixelRatio;
     nparams.basePairToPixelRatio = basePairToPixelRatio;
-
 
     this->line = itemCreator->getNotchedLine(nparams);
     gscene->addItem(this->line);
 
+
+
+    // Draw the reverse ORF diagrams
     pen.ystart = pen.ystart + 2*(2 + 1*basePairToPixelRatio);
     geneProp.color = Qt::magenta;
-
     this->revorfs = itemCreator->getORFDiagrams(data.orfData, REVERSE, geneProp, pen);
     gscene->addItem(this->revorfs);
 
-
     this->view->setAttribute( Qt::WA_AlwaysShowToolTips);
     gscene->setSceneRect(gscene->itemsBoundingRect());
+    this->view->setMinimumSize(gscene->sceneRect().width(), gscene->sceneRect().height());
 
 
 }
@@ -125,11 +144,64 @@ bool GeneBrowser::sortRankBeginPair(const RANK_BEGIN_PAIR &a, const RANK_BEGIN_P
     return false;
 }
 
+/**
+ * @brief compareFreq compares to taxon based on the taxon frequency
+ * @param a, first taxon
+ * @param b, second taxon
+ * @return
+ */
+bool compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b) {
+    //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
+    return a.second  > b.second;
+}
+
+
+/**
+ * @brief GeneBrowser::computeCaptionParams, computes the caption for the sequence name and
+ * the taxon freqeuncy and picks the top few
+ * @param orfs the orf data
+ * @param captionParams, the parameters
+ */
+
+void GeneBrowser::computeCaptionParams(QList<ORFData> &orfs, CAPTIONPARAMS &captionParams) {
+
+    unsigned int _maxorfs = 5;
+    QRegExp all("^all$");
+    QRegExp root("^root$");
+
+    QHash<QString, unsigned int> freq;
+    foreach( ORFData orf, orfs) {
+        if( all.indexIn(orf.tax_annot) != -1) continue;
+        if( root.indexIn(orf.tax_annot) != -1) continue;
+
+        if( !freq.contains(orf.tax_annot)) freq.insert(orf.tax_annot, 0);
+        freq[orf.tax_annot]++;
+    }
+
+
+    QList<TaxonFreqQPair > taxonFreqList;
+    foreach(QString key, freq.keys()) {
+        taxonFreqList.append(TaxonFreqQPair(key, freq[key]) );
+    }
+    qSort(taxonFreqList.begin(), taxonFreqList.end(), compareFreq);
+
+    unsigned int i =0;
+    foreach(TaxonFreqQPair taxon, taxonFreqList  ) {
+        if(i > _maxorfs ) break;
+        qDebug() << taxon.first << "  " << taxon.second;
+        captionParams.taxonFreq.append(taxon);
+        i++;
+    }
+    captionParams.maxpairs = 5;
+    captionParams.contigName = this->data.seq.name;
+
+}
+
 unsigned int GeneBrowser::computeORFLevels(QList<ORFData> &orfs, STRAND strand) {
     QVector<unsigned int> levelEnds;
     QVector<RANK_BEGIN_PAIR> ranks;
 
-    for(unsigned int i=0; i <  orfs.size(); i++ ) {
+    for(int i=0; i <  orfs.size(); i++ ) {
         RANK_BEGIN_PAIR pair;
         pair.rank = i;
         pair.begin = orfs[i].start;
@@ -142,8 +214,8 @@ unsigned int GeneBrowser::computeORFLevels(QList<ORFData> &orfs, STRAND strand) 
         rankIndex.push_back(p.rank );
     }
 
-    unsigned int j=0;
-    for(unsigned int i =0; i < rankIndex.size(); i++) {
+    int j=0;
+    for(int i =0; i < rankIndex.size(); i++) {
         if( orfs[rankIndex[i]].strand != strand) continue;
 
         bool inserted = false;
@@ -163,7 +235,7 @@ unsigned int GeneBrowser::computeORFLevels(QList<ORFData> &orfs, STRAND strand) 
 
     unsigned int maxLevel = levelEnds.size()-1;
     if(strand==FORWARD) {
-        for(unsigned int i =0; i < orfs.size(); i++) {
+        for(int i =0; i < orfs.size(); i++) {
             orfs[i]._level = maxLevel - orfs[i]._level;
         }
     }

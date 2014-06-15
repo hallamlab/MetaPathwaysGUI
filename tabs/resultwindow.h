@@ -11,6 +11,8 @@
 #include <QProgressDialog>
 #include <QFileDialog>
 #include <QDebug>
+#include <QAction>
+#include <QMenu>
 
 
 #include "ProgressDialog.h"
@@ -40,14 +42,22 @@
 #include "popupviews/selectsamples.h"
 
 #include "tabs/simpletabgroups.h"
+#include "helper/globaldatatransit.h"
+#include "tabs/simpletabgroups.cpp"
 
 
 extern const QString SELECT_SAMPLE_TAG;
 class SelectSamples;
+class TableData;
+class GraphData;
+
 
 namespace Ui {
 class ResultWindow;
 }
+
+
+
 
 class ResultWindow : public QWidget
 {
@@ -60,11 +70,16 @@ public:
 
     static ResultWindow *getResultWindow();
 
+    void copyROWData(QList<ROW *> &src, QList<ROW *> &tar, QList<ORF *> &selectORFs);
 public slots:
     void sampleChanged(QString changed);
     void updateFileNames();
     void setVisible(int);
     void receiveSelection(QList<bool> &selection);
+
+
+    void ProvideContexMenu(QPoint position);
+    void showTable(QString sampleName,  ATTRTYPE attrType);
 
 private slots:
     void clickedSelectSample();
@@ -79,8 +94,10 @@ private:
     void indexSamples(bool useResourceFolder, bool forcereindex =false);
     void indexSample(QString sampleName, bool userResourceFolder) ;
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
+    TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool loadData = true);
 
-
+public:
+    QHash<HTableData *, bool> htablesAddSignals;
 private:
     static ResultWindow *resultWindow;
 
@@ -94,6 +111,7 @@ private:
     QLabel *currentSampleLabel;
 
     QTabWidget *resultTabs;
+
     SimpleTabGroups<TableData> simpleTabGroups;
     SimpleTabGroups<GraphData> simpleGraphGroups;
 
@@ -109,10 +127,13 @@ private:
  //   QHash<QString, GraphicsRepresentation *> graphicsRepresentation;
     QHash<QString, MeganView *> meganviews;
 
+    HTABLE_PARAMS tableParams;
     QList<bool> selectedSamples;
 
     DataManager *datamanager;
     bool disableSampleChanged;
+
+
 
 
 

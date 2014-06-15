@@ -31,6 +31,13 @@ typedef struct _HNODE {
 
 typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, TAXON, RPKM}  ATTRTYPE;
 
+
+
+typedef struct _HTABLE_PARAMS {
+    QHash<ATTRTYPE, QStringList>  headers;
+} HTABLE_PARAMS;
+
+
 typedef struct _ORF {
     QHash<ATTRTYPE, ATTRIBUTE*> attributes;
     CONTIG *contig;
