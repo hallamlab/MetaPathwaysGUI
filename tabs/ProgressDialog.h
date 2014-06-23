@@ -36,7 +36,7 @@ public:
     RunData *rundata;
     QString METAPATH;
     QStringList filesDetected;
-    QHash<int,QString> *TABLE_MAPPING;
+    QHash<int,QString> TABLE_MAPPING;
     QHash<QString, QString> previousStatus;
 
 
@@ -59,6 +59,7 @@ private slots:
     void showErrors();
     void readStepsLog();
     void startRun();
+    void setProcessToZero();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
     unsigned int countTotalNumberOfSteps();
 
@@ -93,7 +94,6 @@ private:
     QTextEdit *standardOut;
     QComboBox* sampleSelect;
     QCheckBox* runVerbose;
-    QCheckBox *computeStats;
 
 };
 

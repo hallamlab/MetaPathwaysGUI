@@ -6,6 +6,11 @@
 #include <QDebug>
 #include <QMessageBox>
 
+/**
+ * @brief GridSetup::GridSetup, this sets up the grid configuration panel for adding and
+ * deleting grid or to change their settings
+ * @param parent
+ */
 GridSetup::GridSetup(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GridSetup)
@@ -168,9 +173,17 @@ void GridSetup::getWidgetValues(const Grid &g){
     }
 }
 
+/**
+ * @brief GridSetup::saveAndClose, save the grid setting if they are validated
+ */
 void GridSetup::saveAndClose(){
 
     RunData *rundata = RunData::getRunData();
+    QString errMsg ;
+    if( ! this->validateGridSettings(errMsg) ) {
+        QMessageBox::warning(this, "Errors in Grid Setup", QString("Please either remove the erroneously set grids, or correct their settings ") + errMsg, QMessageBox::Ok )  ;
+        return;
+    }
     this->writeGridSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator() + RunData::TEMPLATE_PARAM);
 
 
@@ -180,12 +193,52 @@ void GridSetup::saveAndClose(){
 }
 
 
-/*
+/**
+ * @brief GridSetup::validateGridSettings, validate the Grid settings
+ */
+bool GridSetup::validateGridSettings(QString &errMsg) {
+
+       errMsg = "Error : \n";
+       bool error = true;
+       QHashIterator<QString,  Grid *> grids(*Grids);
+       while (grids.hasNext()){
+
+
+           //get next grid in hash
+           grids.next();
+
+           //grids.key() gives us the name of the grid
+           //grids.value()->values gives us the hash with the key being the setting, value
+
+           getWidgetValues(*grids.value());
+           //refresh the values stored for each grid, they may have changed
+           QHashIterator<QString,QString> gridValues(*grids.value()->values);
+
+           while( gridValues.hasNext() ) {
+               gridValues.next();
+
+               if( gridValues.value().trimmed().size() ==0 && gridValues.key().size()!=0 && ( gridValues.key().compare("user")==0 || gridValues.key().compare("server")==0  ) ) {
+                   errMsg += "Grid : " + grids.key() + " missing " +  gridValues.key() + "\n";
+                   error = false;
+               }
+           }
+
+       }
+
+    return error;
+}
+
+
+
+/**
+ * @brief GridSetup::writeGridSettingToFile
+ *
  * Creates a new file with filename TEMPLATE_FILE. Copies over old lines and the new specified KEY, VALUE
  * pairing for settings. TYPE specifies if it is a config or param file, as the first will require all values
  * to be wrapped in single quotations, and params do not.
+ *
+ * @param TEMPLATE_FILE
  */
-
 void GridSetup::writeGridSettingToFile(const QString &TEMPLATE_FILE){
     QFile inputFile(TEMPLATE_FILE);
     QFile newFile( TEMPLATE_FILE + "_new" );

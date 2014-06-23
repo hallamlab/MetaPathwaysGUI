@@ -52,7 +52,7 @@ TableData::TableData(  QWidget *parent) :
     this->p =0;
     this->g =0;
 
-    this->type = OTHERSTABLEEXP;
+    this->exportType = OTHERSTABLEEXP;
 }
 
 
@@ -218,6 +218,17 @@ void TableData::setType(TABLETYPE type) {
     this->type = type;
 }
 
+
+void TableData::setExportType(TABLEEXPORTTYPE type) {
+    this->exportType = type;
+}
+
+
+void TableData::setAuxName(QString auxname) {
+    this->auxName = auxname;
+}
+
+
 void TableData::setSampleNames(QStringList sampleNames) {
     this->sampleNames = sampleNames;
 }
@@ -228,48 +239,65 @@ enum TYPE TableData::getFieldType(unsigned int i) {
     return this->types.at(i);
 }
 
-void TableData::searchQuery(QString query, int column, bool caseSensitive){
 
-    this->initializeSearchFilter(query, column, caseSensitive);
-    this->largeTable->markRowsSearch(this->searchFilter);
+/**
+ * @brief TableData::searchQuery, signal slots and column choices for the 4 querys in the query box
+ * @param query1
+ * @param column1
+ * @param query2
+ * @param column2
+ * @param query3
+ * @param column3
+ * @param query4
+ * @param column4
+ * @param type, AND or OR type
+ * @param caseSensitive, case sensitive or case insensitive
+ */
+void TableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type,  bool caseSensitive){
+
+    this->clearSearchFilters();
+    if(query1.size() > 0) this->addSearchFilter(query1, column1);
+    if(query2.size() > 0) this->addSearchFilter(query2, column2);
+    if(query3.size() > 0) this->addSearchFilter(query3, column3);
+    if(query4.size() > 0) this->addSearchFilter(query4, column4);
+
+    this->largeTable->markRowsSearch(this->searchFilters, type, caseSensitive);
     tableWidget->setRowCount(largeTable->tableData.length());
     int currPos = tableWidget->verticalScrollBar()->value();
     this->updateData(currPos, true);
 }
 
-
-void TableData::initializeSearchFilter(QString query, int column, bool caseSensitive) {
-
-    QString _and = "&&", _or="||";
-
-    QStringList searchFields;
-    this->searchFilter.searchItems.clear();
-    this->searchFilter.searchCols.clear();
+/**
+ * @brief TableData::clearSearchFilters, removes the search filters added so far
+ */
+void TableData::clearSearchFilters() {
+    this->searchFilters.clear();
+}
 
 
-    searchFields = query.split(_or, QString::SkipEmptyParts);
-    this->searchFilter.type = OR;
+/**
+ * @brief TableData::initializeSearchFilter adds a search filter
+ * @param query, the query
+ * @param column, column chosen at the export box
+ * @param caseSensitive
+ */
+void TableData::addSearchFilter(QString query, int column) {
 
-    if( searchFields.size() ==0 ) {
-        searchFields = query.split(_and, QString::SkipEmptyParts);
-        this->searchFilter.type = AND;
-    }
-
-    this->searchFilter.searchItems = searchFields;
+    SEARCH searchFilter;
+    searchFilter.searchItem = query.trimmed();
 
 
     if( column==0) {
         for(unsigned int i = 0; i < this->numCols; i++) {
             if( this->types[i]==STRING)
-               this->searchFilter.searchCols.append(i);
+               searchFilter.searchCols.append(i);
         }
     }
     else {
-        this->searchFilter.searchCols.append(column-1);
+        searchFilter.searchCols.append(column-1);
     }
 
-    this->searchFilter.caseSensitive = caseSensitive;
-
+    this->searchFilters.append(searchFilter);
 }
 
 void TableData::searchButtonPressed(){
@@ -278,7 +306,8 @@ void TableData::searchButtonPressed(){
 }
 
 void TableData::exportButtonPressed(){
-    this->exportBox = new ExportBox(this, 0 , this->type);
+    this->exportBox = new ExportBox(this, 0 , this->exportType);
+    this->exportBox->setAuxName(this->auxName);
     this->exportBox->show();
 }
 
@@ -539,43 +568,111 @@ bool TableData::saveTableToFile(QString fileName, QChar delim, const QStringList
 }
 
 
+
 bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
+
+
 
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
 
-
-        ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
-
-
-        unsigned int interval = this->largeTable->tableData.size()/100;
-
+        //type can be only of NUCFASTA, NUCFNA or AMINOFAA
         SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
         FileIndex *fileIndex = sampleResourceManager->getFileIndex(this->getSampleName(), type);
+
+        if( this->type == rRNATABLE) type = rRNA;
+        if( this->type == tRNATABLE) type = tRNA;
+
+        QString seqType;
+
+        //change to the proper type if the contigs are actually specific type of sequences
+        // such rRNA or tRNA
+
+        switch(type) {
+            case NUCFNA:
+                 seqType = "ORFs";
+                 break;
+            case AMINOFAA:
+                 seqType= "Amino Acid";
+                 break;
+            case NUCFASTA:
+                 seqType = "Contigs";
+                 break;
+            case rRNA:
+                 seqType = "rRNA";
+                 break;
+            case tRNA:
+                 seqType = "tRNA";
+                 break;
+            default:
+                 seqType = "Unknown";
+                 break;
+        }
+
+        ProgressView progressbar("Saving " + seqType + " sequences for sample : " + sampleName, 0, 0, this);
 
         if( fileIndex !=0 ) {
             unsigned int col;
             if( type == NUCFNA || type == AMINOFAA ) col = 0;
+            if( type == rRNA || type==tRNA) col = 0;
             if( type == NUCFASTA) col = 4;
 
             QString name, resultStr, shortname;
             QHash<QString, bool> alreadyWritten;
           //  qDebug() << "Size to export " << this->largeTable->tableData.size();
-            for(int i =0; i < this->largeTable->tableData.size();  i++) {
-             //  if( i%interval ==0) { progressBar.setValue(i); qApp->processEvents();  progressBar.update(); }
-             //  qDebug() << "col " << col << " strVar " <<  this->largeTable->index[col];
-              // qDebug() <<  "strVars " << this->largeTable->tableData[i]->strVar[0];
-               name = this->largeTable->tableData[i]->strVar[this->largeTable->index[col]];
-               if(type==NUCFASTA)
-                  shortname = Utilities::getShortContigId(name);
-               if(type==NUCFNA || type==AMINOFAA)
-                  shortname = Utilities::getShortORFId(name);
 
-             //  qDebug() << "short name " << shortname;
-               if(alreadyWritten.contains(shortname) ) continue;
-               alreadyWritten[shortname] = true;
-               resultStr = fileIndex->getDataToDisplay(shortname);
+            QHash<QString, unsigned int> orfNum;
+
+            for(int i =0; i < this->largeTable->tableData.size();  i++) {
+               name = this->largeTable->tableData[i]->strVar[this->largeTable->index[col]];
+
+               QString seqName;
+
+               if(type==NUCFASTA  || type ==rRNA || type == tRNA) {
+                  shortname = Utilities::getShortContigId(name);
+                  seqName = shortname;
+               }
+
+               if(type==NUCFNA || type==AMINOFAA) {
+                  shortname = Utilities::getShortORFId(name);
+                  seqName = shortname;
+               }
+
+               unsigned int start=0, end=0, col1, col2;
+               if(type ==rRNA || type == tRNA) {
+                   QString typeTag;
+                   if(type==rRNA ) {
+                       col1=1; col2=2;
+                       typeTag = "_rRNA_";
+                   }
+                   if( type==tRNA ){
+                       col1= 3; col2 = 4;
+                       typeTag = "_tRNA_";
+                   }
+
+                   if( !orfNum.contains(shortname)) orfNum[shortname] = -1;
+                   orfNum[shortname]++;
+                   seqName = this->sampleName + QString("_") +  shortname + typeTag + QString::number(orfNum[shortname]);
+               }
+
+
+               if(alreadyWritten.contains(seqName) ) continue;
+               alreadyWritten[seqName] = true;
+
+               if(type ==rRNA || type == tRNA) {
+                   resultStr = fileIndex->getDataToDisplay(shortname);
+
+                   start = this->largeTable->tableData[i]->intVar[this->largeTable->index[col1]];
+
+                   end = this->largeTable->tableData[i]->intVar[this->largeTable->index[col2]];
+
+                   resultStr = Utilities::getSubSequence(resultStr,  seqName, start, end);
+               }
+               else {
+                   resultStr = fileIndex->getDataToDisplay(shortname);
+               }
+
                if( !resultStr.isEmpty()) { out << resultStr; }
             }
         }

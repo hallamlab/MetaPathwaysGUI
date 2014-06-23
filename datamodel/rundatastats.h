@@ -40,6 +40,7 @@ private:
     QStringList filenames;
 
     QHash<QString, QHash<QString, QString> > statsData;
+    QHash<QString, unsigned int> ranking;
     QHash<QString, bool> statNames;
 };
 

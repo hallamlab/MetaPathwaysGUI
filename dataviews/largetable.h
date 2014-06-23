@@ -44,7 +44,7 @@ public:
 
     int getPivot();
     void setPivot(int pivot);
-    void markRowsSearch(SEARCH &searchFilter);
+    void markRowsSearch(QList<SEARCH> &searchFilter, OPTYPE optype, bool caseSensitive);
     void reRank();
     void getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & selectrows, QString search, unsigned int col, enum TYPE type);
 

@@ -135,7 +135,7 @@
      <x>90</x>
      <y>253</y>
      <width>495</width>
-     <height>561</height>
+     <height>541</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -152,6 +152,15 @@
    </property>
    <property name="focusPolicy">
     <enum>Qt::WheelFocus</enum>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Annotate step uses the BLAST/LAST hits against the functional reference databases (KEGG, COG, SEED, RefSeq, etc), with some ranking or quality of hits to generate function annotations for indivitual ORFs.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;The resulting files are in the folder &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#30c237;&quot;&gt;results/annotation_tables&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
@@ -332,6 +341,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#127418;&quot;&gt;&amp;quot;orf_prediction&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
@@ -396,6 +408,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting GFF files produced by the gene prediction algorithm in the ORF Prediction step are used to translate into the amino acid sequences.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
@@ -450,6 +465,14 @@
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The amino acid sequences in &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#20e542;&quot;&gt;the orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder are used to do a self blast, which will be used to compute the bit score ratio for the hits.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting files are in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#30d85c;&quot;&gt;blast_results&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder in a file named with a &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#1f17d1;&quot;&gt;.refscore.algorithm&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; (where algorith is LAST/BLAST depending on the algoirthm) extension&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -506,6 +529,17 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The filtered sequences &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; are used to BLAST/LAST against the functional reference database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;This step of the computation can be done using multiple girds (to use batch processing system)&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each of the databases. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#1ace4a;&quot;&gt;&amp;quot;samplename.dbname.algorithmout&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
@@ -560,6 +594,15 @@
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The BLAST/LAST results in the tabular form dropped in the folder blast_results folder are parsed to find out the BLAST/LAST hits for individual ORF with the minimum bit score ratio or e-value specified.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The parsed results are put in the blast_results folder,  with individual files for each of the databases. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#1ace4a;&quot;&gt;&amp;quot;samplename.dbname.algorithmout.parse.dtxt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -616,6 +659,14 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The nuceoltide sequences in the &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2ab531;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;&amp;quot; folder in the step &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2a31bf;&quot;&gt;Preprocess FASTA&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; are blasted against the selected rRNA databases such as silva, lsu and greengene. The hits with high bit scores are flagged as rRNA and the resulting taxonomy from the databases are assigned.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results from this step are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2bc643;&quot;&gt;results/rRNA folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;, with one tsv file for each rRNA database; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
@@ -671,6 +722,15 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The filtered nucleotide sequences, in the  &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#30db3d;&quot;&gt;preprocessed &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;folder produced in the Preprocess FASTA step are scanned with tRNA-Scan to find the tRNAs&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#10c42a;&quot;&gt;results/tRNA&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
@@ -721,10 +781,19 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>580</y>
+     <y>550</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create genbank files for each of the samples.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -776,10 +845,19 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>550</y>
+     <y>520</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Based on the annotations created, for the ORFs, in the Annote step the input for Pathologic (the pathway prediction algorithm in the Pathway Tools software) are computed.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting input files for the Pathologic are in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#49df5c;&quot;&gt;ptools&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder (4 files)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -831,10 +909,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>640</y>
+     <y>610</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The functional and taxonomic annotation for all the ORFs in a sample are used to create sequin files that are helpful in the process of submitting sequences to NCBI &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#30db52;&quot;&gt;results/sequin&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -886,10 +967,19 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>610</y>
+     <y>580</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create genbank files for each of the samples.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt; font-weight:600;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -941,10 +1031,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>670</y>
+     <y>640</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -999,10 +1092,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>700</y>
+     <y>670</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#c21e30;&quot;&gt;MlTreeMap is currently disabled and is undergoing some changes. Near future versions of MetaPathways will have this feature enabled.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1075,10 +1171,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>730</y>
+     <y>700</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#c41e33;&quot;&gt;MlTreeMap is currently disabled and is undergoing some changes. Near future versions of MetaPathways will have this feature enabled.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1148,10 +1247,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>760</y>
+     <y>730</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The pathway prediction algorithm, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2c3bd2;&quot;&gt;Pathologic&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#3a48d7;&quot;&gt;Pathway Tools&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; software, is run with the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2de14d;&quot;&gt;ptools&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; as the input. The result of this step is an ePGDB (environmental pathway genome database).&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting ePGDB is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#1bd429;&quot;&gt;~/ptools-local/pgdbs/user&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder. They can be viewed using the Pathway Tools software.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1207,6 +1309,9 @@
      <width>314</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Process step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting filtered sequences are made available into the folder &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#0bc013;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1277,10 +1382,13 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>520</y>
+     <y>760</y>
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Based on the avialability of the sam files, in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#49d760;&quot;&gt;results/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; resutling from the bwa run to recrut the short reads into the contigs the read per kilobase per milliion (RPKM) value for each orf is computed.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are dropped in the r&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#36d741;&quot;&gt;esults/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder are used by the tool for reporting RPKM values values. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1391,6 +1499,14 @@
      <width>314</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>

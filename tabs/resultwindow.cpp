@@ -329,6 +329,10 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "COG");
+    resultTabs->setStyleSheet( "QTabBar::tab:selected { min-width: 100ex;}");
+
+
+
     resultTabs->setTabToolTip(resultTabs->count()-1, "COG");
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -353,7 +357,7 @@ void ResultWindow::sampleChanged(QString sampleName){
        connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
        this->htablesAddSignals.insert(htable, true);
     }
-
+    resultTabs->setStyleSheet( "QTabBar::tab { min-width: 25ex;}");
 
 
     types.clear();
@@ -414,10 +418,10 @@ void ResultWindow::sampleChanged(QString sampleName){
     TableData *t;
     foreach(QString rRNATableFile, rRNATableFiles) {
         types.clear();
-        types << STRING << STRING<< STRING << STRING << STRING << STRING << STRING;
+        types << STRING << INT<< INT << STRING << STRING << STRING << STRING;
         columns.clear();
         columns << 0 << 1 << 2 << 3 << 4<<  5 << 6;
-        QString rRNADatabase = samplercmgr->extractDBName(sampleName, rRNATableFile, rRNATABLE);
+        QString rRNADatabase = samplercmgr->extractDBName(sampleName, rRNATableFile, rRNA);
         if(rRNADatabase.size() == 0) return;
 
         if( this->simpleTabGroups.tableExists(sampleName, rRNATableFile)) {
@@ -428,7 +432,11 @@ void ResultWindow::sampleChanged(QString sampleName){
             t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
         }
-        t->setType(rRNATABLEEXP);
+        t->setExportType(rRNATABLEEXP);
+        t->setType(rRNATABLE);
+        t->setSampleName(sampleName);
+        t->setAuxName(rRNADatabase);
+
         resultTabs->addTab(t, rRNADatabase);
         resultTabs->setTabToolTip(resultTabs->count()-1, rRNADatabase);
     }
@@ -438,7 +446,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     foreach(QString tRNATableFile,tRNATableFiles) {
         types.clear();
-        types << STRING << STRING<< STRING << STRING << STRING << STRING << STRING;
+        types << STRING << STRING<< STRING << INT << INT << STRING ;
         columns.clear();
         columns << 0 << 1 << 2 << 3 << 4<<  5 ;
 
@@ -450,7 +458,9 @@ void ResultWindow::sampleChanged(QString sampleName){
             t->setParameters(false, tRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, tRNATableFile);
         }
-        t->setType(tRNATABLEEXP);
+        t->setExportType(tRNATABLEEXP);
+        t->setType(tRNATABLE);
+        t->setSampleName(sampleName);
         resultTabs->addTab(t, "tRNA-Scan");
         resultTabs->setTabToolTip(resultTabs->count()-1, "tRNA-Scan");
     }
@@ -545,7 +555,7 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
     // if loaded then it always loads from cache table
     if(loadData)  func_tax_table->loadData();
     func_tax_table->setPopupListener(p);
-    func_tax_table->setType(OTHERSTABLEEXP);
+    func_tax_table->setExportType(OTHERSTABLEEXP);
     return func_tax_table;
 }
 

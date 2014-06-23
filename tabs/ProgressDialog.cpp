@@ -39,14 +39,13 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     showErrorsButton = this->findChild<QPushButton *>("showErrors");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
-    computeStats = this->findChild<QCheckBox *>("computeStats");
 
     summaryTable->setSortingEnabled(false);
 
     initMapping();
 
     timer = new QTimer(this);
-    timer->start(1000);
+    timer->start(5000);
 
     this->myProcess =0;
 
@@ -180,26 +179,27 @@ void ProgressDialog::readStepsLog(){
  * the mapping of a row index to its groupbox.
  */
 void ProgressDialog::initMapping(){
-    TABLE_MAPPING = new QHash<int,QString>();
+  //  TABLE_MAPPING = new QHash<int,QString>();
 
-    TABLE_MAPPING->operator [](0) = "PREPROCESS_FASTA";
-    TABLE_MAPPING->operator [](1) = "ORF_PREDICTION";
-    TABLE_MAPPING->operator [](2) = "GFF_TO_AMINO";
-    TABLE_MAPPING->operator [](3) = "FILTERED_FASTA";
-    TABLE_MAPPING->operator [](4) = "COMPUTE_REFSCORE";
-    TABLE_MAPPING->operator [](5) = "BLAST_REFDB";
-    TABLE_MAPPING->operator [](6) = "PARSE_BLAST";
-    TABLE_MAPPING->operator [](7) = "SCAN_rRNA";
-    TABLE_MAPPING->operator [](8) = "STATS_rRNA";
-    TABLE_MAPPING->operator [](9) = "SCAN_tRNA";
-    TABLE_MAPPING->operator [](10) = "ANNOTATE";
-    TABLE_MAPPING->operator [](11) = "PATHOLOGIC_INPUT";
-    TABLE_MAPPING->operator [](12) = "GENBANK_FILE";
-    TABLE_MAPPING->operator [](13) = "CREATE_SEQUIN_FILE";
-    TABLE_MAPPING->operator [](14) = "CREATE_REPORT_FILES";
-    TABLE_MAPPING->operator [](15) = "MLTREEMAP_CALCULATION";
-    TABLE_MAPPING->operator [](16) = "MLTREEMAP_IMAGEMAKER";
-    TABLE_MAPPING->operator [](17) = "PATHOLOGIC";
+    TABLE_MAPPING[0] = "PREPROCESS_FASTA";
+    TABLE_MAPPING[1] = "ORF_PREDICTION";
+    TABLE_MAPPING[2] = "GFF_TO_AMINO";
+    TABLE_MAPPING[3] = "FILTERED_FASTA";
+    TABLE_MAPPING[4] = "COMPUTE_REFSCORE";
+    TABLE_MAPPING[5] = "BLAST_REFDB";
+    TABLE_MAPPING[6] = "PARSE_BLAST";
+    TABLE_MAPPING[7] = "SCAN_rRNA";
+    TABLE_MAPPING[8] = "SCAN_tRNA";
+    TABLE_MAPPING[9] = "ANNOTATE";
+    TABLE_MAPPING[10] = "PATHOLOGIC_INPUT";
+    TABLE_MAPPING[11] = "GENBANK_FILE";
+    TABLE_MAPPING[12] = "CREATE_SEQUIN_FILE";
+    TABLE_MAPPING[13] = "CREATE_REPORT_FILES";
+    TABLE_MAPPING[14] = "MLTREEMAP_CALCULATION";
+    TABLE_MAPPING[15] = "MLTREEMAP_IMAGEMAKER";
+    TABLE_MAPPING[16] = "PATHOLOGIC";
+    TABLE_MAPPING[17] = "RPKM";
+
 }
 
 /*
@@ -207,7 +207,12 @@ void ProgressDialog::initMapping(){
  */
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
-    progressBar->setValue(_stepsCompleted);
+
+    if( this->rundata->getProcess()==0) {
+        progressBar->setValue(0);
+    }else {
+          progressBar->setValue(_stepsCompleted);
+    }
 
     _totalSteps = this->countTotalNumberOfSteps();
     progressBar->setMaximum(_totalSteps);
@@ -332,7 +337,7 @@ void ProgressDialog::colorRunConfig(QHash<QString,QString> &statusHash){
         if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
         if (stepName.contains(QRegExp("STATS_"))) continue;
 
-        int _row = TABLE_MAPPING->key(stepName);
+        int _row = TABLE_MAPPING.key(stepName);
 
         //clear old cell
       //  this->summaryTable->removeCellWidget(_row,0);
@@ -402,7 +407,7 @@ void ProgressDialog::resetRunTab() {
  //   timer->start(1000); // refresh rate of 1 sec for the log
 
     _stepsCompleted = 0;
-    _totalSteps = TABLE_MAPPING->size(); // used for progress bar
+    _totalSteps = TABLE_MAPPING.size(); // used for progress bar
 
 
 
@@ -424,19 +429,12 @@ void ProgressDialog::initProcess(){
 
     QStringList arguments;
 
-
-    qDebug() << " num of databases to run on " << rundata->getNumADB();
     if(this->rundata->getSamplesSubsetToRun().size()==0) {
-
        QMessageBox::warning(0,"ERROR", "At least one sample must be selected to process!\nPlease select samples in the Stages tab.", QMessageBox::Ok);
        this->processFinished(0,QProcess::NormalExit);
        this->resetRunTab();
        return;
     }
-
-//    qDebug() << this->rundata->getNumADB();
-
-
 
     if(this->rundata->getNumADB()==0 && this->rundata->getParams().contains(PIPELINE_STEP_BLAST)\
             && this->rundata->getParams()[PIPELINE_STEP_BLAST].indexOf(QString("skip")) == -1 )  {
@@ -454,7 +452,7 @@ void ProgressDialog::initProcess(){
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "config" + QDir::separator() + "template_param.txt");
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator()  + "config" + QDir::separator() + "template_config.txt");
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
-    if(computeStats->isChecked())  arguments << "--stats" << "on";
+
     //add the specific samples
     foreach(QString samplename, this->rundata->getSamplesSubsetToRun()) {
         arguments << "-s" << samplename;
@@ -470,6 +468,7 @@ void ProgressDialog::initProcess(){
     env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
 
     // the actual process setup
+
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
@@ -532,18 +531,24 @@ void ProgressDialog::checkFiles(){
     this->rundata->setFileList(filesDetected);
 }
 
-/*
- * Reset the state after its finished, but don't clear everything.
+/**
+ * @brief ProgressDialog::processFinished, Reset the state after its finished, but don't clear everything
+ * @param exitCode, the exit code,
+ * @param exitStatus, the exit status
  */
 void ProgressDialog::processFinished(int exitCode, QProcess::ExitStatus exitStatus){
     runButton->setEnabled(true);
     cancelButton->setEnabled(false);
     progressBar->setValue(0);
-    myProcess = 0;
+    this->setProcessToZero();
 }
 
 
 /*
+ * Kill the current run. Clear everything.
+ */
+/**
+ * @brief ProgressDialog::terminateRun
  * Kill the current run. Clear everything.
  */
 void ProgressDialog::terminateRun(){
@@ -554,13 +559,23 @@ void ProgressDialog::terminateRun(){
         standardOut->append(QString("Received a TERMINATION/KILL signal"));
     }
 
-    myProcess = 0;
+    this->setProcessToZero();
 
    // summaryTable->clearContents();
     progressBar->setValue(0);
   //  rundata->setCurrentSample("");
     runButton->setEnabled(true);
 }
+
+/**
+ * @brief ProgressDialog::setProcessTozero, this function sets the myProcess and process in rundata to
+ * 0 to mean that no process is running
+ */
+void ProgressDialog::setProcessToZero() {
+    myProcess = 0;
+    this->rundata->setProcess(myProcess);
+}
+
 
 ProgressDialog::~ProgressDialog()
 {

@@ -141,7 +141,7 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     }
     gdata->ymax = _ymax;
 
-    qDebug() << gdata->xmin << " " << gdata->xmax << "  " << gdata->ymin << "  " << gdata->ymax;
+  //  qDebug() << gdata->xmin << " " << gdata->xmax << "  " << gdata->ymin << "  " << gdata->ymax;
 }
 
 
@@ -150,16 +150,17 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
 void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
 
 
-    qDebug() << gdata->x;
-    qDebug() << gdata->y;
-
     QVector<double> x3, y3;
-    x3 = gdata->x;
-    y3 = gdata->y;
+    x3 = gdata->y;
+    y3 = gdata->x;
 
-    double width = ( gdata->xmax - gdata->xmin)/100;
-    if( width < 5) width = 5;
+    double width = ( gdata->xmax - gdata->xmin)/gdata->x.size();
 
+    if( width < 5 || gdata->x.size() < 10) width = 5;
+
+   // qDebug() << width << gdata->xmax << gdata->xmin << " size " << gdata->x.size();
+   // qDebug() << gdata->x;
+   // qDebug() << gdata->y;
     customPlot->yAxis->setRange(gdata->ymin, gdata->ymax);
     customPlot->xAxis->setRange(gdata->xmin , gdata->xmax);
 
@@ -188,9 +189,12 @@ void GraphData::plotLineGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
     customPlot->xAxis->setLabel(gdata->xlab);
     customPlot->yAxis->setLabel(gdata->ylab);
 
+   // qDebug() << gdata->x;
+   // qDebug() << gdata->y;
+
     // set axes ranges, so we see all data:
  //   qDebug() << "yaxis range " << customPlot->yAxis->range().maxRange << " xaxis range " << customPlot->xAxis->range().minRange << " - " << customPlot->xAxis->range().maxRange;
-    customPlot->yAxis->setRange(0,gdata->ymax);
+    customPlot->yAxis->setRange(0, gdata->ymax);
     customPlot->xAxis->setRange(gdata->xmin -1 , gdata->xmax + 1);
 
 }
@@ -204,6 +208,7 @@ void GraphData::updateMinMax(GRAPHDATA *gdata) {
     gdata->xmin = _min;
     gdata->xmax = _max;
 
+    _min= 1e+20 ; _max = -999999;
     foreach(double v, gdata->y) {
         if( v > _max ) _max = v;
         if( v < _min ) _min= v;
@@ -231,6 +236,7 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
     Utilities::removeZeros(gdata->x, gdata->y, 1);
 
     this->updateMinMax(gdata);
+    qDebug() << "non zero " << nonzeroSize;
     if( nonzeroSize < 10) {
          this->plotBarGraph(customPlot, gdata);
     }

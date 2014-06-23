@@ -47,6 +47,7 @@ public:
     void initGridValues();
     void initSelectChoices();
     void populateValues();
+
     void setDefaultParamValues() ;
 
     void writeGridSettingToFile(const QString &TEMPLATE_FILE);
@@ -59,6 +60,7 @@ public slots:
     void deleteExistingGrid();
     void closeWindow();
     void saveAndClose();
+    bool validateGridSettings(QString &errMsg) ;
 
 
     void newEC2Form();

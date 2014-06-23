@@ -110,7 +110,7 @@ QString SampleResourceManager::extractDBName(const QString &sampleName, const QS
 
     QRegExp pattern;
     switch(type) {
-        case rRNATABLE:
+        case rRNA:
              pattern.setPattern(sampleName + "[.](.*)[.]rRNA.stats.txt$");
              break;
          default:

@@ -37,6 +37,7 @@ public:
     void setConfig(QHash<QString,QString> CONFIG);
     void setConfigMapping(QHash<QString,QString> CONFIG_MAPPING);
     void setProcess(QProcess *process);
+    QProcess * getProcess();
     void setRRNADBS(QStringList rrnaDBS);
     void setAnnotationDBS(QStringList annotationDBS);
     void setPathologicPath(QString pathologicPath);
@@ -50,7 +51,7 @@ public:
     QHash<QString,QString> getParams();
     QHash<QString,QString> getConfig();
     QHash<QString,QString> getConfigMapping();
-    QProcess* getProcess();
+
 
     void setNumRRNADB(unsigned int n);
     void setNumADB(unsigned int n);

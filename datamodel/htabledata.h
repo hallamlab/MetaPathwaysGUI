@@ -76,9 +76,10 @@ public:
     QStringList getSampleNames();
     void addSampleName(QString sampleName, bool clearPrev = false) ;
     void setSampleNames(QStringList sampleNames);
+    unsigned int getSampleNumber(QString sampleName);
     QString getSampleName(unsigned int i);
 
-    void initializeSearchFilter(QString query, int column, bool caseSensitive);
+    void initializeSearchFilter(QString query, int column);
 
 
 
@@ -86,6 +87,7 @@ public:
     QTableWidget* tableWidget;
     unsigned int numCols;
     QList<enum TYPE> types;
+    QStringList windowtitles;
     Connector *_connector;
     QList<Connector *> connectors;
     QHash<ATTRTYPE, QList<Connector *> > allConnectors;
@@ -118,13 +120,18 @@ private slots:
     void exportButtonPressed();
     void ProvideContexMenu(QPoint pos);
 
+
 signals:
     void showTable(QString sampleName, ATTRTYPE type);
 
 
 public slots:
-    void searchQuery(QString query, int column, bool caseSensitive);
+    void searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type,  bool caseSensitive);
 
+private:
+    void addSearchFilter(QString query, int column);
+    void clearSearchFilters();
+    void makeSearch(OPTYPE optype,  bool caseSensitive);
 
 private:
 
@@ -149,7 +156,7 @@ private:
     QStringList sampleNames;
     unsigned int maxSpinBoxDepth;
 
-    SEARCH searchFilter;
+    QList<SEARCH> searchFilters;
 
     Ui::HTableData *ui;
 };

@@ -21,16 +21,19 @@ enum SOURCETYPE {FASTA, TABTABLE};
 typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, NUCFNA, CONTIGLENGTH, ORFLENGTH, \
                              NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
                              FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, ORFRPKM, MEGANLASTFILE,\
-                             MEGANBLASTFILE, RUNSTATS, ERRORS, GLOBAL_ERRORS , rRNATABLES, rRNATABLE, tRNATABLE, tRNATABLES} RESOURCE;
+                             MEGANBLASTFILE, RUNSTATS, ERRORS, GLOBAL_ERRORS , rRNATABLES, tRNATABLES, rRNA, tRNA} RESOURCE;
 
 
 /**
  * the types for the export boxes
  */
-typedef enum _TABLETYPE {
+typedef enum _TABLEEXPORTTYPE {
     rRNATABLEEXP, tRNATABLEEXP, OTHERSTABLEEXP
-} TABLETYPE;
+} TABLEEXPORTTYPE;
 
+typedef enum _TABLETYPE {
+    rRNATABLE, tRNATABLE, OTHERSTABLE
+} TABLETYPE;
 
 typedef struct _RANK_BEGIN_PAIR {
     unsigned int rank, begin;
@@ -60,6 +63,15 @@ typedef struct _SEQUENCEDATA {
 
 
 typedef QPair<QString, unsigned int > TaxonFreqQPair;
+
+
+template <class T, class U, class V>
+struct _Triplet {
+    int first;
+    QString second;
+    QString third;
+};
+
 
 typedef struct _GeneBrowserData {
     QList<ORFData>  orfData;
@@ -110,10 +122,11 @@ typedef struct GeneProperty {
 
 
 typedef struct _SEARCH {
-    QList<QString> searchItems;
+    QString searchItem;
     enum OPTYPE type;
     QList<unsigned int> searchCols;
     bool caseSensitive;
+
 
 } SEARCH;
 

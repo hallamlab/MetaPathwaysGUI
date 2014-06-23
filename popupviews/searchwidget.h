@@ -29,17 +29,22 @@ public:
     
 private slots:
     void querySet();
+    void toggleANDOR(bool );
 
 signals:
-    void lookUp(QString, int, bool);
+    void lookUp(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool);
 
 private:
     void createWidget();
+
 private:
     Ui::SearchWidget *ui;
 
-    QLineEdit* keyword;
-    QComboBox* columnSelect;
+    QLineEdit* keyword_1, *keyword_2, *keyword_3, *keyword_4;
+    QComboBox* columnSelect_1, *columnSelect_2, *columnSelect_3, *columnSelect_4;
+    QLabel *andORlabel_1, *andORlabel_2, *andORlabel_3, *andORlabel_4;
+
+    QCheckBox *andOR;
     QCheckBox* caseSensitive;
     QDialogButtonBox* okAndCancel;
 

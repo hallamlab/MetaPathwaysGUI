@@ -56,6 +56,7 @@ public:
     static unsigned int numNonZeros(const QVector<double> &v);
     static void removeZeros(QVector<double> &x, QVector<double> &y, unsigned int index = 0 );
     static unsigned int uniqueORFsCount(const QList<ORF *> &orfList);
+    static QString getSubSequence(QString, QString, unsigned int start, unsigned int end);
 };
 
 

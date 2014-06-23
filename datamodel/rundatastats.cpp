@@ -13,6 +13,10 @@ void RunDataStats::setFileNames(const QStringList &filenames) {
     this->filenames = filenames;
 }
 
+bool compareAttributes(QPair<QString, unsigned int> &pair1, QPair<QString, unsigned int> &pair2 ) {
+    if(pair1.second > pair2.second) return true;
+    return false;
+}
 
 bool RunDataStats::readStatFiles() {
     RunData *rundata = RunData::getRunData();
@@ -27,6 +31,21 @@ bool RunDataStats::readStatFiles() {
        this->readDataFromFile(runstatsFile, filename);
     }
 
+
+    QList< QPair<QString, unsigned int> > pairs;
+
+    QPair<QString, unsigned int> pair;
+
+
+    foreach( QString attribute, this->ranking.keys()) {
+        pair.first = attribute;
+        pair.second = this->ranking[attribute];
+        pairs.append(pair);
+    }
+
+    qSort(pairs.begin(), pairs.end(), compareAttributes);
+
+
     foreach(QString sample, this->statsData.keys()) {
         foreach(QString stat, this->statsData[sample].keys()) {
             this->statNames[stat] =true;
@@ -35,13 +54,17 @@ bool RunDataStats::readStatFiles() {
 
     this->dataVectorMap.clear();
 
-    foreach(QString statName, this->statNames.keys()) {
-        this->dataVectorMap[statName] = QList<QString>();
+    typedef QPair<QString, unsigned int> RankPair;
+
+    foreach( RankPair pair, pairs ) {
+     //   qDebug() << pair.second;
+     //   if( !statNames.contains(pair.first)) continue;
+        this->dataVectorMap[pair.first] = QList<QString>();
         foreach(QString sample, this->filenames) {
-            if( this->statsData[sample].contains(statName))
-                this->dataVectorMap[statName].append( this->statsData[sample][statName]);
+            if( this->statsData[sample].contains(pair.first))
+                this->dataVectorMap[pair.first].append( this->statsData[sample][pair.first]);
             else
-                this->dataVectorMap[statName].append("0");
+                this->dataVectorMap[pair.first].append("0");
         }
     }
 
@@ -52,6 +75,7 @@ void RunDataStats::clear() {
     this->dataVectorMap.clear();
     this->statNames.clear();
     this->statsData.clear();
+    this->ranking.clear();
 }
 
 bool RunDataStats::readDataFromFile(const QString &filename, const QString &sample) {
@@ -72,11 +96,17 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
         while ( !in.atEnd() )  {
             QString line = in.readLine().trimmed();
             QStringList fields = line.split(QChar('\t'));
-            if( fields.length()!= 2) continue;
+            if( fields.length()!= 3) continue;
 
+            bool ok;
+            fields[0].trimmed().toInt(&ok);
+            if( ok )
+               this->ranking[fields[0].trimmed() + " " + fields[1]] = fields[0].trimmed().toInt(&ok);
+            else
+               this->ranking[fields[0].trimmed() + " " +fields[1]] = 0;
 
-            pair.first= fields[0].trimmed();
-            pair.second= fields[1].trimmed();
+            pair.first= fields[0].trimmed() + " " +  fields[1].trimmed();
+            pair.second= fields[2].trimmed();
             cols.append(pair);
         }
         inputFile.close();
@@ -114,8 +144,6 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
    }
    else if (role == Qt::DisplayRole) {
 
-   //    qDebug() << dataVectorMap.size() << " , " << index.row() << ", " << index.column();
-      // qDebug() << dataVectorMap.keys();
        if( index.row() < dataVectorMap.size() ) {
            QString key =  (dataVectorMap.begin()+ index.row()).key();
            if( index.column() < dataVectorMap[key].size() ) {
@@ -139,5 +167,11 @@ QVariant RunDataStats::headerData(int section, Qt::Orientation orientation, int 
        return QVariant();
 
    if( orientation==Qt::Horizontal) return filenames[section];
-   return (dataVectorMap.begin()+ section).key();
+   QString rowAttribute = (dataVectorMap.begin()+ section).key();
+
+   QRegExp re("^\\d+");
+
+   return rowAttribute.remove(re);
+
+  // return (dataVectorMap.begin()+ section).key();
 }

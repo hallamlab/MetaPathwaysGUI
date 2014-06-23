@@ -89,7 +89,7 @@ MainFrame::MainFrame(QWidget *parent) :
 }
 
 void MainFrame::showSetupError(QString warningStr) {
-    warning->warning(0,"Configuration Invalid!\n", QString("These problems require your attention : \n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
+    warning->warning(0,"Incomplete Configuration !\n", QString("INCOMPLETE CONFIGURATION MAY DISABLE SOME FEATURES  \n\n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
     greyTabs(false);
     this->openSetup();
     setupWidget->updateValues();
@@ -103,17 +103,16 @@ void MainFrame::showSetupError(QString warningStr) {
 void MainFrame::validateSetup() {
      RunData *rundata= RunData::getRunData();
      QString warningStr;
-     if( rundata->validate(warningStr)) {
-         //pass
-         addRemainingTabs();
-         stackedWidget->setCurrentWidget(settingsScroll);
-         greyTabs(true);
+
+
+     if( !rundata->validate(warningStr)) {
+          showSetupError(warningStr);
      }
-     else {
-         //fails
-         showSetupError(warningStr);
-         greyTabs(false);
-     }
+
+    addRemainingTabs();
+    stackedWidget->setCurrentWidget(settingsScroll);
+    greyTabs(true);
+
 }
 
 /*

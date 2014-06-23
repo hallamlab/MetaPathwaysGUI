@@ -386,41 +386,43 @@ void LargeTable::getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & select
     }
 }
 
-void LargeTable::markRowsSearch(SEARCH &searchFilter) {
+void LargeTable::markRowsSearch(QList<SEARCH> &searchFilters, OPTYPE optype, bool caseSensitive ) {
     enum DECISION hit;
     unsigned int k=0;
     tableData.clear();
-    Qt::CaseSensitivity caseSensitive =  searchFilter.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
-   // Qt::CaseInsensitive
+    Qt::CaseSensitivity _caseSensitive =  caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
+
+    if(searchFilters.size()==0) {
+       for (unsigned int i = 0;  i < wholeTableData.length(); i++){
+             tableData.append(wholeTableData.at(i));
+       }
+       return;
+    }
+
+    //consider a row i in the whole data
     for (unsigned int i = 0;  i < wholeTableData.length(); i++){
-        hit=MAYBE;
-        if(searchFilter.searchItems.size()==0 ) hit = YES;
-        foreach(unsigned int j, searchFilter.searchCols) {
-            foreach(QString searchItem, searchFilter.searchItems) {
-                if( searchItem.size() ==0 ) { hit=YES; break; }
-                if( searchFilter.type == OR) {
-                   if( wholeTableData.at(i)->strVar.at(this->index[j]).indexOf(searchItem, 0, caseSensitive) > -1 ) {
-                        hit= YES;
-                        break;
-                    }
-                }
+        //one search at a time
+        hit = NO;
+        foreach(SEARCH searchFilter, searchFilters) {
+            //empty searchquery
+            if( searchFilter.searchItem.size()==0 ) continue;
 
-                if( searchFilter.type == AND) {
-                   if( wholeTableData.at(i)->strVar.at(this->index[j]).indexOf(searchItem, 0, caseSensitive) == -1 ) {
-                        hit= NO;
-                        break;
-                    }
-                }
+            //one column j in row i
+            hit=NO;
+            foreach(unsigned int j, searchFilter.searchCols) {
+               if( wholeTableData.at(i)->strVar.at(this->index[j]).indexOf(searchFilter.searchItem, 0, _caseSensitive) > -1 ) {  hit= YES; break; }
             }
-            if( hit != MAYBE) break;
+            if(hit==YES && optype == OR) break;
+            if(hit==NO && optype == AND ) break;
         }
 
         if(hit == YES ) {
-            tableData.append(wholeTableData.at(i));
-            k++;
+           tableData.append(wholeTableData.at(i));
+           k++;
         }
+
     }
 }
 

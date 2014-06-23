@@ -35,10 +35,11 @@ class ExportBox : public QWidget
     Q_OBJECT
 public:
      void setTableData(TableData *td);
-     ExportBox(TableData *td = 0, QWidget *parent = 0, TABLETYPE type = OTHERSTABLEEXP);
+     ExportBox(TableData *td = 0, QWidget *parent = 0, TABLEEXPORTTYPE type = OTHERSTABLEEXP);
      ExportBox(HTableData *td = 0, QWidget *parent =0);
 
-     void setType( TABLETYPE type);
+     void setExportType(TABLEEXPORTTYPE type);
+     void setAuxName(QString auxname);
 
     ~ExportBox() ;
 
@@ -69,7 +70,8 @@ private:
 
     QList<EXPORT_SELECT> Columns;
     QList<QCheckBox *> samplesCheckboxes;
-    TABLETYPE type;
+    TABLEEXPORTTYPE exportType;
+    QString auxName;
 
 };
 

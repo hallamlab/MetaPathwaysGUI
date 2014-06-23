@@ -1,10 +1,10 @@
 #include "exportbox.h"
 
-ExportBox::ExportBox(TableData* td, QWidget *parent, TABLETYPE type)
+ExportBox::ExportBox(TableData* td, QWidget *parent, TABLEEXPORTTYPE type)
     // : QWidget(parent)
 {
     this->td = new ExportSource(td);
-    this->type = type;
+    this->exportType = type;
 
     this->createWidget();
 }
@@ -13,7 +13,8 @@ ExportBox::ExportBox(HTableData* td, QWidget *parent)
     // : QWidget(parent)
 {
     this->td = new ExportSource(td);
-    this->type = OTHERSTABLEEXP;
+    this->exportType = OTHERSTABLEEXP;
+
 
     this->createWidget();
 }
@@ -31,9 +32,12 @@ void ExportBox::createWidget() {
 
  }
 
+void ExportBox::setAuxName(QString auxname) {
+    this->auxName = auxname;
+}
 
-void ExportBox::setType(TABLETYPE type) {
-    this->type = type;
+void ExportBox::setExportType(TABLEEXPORTTYPE type) {
+    this->exportType = type;
 }
 
 bool ExportBox::cancelWindow() {
@@ -163,14 +167,26 @@ QStringList ExportBox::getAllHeaders() {
      fna = new QCheckBox(tr("ORFs"));
      faa = new QCheckBox(tr("Amino"));
 
+     fasta->setToolTip("Exports the contigs where the ORFs originated");
+     fna->setToolTip("Exports the ORFs");
+     faa->setToolTip("Exports the translated ORFs");
+
      vbox->addWidget(fasta);
      vbox->addWidget(fna);
      vbox->addWidget(faa);
 
-     if(this->type == rRNATABLEEXP || this->type == tRNATABLEEXP ) {
-         fasta->hide();
+
+     if(this->exportType == rRNATABLEEXP) {
          fna->hide();
          faa->hide();
+         fasta->setText(tr("rRNA"));
+         fasta->setToolTip("Exports the region of the contigs that has a hit in the rRNA database");
+     }
+     else if(this->exportType == tRNATABLEEXP ) {
+         fna->hide();
+         faa->hide();
+         fasta->setText(tr("tRNA"));
+         fasta->setToolTip("Exports the region of the contigs that has the tRNA");
      }
      else {
          fasta->show();
@@ -261,14 +277,31 @@ typedef struct _EXPORT_FILES_INFO {
      filesInfo.suffixes << ".fasta" << ".fna" << ".faa";
      filesInfo.resources << NUCFASTA << NUCFNA << AMINOFAA;
 
-   //  if( this->td->isMultiSampleMode() ) {
+
+     // export the sequences now
       QDir dir(fileName);
+
       foreach( QString sampleName, this->td->getSampleNames() ) {
-            if( this->td->isMultiSampleMode() && !sampleSequencesToExport.contains(sampleName)) continue;  // skip the sample if it is not selected
+
+          if( this->td->isMultiSampleMode() && !sampleSequencesToExport.contains(sampleName)) continue;  // skip the sample if it is not selected
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {
                      if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
-                     exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
+
+                     if( i==0 ) {
+                          if(this->exportType==tRNATABLEEXP) {
+                              exportFileName = fileName +"/" + sampleName + QString(".tRNA") +  QString(filesInfo.suffixes[i]);
+                          }
+                          else if(this->exportType==rRNATABLEEXP) {
+                              exportFileName = fileName +"/" + sampleName + QString(".rRNA") + QString(".") + QString(this->auxName) +    QString(filesInfo.suffixes[i]);
+                          }
+                          else {
+                              exportFileName = fileName +"/" + sampleName +  QString(filesInfo.suffixes[i]);
+                          }
+                     }
+                     else {
+                        exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
+                     }
 //                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
                      this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
                      //waitScreen->hide();

@@ -212,7 +212,7 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
        return true;
     }else{
         QMessageBox msg;
-        msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
+       // msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
         return false;
     }
     return false;
@@ -511,8 +511,29 @@ unsigned int Utilities::uniqueORFsCount(const  QList<ORF *> &orfList) {
     }
 
     return _names.size();
+}
 
+QString Utilities::getSubSequence(QString str,QString name, unsigned int start, unsigned int end) {
 
+    QString sequence;
+    QRegExp begPattern(">");
+
+    foreach( QString seq, str.split("\n") ) {
+        if( begPattern.indexIn(seq) > - 1 ) continue;
+        sequence.append(seq.trimmed());
+    }
+
+    unsigned int len =  static_cast<unsigned int>(sequence.size());
+
+    if( start > len || end > len) return QString();
+
+    if( start > end ) {
+        unsigned int temp = start;
+        start = end;
+        end = temp;
+    }
+
+    return  ( QString(">") + name + QString("\n") + sequence.mid(start, (end -start) + 1)  + QString("\n"));
 }
 
 

@@ -9,5 +9,9 @@
         <file>text/default_template_param.txt</file>
         <file>text/default_template_config.txt</file>
         <file>images/running.png</file>
+        <file>functional_categories/COG_categories.txt</file>
+        <file>functional_categories/KO_classification.txt</file>
+        <file>functional_categories/SEED_subsystems.txt</file>
+        <file>functional_categories/metacyc_hierarchy.txt</file>
     </qresource>
 </RCC>

@@ -193,7 +193,8 @@ void DataManager::createDataModel() {
     RunData *rundata = RunData::getRunData();
 
     QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
-    QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
+    //QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
+    QString COG_categories = QString(":/functional_categories/") + "COG_categories.txt";
     HTree *htree = createHTree(COG_categories);
 
     htree->hashNodes(htree->root);
@@ -201,18 +202,20 @@ void DataManager::createDataModel() {
   //  htree->printTree(htree->getRootHNODE());
 
 
-
-    QString KEGG_categories = refDBFolder + "/functional_categories/" + "KO_classification.txt";
+    //QString KEGG_categories = refDBFolder + "/functional_categories/" + "KO_classification.txt";
+    QString KEGG_categories =  QString(":/functional_categories/") + "KO_classification.txt";
     htree = createHTree(KEGG_categories);
     htree->hashNodes(htree->root);
     this->htrees[KEGG] = htree;
 
-    QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
+    //QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
+    QString MetaCyc_hierarchy = QString(":/functional_categories/") + "metacyc_hierarchy.txt";
     htree = createHTree(MetaCyc_hierarchy);
     htree->hashNodes(htree->root);
     this->htrees[METACYC] = htree;
 
-    QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
+    //QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
+    QString Seed_subsystems =  QString(":/functional_categories/") + "SEED_subsystems.txt";
     htree = createHTree(Seed_subsystems);
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;

@@ -149,6 +149,19 @@ void HTableData::setSampleNames(QStringList sampleNames) {
 }
 
 
+unsigned int HTableData::getSampleNumber(QString sampleName) {
+    unsigned int i =0;
+    QHash<QString, unsigned int> sampleNumbers;
+    foreach(QString _sampleName, this->sampleNames) {
+        sampleNumbers.insert(_sampleName, i);
+        i++;
+    }
+
+    if( sampleNumbers.contains(sampleName) ) return sampleNumbers[sampleName];
+    return 0;
+}
+
+
 QString HTableData::getSampleName(unsigned int i) {
    if( this->sampleNames.size() > i )  {
        return this->sampleNames[i];
@@ -315,8 +328,6 @@ void HTableData::fillData() {
 
 unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth) {
      QList<ROWDATA *> data;
-     qDebug() << categoryName;
-
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(),  this->showRPKM->isChecked() ) ;
 
      QStringList _headers = this->tableParams.headers[this->id.attrType];
@@ -411,8 +422,9 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     }
     tableWidget->resizeColumnsToContents();
     //table.resizeRowsToContents();
-    tableWidget->horizontalHeader()->setStretchLastSection(true);
+  //  tableWidget->horizontalHeader()->setStretchLastSection(true);
 //    tableWidget->resize(tableWidget->sizeHint());
+
 }
 
 /**
@@ -439,8 +451,17 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->category = tableWidget->item(row,0)->text().trimmed();
     htable->level = this->level +1;
     htable->types = this->types;
+    htable->windowtitles = this->windowtitles;
 
-    htable->setWindowTitle(htable->category);
+
+    QString title;
+    foreach( QString _title, htable->windowtitles) {
+        title += _title + " | ";
+    }
+    title += htable->category;
+    htable->windowtitles.append(htable->category);
+
+    htable->setWindowTitle(title );
     HTree *htree = datamanager->getHTree(this->id.attrType);
     HNODE *hnode = htree->getHNODE(htable->category);
 
@@ -452,14 +473,10 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     htable->depthLabelValue->setText(QString::number(htable->level));
     htable->depthLabelValue->setVisible(true);
-  //  htable->connectors = this->connectors;
 
     htable->connectors.clear();
     Connector *modConnector ;
 
-
-    // create the subConnectors from the already existing connectors in the current
-    // htable
 
     foreach(Connector *connector, this->connectors) {
         modConnector = datamanager->createSubConnector(datamanager->getHTree(this->id.attrType), hnode, connector, this->id.attrType);
@@ -491,6 +508,8 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->setToolTip("Total number of ORFs | Number of distinct ORFs");
     htable->numOrfsLabel->setVisible(true);
     htable->setTableIdentity(this->id.sampleName, this->id.attrType);
+
+    // this also starts loading the data
     htable->switchCategory(this->id.attrType);
 
 
@@ -614,6 +633,7 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
 }
 
 
+
 /** Saves the sequeces to a local file
  * \param sampleName : name of the sample
  * \param fileName : name of the file/folder to save it in, creates a new folder
@@ -625,29 +645,29 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
     HTree *htree = datamanager->getHTree(this->id.attrType);
 
     // take any connector, since they all have the same set of ORFs
-    Connector *connector  = this->connectors[0];
+
+    Connector *connector = this->allConnectors[this->id.attrType][this->getSampleNumber(sampleName)];
     if( datamanager==0 || htree ==0 || connector == 0 ) return false;
     QList<ORF *>orfList = connector->getORFList();
 
+  //  connector->getORFList(htree->getLeafAttributesOf(hnode));
     QHash<QString, bool> keyNames;
     ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
  //   qDebug() << "total orfs " << connector->getORFList().size();
    // foreach( ORF *o, connector->getORFList())
      //   qDebug() << o->name;
 
-   // for(int i =0; i < this->tableWidget->rowCount(); i++) {
-       //  HNODE *hnode = htree->getHNODE(this->tableWidget->item(i,0)->text().trimmed());
-        // orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
-         foreach(ORF *orf, orfList) {
-             if( type == NUCFNA || type == AMINOFAA) {
+
+    foreach(ORF *orf, orfList) {
+       if( type == NUCFNA || type == AMINOFAA) {
               //   qDebug() << " orf name " << orf->name;
                  keyNames[orf->name] = true;
-             }
-             if( type==NUCFASTA) {
+       }
+       if( type==NUCFASTA) {
               //   qDebug() << "contig name " << orf->contig->name;
                  keyNames[orf->contig->name] = true;
-             }
-         }
+       }
+    }
    // }
 
 
@@ -667,57 +687,102 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
 }
 
 
-void HTableData::searchQuery(QString query, int column, bool caseSensitive){
-
-   // this->initializeSearchFilter(query, column, caseSensitive);
-    for( int i = 0; i < tableWidget->rowCount(); ++i )
-    {
-        bool match = false;
-        for( int j = 0; j < tableWidget->columnCount(); ++j )
-        {
-            QTableWidgetItem *item = tableWidget->item( i, j );
-            if( item->text().contains(query) )
-            {
-                match = true;
-                break;
-            }
-        }
-        tableWidget->setRowHidden(i, !match );
-    }
-
+/**
+ * @brief TableData::clearSearchFilters, removes the search filters added so far
+ */
+void HTableData::clearSearchFilters() {
+    this->searchFilters.clear();
 }
 
-void HTableData::initializeSearchFilter(QString query, int column, bool caseSensitive) {
 
-    QString _and = "&&", _or="||";
+/**
+ * @brief TableData::initializeSearchFilter adds a search filter
+ * @param query, the query
+ * @param column, column chosen at the export box
+ * @param caseSensitive
+ */
+void HTableData::addSearchFilter(QString query, int column) {
 
-    QStringList searchFields;
-    this->searchFilter.searchItems.clear();
-    this->searchFilter.searchCols.clear();
-
-
-    searchFields = query.split(_or, QString::SkipEmptyParts);
-    this->searchFilter.type = OR;
-
-    if( searchFields.size() ==0 ) {
-        searchFields = query.split(_and, QString::SkipEmptyParts);
-        this->searchFilter.type = AND;
-    }
-
-    this->searchFilter.searchItems = searchFields;
+    SEARCH searchFilter;
+    searchFilter.searchItem = query.trimmed();
 
 
     if( column==0) {
         for(unsigned int i = 0; i < this->numCols; i++) {
             if( this->types[i]==STRING)
-               this->searchFilter.searchCols.append(i);
+               searchFilter.searchCols.append(i);
         }
     }
     else {
-        this->searchFilter.searchCols.append(column-1);
+        searchFilter.searchCols.append(column-1);
     }
 
-    this->searchFilter.caseSensitive = caseSensitive;
+    this->searchFilters.append(searchFilter);
+}
+
+
+/**
+ * @brief HTableData::searchQuery, a slot that searches the table based on the for query and query columns selected
+ * in the search box
+ * @param query1
+ * @param column1
+ * @param query2
+ * @param column2
+ * @param query3
+ * @param column3
+ * @param query4
+ * @param column4
+ * @param type,  OR or AND
+ * @param caseSensitive,  case sensitivity
+ */
+
+void HTableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type,  bool caseSensitive){
+    this->clearSearchFilters();
+    if(query1.size() > 0) this->addSearchFilter(query1, column1);
+    if(query2.size() > 0) this->addSearchFilter(query2, column2);
+    if(query3.size() > 0) this->addSearchFilter(query3, column3);
+    if(query4.size() > 0) this->addSearchFilter(query4, column4);
+    this->makeSearch(type, caseSensitive);
+}
+
+void HTableData::makeSearch(OPTYPE optype,  bool caseSensitive) {
+
+    enum DECISION hit;
+    unsigned int k=0;
+
+    Qt::CaseSensitivity _caseSensitive =  caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
+    if(this->searchFilters.size()==0) {
+       for (unsigned int i = 0;  i < tableWidget->rowCount(); i++){
+            this->tableWidget->setRowHidden(i, false);
+       }
+       return;
+    }
+
+    //consider a row i in the table widget data
+    for (unsigned int i = 0;  i < tableWidget->rowCount(); i++){
+        //one search at a time
+        hit = NO;
+        foreach(SEARCH searchFilter, searchFilters) {
+            //empty searchquery
+            if( searchFilter.searchItem.size()==0 ) continue;
+
+            //one column j in row i
+            hit=NO;
+            foreach(unsigned int j, searchFilter.searchCols) {
+               if( this->tableWidget->item(i, j)->text().contains(searchFilter.searchItem, _caseSensitive)) {  hit= YES; break; }
+            }
+            if(hit==YES && optype == OR) break;
+            if(hit==NO && optype == AND ) break;
+        }
+
+        if(hit == NO ) {
+           this->tableWidget->setRowHidden(i, true);
+        }
+        else{
+           this->tableWidget->setRowHidden(i, false);
+        }
+    }
 
 }
 

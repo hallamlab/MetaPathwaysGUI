@@ -51,7 +51,8 @@ public:
 
     void setPopupListener(DisplayInfo *p);
     void setPopupListener(GenomeView *g);
-    void initializeSearchFilter(QString query, int column=0, bool caseSensitive = true) ;
+    void addSearchFilter(QString query, int column=0) ;
+    void clearSearchFilters();
     enum TYPE getFieldType(unsigned int i);
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
@@ -64,8 +65,10 @@ public:
     QStringList getSampleNames();
     QString getSampleName(unsigned int i);
     void setSampleNames(QStringList sampleNames);
-    void setType(TABLETYPE type);
 
+    void setType(TABLETYPE type);
+    void setExportType(TABLEEXPORTTYPE type);
+    void setAuxName(QString auxname);
 
     QList<enum TYPE> types;
 
@@ -86,6 +89,7 @@ public:
 
     QTableWidget* tableWidget;
     TABLETYPE  type;
+    TABLEEXPORTTYPE exportType;
 
 
 
@@ -93,7 +97,7 @@ public:
 public slots:
     void outputRows(int top);
     void headerClicked(int index);
-    void searchQuery(QString query, int column, bool caseSensitive);
+    void searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type, bool caseSensitive);
     void createGeneViewData(QTableWidgetItem *item);
 
 private slots:
@@ -117,8 +121,9 @@ private:
     QString sampleName;
     QString file;
     ExportBox * exportBox;
+    QString auxName;
 
-    SEARCH searchFilter;
+    QList<SEARCH> searchFilters;
 
 
     bool multiSampleMode;

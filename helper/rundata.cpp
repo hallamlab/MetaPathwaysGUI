@@ -86,6 +86,15 @@ void RunData::setProcess(QProcess *process){
     this->process = process;
 }
 
+/**
+ * @brief RunData::getProcess
+ *
+ * @return  the pointer to the current process
+ */
+QProcess * RunData::getProcess(){
+    return this->process;
+}
+
 void RunData::setRRNADBS(QStringList rrnaDBS){
     this->rrnaDBS = rrnaDBS;
 }
@@ -106,9 +115,7 @@ QHash<QString,QString> RunData::getConfigMapping(){
     return this->CONFIG_MAPPING;
 }
 
-QProcess *RunData::getProcess(){
-    return this->process;
-}
+
 
 void RunData::setPythonExecutablePath(QString pythonPath) {
     this->CONFIG["PYTHON_EXECUTABLE"] = pythonPath;
