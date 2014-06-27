@@ -240,7 +240,7 @@ bool RunData::validate(QString &warningMsg) {
     }
 
     file.setFile(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG));
-    QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + QDir::separator() + "bin" + QDir::separator() + "MetaPathways.py");
+    QFileInfo  file1(this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) + QDir::separator() + "MetaPathways.py");
 
     if( !file.exists() || !file1.exists() ) {
         warningMsg = warningMsg + " - MetaPathways.py is missing from your specified MetaPathways directory. Please verify it exists!\n";
@@ -279,6 +279,13 @@ QStringList RunData::getFileList(){
 
 }
 
+void RunData::updateCurrentFileList(){
+   this->currentfiles = this->files;
+}
+
+QStringList RunData::getCurrentFileList(){
+    return this->currentfiles;
+}
 
 
 void RunData::loadInputFiles(){

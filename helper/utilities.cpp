@@ -56,7 +56,6 @@ QHash<QString,QString> Utilities::createMapping(){
     CONFIG_NAME_MAP["metapaths_steps:BLAST_REFDB"] = "metapaths_stepsBLAST_REFDB";
     CONFIG_NAME_MAP["metapaths_steps:PARSE_BLAST"] = "metapaths_stepsPARSE_BLAST";
     CONFIG_NAME_MAP["metapaths_steps:SCAN_tRNA"] = "metapaths_stepsSCAN_TRNA";
-    CONFIG_NAME_MAP["metapaths_steps:STATS_rRNA"] = "metapaths_stepsSTATS_RRNA";
     CONFIG_NAME_MAP["metapaths_steps:SCAN_rRNA"] = "metapaths_stepsSCAN_RRNA";
     CONFIG_NAME_MAP["metapaths_steps:ANNOTATE"] = "metapaths_stepsANNOTATE";
     CONFIG_NAME_MAP["metapaths_steps:PATHOLOGIC_INPUT"] = "metapaths_stepsPATHOLOGIC_INPUT";

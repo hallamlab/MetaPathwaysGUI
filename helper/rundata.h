@@ -70,6 +70,10 @@ public:
     void addFileToList(QString file);
     void setFileList(QStringList files);
     QStringList getFileList();
+
+    void updateCurrentFileList();
+    QStringList getCurrentFileList();
+
     void loadInputFiles();
     QString getSystem();
 
@@ -94,7 +98,7 @@ private:
 
     static RunData* runData;
 
-    QStringList files;
+    QStringList files, currentfiles;
     QHash<QString,QString> PARAMS;
     QHash<QString,QString> CONFIG;
     QHash<QString,QString> CONFIG_MAPPING;

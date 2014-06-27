@@ -445,7 +445,7 @@ void ProgressDialog::initProcess(){
 
     // arguments to the python execution process call
     // recall : python code is run as python MetaPathways.py -i input -o output -p paramfile -c configfile -r writemode
-    arguments <<  QDir::toNativeSeparators(METAPATH + QDir::separator() + "bin" + QDir::separator() +  "MetaPathways.py");
+    arguments <<  QDir::toNativeSeparators(METAPATH  + QDir::separator() +  "MetaPathways.py");
     if(runVerbose->isChecked()) arguments << "-v";
     arguments << "-i" << QDir::toNativeSeparators(this->rundata->getParams()["fileInput"]);
     arguments << "-o" << QDir::toNativeSeparators(this->rundata->getParams()["folderOutput"]);

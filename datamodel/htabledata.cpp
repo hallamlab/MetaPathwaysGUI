@@ -182,10 +182,13 @@ bool HTableData::setParameters(HTree *htree,  QList<TYPE> _types) {
 
 void HTableData::clearConnectors() {
     this->connectors.clear();
+    foreach(ATTRTYPE attr, this->allConnectors.keys())
+        this->allConnectors[attr].clear();
 }
 
-void HTableData::addConnector(Connector *connector) {
+void HTableData::addConnector(Connector *connector, ATTRTYPE attr) {
      this->connectors.append(connector);
+     this->allConnectors[attr].append(connector);
 }
 
 void HTableData::setNumCols(unsigned int numCols) {
@@ -268,11 +271,11 @@ void HTableData::showHierarchyChanged(int state) {
 
 
 
-
-/* This function toggels to show and display the zero rows of the functional
- *tables
- * @params true/false settings to enable or disable based on the Checkbox state
- **/
+/**
+ * @brief HTableData::hideZeroRowsChanged, This function toggels to show and
+ * display the zero rows of the functional tables
+ * @param state, true/false settings to enable or disable based on the Checkbox state
+ */
 void HTableData::hideZeroRowsChanged(int state) {
     if(this->subWindow)
 //        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
@@ -647,6 +650,7 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
     // take any connector, since they all have the same set of ORFs
 
     Connector *connector = this->allConnectors[this->id.attrType][this->getSampleNumber(sampleName)];
+
     if( datamanager==0 || htree ==0 || connector == 0 ) return false;
     QList<ORF *>orfList = connector->getORFList();
 
@@ -745,6 +749,12 @@ void HTableData::searchQuery(QString query1, int column1, QString query2, int co
     this->makeSearch(type, caseSensitive);
 }
 
+
+/**
+ * @brief HTableData::makeSearch, applies the multiple search options to the data
+ * @param optype, it is of AND or OR type
+ * @param caseSensitive, it is casesensitive one true
+ */
 void HTableData::makeSearch(OPTYPE optype,  bool caseSensitive) {
 
     enum DECISION hit;
@@ -786,7 +796,11 @@ void HTableData::makeSearch(OPTYPE optype,  bool caseSensitive) {
 
 }
 
-
+/**
+ * @brief HTableData::ProvideContexMenu, this function emits a showtable signal to the
+ * results windwo with eventually triggers off the functional and taxonomic table
+ * @param pos
+ */
 
 void HTableData::ProvideContexMenu(QPoint pos)
 {

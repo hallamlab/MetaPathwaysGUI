@@ -43,10 +43,12 @@ public:
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
     void addRPKMToORFs(QString sampleName, QString fileName);
 
-    ORF* _createAnORF(QStringList &attributes);
+    ORF* _createAnORF(QStringList &attributes, QString &sampleName);
     void destroyORFs(QString sampleName);
     void destroyAllORFs();
     void _destroyAnORF(ORF *);
+    void destroyAllContigs();
+    void destroyContigs(QString &sampleName);
    // void destroyAllAttributes();
 
     void setDataModelCreated(bool);
@@ -73,6 +75,7 @@ private:
     QHash<ATTRTYPE, HTree *>  htrees;
 
     static DataManager *datamanager;
+    QHash<QString, QHash<QString, CONTIG *> > contigHash;
 
     QHash<ATTRTYPE, QHash<QString, ATTRIBUTE *> > attributes;
 

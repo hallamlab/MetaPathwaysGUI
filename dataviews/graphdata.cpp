@@ -236,7 +236,7 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
     Utilities::removeZeros(gdata->x, gdata->y, 1);
 
     this->updateMinMax(gdata);
-    qDebug() << "non zero " << nonzeroSize;
+
     if( nonzeroSize < 10) {
          this->plotBarGraph(customPlot, gdata);
     }

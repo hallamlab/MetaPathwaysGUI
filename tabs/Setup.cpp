@@ -81,7 +81,8 @@ void Setup::canSave(){
            pathologicPath = pathologicTxt->text();
     }
     else {
-        saveButton->setEnabled(false);
+        // Proceed with changes anyway without specifying the essential folders and executables
+        ;//saveButton->setEnabled(false);
     }
 }
 

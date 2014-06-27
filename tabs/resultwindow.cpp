@@ -90,10 +90,12 @@ void ResultWindow::_loadResults() {
 
     this->disableSampleChanged = true;
     this->updateFileNames();
+    this->rundata->updateCurrentFileList();
     this->disableSampleChanged = false;
     DataManager *datamanager = DataManager::getDataManager();
     /***/
     datamanager->destroyAllORFs();
+    datamanager->destroyAllContigs();
     datamanager->deleteAllConnectors();
     datamanager->destroyAllHTrees();
     datamanager->destroyAllAttributes();
@@ -101,10 +103,9 @@ void ResultWindow::_loadResults() {
     TableManager *tableManager = TableManager::getTableManager();
     tableManager->deleteAllGraphData();
     tableManager->deleteAllTables();
-
-
     /***/
     datamanager->setDataModelCreated(false);
+
 
     //  datamanager->setORFsUptoDateAll(false);
     if (this->sampleSelect->count() > 0) {
@@ -151,7 +152,7 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
 void ResultWindow::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-    this->selectWindow->addSamples(this->rundata->getFileList());
+    this->selectWindow->addSamples(this->rundata->getCurrentFileList());
     this->selectWindow->show();
 }
 
@@ -367,6 +368,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable = this->getHTableData(sampleName, SEED, types, headers, datamanager);
     htable->addSampleName(sampleName, true);
     htable->setMultiSampleMode(false);
+
     resultTabs->addTab(htable, "SEED");
     resultTabs->setTabToolTip(resultTabs->count()-1, "SEED");
     if( !this->htablesAddSignals.contains(htable)) {
@@ -385,23 +387,6 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     TableData *func_tax_table;
 
-    /*//FUNCTION AND TAXONOMIC TABLE
-    DisplayInfo *p = displayInfos["FUNC & TAX"];
-    p->removeFileIndexes();
-    FileIndex *fileIndex = samplercmgr->getFileIndex(sampleName, NUCFASTA);
-
-    p->addFileIndex(fileIndex,4);
-    fileIndex = samplercmgr->getFileIndex(sampleName, AMINOFAA);
-    p->addFileIndex(fileIndex,0);
-
-    types.clear();
-    types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
-    func_tax_table = this->tables["FUNC & TAX"];
-    func_tax_table->setSampleName(sampleName);
-    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
-    func_tax_table->setPopupListener(p);
-    func_tax_table->setType(OTHERSTABLEEXP);
-    */
 
     func_tax_table = this->getFunctionalAndTaxTable(sampleName);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
@@ -638,7 +623,7 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
 
     htable->setParameters(datamanager->getHTree(attr), types);
 
-    htable->addConnector(connect);
+    htable->addConnector(connect, attr);
 
     htable->setMaxSpinBoxDepth(datamanager->getHTree(attr)->getTreeDepth());
 
@@ -678,6 +663,7 @@ void ResultWindow::switchToComparativeMode() {
     datamanager->createDataModel();
     samplercmgr->setOutPutPath(OUTPUTPATH);
 
+
   //  this->indexSamples(true);
 
     //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
@@ -685,18 +671,19 @@ void ResultWindow::switchToComparativeMode() {
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
 
-
     unsigned int numSamplesToLoad = 0;
-    for(int i=0; i < files.size(); i++) {
+    for(int i=0; i < this->selectedSamples.size(); i++) {
         if(this->selectedSamples[i])  numSamplesToLoad++;
     }
     ProgressView *progressbar = new ProgressView("creating ORFs for samples ", 0, numSamplesToLoad, this);
    // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
 
-    for(int i=0; i < files.size(); i++) {
+
+    for(int i=0; i < selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
-        orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);        
+
+        orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
         datamanager->createORFs(files[i], orfTableName);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
@@ -707,16 +694,14 @@ void ResultWindow::switchToComparativeMode() {
         progressbar->updateprogress(i+1);
         qApp->processEvents();
         progressbar->update();
+
     }
     progressbar->hide();
     delete progressbar;
 
 
-
-
-
    QStringList selectedFileNames;
-   for(unsigned int i=0; i < files.size(); i++) {
+   for(unsigned int i=0; i < selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        selectedFileNames.append(files[i]);
    }
@@ -744,16 +729,19 @@ void ResultWindow::switchToComparativeMode() {
 
 
     ////////////////////////   COG
-    HTableData *htable = new HTableData;
+    HTableData *htable = CreateWidgets::getHtableData(COG); //new HTableData;
+    htable->clearConnectors();
+
+
     types.clear();
     types << STRING << STRING;
 
     progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
     progressbar->show();
-    for(int i=0; i < files.size(); i++) {
+    for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
-       htable->addConnector(connect);
+       htable->addConnector(connect, COG);
        headers << files[i];
        htable->addSampleName(files[i]);
        types << INT;
@@ -782,6 +770,8 @@ void ResultWindow::switchToComparativeMode() {
 
     /////////////////  KEGG
     htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
+    htable->clearConnectors();
+
     types.clear();
     types << STRING << STRING;
 
@@ -792,10 +782,10 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
     progressbar->show();
-    for( int i=0; i < files.size(); i++) {
+    for( int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
-       htable->addConnector(connect);
+       htable->addConnector(connect, KEGG);
        headers << files[i];
        htable->addSampleName(files[i]);
        types << INT;
@@ -811,7 +801,6 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("KEGG", KEGG);
     htable->setMultiSampleMode(true);
     htable->showTableData();
-
 
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -830,6 +819,8 @@ void ResultWindow::switchToComparativeMode() {
 
     ////////////////// METACYC
     htable = CreateWidgets::getHtableData(METACYC); //new HTableData;
+    htable->clearConnectors();
+
     types.clear();
     types << STRING << STRING;
 
@@ -840,18 +831,19 @@ void ResultWindow::switchToComparativeMode() {
 */
 
 
-    for(int i=0; i < files.size(); i++) {
+    for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
-       htable->addConnector(connect);
+
+       htable->addConnector(connect, METACYC);
        headers << files[i];
        htable->addSampleName(files[i]);
        types << INT;
     }
     htable->setParameters(datamanager->getHTree(METACYC),  types);
     htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
-    htable->setShowHierarchy(true);
 
+    htable->setShowHierarchy(true);
     htable->setTableIdentity("METACYC", METACYC);
     htable->setMultiSampleMode(true);
     htable->showTableData();
@@ -870,6 +862,8 @@ void ResultWindow::switchToComparativeMode() {
 
     ////////////////////// SEED
     htable = CreateWidgets::getHtableData(SEED);;
+    htable->clearConnectors();
+
     types.clear();
     types << STRING << STRING;
 
@@ -877,14 +871,13 @@ void ResultWindow::switchToComparativeMode() {
     headers.clear();
     headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) ";
     */
-
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
     progressbar->show();
-    for(int i=0; i < files.size(); i++) {
+    for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );
-       htable->addConnector(connect);
+       htable->addConnector(connect, SEED);
        headers << files[i];
        htable->addSampleName(files[i]);
        types << INT;
@@ -906,8 +899,6 @@ void ResultWindow::switchToComparativeMode() {
        QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
        this->htablesAddSignals.insert(htable, true);
     }
-
-
     resultTabs->addTab(htable, "SEED");
 
 

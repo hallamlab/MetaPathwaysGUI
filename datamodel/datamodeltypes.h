@@ -48,10 +48,11 @@ typedef struct _ORF {
 
 
     ~_ORF() {
-        if(this->contig) {
+        /*
+        if(this->contig!=0) {
            delete this->contig;
-           this->contig = NULL;
-         }
+           this->contig = 0;
+         }*/
     }
 
 } ORF;

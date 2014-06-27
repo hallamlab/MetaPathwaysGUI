@@ -19,7 +19,6 @@ DataManager::DataManager()
 }
 
 void DataManager::setDataModelCreated(bool flag) {
-
     this->dataModelCreated = flag;
 }
 
@@ -189,10 +188,9 @@ void DataManager::createDataModel() {
 
     if( dataModelCreated ) return;
 
-
     RunData *rundata = RunData::getRunData();
 
-    QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
+  //  QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
     //QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
     QString COG_categories = QString(":/functional_categories/") + "COG_categories.txt";
     HTree *htree = createHTree(COG_categories);
@@ -221,7 +219,7 @@ void DataManager::createDataModel() {
     this->htrees[SEED] = htree;
 
     this->setDataModelCreated(true);
- //   dataModelCreated=true;
+
 }
 
 HTree *DataManager::createHTree(QString refDBFileName) {
@@ -312,23 +310,27 @@ void DataManager::destroyHTree(ATTRTYPE refDB ) {
  * @param attributes attribute list as provided from the orf list tables, orf_annotation
  * @return
  */
-ORF *DataManager::_createAnORF(QStringList &attributes) {
+ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
 
     ORF *orf = new ORF;
-    QHash<QString, CONTIG *> contigHash;
+
 
     orf->name =  Utilities::getShortORFId(attributes[0]);
 
     QString shortContigName =  Utilities::getShortContigId(attributes[1]);
 
-    if(contigHash.contains(shortContigName))
-        orf->contig = contigHash[shortContigName];
+    if( !contigHash.contains(sampleName)) this->contigHash[sampleName] = QHash<QString, CONTIG *>();
+
+    if(contigHash[sampleName].contains(shortContigName))
+        orf->contig = this->contigHash[sampleName][shortContigName];
     else {
         CONTIG *contig = new CONTIG;
         contig->name  = shortContigName;
-        contigHash[shortContigName] = contig;
+        this->contigHash[sampleName][shortContigName] = contig;
         orf->contig = contig;
     }
+
+
 
    // qDebug() << orf->contig->name  << "   " << orf->name << "    ";
 
@@ -379,7 +381,7 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
             if(line.size() < 4) continue;
-            (this->ORFList->value(sampleName))->append(this->_createAnORF(line));
+            (this->ORFList->value(sampleName))->append(this->_createAnORF(line, sampleName));
         }
         inputFile.close();
     }
@@ -397,15 +399,39 @@ void DataManager::destroyAllORFs() {
         this->destroyORFs(sampleName);
 }
 
+
+void DataManager::destroyAllContigs() {
+    foreach( QString sampleName, this->contigHash.keys())
+        this->destroyContigs(sampleName);
+}
+
+void DataManager::destroyContigs(QString &sampleName) {
+
+    foreach(QString contigName, this->contigHash[sampleName].keys()) {
+        delete this->contigHash[sampleName][contigName];
+    }
+    this->contigHash.remove(sampleName);
+}
+
+
+void deleteORF(ORF *orf) {
+    delete orf;
+
+}
+
 void DataManager::destroyORFs(QString sampleName) {
 
     if( !this->ORFList->contains(sampleName)) return;
     const QList<ORF *> *orfList = this->ORFList->value(sampleName);
 
+    unsigned int i =0;
     foreach(ORF *orf, *orfList) {
-        delete orf;
+        i++;
+        //delete orf;
+        deleteORF(orf);
     }
 
+   // this->ORFList->value(sampleName)
     this->ORFList->remove(sampleName);
 
 }

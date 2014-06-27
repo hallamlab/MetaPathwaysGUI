@@ -24,7 +24,6 @@ LASTDB_EXECUTABLE  'executables/mac/bit64/lastdb'
 LAST_EXECUTABLE  'executables/mac/bit64/lastal'
 ORF_PREDICTION 'executables/mac/bit64/prodigal' 
 
-SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
 # This is the folder where the scripts folder of the MetaPathways  pipeline 
 # # is installed
 
@@ -37,7 +36,7 @@ PARSE_BLAST 'libs/python_scripts/MetaPathways_parse_blast.py'
 ANNOTATE 'libs/python_scripts/MetaPathways_annotate_fast.py'
 GENBANK_FILE 'libs/python_scripts/MetaPathways_create_genbank_ptinput_sequin.py'  
 CREATE_REPORT_FILES 'libs/python_scripts/MetaPathways_create_reports_fast.py' 
-STATS_rRNA 'libs/python_scripts/MetaPathways_rRNA_stats_calculator.py'
+SCAN_rRNA 'libs/python_scripts/MetaPathways_rRNA_stats_calculator.py'
 SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
 MLTREEMAP_IMAGEMAKER 'mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl' 
 MLTREEMAP_CALCULATION 'mltreemap/mltreemap_calculation/mltreemap.pl' 

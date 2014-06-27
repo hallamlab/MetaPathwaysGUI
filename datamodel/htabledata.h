@@ -48,7 +48,7 @@ public:
     explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = false, bool _hideZeroRows = false, bool _showRPKM =false);
     ~HTableData();
     bool setParameters(HTree *htree, QList<enum TYPE> _types);
-    void addConnector(Connector *connector);
+    void addConnector(Connector *connector, ATTRTYPE attr);
     void clearConnectors();
     void setNumCols(unsigned int numCols);
     void fillData();

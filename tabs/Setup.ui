@@ -15,7 +15,11 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="9" column="1">
-    <widget class="QLineEdit" name="dbDirectoryTxt"/>
+    <widget class="QLineEdit" name="dbDirectoryTxt">
+     <property name="placeholderText">
+      <string>Location of database</string>
+     </property>
+    </widget>
    </item>
    <item row="0" column="0" colspan="3">
     <widget class="QLabel" name="label">
@@ -96,6 +100,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="placeholderText">
+      <string>/path/to/python_executable</string>
+     </property>
     </widget>
    </item>
    <item row="3" column="2">
@@ -125,7 +132,11 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="perlExecTxt"/>
+    <widget class="QLineEdit" name="perlExecTxt">
+     <property name="placeholderText">
+      <string>/path/to/perl_executable</string>
+     </property>
+    </widget>
    </item>
    <item row="5" column="2">
     <widget class="QPushButton" name="perlBrowseButton">
@@ -154,7 +165,11 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QLineEdit" name="pathMetaPathwaysTxt"/>
+    <widget class="QLineEdit" name="pathMetaPathwaysTxt">
+     <property name="placeholderText">
+      <string>MetaPathways folder location</string>
+     </property>
+    </widget>
    </item>
    <item row="7" column="2">
     <widget class="QPushButton" name="metapathwaysBrowseButton">
@@ -218,7 +233,11 @@
     </widget>
    </item>
    <item row="11" column="1">
-    <widget class="QLineEdit" name="pathologicTxt"/>
+    <widget class="QLineEdit" name="pathologicTxt">
+     <property name="placeholderText">
+      <string>pathway tool executable</string>
+     </property>
+    </widget>
    </item>
    <item row="11" column="0">
     <widget class="QLabel" name="metapathwaysLabel_3">
