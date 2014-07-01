@@ -24,6 +24,11 @@ namespace Ui {
 class ProgressDialog;
 }
 
+typedef struct _STATUS {
+    QString step;
+    QHash<QString, bool> done, expected;
+} STATUS;
+
 class ProgressDialog : public QWidget
 {
     Q_OBJECT
@@ -41,15 +46,20 @@ public:
 
 
     QHash<QString,int> stepsPassed;
+    QHash<QString, bool> expectedSteps;
 
+    QHash<QString, STATUS> status;
+
+    short int getState(const QString &stepName);
     void checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName);
-    void colorRunConfig(QHash<QString,QString> &statusHash);
+    void colorRunConfig();
     void initMapping();
 
     ~ProgressDialog();
 private:
     bool checkInputOutPutLocations() ;
-
+    void setExpectedSteps();
+    void updateStatus(const QString &line);
 private slots:
 
     void terminateRun();
@@ -58,13 +68,19 @@ private slots:
     void loadSampleList();
     void showErrors();
     void readStepsLog();
+
     void startRun();
     void setProcessToZero();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
     unsigned int countTotalNumberOfSteps();
+    unsigned int getNumStepsCompleted();
 
     void resetRunTab() ;
+    void updateOverwriteChoice();
 
+public:
+public:
+    bool shouldOverwrite();
 
 private:
     Ui::ProgressDialog *ui;
@@ -94,6 +110,7 @@ private:
     QTextEdit *standardOut;
     QComboBox* sampleSelect;
     QCheckBox* runVerbose;
+    QCheckBox *overwrite;
 
 };
 

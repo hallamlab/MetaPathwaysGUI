@@ -27,20 +27,30 @@ bool ProgressDisplayData::isValidKey(const QString &stepName) {
     return _tablewidgetitem[REDCROSS].contains(stepName);
 }
 
-void ProgressDisplayData::createWidgets(QHash<QString,QString> &statusHash) {
+void ProgressDisplayData::createWidgets(const QStringList &stepNames) {
 
-    QHash<QString,QString>::iterator it;
-    for(it=statusHash.begin();it!=statusHash.end();it++){
-        QString stepName = it.key();
+
+    foreach(QString stepName, stepNames) {
+
 
         QImage rimg  = QImage(":/images/cross.png");
         _tablewidgetitem[REDCROSS][stepName] = new QTableWidgetItem();
         _tablewidgetitem[REDCROSS][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(rimg).scaled(12,12));
+
         QImage cimg  = QImage(":/images/check.png");
         _tablewidgetitem[GREENCHECK][stepName] = new QTableWidgetItem();
         _tablewidgetitem[GREENCHECK][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(cimg).scaled(12,12));
 
-        QImage loadmov  = QImage(":/images/logo.png");
+        QImage dimg  = QImage(":/images/partial.png");
+        _tablewidgetitem[PARTIAL][stepName] = new QTableWidgetItem();
+        _tablewidgetitem[PARTIAL][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(dimg).scaled(8,26));
+
+        QImage eimg  = QImage(":/images/unsure.png");
+        _tablewidgetitem[UNSURE][stepName] = new QTableWidgetItem();
+        _tablewidgetitem[UNSURE][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(eimg).scaled(8,20));
+
+
+        QImage loadmov  = QImage(":/images/running.png");
         _tablewidgetitem[LOADING][stepName] = new QTableWidgetItem();
         _tablewidgetitem[LOADING][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(loadmov).scaled(12,12));
 

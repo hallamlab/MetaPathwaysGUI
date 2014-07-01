@@ -62,19 +62,22 @@ MainFrame::MainFrame(QWidget *parent) :
 
     setupWidget = new Setup();
 
+    setupWidget->loadPathVariables();
+    // populates the setup form with values previously used, if they exist
+
     rundata->setupDefaultConfig();
     rundata->setupDefaultParams();
     // for the config and param file, check to see if pre-existing config or parameter files
     // are defined and exist. see their function heads for clarification.
 
-    setupWidget->loadPathVariables();
-    // populates the setup form with values previously used, if they exist
 
     // databases are agnostic to what the param file has written from a previous run
     // so we clear the values in the hash picked up from the config file to ensure
     // the user has to always specify a new set to go with
-    rundata->setValue("rRNA:refdbs","",_PARAMS);
-    rundata->setValue("annotation:dbs","",_PARAMS);
+
+
+    // rundata->setValue("rRNA:refdbs","",_PARAMS);
+   // rundata->setValue("annotation:dbs","",_PARAMS);
 
     QString warningStr;
     stackedWidget->addWidget(setupWidget);
@@ -315,10 +318,6 @@ void MainFrame::updateWidgets(){
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs",rRNArefdbs, false,false);
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "annotation:dbs",annotationDBS, false,false);
 
-        //use -r overwrite? defaults to overlay
-        if (stages->overwrite->isChecked()){
-            rundata->setValue("overwrite", "overwrite", _PARAMS);
-        }else rundata->setValue("overwrite", "overlay", _PARAMS);
 
         executionPrep();
     } //end of else
@@ -367,6 +366,7 @@ void MainFrame::displayResults(){
     this->updateWidgets();
     stackedWidget->setCurrentWidget(resultWindow);
 }
+
 
 
 MainFrame::~MainFrame()

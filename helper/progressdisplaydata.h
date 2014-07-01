@@ -9,11 +9,12 @@
 
 #include "types.h"
 
+
 class ProgressDisplayData
 {
 public:
     static ProgressDisplayData *getProgressDisplayData();
-    void createWidgets(QHash<QString, QString> &statusHash);
+    void createWidgets(const QStringList &stepNames);
     void destroyWidgets();
     QTableWidgetItem *getTableWidgetItem(const QString &key, const STATUS_SYMBOL);
     QMovie *getLoadingMovie(const QString &key);
@@ -23,7 +24,7 @@ private:
     ProgressDisplayData();
     static ProgressDisplayData *progressdata;
 
-    QHash<QString, QTableWidgetItem *> _tablewidgetitem[3] ;  //= new QTableWidgetItem();
+    QHash<QString, QTableWidgetItem *> _tablewidgetitem[5] ;  //= new QTableWidgetItem();
     QHash<QString, QMovie *>_loadingmovie; // = new QMovie(":/images/loading.gif");
     QHash<QString, QLabel *> _imageLabel; // = new QLabel();
 };

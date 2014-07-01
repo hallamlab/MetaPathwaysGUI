@@ -50,7 +50,7 @@ bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
        gdata->ylab = ylab;
        gdata->xmin = 0;
        gdata->ymin = 0;
-       gdata->numBuckets = 100;
+       gdata->numBuckets = 200;
 
 
        /*double buckets =   static_cast<double>(gdata->x.size())/10.0 > 1.0 ? static_cast<double>(gdata->x.size())/10.0  : 2 ;
@@ -151,31 +151,59 @@ void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
 
 
     QVector<double> x3, y3;
-    x3 = gdata->y;
-    y3 = gdata->x;
 
-    double width = ( gdata->xmax - gdata->xmin)/gdata->x.size();
+    double deltaw = 0.8*(gdata->xmax -gdata->xmin) / gdata->numBuckets;
 
-    if( width < 5 || gdata->x.size() < 10) width = 5;
+    double miny = 1e+20, maxy = -1e+20;
+    double wtmean =0, wtsum=0, sumy=0, wtsumsq;
 
-   // qDebug() << width << gdata->xmax << gdata->xmin << " size " << gdata->x.size();
-   // qDebug() << gdata->x;
-   // qDebug() << gdata->y;
-    customPlot->yAxis->setRange(gdata->ymin, gdata->ymax);
-    customPlot->xAxis->setRange(gdata->xmin , gdata->xmax);
+    for(int i =0; i < gdata->x.size(); i++ )  {
+        wtsum += gdata->x.at(i)*gdata->y.at(i);
+        wtsumsq += gdata->x.at(i)*gdata->x.at(i)*gdata->y.at(i);
+        sumy += gdata->y.at(i);
+    }
+    wtsumsq = wtsumsq/sumy;
+    wtmean = wtsum/sumy;
+
+    double leftlim = wtmean - sqrt(wtsumsq - wtmean*wtmean);
+    double rightlim = wtmean +  sqrt(wtsumsq - wtmean*wtmean);
+
+    int countleft =0, countright=0;
+    for(int i = 0; i <gdata->x.size(); i++) {
+        if( gdata->x.at(i) < leftlim  ) {
+            countleft++;
+        }
+        else if( gdata->x.at(i) > rightlim ) {
+            countright++;
+        }
+        else {
+            if( gdata->y.at(i) < miny ) miny = gdata->y.at(i);
+            if( gdata->y.at(i) > maxy ) maxy = gdata->y.at(i);
+            x3.append(gdata->x.at(i));
+            y3.append(gdata->y.at(i));
+        }
+    }
+    y3[0] += countleft;
+    y3[y3.size()-1] += countright;
+
+    customPlot->yAxis->setRange(miny, maxy);
+    customPlot->xAxis->setRange(x3.first() - deltaw , x3.last() + deltaw);
+
 
     QCPBars *bars1 = new QCPBars(customPlot->xAxis, customPlot->yAxis );
     customPlot->addPlottable(bars1);
-    bars1->setWidth(width);
+    bars1->setWidth(deltaw);
     bars1->setData(x3, y3);
 
     bars1->setPen(QPen(Qt::black));
     bars1->setAntialiased(true);
     bars1->setAntialiasedFill(false);
    // bars1->setBrush(QColor("#705BE8"));
-    bars1->keyAxis()->setAutoTicks(false);
+   // bars1->keyAxis()->setAutoTicks(false);
   //  bars1->keyAxis()->setTickVector(x3);
-    bars1->keyAxis()->setSubTickCount(0);
+   // bars1->valueAxis()->setSubTickCount(deltaw);
+
+
 
 
 
@@ -237,7 +265,7 @@ void GraphData::plotSomeGraph(QCustomPlot *customPlot, GRAPHDATA *gdata){
 
     this->updateMinMax(gdata);
 
-    if( nonzeroSize < 10) {
+    if( nonzeroSize < 100) {
          this->plotBarGraph(customPlot, gdata);
     }
     else {

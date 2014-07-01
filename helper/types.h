@@ -6,7 +6,7 @@
 #include <QPair>
 #include <QGraphicsItem>
 
-typedef enum _STATUS_SYMBOL {REDCROSS, GREENCHECK, LOADING}  STATUS_SYMBOL;
+typedef enum _STATUS_SYMBOL {REDCROSS, GREENCHECK, LOADING, UNSURE, PARTIAL}  STATUS_SYMBOL;
 
 const QString  SELECT_SAMPLE_TAG = "Select sample";
 enum TYPE {INT, DOUBLE, STRING, UNKNOWN};

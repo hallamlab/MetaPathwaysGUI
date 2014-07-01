@@ -12,9 +12,14 @@ const QString RunData::TEMPLATE_CONFIG = "template_config.txt";
 const QString RunData::DEFAULT_TEMPLATE_CONFIG = "default_template_config.txt";
 RunData* RunData::runData = 0;
 
-/*
+
+
+/**
+ * @brief RunData::RunData
  * Private constructor, loads settings values into the CONFIG hash if they already exist.
- */
+ *
+*/
+
 RunData::RunData(){
     QSettings settings("HallamLab", "MetaPathways");
     this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
@@ -24,8 +29,11 @@ RunData::RunData(){
     this->setValue("REFDBS", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
 }
 
-/*
- * Initializes and returns our singleton.
+
+
+/**
+ * @brief RunData::getRunData, Initializes and returns our singleton.
+ * @return
  */
 RunData* RunData::getRunData(){
     if (runData ==0){
@@ -50,6 +58,13 @@ RunData* RunData::getRunData(){
 
 /*
  * Returns value from
+ */
+
+/**
+ * @brief RunData::getValueFromHash from the CONFIG or PARAM
+ * @param key, key to get from the config
+ * @param type, the type of avlue
+ * @return
  */
 QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
     if (type==_CONFIG)
@@ -151,33 +166,61 @@ int RunData::getRunningStepNumber(){
     return count;
 }
 
-/*
+
+
+/**
  * Setup our default configs - if have a path variable already, use it. Otherwise, use the default built in
  * config file from here. Let the user make the changes they need in the setup screen, then write out those
  * changes. We can't make the default_template copies yet, because we don't know the METAPATHWAYS_PATH
  * in the case that the user hasn't specified it. At this point RunData has already been initialized, so
  * we can safely use the config values for METAPATHWAYS_PATH.
+* @brief RunData::setupDefaultConfig
  */
+
 void RunData::setupDefaultConfig(){
-    QString path = this->CONFIG["METAPATHWAYS_PATH"];
-    QFileInfo configFile(path);
-    if (!configFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_CONFIG;
-    else path = path + QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_CONFIG;
-    this->setConfig(Utilities::parseFile(path,"CONFIG"));
+    QString metapath = this->CONFIG["METAPATHWAYS_PATH"];
+
+
+    QFileInfo configFile(metapath +  QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_CONFIG);
+    QString cpath;
+    if (!configFile.exists()) {
+        cpath = QString(":/text/")  + this->DEFAULT_TEMPLATE_CONFIG;
+    }
+    else {
+        cpath = metapath + QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_CONFIG;
+    }
+
+
+    QHash<QString, QString> parsedResults = Utilities::parseFileConfig(cpath);
+    if (configFile.exists()) parsedResults["METAPATHWAYS_PATH"] = metapath;
+
+    this->setConfig(parsedResults);
+
 }
 
-/*
+
+/**
  * Setup our default params - if have a path variable already, use it. Otherwise, use the default built in
  * param file from here. Let the user make the changes they need in the setup screen, then write out those
  * changes.
+ * @brief RunData::setupDefaultParams
  */
+
 void RunData::setupDefaultParams(){
     QString path = this->CONFIG["METAPATHWAYS_PATH"];
-    QFileInfo paramFile(path);
-    if (!paramFile.exists()) path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
-    else path = path + QDir::separator() +"config" + QDir::separator()  + this->TEMPLATE_PARAM;
+    QFileInfo paramFile(path + QDir::separator() +"config" + QDir::separator()  + this->TEMPLATE_PARAM);
+
+    if (!paramFile.exists()) {
+        path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
+    }
+    else {
+        path = path + QDir::separator() +"config" + QDir::separator()  + this->TEMPLATE_PARAM;
+    }
+
+
 
     QHash<QString,QString> parsed = Utilities::parseFile(path,"PARAMS");
+
 
     this->setParams(parsed);
 }
@@ -205,6 +248,14 @@ unsigned int RunData::getNumADB(){
     return this->nADB;
 }
 
+QStringList RunData::getrNADBNames() {
+   return this->rrnaDBS;
+}
+
+QStringList RunData::getADBNames() {
+   return this->annotationDBS;
+}
+
 void RunData::setNumRRNADB(unsigned int n){
     this->nRRNADB = n;
 }
@@ -214,7 +265,7 @@ void RunData::setNumADB(unsigned int n){
 }
 
 bool RunData::checkConfig(){
-  //  qDebug() << " config file ";
+
     QFile configFile(  this->CONFIG["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator()  +this->TEMPLATE_CONFIG);
 
     if (configFile.exists()) return true;
@@ -298,7 +349,7 @@ void RunData::loadInputFiles(){
     QStringList entries = currentDir.entryList();
 
     QList<QRegExp> regList;
-    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$") <<  QRegExp("[.][gG][bB][kK]$") ;
 
     QStringList filesDetected;
     for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
@@ -308,6 +359,17 @@ void RunData::loadInputFiles(){
 
         QString suffix = QString(".") + file.last();
 
+      //  qDebug() << *entry ;
+        foreach(QRegExp reg, regList ) {
+            if(suffix.indexOf(reg,0) != -1 ) {
+                   filesDetected.append( temp.remove(reg).replace('.','_') );
+                   break;
+            }
+        }
+
+
+
+        /*
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
                if(suffix.indexOf(reg,0) > -1 ) {
@@ -320,12 +382,11 @@ void RunData::loadInputFiles(){
             if (file.last() == "gbk"){
                 filesDetected.append(file.first());
             }
-        }
-        else if (fileType == "gff-annotated" || fileType == "gff-unannotated"){
-            if (file.last() == "gff"){
-                filesDetected.append(file.first());
-            }
-        }
+        }*/
+
+
+
+
     }
 
     this->setFileList(filesDetected);
@@ -372,6 +433,12 @@ bool RunData::hasContext(const QString &key) {
 /* Gets the context against the key
  * \param key: the value for the key
  * \return the value of the key as a QVariant
+ */
+
+/**
+ * @brief RunData::getContext  Gets the context against the key
+ * @param  key
+ * @return the value of the key as a QVariant
  */
 QVariant RunData::getContext(const QString &key) {
      QSettings settings("HallamLab", "MetaPathways");

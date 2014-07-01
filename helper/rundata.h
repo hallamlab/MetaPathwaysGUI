@@ -79,6 +79,9 @@ public:
 
     unsigned int getNumRRNADB();
     unsigned int getNumADB();
+    QStringList getrNADBNames();
+    QStringList getADBNames();
+
     QHash<QString, QString> getPARAMS();
     void emitloadSampleList();
 

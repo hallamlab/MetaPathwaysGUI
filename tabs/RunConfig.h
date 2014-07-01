@@ -36,7 +36,7 @@ public:
     QList<QGroupBox *> *groupBoxes;
     QCheckBox* gridBlastChoice;
     QComboBox *fileInputFormat;
-    QCheckBox* overwrite;
+
 
 private slots:
     void closeWindow();
@@ -47,6 +47,7 @@ private slots:
     void browseFolder();
     void specifyGrid();
     void clickedSelectSample();
+    void saveOutput(QString text);
     //void run();
 public slots:
     void receiveSelection(QList<QString> &selectedSamples);

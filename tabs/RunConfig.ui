@@ -36,7 +36,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="maxVisibleItems">
     <number>6</number>
@@ -54,16 +54,6 @@
    <item>
     <property name="text">
      <string>gbk-unannotated</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>gff-annotated</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>gff-unannotated</string>
     </property>
    </item>
   </widget>
@@ -135,7 +125,7 @@
      <x>90</x>
      <y>253</y>
      <width>495</width>
-     <height>541</height>
+     <height>511</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -200,92 +190,87 @@
    </attribute>
    <row>
     <property name="text">
-     <string>Preprocess FASTA</string>
+     <string>PREPROCESS INPUT</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>ORF Prediction</string>
+     <string>ORF PREDICTION</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>GFF to Amino</string>
+     <string>ORF TO AMINO</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Filtered FASTA</string>
+     <string>FILTER AMINOS</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Compute Refscore</string>
+     <string>COMPUTE REFSCORES</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>BLAST refDB</string>
+     <string>FUNC SEARCH</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Parse BLAST</string>
+     <string>PARSE FUNC SEARCH</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Scan rRNA</string>
+     <string>SCAN rRNA</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Scan tRNA</string>
+     <string>SCAN tRNA</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Annotate</string>
+     <string>ANNOTATE ORFS</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Pathway Tools Input</string>
+     <string>PATHOLOGIC INPUT</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Genbank File</string>
+     <string>CREATE GENBANK FILE</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Create Sequin File</string>
+     <string>CREATE ANNOT REPORTS</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Create Report Files</string>
+     <string>MLTREEMAP CALCULATION</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>ML-TreeMap Calculation</string>
+     <string>MLTREEMAP IMAGEMAKER</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>ML-TreeMap Imagemaker</string>
+     <string>BUILD PGDB</string>
     </property>
    </row>
    <row>
     <property name="text">
-     <string>Pathway Tools</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
-     <string>RPKM</string>
+     <string>COMPUTE RPKM</string>
     </property>
    </row>
    <column>
@@ -390,7 +375,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsGFF_TO_AMINO">
+  <widget class="QGroupBox" name="metapaths_stepsORF_TO_AMINO">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -408,7 +393,7 @@
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="gff_to_aminoYES">
+   <widget class="QRadioButton" name="orf_to_aminoYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -421,7 +406,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="gff_to_aminoSKIP">
+   <widget class="QRadioButton" name="orf_to_aminoSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -434,7 +419,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="gff_to_aminoREDO">
+   <widget class="QRadioButton" name="orf_to_aminoREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -448,7 +433,7 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORE">
+  <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORES">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -471,7 +456,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="compute_refscoreYES">
+   <widget class="QRadioButton" name="compute_refscoresYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -484,7 +469,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="compute_refscoreSKIP">
+   <widget class="QRadioButton" name="compute_refscoresSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -497,7 +482,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="compute_refscoreREDO">
+   <widget class="QRadioButton" name="compute_refscoresREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -511,7 +496,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsBLAST_REFDB">
+  <widget class="QGroupBox" name="metapaths_stepsFUNC_SEARCH">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -537,7 +522,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="blast_refdbYES">
+   <widget class="QRadioButton" name="func_searchYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -550,7 +535,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="blast_refdbSKIP">
+   <widget class="QRadioButton" name="func_searchSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -563,7 +548,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="blast_refdbREDO">
+   <widget class="QRadioButton" name="func_searchREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -577,7 +562,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsPARSE_BLAST">
+  <widget class="QGroupBox" name="metapaths_stepsPARSE_FUNC_SEARCH">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -601,7 +586,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="parse_blastYES">
+   <widget class="QRadioButton" name="parse_func_searchYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -614,7 +599,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="parse_blastSKIP">
+   <widget class="QRadioButton" name="parse_func_searchSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -627,7 +612,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="parse_blastREDO">
+   <widget class="QRadioButton" name="parse_func_searchREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -641,7 +626,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsSCAN_RRNA">
+  <widget class="QGroupBox" name="metapaths_stepsSCAN_rRNA">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -832,7 +817,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsANNOTATE">
+  <widget class="QGroupBox" name="metapaths_stepsANNOTATE_ORFS">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -856,7 +841,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="annotateYES">
+   <widget class="QRadioButton" name="annotate_orfsYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -869,7 +854,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="annotateSKIP">
+   <widget class="QRadioButton" name="annotate_orfsSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -882,65 +867,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="annotateREDO">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsCREATE_SEQUIN_FILE">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>610</y>
-     <width>314</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The functional and taxonomic annotation for all the ORFs in a sample are used to create sequin files that are helpful in the process of submitting sequences to NCBI &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#30db52;&quot;&gt;results/sequin&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string>GroupBox</string>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="create_sequin_fileYES">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="create_sequin_fileSKIP">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="create_sequin_fileREDO">
+   <widget class="QRadioButton" name="annotate_orfsREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1018,11 +945,11 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsCREATE_REPORT_FILES">
+  <widget class="QGroupBox" name="metapaths_stepsCREATE_ANNOT_REPORTS">
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>640</y>
+     <y>610</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1036,7 +963,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="create_report_filesYES">
+   <widget class="QRadioButton" name="create_annot_reportsYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1049,7 +976,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="create_report_filesSKIP">
+   <widget class="QRadioButton" name="create_annot_reportsSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1062,7 +989,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="create_report_filesREDO">
+   <widget class="QRadioButton" name="create_annot_reportsREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1083,7 +1010,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>670</y>
+     <y>640</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1153,6 +1080,9 @@ p, li { white-space: pre-wrap; }
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
@@ -1162,7 +1092,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>700</y>
+     <y>670</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1232,13 +1162,16 @@ p, li { white-space: pre-wrap; }
     <property name="text">
      <string/>
     </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC">
+  <widget class="QGroupBox" name="metapaths_stepsBUILD_PGDB">
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>730</y>
+     <y>700</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1252,7 +1185,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="pathologicYES">
+   <widget class="QRadioButton" name="build_pgdbYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1265,7 +1198,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="pathologicSKIP">
+   <widget class="QRadioButton" name="build_pgdbSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1278,7 +1211,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="pathologicREDO">
+   <widget class="QRadioButton" name="build_pgdbREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1292,7 +1225,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_FASTA">
+  <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_INPUT">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -1310,7 +1243,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="preprocess_fastaYES">
+   <widget class="QRadioButton" name="preprocess_inputYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1323,7 +1256,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="preprocess_fastaSKIP">
+   <widget class="QRadioButton" name="preprocess_inputSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1336,7 +1269,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="preprocess_fastaREDO">
+   <widget class="QRadioButton" name="preprocess_inputREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1369,11 +1302,11 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsSTATS_RRNA">
+  <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_RPKM">
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>760</y>
+     <y>730</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1387,7 +1320,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="stats_rrnaYES">
+   <widget class="QRadioButton" name="compute_rpkmYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1400,7 +1333,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="stats_rrnaSKIP">
+   <widget class="QRadioButton" name="compute_rpkmSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1413,7 +1346,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="stats_rrnaREDO">
+   <widget class="QRadioButton" name="compute_rpkmREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1482,7 +1415,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsFILTERED_FASTA">
+  <widget class="QGroupBox" name="metapaths_stepsFILTER_AMINOS">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -1505,7 +1438,7 @@ p, li { white-space: pre-wrap; }
    <property name="flat">
     <bool>true</bool>
    </property>
-   <widget class="QRadioButton" name="filtered_fastaYES">
+   <widget class="QRadioButton" name="filter_aminosYES">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -1518,7 +1451,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="filtered_fastaSKIP">
+   <widget class="QRadioButton" name="filter_aminosSKIP">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -1531,7 +1464,7 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QRadioButton" name="filtered_fastaREDO">
+   <widget class="QRadioButton" name="filter_aminosREDO">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -1551,8 +1484,8 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>840</y>
+     <x>80</x>
+     <y>790</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -1567,8 +1500,8 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>820</y>
+     <x>340</x>
+     <y>790</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -1578,19 +1511,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="checkable">
     <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="overwrite">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>820</y>
-     <width>241</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Purge and overwrite existing data</string>
    </property>
   </widget>
   <widget class="QLabel" name="outputFolder">
@@ -1629,7 +1549,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="readOnly">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QLineEdit" name="outputLine">
@@ -1642,7 +1562,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="readOnly">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="selectSamplesButton">
@@ -1669,26 +1589,24 @@ p, li { white-space: pre-wrap; }
   <zorder>fileInput</zorder>
   <zorder>blastWithGrid</zorder>
   <zorder>setupGrids</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC</zorder>
+  <zorder>metapaths_stepsBUILD_PGDB</zorder>
   <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
   <zorder>runOptionsGroupBox</zorder>
   <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
-  <zorder>metapaths_stepsGFF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORE</zorder>
-  <zorder>metapaths_stepsFILTERED_FASTA</zorder>
-  <zorder>metapaths_stepsSTATS_RRNA</zorder>
-  <zorder>metapaths_stepsPREPROCESS_FASTA</zorder>
-  <zorder>metapaths_stepsANNOTATE</zorder>
-  <zorder>metapaths_stepsPARSE_BLAST</zorder>
+  <zorder>metapaths_stepsORF_TO_AMINO</zorder>
+  <zorder>metapaths_stepsCOMPUTE_REFSCORES</zorder>
+  <zorder>metapaths_stepsFILTER_AMINOS</zorder>
+  <zorder>metapaths_stepsCOMPUTE_RPKM</zorder>
+  <zorder>metapaths_stepsPREPROCESS_INPUT</zorder>
+  <zorder>metapaths_stepsANNOTATE_ORFS</zorder>
+  <zorder>metapaths_stepsPARSE_FUNC_SEARCH</zorder>
   <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
-  <zorder>metapaths_stepsCREATE_SEQUIN_FILE</zorder>
-  <zorder>metapaths_stepsBLAST_REFDB</zorder>
+  <zorder>metapaths_stepsFUNC_SEARCH</zorder>
   <zorder>metapaths_stepsSCAN_TRNA</zorder>
   <zorder>metapaths_stepsGENBANK_FILE</zorder>
-  <zorder>metapaths_stepsSCAN_RRNA</zorder>
-  <zorder>metapaths_stepsCREATE_REPORT_FILES</zorder>
+  <zorder>metapaths_stepsSCAN_rRNA</zorder>
+  <zorder>metapaths_stepsCREATE_ANNOT_REPORTS</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
-  <zorder>overwrite</zorder>
   <zorder>outputFolder</zorder>
   <zorder>outputFolderBrowser</zorder>
   <zorder>inputLine</zorder>
@@ -1705,61 +1623,33 @@ p, li { white-space: pre-wrap; }
   <tabstop>skipAllRadioButton</tabstop>
   <tabstop>redoAllRadioButton</tabstop>
   <tabstop>tableWidget</tabstop>
-  <tabstop>preprocess_fastaYES</tabstop>
-  <tabstop>preprocess_fastaSKIP</tabstop>
-  <tabstop>preprocess_fastaREDO</tabstop>
   <tabstop>orf_predictionYES</tabstop>
   <tabstop>orf_predictionSKIP</tabstop>
   <tabstop>orf_predictionREDO</tabstop>
-  <tabstop>gff_to_aminoYES</tabstop>
-  <tabstop>gff_to_aminoSKIP</tabstop>
-  <tabstop>gff_to_aminoREDO</tabstop>
-  <tabstop>filtered_fastaYES</tabstop>
-  <tabstop>filtered_fastaSKIP</tabstop>
-  <tabstop>filtered_fastaREDO</tabstop>
-  <tabstop>compute_refscoreYES</tabstop>
-  <tabstop>compute_refscoreSKIP</tabstop>
-  <tabstop>compute_refscoreREDO</tabstop>
-  <tabstop>blast_refdbYES</tabstop>
-  <tabstop>blast_refdbSKIP</tabstop>
-  <tabstop>blast_refdbREDO</tabstop>
-  <tabstop>parse_blastYES</tabstop>
-  <tabstop>parse_blastSKIP</tabstop>
-  <tabstop>parse_blastREDO</tabstop>
   <tabstop>scan_rrnaYES</tabstop>
   <tabstop>scan_rrnaSKIP</tabstop>
   <tabstop>scan_rrnaREDO</tabstop>
   <tabstop>scan_trnaYES</tabstop>
   <tabstop>scan_trnaSKIP</tabstop>
   <tabstop>scan_trnaREDO</tabstop>
-  <tabstop>stats_rrnaYES</tabstop>
-  <tabstop>stats_rrnaSKIP</tabstop>
-  <tabstop>stats_rrnaREDO</tabstop>
-  <tabstop>annotateYES</tabstop>
-  <tabstop>annotateSKIP</tabstop>
-  <tabstop>annotateREDO</tabstop>
+  <tabstop>compute_rpkmYES</tabstop>
+  <tabstop>compute_rpkmSKIP</tabstop>
+  <tabstop>compute_rpkmREDO</tabstop>
   <tabstop>pathologic_inputYES</tabstop>
   <tabstop>pathologic_inputSKIP</tabstop>
   <tabstop>pathologic_inputREDO</tabstop>
   <tabstop>genbank_fileYES</tabstop>
   <tabstop>genbank_fileSKIP</tabstop>
   <tabstop>genbank_fileREDO</tabstop>
-  <tabstop>create_sequin_fileYES</tabstop>
-  <tabstop>create_sequin_fileSKIP</tabstop>
-  <tabstop>create_sequin_fileREDO</tabstop>
-  <tabstop>create_report_filesYES</tabstop>
-  <tabstop>create_report_filesSKIP</tabstop>
-  <tabstop>create_report_filesREDO</tabstop>
   <tabstop>mltreemap_calculationYES</tabstop>
   <tabstop>mltreemap_calculationSKIP</tabstop>
   <tabstop>mltreemap_calculationREDO</tabstop>
   <tabstop>mltreemap_imagemakerYES</tabstop>
   <tabstop>mltreemap_imagemakerSKIP</tabstop>
   <tabstop>mltreemap_imagemakerREDO</tabstop>
-  <tabstop>pathologicYES</tabstop>
-  <tabstop>pathologicSKIP</tabstop>
-  <tabstop>pathologicREDO</tabstop>
-  <tabstop>overwrite</tabstop>
+  <tabstop>build_pgdbYES</tabstop>
+  <tabstop>build_pgdbSKIP</tabstop>
+  <tabstop>build_pgdbREDO</tabstop>
   <tabstop>setupGrids</tabstop>
   <tabstop>blastWithGrid</tabstop>
  </tabstops>

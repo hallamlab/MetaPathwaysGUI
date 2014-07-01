@@ -48,7 +48,7 @@ GridProgress::GridProgress(QWidget *parent) :
     createEmptyWidget();
 
     timer = new QTimer();
-    timer->start(3000);
+    timer->start(5000);
 
     counter =0;
     connect(timer, SIGNAL(timeout()), this, SLOT(updatServerStats())  );

@@ -44,7 +44,9 @@ private slots:
 private:
     bool writeOutToFile();
     void getAllWidgets();
+    QStringList getADBNames();
     void initWidgetValues();
+    void checkAnnotationDBS();
     void showORFDBS();
     void showRRNADBS();
     bool findFiles(QString path, QStringList *fileListing);

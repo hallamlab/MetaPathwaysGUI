@@ -39,8 +39,10 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     showErrorsButton = this->findChild<QPushButton *>("showErrors");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
+    overwrite = this->findChild<QCheckBox *>("overwrite");
 
     summaryTable->setSortingEnabled(false);
+    this->setExpectedSteps();
 
     initMapping();
 
@@ -50,6 +52,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     this->myProcess =0;
 
     cancelButton->setEnabled(false);
+    runButton->setEnabled(true);
 
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
@@ -57,6 +60,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
     connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleList()));
     connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
+    connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
 }
 
 void ProgressDialog::showErrors() {
@@ -111,11 +115,122 @@ bool ProgressDialog::checkInputOutPutLocations() {
     return true;
 }
 
-/*
- * Function called every time the timer expires. Intended to be what updates the table based off the log
- * input for the current sample.
+
+/**
+ * @brief ProgressDialog::setExpectedSteps setup the expected steps for the
+ * widgets
+ */
+void ProgressDialog::setExpectedSteps() {
+    this->expectedSteps["PREPROCESS_INPUT"] = true;
+    this->expectedSteps["ORF_PREDICTION"] = true;
+    this->expectedSteps["ORF_TO_AMINO"] = true;
+    this->expectedSteps["FILTER_AMINOS"] = true;
+    this->expectedSteps["COMPUTE_REFSCORES"] = true;
+    this->expectedSteps["FUNC_SEARCH"] = true;
+    this->expectedSteps["PARSE_FUNC_SEARCH"] = true;
+    this->expectedSteps["SCAN_rRNA"] = true;
+    this->expectedSteps["SCAN_tRNA"] = true;
+    this->expectedSteps["ANNOTATE_ORFS"] = true;
+    this->expectedSteps["PATHOLOGIC_INPUT"] = true;
+    this->expectedSteps["GENBANK_FILE"] = true;
+    this->expectedSteps["CREATE_ANNOT_REPORTS"] = true;
+    this->expectedSteps["MLTREEMAP_CALCULATION"] = true;
+    this->expectedSteps["MLTREEMAP_IMAGEMAKER"] = true;
+    this->expectedSteps["BUILD_PGDB"] = true;
+    this->expectedSteps["COMPUTE_RPKM"] = true;
+}
+
+
+/**
+ * @brief ProgressDialog::initMapping, There is no mapping from the
+ * table to the groupboxes. Therefore, this function will declare
+ * the mapping of a row index to its groupbox.
+ */
+void ProgressDialog::initMapping(){
+  //  TABLE_MAPPING = new QHash<int,QString>();
+
+    TABLE_MAPPING[0] = "PREPROCESS_INPUT";
+    TABLE_MAPPING[1] = "ORF_PREDICTION";
+    TABLE_MAPPING[2] = "ORF_TO_AMINO";
+    TABLE_MAPPING[3] = "FILTER_AMINOS";
+    TABLE_MAPPING[4] = "COMPUTE_REFSCORES";
+    TABLE_MAPPING[5] = "FUNC_SEARCH";
+    TABLE_MAPPING[6] = "PARSE_FUNC_SEARCH";
+    TABLE_MAPPING[7] = "SCAN_rRNA";
+    TABLE_MAPPING[8] = "SCAN_tRNA";
+    TABLE_MAPPING[9] = "ANNOTATE_ORFS";
+    TABLE_MAPPING[10] = "PATHOLOGIC_INPUT";
+    TABLE_MAPPING[11] = "GENBANK_FILE";
+    TABLE_MAPPING[12] = "CREATE_ANNOT_REPORTS";
+    TABLE_MAPPING[13] = "MLTREEMAP_CALCULATION";
+    TABLE_MAPPING[14] = "MLTREEMAP_IMAGEMAKER";
+    TABLE_MAPPING[15] = "BUILD_PGDB";
+    TABLE_MAPPING[16] = "COMPUTE_RPKM";
+
+}
+
+
+/**
+ * @brief ProgressDialog::updateStatus, inserts with the right status;
+ * @param line
+ */
+
+void ProgressDialog::updateStatus(const QString &line) {
+
+    QStringList splitList = line.split(QRegExp("[\\s\\t]"),QString::SkipEmptyParts);
+    QString step = splitList.at(0).trimmed();
+
+    QString status = splitList.at(1).trimmed();
+
+    QString key, subkey;
+    QStringList keySubkey = step.split(QRegExp(":"));
+    if( keySubkey.size()==2 && !keySubkey.isEmpty() && !keySubkey.isEmpty()) {
+        key = keySubkey[0]; subkey = keySubkey[1];
+    }
+    else {
+        key =  step.trimmed(); subkey = step.trimmed();
+    }
+
+
+    STATUS _status;
+    if( this->status.contains(key)) _status = this->status[key];
+ //   qDebug() << "hash " <<  this->status[key].done.keys();
+
+    if( key.compare(QString("FUNC_SEARCH")) ==0 || key.compare(QString("PARSE_FUNC_SEARCH")) ==0   ) {
+       QStringList dbs = this->rundata->getADBNames();
+   //    qDebug() << dbs;
+       foreach(QString db, dbs) _status.expected[db] = true;
+    }
+
+    if( key.compare(QString("SCAN_rRNA")) ==0 ) {
+       QStringList dbs = this->rundata->getrNADBNames();
+       foreach(QString db, dbs) _status.expected[db] = true;
+    }
+
+    _status.expected[key]= true;
+
+    //only accept known steps
+    if( !this->expectedSteps.contains(key)) return;
+
+    _status.step = key;
+    if( status.indexOf("ALREADY_COMPLETED") != -1 || status.indexOf("SUCCESS")!= -1 ) {
+        if( _status.expected.contains(subkey) ) _status.done[subkey] = true;
+        _status.done[key] = true;
+    }
+    else {
+        if( _status.expected.contains(subkey) ) _status.done[subkey] = false;
+    }
+    this->status[key] = _status;
+
+}
+
+/**
+ * @brief ProgressDialog::readStepsLog
+ *  Function called every time the timer expires. Intended to be what updates
+ *  the table based off the log input for the current sample.
  */
 void ProgressDialog::readStepsLog(){
+    if( rundata->getCurrentSample().isEmpty()  ) return;
     _stepsCompleted = 0;
 
     //if(!this->checkInputOutPutLocations()) return;
@@ -124,11 +239,11 @@ void ProgressDialog::readStepsLog(){
     QString pathToLog = OUTPUTPATH + QDir::separator() + rundata->getCurrentSample() + QDir::separator() + "metapathways_steps_log.txt";
 
     QFile inputFile(pathToLog);
-    QHash<QString, QString> statusHash;
-    QRegExp whiteSpace("\\s");
     QRegExp commentLine("#[^\"\\n\\r]*");
 
     logBrowser->clear();
+    this->status.clear();
+
     if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
     {
        QTextStream in(&inputFile);
@@ -136,15 +251,9 @@ void ProgressDialog::readStepsLog(){
        {
             QString line = in.readLine();
 
-            if (!commentLine.exactMatch(line) && line.length()>0){
-                //if not a comment line
+            if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
                 logBrowser->append(line);
-                QStringList splitList = line.split(whiteSpace,QString::SkipEmptyParts);
-                QString step = splitList.at(0).trimmed();
-                QString status = splitList.at(1).trimmed();
-
-
-                if (!step.isEmpty())  statusHash.insert(step,status);
+                this->updateStatus(line);
             }
        }
        inputFile.close();
@@ -152,55 +261,20 @@ void ProgressDialog::readStepsLog(){
         logBrowser->append("The log file has not yet been generated. Please wait.");
     }
 
-    // problem : several steps have an unknown number of databases (sub-steps) that run
-    // so we pass these values off to another function to see what the overall progress is
-    checkStepsWithDBS(&statusHash, "BLAST_REFDB_","BLAST_REFDB");
-    checkStepsWithDBS(&statusHash, "PARSE_BLAST_", "PARSE_BLAST");
-    checkStepsWithDBS(&statusHash, "SCAN_rRNA_", "SCAN_rRNA");
-    checkStepsWithDBS(&statusHash, "STATS_", "STATS_rRNA");
-    checkStepsWithDBS(&statusHash, "GENBANK_FILE", "GENBANK_FILE");
 
     // update icons for each step
+    colorRunConfig();
 
-    colorRunConfig(statusHash);
-    // update progress bar
-
-    updateProgressBar();
 
     if( myProcess !=0 ) {
+        updateProgressBar();
         // dump out output from stdout to the other log
         QByteArray read = myProcess->readAll();
         if (!read.isEmpty()) standardOut->append(QString(read));
     }
 }
 
-/*
- * There is no mapping from the table to the groupboxes. Therefore, this function will declare
- * the mapping of a row index to its groupbox.
- */
-void ProgressDialog::initMapping(){
-  //  TABLE_MAPPING = new QHash<int,QString>();
 
-    TABLE_MAPPING[0] = "PREPROCESS_FASTA";
-    TABLE_MAPPING[1] = "ORF_PREDICTION";
-    TABLE_MAPPING[2] = "GFF_TO_AMINO";
-    TABLE_MAPPING[3] = "FILTERED_FASTA";
-    TABLE_MAPPING[4] = "COMPUTE_REFSCORE";
-    TABLE_MAPPING[5] = "BLAST_REFDB";
-    TABLE_MAPPING[6] = "PARSE_BLAST";
-    TABLE_MAPPING[7] = "SCAN_rRNA";
-    TABLE_MAPPING[8] = "SCAN_tRNA";
-    TABLE_MAPPING[9] = "ANNOTATE";
-    TABLE_MAPPING[10] = "PATHOLOGIC_INPUT";
-    TABLE_MAPPING[11] = "GENBANK_FILE";
-    TABLE_MAPPING[12] = "CREATE_SEQUIN_FILE";
-    TABLE_MAPPING[13] = "CREATE_REPORT_FILES";
-    TABLE_MAPPING[14] = "MLTREEMAP_CALCULATION";
-    TABLE_MAPPING[15] = "MLTREEMAP_IMAGEMAKER";
-    TABLE_MAPPING[16] = "PATHOLOGIC";
-    TABLE_MAPPING[17] = "RPKM";
-
-}
 
 /*
  * You know.
@@ -208,17 +282,30 @@ void ProgressDialog::initMapping(){
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
 
+    _stepsCompleted = this->getNumStepsCompleted();
     if( this->rundata->getProcess()==0) {
         progressBar->setValue(0);
     }else {
           progressBar->setValue(_stepsCompleted);
     }
-
     _totalSteps = this->countTotalNumberOfSteps();
+
+    qDebug() << _stepsCompleted << _totalSteps;
+
     progressBar->setMaximum(_totalSteps);
 
 }
 
+unsigned int ProgressDialog::getNumStepsCompleted() {
+    unsigned int num = 0;
+    foreach(QString stepName, this->status.keys()) {
+        foreach(QString subStep, this->status[stepName].done.keys()) {
+            num++;
+        }
+    }
+    return num;
+
+}
 
 unsigned int ProgressDialog::countTotalNumberOfSteps() {
     RunData *rundata = RunData::getRunData();
@@ -257,7 +344,7 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
 
     // GENBANK_FILE, CREATE_SEQUIN_FILE, AND PATHOLOGIC_INPUT are considered to be really all the same step
     // so if any one of them fails, they all fail, any one is done, they're all done, etc
-    if(stepName=="GENBANK_FILE"){
+   /* if(stepName=="GENBANK_FILE"){
         if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
             statusHash->operator []("CREATE_SEQUIN_FILE") = "FAILED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "FAILED";
@@ -275,12 +362,12 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
             statusHash->operator []("PATHOLOGIC_INPUT") = "SKIPPED";
             _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }else if(statusHash->operator []("GENBANK_FILE")=="ALREADY_COMPUTED"){
-            statusHash->operator []("CREATE_SEQUIN_FILE") = "ALREADY_COMPUTED";
             statusHash->operator []("PATHOLOGIC_INPUT") = "ALREADY_COMPUTED";
             _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
         }
         return;
     }
+    */
 
     // checking through the hash for one of our problem steps
     // stepName is just the substring of what a substep would look like
@@ -313,56 +400,73 @@ void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QStri
     }
 }
 
+short int ProgressDialog::getState(const QString &stepName) {
+
+    if( !this->status.contains(stepName) ) return -2;
+
+    STATUS _status = this->status[stepName];
+    unsigned successCount = 0;
+
+   // qDebug() << _status.step << _status.expected << _status.done;
+
+    foreach(QString subKey, _status.expected.keys()) {
+        if( _status.done.contains(subKey) ) successCount++;
+    }
+
+ //  qDebug() << _status.done.keys()  << "   " << _status.expected.keys();
+    if( successCount==_status.expected.size() ) return 1;
+    if( _status.expected.size() > 0  ) return 0;
+    return -1;
+}
+
+
 /*
  * Crayons, ma. Update the table with the appropriate widget depending on the status for that step.
  */
-void ProgressDialog::colorRunConfig(QHash<QString,QString> &statusHash){
+void ProgressDialog::colorRunConfig(){
 
-    QHash<QString,QString>::iterator it;
+    QHash<QString,STATUS> ::iterator it;
     _stepsCompleted = 0;
    // this->summaryTable->clearContents();
     QTableWidgetItem *item;
 
     ProgressDisplayData *progressdisplaydata = ProgressDisplayData::getProgressDisplayData();
     progressdisplaydata->destroyWidgets();
-    progressdisplaydata->createWidgets(statusHash);
+    progressdisplaydata->createWidgets(this->expectedSteps.keys());
 
-    for(it=statusHash.begin();it!=statusHash.end();it++){
-        QString stepName = it.key();
-        QString status = it.value();
+    foreach(QString stepName, this->expectedSteps.keys()){
 
-        if( !progressdisplaydata->isValidKey(stepName)) continue;
-        if (stepName.contains(QRegExp("BLAST_REFDB_"))) continue;
-        if (stepName.contains(QRegExp("PARSE_BLAST_"))) continue;
-        if (stepName.contains(QRegExp("SCAN_rRNA_"))) continue;
-        if (stepName.contains(QRegExp("STATS_"))) continue;
+       // if( !progressdisplaydata->isValidKey(stepName)) continue;
 
         int _row = TABLE_MAPPING.key(stepName);
 
-        //clear old cell
-      //  this->summaryTable->removeCellWidget(_row,0);
         this->summaryTable->setItem(_row, 0, NULL);
 
-        if (status.operator ==("FAILED")){
+     //   qDebug() << stepName << " " << _row << "  " << this->getState(stepName);
+
+        if ( this->getState(stepName) == -1 ){
             item = progressdisplaydata->getTableWidgetItem(stepName, REDCROSS);
-            this->summaryTable->setItem(_row, 0, item);
             _stepsCompleted++;
 
-        }else if (status.operator ==("RUNNING")){
-            //loading->start();
-            item = progressdisplaydata->getTableWidgetItem(stepName, LOADING);
-            this->summaryTable->setItem(_row,0,item);
+        }else if (this->getState(stepName) == 0){
+            item = progressdisplaydata->getTableWidgetItem(stepName, PARTIAL);
         }
-
-        else if (status.operator ==("SUCCESS") ||
-                  status.operator ==("ALREADY_COMPUTED") ||
-                  status.operator ==("SKIPPED"))  {
-
+        else if (this->getState(stepName) == 1)  {
             //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
             item = progressdisplaydata->getTableWidgetItem(stepName, GREENCHECK);
-            this->summaryTable->setItem(_row,0, item);
             _stepsCompleted++;
         }
+        else if (this->getState(stepName) == 2)  {
+            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+            item = progressdisplaydata->getTableWidgetItem(stepName, LOADING );
+        }
+        else if (this->getState(stepName) == -2)  {
+        //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+            item = progressdisplaydata->getTableWidgetItem(stepName, UNSURE);
+        }
+
+
+        this->summaryTable->setItem(_row,0, item);
     }
 
 }
@@ -376,6 +480,7 @@ void ProgressDialog::startRun(){
 
     // qDebug() << rRNArefdbs << annotationDBS;
 
+    this->rundata->emitloadSampleList();
     if(rRNArefdbs.isEmpty()){
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs","",false,false);
     }
@@ -399,7 +504,7 @@ void ProgressDialog::startRun(){
 
 void ProgressDialog::resetRunTab() {
     cancelButton->setEnabled(true);
-    runButton->setDisabled(true);
+    runButton->setEnabled(false);
     standardOut->clear();
     logBrowser->clear();
     progressBar->setValue(0);
@@ -451,6 +556,7 @@ void ProgressDialog::initProcess(){
     arguments << "-o" << QDir::toNativeSeparators(this->rundata->getParams()["folderOutput"]);
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "config" + QDir::separator() + "template_param.txt");
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator()  + "config" + QDir::separator() + "template_config.txt");
+    this->updateOverwriteChoice();
     arguments << "-r" << (this->rundata->getParams()["overwrite"]);
 
     //add the specific samples
@@ -508,6 +614,16 @@ void ProgressDialog::checkFiles(){
         QString temp = *entry;
         QStringList file = temp.split(".");
 
+
+        foreach(QRegExp reg, regList ) {
+           if(temp.indexOf(reg,0) != -1 ) {
+               filesDetected.append( temp.remove(reg).replace('.','_') );
+               break;
+           }
+        }
+
+        /*
+
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
                if(temp.indexOf(reg,0) > -1 ) {
@@ -520,12 +636,9 @@ void ProgressDialog::checkFiles(){
             if (file.last() == "gbk"){
                 filesDetected.append(file.first());
             }
-        }
-        else if (fileType == "gff-annotated" || fileType == "gff-unannotated"){
-            if (file.last() == "gff"){
-                filesDetected.append(file.first());
-            }
-        }
+        }*/
+
+
     }
 
     this->rundata->setFileList(filesDetected);
@@ -560,6 +673,8 @@ void ProgressDialog::terminateRun(){
     }
 
     this->setProcessToZero();
+    cancelButton->setEnabled(false);
+    runButton->setEnabled(true);
 
    // summaryTable->clearContents();
     progressBar->setValue(0);
@@ -576,6 +691,29 @@ void ProgressDialog::setProcessToZero() {
     this->rundata->setProcess(myProcess);
 }
 
+
+/**
+ * @brief ProgressDialog::updateOverwriteChoice, updates the overwrite choice
+ * once the checkbox is changed
+ *
+ */
+void ProgressDialog::updateOverwriteChoice() {
+   if (this->shouldOverwrite())
+      this->rundata->setValue("overwrite", "overwrite", _PARAMS);
+   else
+      this->rundata->setValue("overwrite", "overlay", _PARAMS);
+}
+
+
+/**
+ * @brief ProgressDialog::shouldOverwrite, check if the
+ * should overwrite previous results flag is on
+ * @return
+ */
+bool ProgressDialog::shouldOverwrite() {
+
+    return this->overwrite->isChecked();
+}
 
 ProgressDialog::~ProgressDialog()
 {

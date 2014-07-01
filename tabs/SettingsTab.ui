@@ -269,17 +269,20 @@ p, li { white-space: pre-wrap; }
      <property name="editable">
       <bool>false</bool>
      </property>
+     <property name="maxVisibleItems">
+      <number>4</number>
+     </property>
      <property name="maxCount">
-      <number>10</number>
+      <number>2</number>
      </property>
      <item>
       <property name="text">
-       <string>blast</string>
+       <string>BLAST</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>last</string>
+       <string>LAST</string>
       </property>
      </item>
     </widget>

@@ -48,23 +48,22 @@ QHash<QString,QString> Utilities::createMapping(){
     CONFIG_NAME_MAP["grid_engine:user"] = "grid_engineUSER";
     CONFIG_NAME_MAP["grid_engine:server"] = "grid_engineSERVER";
 
-    CONFIG_NAME_MAP["metapaths_steps:PREPROCESS_FASTA"] = "metapaths_stepsPREPROCESS_FASTA";
+    CONFIG_NAME_MAP["metapaths_steps:PREPROCESS_INPUT"] = "metapaths_stepsPREPROCESS_INPUT";
     CONFIG_NAME_MAP["metapaths_steps:ORF_PREDICTION"] = "metapaths_stepsORF_PREDICTION";
-    CONFIG_NAME_MAP["metapaths_steps:GFF_TO_AMINO"] = "metapaths_stepsGFF_TO_AMINO";
-    CONFIG_NAME_MAP["metapaths_steps:FILTERED_FASTA"] = "metapaths_stepsFILTERED_FASTA";
-    CONFIG_NAME_MAP["metapaths_steps:COMPUTE_REFSCORE"] = "metapaths_stepsCOMPUTE_REFSCORE";
-    CONFIG_NAME_MAP["metapaths_steps:BLAST_REFDB"] = "metapaths_stepsBLAST_REFDB";
-    CONFIG_NAME_MAP["metapaths_steps:PARSE_BLAST"] = "metapaths_stepsPARSE_BLAST";
-    CONFIG_NAME_MAP["metapaths_steps:SCAN_tRNA"] = "metapaths_stepsSCAN_TRNA";
-    CONFIG_NAME_MAP["metapaths_steps:SCAN_rRNA"] = "metapaths_stepsSCAN_RRNA";
-    CONFIG_NAME_MAP["metapaths_steps:ANNOTATE"] = "metapaths_stepsANNOTATE";
+    CONFIG_NAME_MAP["metapaths_steps:ORF_TO_AMINO"] = "metapaths_stepsORF_TO_AMINO";
+    CONFIG_NAME_MAP["metapaths_steps:FILTER_AMINOS"] = "metapaths_stepsFILTER_AMINOS";
+    CONFIG_NAME_MAP["metapaths_steps:COMPUTE_REFSCORES"] = "metapaths_stepsCOMPUTE_REFSCORES";
+    CONFIG_NAME_MAP["metapaths_steps:FUNC_SEARCH"] = "metapaths_stepsFUNC_SEARCH";
+    CONFIG_NAME_MAP["metapaths_steps:PARSE_FUNC_SEARCH"] = "metapaths_stepsPARSE_FUNC_SEARCH";
+    CONFIG_NAME_MAP["metapaths_steps:SCAN_tRNA"] = "metapaths_stepsSCAN_tRNA";
+    CONFIG_NAME_MAP["metapaths_steps:SCAN_rRNA"] = "metapaths_stepsSCAN_rRNA";
+    CONFIG_NAME_MAP["metapaths_steps:ANNOTATE_ORFS"] = "metapaths_stepsANNOTATE_ORFS";
     CONFIG_NAME_MAP["metapaths_steps:PATHOLOGIC_INPUT"] = "metapaths_stepsPATHOLOGIC_INPUT";
     CONFIG_NAME_MAP["metapaths_steps:GENBANK_FILE"] = "metapaths_stepsGENBANK_FILE";
-    CONFIG_NAME_MAP["metapaths_steps:CREATE_SEQUIN_FILE"] = "metapaths_stepsCREATE_SEQUIN_FILE";
-    CONFIG_NAME_MAP["metapaths_steps:CREATE_REPORT_FILES"] = "metapaths_stepsCREATE_REPORT_FILES";
+    CONFIG_NAME_MAP["metapaths_steps:CREATE_ANNOT_REPORTS"] = "metapaths_stepsCREATE_ANNOT_REPORTS";
     CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_CALCULATION"] = "metapaths_stepsMLTREEMAP_CALCULATION";
     CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_IMAGEMAKER"] = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
-    CONFIG_NAME_MAP["metapaths_steps:PATHOLOGIC"] = "metapaths_stepsPATHOLOGIC";
+    CONFIG_NAME_MAP["metapaths_steps:BUILD_PGDB"] = "metapaths_stepsBUILD_PGDB";
 
     CONFIG_NAME_MAP["ptools_settings:taxonomic_pruning"] = "ptools_settingsTAXONOMIC_PRUNING";
 
@@ -220,13 +219,13 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
 
 
 
-
-
-
-/*
- * Returns db names that are unique in a list.
+/**
+ * @brief Utilities::getUniqueDBS Returns db names that are unique in a list.
  * 1.) Sort all files alphabetically
- * 2.) Ensure that only strings that do not exist as substrings for other strings in the list are returned.
+ * 2.) Ensure that only strings that do not exist as substrings for
+ *     other strings in the list are returned.
+ * @param dbs
+ * @return
  */
 QStringList Utilities::getUniqueDBS(QStringList dbs){
     QHash<QString, bool> unique;
@@ -235,6 +234,26 @@ QStringList Utilities::getUniqueDBS(QStringList dbs){
         unique[dbs[i]] = true;
     }
     return unique.keys();
+}
+
+
+/**
+ * @brief Utilities::getSplitNames splits the names of a db string, in the
+ * format as in the template_params.txt file
+ * @param nameString, the string
+ * @return a list of strings
+ */
+QStringList Utilities::getSplitNames(QString nameString) {
+    QRegExp delim("[\\s\\t,]");
+    QStringList splits =  nameString.split(delim);
+    QStringList newList;
+
+    foreach(QString split, splits) {
+        if( !split.trimmed().isEmpty() )
+            newList.append(split.trimmed());
+    }
+
+    return newList;
 }
 
 
@@ -298,6 +317,47 @@ QHash<QString,QString> Utilities::parseFile(const QString &TEMPLATE_FILE, const 
     inputFile.close();
     return configs;
 }
+
+
+QHash<QString,QString> Utilities::parseFileConfig(const QString &CONFIG_FILE){
+    QFile inputFile(CONFIG_FILE);
+
+    QHash<QString, QString> configs;
+
+    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine();
+            QRegExp comment("^#");
+            QRegExp splitRegex("[\\s\\t]");
+            QStringList splitList;
+            if (line.indexOf(comment) != -1) continue;
+
+            splitList = line.split(splitRegex);
+            if( splitList.size()< 2) continue;
+
+
+
+            QStringList cleanKeyValue;
+            foreach(QString part, splitList) {
+                QString str = part.remove(QRegExp("\"")).remove(QRegExp("\'"));
+                if( str.isEmpty() ) continue;
+                cleanKeyValue.append(str);
+            }
+            if( cleanKeyValue.size()!=2) continue;
+            configs.insert(cleanKeyValue[0], cleanKeyValue[1]);
+       }
+    }else{
+        QMessageBox msg;
+        msg.warning(0,"Error!\n",QString("Could not read the configuration file to " + CONFIG_FILE + ", does that file exist?"), QMessageBox::Ok);
+        return QHash<QString,QString>();
+    }
+    inputFile.close();
+    return configs;
+}
+
 
 QString Utilities::extractAttribute(QString line) {
 

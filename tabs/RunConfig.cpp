@@ -23,7 +23,6 @@ RunConfig::RunConfig(QWidget *parent) :
     folderBrowseButton = this->findChild<QPushButton *>("outputFolderBrowser");
     gridBlastChoice = this->findChild<QCheckBox *>("blastWithGrid");
     setupGrids = this->findChild<QPushButton *>("setupGrids");
-    overwrite = this->findChild<QCheckBox *>("overwrite");
     inputLine = this->findChild<QLineEdit *>("inputLine");
     outputLine = this->findChild<QLineEdit *>("outputLine");
     selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
@@ -42,6 +41,11 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(fileBrowseButton, SIGNAL(clicked()), this, SLOT(browseFile()));
     connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
+
+    //connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(saveInput()));
+    connect(outputLine, SIGNAL(textChanged(QString)), this, SLOT(saveOutput(QString)));
+
+
 }
 
 
@@ -93,12 +97,20 @@ void RunConfig::loadRunParams(){
         QString radioButtonName = stepName.remove(lowerCaseRegex).toLower();
 
         QRadioButton *yesRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"YES");
-        QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");
+        QRadioButton *redoRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"REDO");        
         QRadioButton *skipRadioButton = temp->findChild<QRadioButton *>(radioButtonName+"SKIP");
 
-        if (configValue.operator ==("yes")) yesRadioButton->setChecked(true);
-        else if (configValue.operator ==("skip")) skipRadioButton->setChecked(true);
-        else redoRadioButton->setChecked(true);
+
+        if (configValue.operator ==("yes")) {
+            yesRadioButton->setChecked(true);
+        }
+        else if (configValue.operator ==("skip")) {
+             skipRadioButton->setChecked(true);
+        }
+        else {
+            redoRadioButton->setChecked(true);
+        }
+
     }
 }
 
@@ -131,7 +143,13 @@ void RunConfig::browseFile(){
         if( !selectedFolder.isEmpty()) emit fileSet();
     }
     this->rundata->emitloadSampleList();
+}
 
+
+void RunConfig::saveOutput(QString text) {
+   if( !text.isEmpty()) emit fileSet();
+   this->rundata->saveContext(OUTPUT_FOLDER, QVariant(text));
+   this->rundata->emitloadSampleList();
 }
 
 void RunConfig::browseFolder(){
@@ -143,10 +161,12 @@ void RunConfig::browseFolder(){
     }
 
     this->rundata->setValue("folderOutput", selectedFolder, _PARAMS);
+
     //send a signal to the parent to enable the continue button
     if (!selectedFolder.isEmpty()){
         if(!selectedFiles.isEmpty()) emit fileSet();
     }
+    this->rundata->emitloadSampleList();
 }
 
 void RunConfig::toggleAllRun(){

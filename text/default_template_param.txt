@@ -15,7 +15,7 @@ orf_prediction:algorithm        prodigal
 orf_prediction:min_length        60
 
 # ORF annotation parameters
-annotation:algorithm blast
+annotation:algorithm LAST
 # e.g. blast or last
 annotation:dbs
 # e.g. annotation:dbs    cog,kegg,refseq,metacyc
@@ -36,30 +36,38 @@ rRNA:min_bitscore 50
 ptools_settings:taxonomic_pruning no
 
 # grid settings
-grid_engine0:batch_size 200
-grid_engine0:max_concurrent_batches 400
-grid_engine0:walltime 10:00:00   
-grid_engine0:RAM 10gb
-grid_engine0:user myusername
-grid_engine0:server mygrid.domain.com
 
 # pipeline execution flags
 # e.g. yes, skip, redo
-metapaths_steps:PREPROCESS_FASTA        yes
+metapaths_steps:PREPROCESS_INPUT        yes
 metapaths_steps:ORF_PREDICTION        yes
 metapaths_steps:GFF_TO_AMINO        yes
-metapaths_steps:FILTERED_FASTA        yes
-metapaths_steps:COMPUTE_REFSCORE        yes
-metapaths_steps:BLAST_REFDB         yes
-metapaths_steps:PARSE_BLAST        yes
+metapaths_steps:FILTER_AMINOS       yes
+metapaths_steps:COMPUTE_REFSCORES       yes
+metapaths_steps:FUNC_SEARCH         yes
+metapaths_steps:PARSE_FUNC_SEARCH        yes
 metapaths_steps:SCAN_rRNA        yes
-metapaths_steps:STATS_rRNA        yes
 metapaths_steps:SCAN_tRNA        yes
 metapaths_steps:ANNOTATE        yes
 metapaths_steps:PATHOLOGIC_INPUT        yes
 metapaths_steps:GENBANK_FILE        yes
-metapaths_steps:CREATE_SEQUIN_FILE        yes
-metapaths_steps:CREATE_REPORT_FILES        yes
+metapaths_steps:CREATE_ANNOT_REPORTS        yes
 metapaths_steps:MLTREEMAP_CALCULATION        skip
 metapaths_steps:MLTREEMAP_IMAGEMAKER        skip
-metapaths_steps:PATHOLOGIC        yes
+metapaths_steps:BUILD_PGDB        yes
+metapaths_steps:COMPUTE_RPKM        yes
+
+# grid settings
+# template for adding grid
+# N is a digit, and should be unique for each grid
+# note the settings below are commented out
+
+#grid_engineN:server myserver
+#grid_engineN:os linux
+#grid_engineN:bit bit64
+#grid_engineN:optional_string 
+#grid_engineN:sshKey 
+#grid_engineN:user who
+#grid_engineN:max_parallel_jobs 3
+#grid_engineN:name 
+

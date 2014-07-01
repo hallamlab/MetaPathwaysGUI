@@ -102,11 +102,11 @@ void SettingsTab::showORFDBS(){
     QString dbPath =  run->getConfig().operator []("REFDBS") + "/functional";
     QStringList *filesInDir = new QStringList();
 
-    QRegExp reg("^[.]");
+    QRegExp reg("^[.]"); // removes stray file created by the OS
 
 
-    if (this->findFiles(dbPath,filesInDir)){
-        if (filesInDir->length()>0){
+    if (this->findFiles(dbPath, filesInDir)){
+        if (filesInDir->length() >0 ){
             foreach (QString db, *filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
@@ -132,8 +132,10 @@ void SettingsTab::closeWindow(){
     close();
 }
 
-/*
- * Similiar to the code in MainFrame, where we save values, we are instead initializing them here
+
+/**
+ * @brief SettingsTab::initWidgetValues, Similiar to the code in MainFrame,
+ * where we save values, we are instead initializing them here
  * for each field widget.
  */
 void SettingsTab::initWidgetValues(){
@@ -144,6 +146,7 @@ void SettingsTab::initWidgetValues(){
     for (i = SettingsTab::allWidgets->begin();i != SettingsTab::allWidgets->end(); ++i){
         QWidget *widget = *i;
         QString objectName = widget->objectName();
+
         QString configName = rundata->getConfigMapping().key(objectName);
 
         QString value = rundata->getValueFromHash(configName,_PARAMS);
@@ -167,7 +170,75 @@ void SettingsTab::initWidgetValues(){
             temp->setText(value);
         }
     }
+
+    //update the annotation dbs
+    this->checkAnnotationDBS();
 }
+
+
+/**
+ * @brief SettingsTab::checkAnnotationDBS, puts a checks in the settings panel
+ * for the database names for each db in the template_params.txt
+ */
+void SettingsTab::checkAnnotationDBS() {
+    QHash<QString, bool> DBNames;
+
+    RunData *rundata = RunData::getRunData();
+    // deal with the refdbs
+    foreach(QString dbname, Utilities::getSplitNames(rundata->getParams() ["rRNA:refdbs"]) ) {
+         DBNames[dbname] = true;
+    }
+    for(unsigned int i =0; i < this->rrnaREFDBS->count(); i++) {
+
+        if( DBNames.contains( this->rrnaREFDBS->item(i)->text() )) {
+           this->rrnaREFDBS->item(i)->setCheckState(Qt::Checked);
+        }
+        else{
+            this->rrnaREFDBS->item(i)->setCheckState(Qt::Unchecked);
+        }
+    }
+
+    // deal with the refdbs
+    DBNames.clear();
+    foreach(QString dbname, Utilities::getSplitNames(rundata->getParams() ["annotation:dbs"]) ) {
+         DBNames[dbname] = true;
+    }
+
+    for(unsigned int i =0; i < this->annotationDBS  ->count(); i++) {
+        if( DBNames.contains( this->annotationDBS->item(i)->text() )) {
+           this->annotationDBS->item(i)->setCheckState(Qt::Checked);
+        }
+        else{
+            this->annotationDBS->item(i)->setCheckState(Qt::Unchecked);
+        }
+    }
+}
+
+/**
+ * @brief SettingsTab::getADBNames, gets the annotation db names in the
+ *  folder in randata
+ * @return
+ */
+QStringList SettingsTab::getADBNames() {
+    RunData *run = RunData::getRunData();
+    QString dbPath =  run->getConfig().operator []("REFDBS") + "/functional";
+    QStringList *filesInDir = new QStringList();
+    QStringList names;
+    QRegExp reg("^[.]");
+
+    if (this->findFiles(dbPath, filesInDir)){
+        if (filesInDir->length() >0 ){
+            foreach (QString db, *filesInDir){
+                if( db.indexOf(reg, 0) != -1) continue;
+                names.append(db);
+            }
+        }
+    }
+    return names;
+}
+
+
+
 
 /*
  * AllWidgets is used by the mainframe to update values across activities. We simply cast
