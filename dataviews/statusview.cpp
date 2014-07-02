@@ -135,7 +135,7 @@ void StatusView::showTreeView() {
     qDebug() << "Treeview";
     QString OUTPUTPATH = rundata->getParams()["folderOutput"];
     samplercmgr->setOutPutPath(OUTPUTPATH);
-    this->filenames = rundata->getFileList();
+    this->filenames = rundata->getFileList(rundata->getCurrentInputFormat());
     this->createModel();
 }
 

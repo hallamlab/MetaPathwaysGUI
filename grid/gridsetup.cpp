@@ -70,7 +70,9 @@ void GridSetup::setDefaultParamValues() {
     this->defaultParamValues.insert("os","linux");
     this->defaultParamValues.insert("max_parallel_jobs","20");
     this->defaultParamValues.insert("batch_size","100");
+    this->defaultParamValues.insert("enabled", "no");
 
+    this->allowedParams["enabled"] = true;
     this->allowedParams["user"] = true;
     this->allowedParams["server"] = true;
     this->allowedParams["bit"] = true;
@@ -151,17 +153,20 @@ void GridSetup::getWidgetValues(const Grid &g){
         QString objectName = widget->objectName();
         QString value;
 
+         //if it is of type combobox
         if (qobject_cast<QComboBox *>(widget)){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             value = temp->currentText();
             g.values->operator [](objectName) = value;
         }
+        //if it is of type spin box
         else if (qobject_cast<QSpinBox *>(widget)){
             QSpinBox *temp = qobject_cast<QSpinBox *>(widget);
             value = QString::number(temp->value());
             g.values->operator [](objectName) = value;
 
         }
+        //if it is of type lineedit
         else if (qobject_cast<QLineEdit *>(widget)){
             QLineEdit *temp = qobject_cast<QLineEdit *>(widget);
             if (temp->objectName().compare("qt_spinbox_lineedit") < 0 ||
@@ -169,6 +174,14 @@ void GridSetup::getWidgetValues(const Grid &g){
                 value = temp->text();
                 g.values->operator [](objectName) = value;
             }
+        }
+        //if it is of type checkbox
+        else if (qobject_cast<QCheckBox *>(widget)){
+            QCheckBox *temp = qobject_cast<QCheckBox *>(widget);
+               if( temp->isChecked() )
+                   g.values->operator [](objectName) = "yes";
+               else
+                   g.values->operator [](objectName) = "no";
         }
     }
 }
@@ -217,6 +230,8 @@ bool GridSetup::validateGridSettings(QString &errMsg) {
            while( gridValues.hasNext() ) {
                gridValues.next();
 
+
+               //must have keys
                if( gridValues.value().trimmed().size() ==0 && gridValues.key().size()!=0 && ( gridValues.key().compare("user")==0 || gridValues.key().compare("server")==0  ) ) {
                    errMsg += "Grid : " + grids.key() + " missing " +  gridValues.key() + "\n";
                    error = false;
@@ -251,6 +266,8 @@ void GridSetup::writeGridSettingToFile(const QString &TEMPLATE_FILE){
        QTextStream in(&inputFile);
        QTextStream out(&newFile);
 
+
+       // read the exisiting file
        while ( !in.atEnd() )
        {
             QString line = in.readLine();
@@ -268,6 +285,8 @@ void GridSetup::writeGridSettingToFile(const QString &TEMPLATE_FILE){
        QHashIterator<QString,  Grid *> grids(*Grids);
 
        out << "\n";
+
+       // now deal with the grid params
        while (grids.hasNext()){
            out << "\n";
            //get next grid in hash
@@ -335,6 +354,11 @@ void GridSetup::deleteExistingGrid(){
     }
 }
 
+
+/**
+ * @brief GridSetup::initForm
+ * @param selected
+ */
 void GridSetup::initForm(const QString &selected){
     Grid *g = Grids->value(selected);
 
@@ -377,8 +401,6 @@ void GridSetup::initGridValues(){
     RunData *rundata = RunData::getRunData();
     QHashIterator<QString,QString> it(rundata->getParams());
 
-
-
    // qDebug() << rundata->getParams();
     while(it.hasNext()){
         it.next();
@@ -411,9 +433,15 @@ void GridSetup::initGridValues(){
             if( it.value().isEmpty() ) {
                 if( this->defaultParamValues.contains(param) )
                     value = this->defaultParamValues[param];
-                if( param=="name") value = g->name;
+                if( param.compare(QString("name")) == 0) value = g->name;
             } else {
-                value = it.value();
+                if( param.compare(QString("enabled")) == 0) {
+                    if( it.value().compare("yes") == 0) g->enabled = true;
+                    else g->enabled= false;
+                }
+                else {
+                   value = it.value();
+                }
             }
 
             g->values->insert(param, value);

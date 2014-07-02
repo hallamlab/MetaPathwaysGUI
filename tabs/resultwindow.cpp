@@ -72,26 +72,21 @@ ResultWindow::ResultWindow(QWidget *parent) :
 }
 
 void ResultWindow::_loadResults() {
-    if( this->rundata->getParams()["fileInput"].size()==0 || this->rundata->getParams()["folderOutput"].size()==0) {
-        QMessageBox::warning(this, "Input/Output Folder Missing", "Input or output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
+    if(  this->rundata->getParams()["folderOutput"].size()==0) {
+        QMessageBox::warning(this, "Output Folder Missing", "Output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
         return;
     }
 
-    QFileInfo input(this->rundata->getParams()["fileInput"]);
+
     QFileInfo output(this->rundata->getParams()["folderOutput"]);
-    if( !input.exists()) {
-        QMessageBox::warning(this, "Input Folder does not exist", "Input folder specified in Stages tab does not exist!", QMessageBox::Ok);
-        return;
-    }
+
     if( !output.exists()) {
         QMessageBox::warning(this, "Output Folder does not exist", "Output folder specified in Stages tab does not exist!", QMessageBox::Ok);
         return;
     }
 
     this->disableSampleChanged = true;
-    this->updateFileNames();
-    this->rundata->updateCurrentFileList();
-    this->disableSampleChanged = false;
+
     DataManager *datamanager = DataManager::getDataManager();
     /***/
     datamanager->destroyAllORFs();
@@ -106,6 +101,11 @@ void ResultWindow::_loadResults() {
     /***/
     datamanager->setDataModelCreated(false);
 
+    this->rundata->loadOutputFolders();
+    this->updateFileNames();
+    this->rundata->updateCurrentFileList();
+
+    this->disableSampleChanged = false;
 
     //  datamanager->setORFsUptoDateAll(false);
     if (this->sampleSelect->count() > 0) {
@@ -121,7 +121,7 @@ void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
     samplercmgr->setUseResourceFolder(userResourceFolder);
 
     unsigned int i =0;
-    foreach(QString file, this->rundata->getFileList() ) {
+    foreach(QString file, this->rundata->getFileList(this->rundata->getCurrentInputFormat()) ) {
         samplercmgr->createFileIndex(file, NUCFASTA);
         samplercmgr->createFileIndex(file, AMINOFAA);
         samplercmgr->createFileIndex(file, NUCFNA);
@@ -138,7 +138,7 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
     samplercmgr->setUseResourceFolder(userResourceFolder);
 
     unsigned int i =0;
-    foreach(QString file, this->rundata->getFileList() ) {
+    foreach(QString file, this->rundata->getFileList( this->rundata->getCurrentInputFormat() ) ) {
         samplercmgr->createFileIndex(file, NUCFASTA);
         samplercmgr->createFileIndex(file, AMINOFAA);
         samplercmgr->createFileIndex(file, NUCFNA);
@@ -172,7 +172,8 @@ void ResultWindow::updateFileNames(){
 
   //  qDebug() << this->rundata->getFileList();
 
-    files = this->rundata->getFileList();
+    files = this->rundata->getOutputFolders();
+    qDebug() << "name of file s" << files;
     if( files.isEmpty()) return;
 
     sampleSelect->clear();

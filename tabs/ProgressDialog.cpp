@@ -70,7 +70,7 @@ void ProgressDialog::showErrors() {
     RunData *rundata= RunData::getRunData();
 
     TreeModel *model = new TreeModel;
-    model->setSampleNames(rundata->getFileList());
+    model->setSampleNames(rundata->getFileList(rundata->getCurrentInputFormat() ));
     model->readFiles();
 
     QTreeView *view = new QTreeView;
@@ -85,14 +85,13 @@ void ProgressDialog::showErrors() {
 }
 void ProgressDialog::loadSampleList() {
 
-    QStringList files = this->rundata->getFileList();
+    QStringList files = this->rundata->getFileList(this->rundata->getCurrentInputFormat());
 
     sampleSelect->clear();
     foreach (QString f, files){
         sampleSelect->addItem(f); // sampleselect lets the user monitor the status of multiple samples
     }
     rundata->setCurrentSample(sampleSelect->currentText());
-
 }
 
 bool ProgressDialog::checkInputOutPutLocations() {
@@ -333,7 +332,7 @@ unsigned int ProgressDialog::countTotalNumberOfSteps() {
             }
         }
     }
-    return rundata->getFileList().size()*count;
+    return rundata->getFileList(rundata->getCurrentInputFormat()).size()*count;
 }
 
 /*
@@ -614,15 +613,16 @@ void ProgressDialog::checkFiles(){
         QString temp = *entry;
         QStringList file = temp.split(".");
 
+        /*
 
         foreach(QRegExp reg, regList ) {
            if(temp.indexOf(reg,0) != -1 ) {
                filesDetected.append( temp.remove(reg).replace('.','_') );
                break;
            }
-        }
+        } */
 
-        /*
+
 
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {
@@ -636,7 +636,7 @@ void ProgressDialog::checkFiles(){
             if (file.last() == "gbk"){
                 filesDetected.append(file.first());
             }
-        }*/
+        }
 
 
     }

@@ -63,18 +63,27 @@ public:
     bool checkParams();
     void setCurrentSample(QString currentSample);
     int getRunningStepNumber();
+
+    QString getCurrentInputFormat();
+
     QString getCurrentSample();
 
     static RunData* getRunData();
 
     void addFileToList(QString file);
     void setFileList(QStringList files);
-    QStringList getFileList();
+    QStringList getFileList(const QString &fileType);
+   //   QStringList getFileList();
 
     void updateCurrentFileList();
     QStringList getCurrentFileList();
 
-    void loadInputFiles();
+    void loadInputFiles(const QString &fileType);
+     //   void loadInputFiles();
+    void loadOutputFolders();
+    QStringList getOutputFolders();
+    bool isOutputFolderValid(const QString &folder);
+    QStringList getSubFolders(const QString & folder);
     QString getSystem();
 
     unsigned int getNumRRNADB();
@@ -91,6 +100,11 @@ public:
 
 signals:
     void loadSampleList();
+
+public slots:
+
+    void updateInputFileFormat(QString currentInputFileFormat) ;
+
 
 private:
     RunData();
@@ -111,6 +125,8 @@ private:
     QString currentSample;
     QString system;
     QList<QString> selectSamplesToRun;
+    QStringList outputFolders;
+    QString currentInputFormat;
 };
 
 

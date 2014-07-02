@@ -42,17 +42,21 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 
+    RunData *rundata = RunData::getRunData();
+
     //connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(saveInput()));
     connect(outputLine, SIGNAL(textChanged(QString)), this, SLOT(saveOutput(QString)));
+    connect(fileInputFormat, SIGNAL(currentIndexChanged(QString)), rundata, SLOT(updateInputFileFormat(QString)) );
 
 
 }
 
 
+
 void RunConfig::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-    this->selectWindow->addSamples(this->rundata->getFileList());
+    this->selectWindow->addSamples(this->rundata->getFileList( fileInputFormat->currentText().trimmed() ));
     this->selectWindow->show();
 }
 
@@ -136,7 +140,7 @@ void RunConfig::browseFile(){
     }
 
     this->rundata->setCurrentSample(QString());
-    this->rundata->loadInputFiles();
+    this->rundata->loadInputFiles( fileInputFormat->currentText().trimmed() );
     this->rundata->setValue("fileInput", selectedFiles, _PARAMS);
     //send a signal to the parent to enable the continue button
     if (!selectedFiles.isEmpty()){

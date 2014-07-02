@@ -232,6 +232,16 @@ QString RunData::getCurrentSample() {
     return this->currentSample;
 }
 
+QString RunData::getCurrentInputFormat() {
+
+    return this->currentInputFormat;
+
+}
+
+
+void RunData::updateInputFileFormat(QString currentInputFileFormat) {
+   this->currentInputFormat = currentInputFileFormat;
+}
 
 bool RunData::checkParams(){
     QFile paramFile( this->CONFIG["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() + this->TEMPLATE_PARAM);
@@ -264,6 +274,10 @@ void RunData::setNumADB(unsigned int n){
     this->nADB = n;
 }
 
+/**
+ * @brief RunData::checkConfig, checks if config file exits
+ * @return bool
+ */
 bool RunData::checkConfig(){
 
     QFile configFile(  this->CONFIG["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator()  +this->TEMPLATE_CONFIG);
@@ -275,6 +289,12 @@ bool RunData::checkConfig(){
  QHash<QString, QString> RunData::getPARAMS() {
      return this->PARAMS;
  }
+
+ /**
+ * @brief RunData::validate, validates the config file for the python code
+ * @param warningMsg, warning message to show
+ * @return bool to say fail or success
+ */
 
 bool RunData::validate(QString &warningMsg) {
     bool correct = true;
@@ -324,11 +344,12 @@ void RunData::setFileList(QStringList files) {
 
 }
 
-QStringList RunData::getFileList(){
-    this->loadInputFiles();
+QStringList RunData::getFileList(const QString &fileType){
+    this->loadInputFiles(fileType);
     return this->files;
-
 }
+
+
 
 void RunData::updateCurrentFileList(){
    this->currentfiles = this->files;
@@ -338,59 +359,130 @@ QStringList RunData::getCurrentFileList(){
     return this->currentfiles;
 }
 
-
-void RunData::loadInputFiles(){
+/**
+ * @brief RunData::loadInputFiles, loading the names of the input file of a fileType
+ * such as fasta, gbk-annotated, gbk-unannotated
+ * @param fileType, the file type to pick
+ */
+void RunData::loadInputFiles(const QString &fileType){
     QDir currentDir(this->getParams()["fileInput"]);
-    QString fileType = this->getParams()["INPUT:format"];
 
     if( !currentDir.exists() ) return;
 
     currentDir.setFilter(QDir::Files);
     QStringList entries = currentDir.entryList();
 
+
     QList<QRegExp> regList;
-    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$") <<  QRegExp("[.][gG][bB][kK]$") ;
+
+    // for fasta type only
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+
 
     QStringList filesDetected;
-    for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )
+    foreach( QString entry, entries )
     {
-        QString temp = *entry;
+        QString temp = entry;
         QStringList file = temp.split(".");
 
         QString suffix = QString(".") + file.last();
 
-      //  qDebug() << *entry ;
-        foreach(QRegExp reg, regList ) {
-            if(suffix.indexOf(reg,0) != -1 ) {
-                   filesDetected.append( temp.remove(reg).replace('.','_') );
-                   break;
-            }
-        }
 
-
-
-        /*
-        if (fileType == "fasta"){
+        if (fileType.compare(QString("fasta"))== 0){
             foreach(QRegExp reg, regList ) {
-               if(suffix.indexOf(reg,0) > -1 ) {
+               if(suffix.indexOf(reg,0) != -1 ) {
                    filesDetected.append( temp.remove(reg).replace('.','_') );
                    break;
                }
             }
         }
-        else if (fileType == "gbk-annotated" || fileType == "gbk-unannotated"){
-            if (file.last() == "gbk"){
+        else if (  fileType.compare( QString("gbk-annotated")) ==0 || fileType.compare(QString("gbk-unannotated"))==0){
+            if (file.last().compare(QString("gbk"),Qt::CaseInsensitive) ==0){
                 filesDetected.append(file.first());
             }
-        }*/
-
-
-
-
+        }
     }
+
 
     this->setFileList(filesDetected);
 }
+
+
+/**
+ * @brief RunData::getOutputFolders, returns the list of outputfolders
+ * @return list of output folders
+ */
+QStringList RunData::getOutputFolders() {
+
+   if(this->outputFolders.isEmpty()) this->loadOutputFolders();
+   return this->outputFolders;
+}
+
+
+/**
+ * @brief RunData::loadOutputFolders, loads the list output folders in the
+ * outoutFolder variable.
+ */
+void RunData::loadOutputFolders(){
+    QDir currentDir(this->getParams()["folderOutput"]);
+
+    if( !currentDir.exists() ) return;
+
+    QStringList sampleFolders = currentDir.entryList(QDir::AllDirs);
+
+    this->outputFolders.clear();
+    foreach(QString sampleFolder, sampleFolders) {
+        if( sampleFolder.compare(QString(".")) ==0  || sampleFolder.compare(QString("..")) ==0 ) continue;
+
+        if( this->isOutputFolderValid(currentDir.absolutePath() + QDir::separator() +  sampleFolder )) {
+            this->outputFolders.append(sampleFolder);
+        }
+    }
+
+}
+
+/**
+ * @brief RunData::isOutputFolderValid, checks if the folder contains
+ * the right structure of a MetaPathways run output corresponding to a sample
+ * @param folder, the sample folder
+ * @return
+ */
+bool RunData::isOutputFolderValid(const QString &folder) {
+    QDir qDir(folder);
+
+    if( !qDir.exists()) return false;
+    QStringList subFolders = this->getSubFolders(folder);
+
+    foreach(QString subFolder, subFolders) {
+        qDir.setPath(folder + QDir::separator() + subFolder);
+        if( !qDir.exists() ) return false;
+    }
+    return true;
+
+}
+
+/**
+ * @brief RunData::getSubFolders, get the immediate subfolders of the
+ * folder
+ * @param folder, the containing folder
+ * @return list of folders
+ */
+
+QStringList RunData::getSubFolders(const QString & folder) {
+    QStringList subFolders ;
+    subFolders<<  QString("blast_results")
+                            <<    QString("ptools")
+                            <<  QString("mltreemap_calculations")
+                            <<     QString("results")
+                            <<    QString("genbank")
+                            <<    QString("orf_prediction")
+                            <<    QString("run_statistics")
+                            <<    QString("preprocessed");
+
+    return subFolders;
+
+}
+
 
 void RunData::setSamplesSubsetToRun(QList<QString> &selection) {
    this->selectSamplesToRun = selection;

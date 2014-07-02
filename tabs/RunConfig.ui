@@ -192,10 +192,18 @@
     <property name="text">
      <string>PREPROCESS INPUT</string>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Process step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting filtered sequences are made available into the folder &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#0bc013;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
    </row>
    <row>
     <property name="text">
      <string>ORF PREDICTION</string>
+    </property>
+    <property name="toolTip">
+     <string>The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.
+The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &quot;orf_prediction&quot; folder.The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.
+The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &quot;orf_prediction&quot; folder.  </string>
     </property>
    </row>
    <row>
@@ -318,7 +326,8 @@
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#127418;&quot;&gt;&amp;quot;orf_prediction&amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt; folder. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.
+The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &quot;orf_prediction&quot; folder. </string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1235,7 +1244,8 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Process step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;The resulting filtered sequences are made available into the folder &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#0bc013;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Process step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.
+The resulting filtered sequences are made available into the folder &quot;preprocessed&quot;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
