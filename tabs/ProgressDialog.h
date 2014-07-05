@@ -37,6 +37,9 @@ public:
     explicit ProgressDialog(QWidget *parent = 0);
     void updateProgressBar();
     void initProcess();
+    QStringList getActiveSteps() ;
+    void shadeActiveSteps();
+
 
     RunData *rundata;
     QString METAPATH;
@@ -49,9 +52,10 @@ public:
     QHash<QString, bool> expectedSteps;
 
     QHash<QString, STATUS> status;
+    QHash<QString, QString> running;
 
     short int getState(const QString &stepName);
-    void checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName);
+
     void colorRunConfig();
     void initMapping();
 
@@ -60,12 +64,15 @@ private:
     bool checkInputOutPutLocations() ;
     void setExpectedSteps();
     void updateStatus(const QString &line);
+    bool isProcessRunning();
+    bool isRunningAStep();
+    bool isStepActive(QString stepName);
 private slots:
 
     void terminateRun();
     void checkFiles();
     void selectedFileChanged(QString file);
-    void loadSampleList();
+    void loadSampleListToRun();
     void showErrors();
     void readStepsLog();
 

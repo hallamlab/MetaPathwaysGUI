@@ -62,6 +62,7 @@ void RunConfig::clickedSelectSample(){
 
 void RunConfig::receiveSelection(QList<QString> &selectedSamples) {
     this->rundata->setSamplesSubsetToRun(selectedSamples);
+    this->rundata->emitloadSampleList();
 }
 
 /* Loads the previously used settings

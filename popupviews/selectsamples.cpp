@@ -71,6 +71,11 @@ void SelectSamples::setReceiver(RunConfig *runconfigWindow  ) {
     this->runconfigWindow    = runconfigWindow;
 }
 
+
+/**
+ * @brief SelectSamples::sendSelection, this sends the signal after
+ * some samples are selected from the Stages panel
+ */
 void SelectSamples::sendSelection() {
    QList<bool> selection;
    if(this->resultWindow!=0) {

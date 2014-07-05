@@ -698,7 +698,7 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsSCAN_TRNA">
+  <widget class="QGroupBox" name="metapaths_stepsSCAN_tRNA">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -1612,7 +1612,7 @@ p, li { white-space: pre-wrap; }
   <zorder>metapaths_stepsPARSE_FUNC_SEARCH</zorder>
   <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
   <zorder>metapaths_stepsFUNC_SEARCH</zorder>
-  <zorder>metapaths_stepsSCAN_TRNA</zorder>
+  <zorder>metapaths_stepsSCAN_tRNA</zorder>
   <zorder>metapaths_stepsGENBANK_FILE</zorder>
   <zorder>metapaths_stepsSCAN_rRNA</zorder>
   <zorder>metapaths_stepsCREATE_ANNOT_REPORTS</zorder>

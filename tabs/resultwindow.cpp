@@ -71,6 +71,9 @@ ResultWindow::ResultWindow(QWidget *parent) :
 */
 }
 
+/**
+ * @brief ResultWindow::_loadResults, loads the samplewise results from the output folder
+ */
 void ResultWindow::_loadResults() {
     if(  this->rundata->getParams()["folderOutput"].size()==0) {
         QMessageBox::warning(this, "Output Folder Missing", "Output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
@@ -113,7 +116,12 @@ void ResultWindow::_loadResults() {
     }
 }
 
-
+/**
+ * @brief ResultWindow::indexSamples, index the nucleotide, amino acid and orfs fasta files
+ * for rapid access
+ * @param userResourceFolder, folder to put the index file
+ * @param reindex, reindexs the files even if it is already indexed
+ */
 void ResultWindow::indexSamples(bool userResourceFolder, bool reindex) {
     ProgressView progressBar("Indexing samples...", 0, files.size(), this);
 
@@ -148,11 +156,14 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
     progressBar.hide();
 }
 
-
+/**
+ * @brief ResultWindow::clickedSelectSample, loads the output results for the
+ * comparative mode
+ */
 void ResultWindow::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-    this->selectWindow->addSamples(this->rundata->getCurrentFileList());
+    this->selectWindow->addSamples(this->rundata->getOutputFolders());
     this->selectWindow->show();
 }
 
@@ -173,7 +184,7 @@ void ResultWindow::updateFileNames(){
   //  qDebug() << this->rundata->getFileList();
 
     files = this->rundata->getOutputFolders();
-    qDebug() << "name of file s" << files;
+
     if( files.isEmpty()) return;
 
     sampleSelect->clear();
@@ -192,6 +203,7 @@ void ResultWindow::updateFileNames(){
     rundata->setCurrentSample(files[0]);
 
 }
+
 
  void ResultWindow::receiveSelection(QList<bool> &selection) {
      this->selectedSamples = selection;

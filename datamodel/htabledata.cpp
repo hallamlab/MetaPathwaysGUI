@@ -806,14 +806,6 @@ void HTableData::ProvideContexMenu(QPoint pos)
 {
 
 
-     //   QMenu menu(this);
-      //  QAction *u = menu.addAction(tr("remove"));
-
-
- //       QAction *a = menu.exec(tablewidget->viewport()->mapToGlobal(pos));
-        //if (a == u)
-       // {
-
         unsigned int col = this->tableWidget->itemAt(pos)->column();
         unsigned int row = this->tableWidget->itemAt(pos)->row();
 

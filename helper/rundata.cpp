@@ -483,15 +483,31 @@ QStringList RunData::getSubFolders(const QString & folder) {
 
 }
 
-
+/**
+ * @brief RunData::setSamplesSubsetToRun, sets the selection of samples to
+ * run
+ * @param selection
+ */
 void RunData::setSamplesSubsetToRun(QList<QString> &selection) {
    this->selectSamplesToRun = selection;
 }
+
+/**
+ * @brief RunData::getSamplesSubsetToRun, returns
+ * the list of samples to run
+ * @return the list of samples to run
+ */
 
 QList<QString> RunData::getSamplesSubsetToRun() {
     return this->selectSamplesToRun;
 }
 
+
+
+/**
+ * @brief RunData::emitloadSampleList, emits a single to the drop down menu in
+ * the Progress tab to load the selected samples
+ */
 void RunData::emitloadSampleList() {
     emit loadSampleList();
 }

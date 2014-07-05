@@ -58,11 +58,17 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
-    connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleList()));
+    connect(sampleSelect, SIGNAL( currentIndexChanged(QString)), this, SLOT(readStepsLog() ) );
+    connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleListToRun()));
     connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
 }
 
+
+
+/**
+ * @brief ProgressDialog::showErrors, shows the error during the run
+ */
 void ProgressDialog::showErrors() {
   /* OLD WAY StatusView *statusview = StatusView::getStatusView();
    statusview->showTreeView();
@@ -83,9 +89,15 @@ void ProgressDialog::showErrors() {
 
 
 }
-void ProgressDialog::loadSampleList() {
 
-    QStringList files = this->rundata->getFileList(this->rundata->getCurrentInputFormat());
+/**
+ * @brief ProgressDialog::loadSampleListToRun, loads the list of samples to the
+ * drop down menu in the progress tab
+ */
+void ProgressDialog::loadSampleListToRun() {
+
+    QStringList files =  this->rundata->getSamplesSubsetToRun();
+
 
     sampleSelect->clear();
     foreach (QString f, files){
@@ -94,6 +106,11 @@ void ProgressDialog::loadSampleList() {
     rundata->setCurrentSample(sampleSelect->currentText());
 }
 
+/**
+ * @brief ProgressDialog::checkInputOutPutLocations, checks if the input and output folder along with the
+ * step logare a available
+ * @return true or false
+ */
 bool ProgressDialog::checkInputOutPutLocations() {
     QFileInfo input(this->rundata->getParams()["fileInput"]);
     QFileInfo output(this->rundata->getParams()["folderOutput"]);
@@ -176,7 +193,24 @@ void ProgressDialog::initMapping(){
 
 void ProgressDialog::updateStatus(const QString &line) {
 
+
+    this->running.clear();
+
+    if( line.contains(QRegExp("====") ) ) {
+        foreach(QString stepName, this->status.keys()) {
+            if(QString("redo").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ||\
+               QString("yes").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ) {
+                  this->status[stepName].done.clear();
+               }
+        }
+    }
+
+    if( line.contains(QRegExp("SKIPPED"))) return;
+
     QStringList splitList = line.split(QRegExp("[\\s\\t]"),QString::SkipEmptyParts);
+
+    if( splitList.size() < 2) return;
+
     QString step = splitList.at(0).trimmed();
 
     QString status = splitList.at(1).trimmed();
@@ -190,6 +224,8 @@ void ProgressDialog::updateStatus(const QString &line) {
         key =  step.trimmed(); subkey = step.trimmed();
     }
 
+    if( status.compare("RUNNING") ==0 ) this->running[QString("RUNNING")] = key;
+
 
     STATUS _status;
     if( this->status.contains(key)) _status = this->status[key];
@@ -197,7 +233,6 @@ void ProgressDialog::updateStatus(const QString &line) {
 
     if( key.compare(QString("FUNC_SEARCH")) ==0 || key.compare(QString("PARSE_FUNC_SEARCH")) ==0   ) {
        QStringList dbs = this->rundata->getADBNames();
-   //    qDebug() << dbs;
        foreach(QString db, dbs) _status.expected[db] = true;
     }
 
@@ -206,15 +241,18 @@ void ProgressDialog::updateStatus(const QString &line) {
        foreach(QString db, dbs) _status.expected[db] = true;
     }
 
-    _status.expected[key]= true;
+    if(key.compare(subkey)==0) _status.expected[key]= true;
+    else _status.expected[key] = false;
 
     //only accept known steps
     if( !this->expectedSteps.contains(key)) return;
 
     _status.step = key;
-    if( status.indexOf("ALREADY_COMPLETED") != -1 || status.indexOf("SUCCESS")!= -1 ) {
-        if( _status.expected.contains(subkey) ) _status.done[subkey] = true;
-        _status.done[key] = true;
+    if( status.indexOf("ALREADY_COMPUTED") != -1 || status.indexOf("SUCCESS")!= -1 ) {
+        if( _status.expected.contains(subkey) ) {
+            if(key.compare(subkey)!=0)  { _status.done[subkey] = true; _status.done[key] = false; }
+            else _status.done[subkey] = true;
+        }
     }
     else {
         if( _status.expected.contains(subkey) ) _status.done[subkey] = false;
@@ -243,13 +281,13 @@ void ProgressDialog::readStepsLog(){
     logBrowser->clear();
     this->status.clear();
 
+
     if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
     {
        QTextStream in(&inputFile);
        while ( !in.atEnd() )
        {
             QString line = in.readLine();
-
             if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
                 logBrowser->append(line);
                 this->updateStatus(line);
@@ -264,6 +302,8 @@ void ProgressDialog::readStepsLog(){
     // update icons for each step
     colorRunConfig();
 
+    shadeActiveSteps();
+
 
     if( myProcess !=0 ) {
         updateProgressBar();
@@ -274,14 +314,16 @@ void ProgressDialog::readStepsLog(){
 }
 
 
-
-/*
- * You know.
+/**
+ * @brief ProgressDialog::updateProgressBar, computes the number steps completed against
+ * the total number of step with redo or yes and updates the progress bar.
  */
+
 void ProgressDialog::updateProgressBar(){
     progressBar->setMinimum(0);
 
     _stepsCompleted = this->getNumStepsCompleted();
+
     if( this->rundata->getProcess()==0) {
         progressBar->setValue(0);
     }else {
@@ -289,39 +331,79 @@ void ProgressDialog::updateProgressBar(){
     }
     _totalSteps = this->countTotalNumberOfSteps();
 
-    qDebug() << _stepsCompleted << _totalSteps;
-
+ //   qDebug() << _stepsCompleted << "/" << _totalSteps;
     progressBar->setMaximum(_totalSteps);
 
 }
 
+
+/**
+ * @brief ProgressDialog::getActiveSteps, retuns the step names of the states
+ * that have redo or yes
+ * @return
+ */
+
+QStringList ProgressDialog::getActiveSteps() {
+
+    QStringList activeSteps;
+    foreach(QString stepName, this->status.keys()) {
+        if(QString("redo").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ||\
+           QString("yes").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ) {
+               activeSteps.append(stepName);
+           }
+    }
+    return activeSteps;
+
+}
+
+
+
+/**
+ * @brief ProgressDialog::getNumStepsCompleted, computes the number of completed steps in the
+ *  current run that has redo or yes settings
+ * @return number of completed steps
+ */
 unsigned int ProgressDialog::getNumStepsCompleted() {
     unsigned int num = 0;
+
     foreach(QString stepName, this->status.keys()) {
-        foreach(QString subStep, this->status[stepName].done.keys()) {
-            num++;
-        }
+        if(QString("redo").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ||\
+           QString("yes").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ) {
+
+              foreach(bool yesno, this->status[stepName].done.values() ) {
+                  if(yesno)  { num++;
+                  //    qDebug() << stepName;
+                  }
+              }
+
+           }
     }
     return num;
 
 }
 
+
+/**
+ * @brief ProgressDialog::countTotalNumberOfSteps, function calculates the number of stages
+ * to computed based on the settings of the metapaths_steps
+ * @return number of steps to do
+ */
 unsigned int ProgressDialog::countTotalNumberOfSteps() {
     RunData *rundata = RunData::getRunData();
 
     QStringList candidate_keys = rundata->getPARAMS().keys();
     QRegExp metapathway_steps("^metapaths_steps*");
 
-    QRegExp metapathway_steps_BLAST_REDB("^metapaths_steps:BLAST_REFDB");
+    QRegExp metapathway_steps_FUNC_SEARCH("^metapaths_steps:FUNC_SEARCH");
     QRegExp metapathway_steps_SCAN_rRNA("^metapaths_steps:SCAN_rRNA");
 
     unsigned int count=0;
-    /* count the steps that are set to redo and yes in the config */
+    /* count the steps that are set to redo or yes in the config */
     foreach( QString candidate_step, candidate_keys ) {
         if( metapathway_steps.indexIn(candidate_step,0) != -1 ) {
             if(QString("redo").compare(rundata->getPARAMS()[candidate_step]) ==0 ||\
                QString("yes").compare(rundata->getPARAMS()[candidate_step]) ==0 )  {
-                   if( metapathway_steps_BLAST_REDB.indexIn(candidate_step,0) != -1 ) {
+                   if( metapathway_steps_FUNC_SEARCH.indexIn(candidate_step,0) != -1 ) {
                        count += rundata->getNumADB();
                    }
                    else if( metapathway_steps_SCAN_rRNA.indexIn(candidate_step,0) != -1 ) {
@@ -332,95 +414,137 @@ unsigned int ProgressDialog::countTotalNumberOfSteps() {
             }
         }
     }
-    return rundata->getFileList(rundata->getCurrentInputFormat()).size()*count;
+    return count;
 }
 
-/*
- * Some special handling of certain steps to ascern their true states.
+
+
+/**
+ * @brief ProgressDialog::getState, gets the running state of a step
+ * -2 if unknown, 1 means success, 0 is partial -1 is failed
+ * @param stepName
+ * @return the code for the state
  */
-void ProgressDialog::checkStepsWithDBS(QHash<QString,QString> *statusHash, QString stepName, QString realStepName){
-    QHash<QString,QString>::iterator it;
-
-    // GENBANK_FILE, CREATE_SEQUIN_FILE, AND PATHOLOGIC_INPUT are considered to be really all the same step
-    // so if any one of them fails, they all fail, any one is done, they're all done, etc
-   /* if(stepName=="GENBANK_FILE"){
-        if(statusHash->operator []("GENBANK_FILE")=="FAILED"){
-            statusHash->operator []("CREATE_SEQUIN_FILE") = "FAILED";
-            statusHash->operator []("PATHOLOGIC_INPUT") = "FAILED";
-            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
-        }else if(statusHash->operator []("GENBANK_FILE")=="RUNNING"){
-            statusHash->operator []("CREATE_SEQUIN_FILE") = "RUNNING";
-            statusHash->operator []("PATHOLOGIC_INPUT") = "RUNNING";
-            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
-        }else if(statusHash->operator []("GENBANK_FILE")=="SUCCESS"){
-            statusHash->operator []("CREATE_SEQUIN_FILE") = "SUCCESS";
-            statusHash->operator []("PATHOLOGIC_INPUT") = "SUCCESS";
-            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
-        }else if(statusHash->operator []("GENBANK_FILE")=="SKIPPED"){
-            statusHash->operator []("CREATE_SEQUIN_FILE") = "SKIPPED";
-            statusHash->operator []("PATHOLOGIC_INPUT") = "SKIPPED";
-            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
-        }else if(statusHash->operator []("GENBANK_FILE")=="ALREADY_COMPUTED"){
-            statusHash->operator []("PATHOLOGIC_INPUT") = "ALREADY_COMPUTED";
-            _stepsCompleted++; _stepsCompleted++; _stepsCompleted++;
-        }
-        return;
-    }
-    */
-
-    // checking through the hash for one of our problem steps
-    // stepName is just the substring of what a substep would look like
-    // eg realStepName = BLAST_REFDB, stepName = BLAST_REFDB_
-    for (it=statusHash->begin();it!=statusHash->end();it++){
-        QString k = it.key();
-        if (k.contains(stepName)){
-            // one of our problem steps with multiple databases to go through
-            QString v = it.value();
-            //qDebug() << k << v << stepName << realStepName;
-
-            if (v == "FAILED") {
-                statusHash->insert(realStepName,"FAILED");
-                break;
-            }
-            else if (v == "RUNNING"){
-                statusHash->insert(realStepName, "RUNNING");
-            }
-            else if (v == "SUCCESS") {
-                statusHash->insert(realStepName,"SUCCESS");
-            }
-            else if (v == "ALREADY_COMPUTED") {
-                statusHash->insert(realStepName,"ALREADY_COMPUTED");
-            }
-            else if (v == "SKIPPED"){
-                statusHash->insert(realStepName,"SKIPPED");
-            }
-
-        }
-    }
-}
-
 short int ProgressDialog::getState(const QString &stepName) {
 
     if( !this->status.contains(stepName) ) return -2;
 
     STATUS _status = this->status[stepName];
-    unsigned successCount = 0;
+    unsigned int successCount = 0;
 
    // qDebug() << _status.step << _status.expected << _status.done;
 
     foreach(QString subKey, _status.expected.keys()) {
-        if( _status.done.contains(subKey) ) successCount++;
+        if( _status.done.contains(subKey)  && _status.done[subKey]) successCount++;
     }
 
- //  qDebug() << _status.done.keys()  << "   " << _status.expected.keys();
-    if( successCount==_status.expected.size() ) return 1;
-    if( _status.expected.size() > 0  ) return 0;
+    unsigned int expectedSuccess = 0;
+
+    // qDebug() << stepName << _status.done.keys()  << "   " << _status.expected.keys();
+    // qDebug() << stepName << _status.done.values()  << "   " << _status.expected.values();
+     foreach(QString subKey, _status.expected.keys()) {
+         if( _status.expected.contains(subKey)  && _status.expected[subKey])  expectedSuccess++;
+     }
+
+     if( successCount==expectedSuccess ) return 1;
+
+    if( this->running.contains(QString("RUNNING"))  && this->running["RUNNING"].compare(stepName)==0 && this->myProcess!=0 ) {
+        try {
+            if( this->myProcess->Running !=0 ) return 2;
+        }
+        catch(...) {
+            return -2;
+        }
+
+    }
+
+    if( successCount > 0 &&  _status.expected.size() > 0  ) return 0;
+
+    if( successCount ==0 &&  _status.expected.size() > 0  ) return -1;
+
     return -1;
 }
 
+/**
+ * @brief ProgressDialog::isProcessRunning, is the process running
+ * @return
+ */
+bool ProgressDialog::isProcessRunning() {
+    if( this->myProcess!=0 ) {
+        try {
+            if( this->myProcess->Running !=0 ) return true;
+        }
+        catch(...) {
+            return false;
+        }
+    }
+    return false;
+}
 
-/*
- * Crayons, ma. Update the table with the appropriate widget depending on the status for that step.
+
+/**
+ * @brief ProgressDialog::isRunningAStep, is any step running
+ * @return
+ */
+bool ProgressDialog::isRunningAStep() {
+    if( this->isProcessRunning() ) {
+        if(this->running.contains("RUNNING")) return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief ProgressDialog::shadeActiveSteps, shade the active steps of the
+ * pipeline
+ */
+
+void ProgressDialog::shadeActiveSteps() {
+
+    QHash<QString,STATUS> ::iterator it;
+    _stepsCompleted = 0;
+   // this->summaryTable->clearContents();
+    QTableWidgetItem *item;
+
+
+    QHash<QString, bool> activeSteps;
+
+    foreach(QString stepName, this->getActiveSteps()) {
+        activeSteps[stepName] =true;
+    }
+
+    for(unsigned int i =0; i < this->summaryTable->rowCount(); i++){
+     //   qDebug() << this->summaryTable->item(0,0)->text();
+        item= this->summaryTable->item(i,0);
+
+        if( activeSteps.contains( this->TABLE_MAPPING[i]) && this->isProcessRunning() )
+            item->setBackgroundColor(Qt::lightGray);
+        else
+            item->setBackgroundColor(Qt::white);
+    }
+}
+
+/**
+ * @brief ProgressDialog::isStepActive, is step active
+ * @param stepName
+ * @return true/false
+ */
+bool ProgressDialog::isStepActive(QString stepName) {
+
+    QHash<QString, bool> activeSteps;
+    foreach(QString stepName, this->getActiveSteps()) {
+        activeSteps[stepName] =true;
+    }
+
+    if( activeSteps.contains(stepName) ) return true;
+    return false;
+}
+
+
+/**
+ * @brief ProgressDialog::colorRunConfig,
+ * Update the table with the appropriate widget depending on the status for that step
  */
 void ProgressDialog::colorRunConfig(){
 
@@ -433,35 +557,37 @@ void ProgressDialog::colorRunConfig(){
     progressdisplaydata->destroyWidgets();
     progressdisplaydata->createWidgets(this->expectedSteps.keys());
 
-    foreach(QString stepName, this->expectedSteps.keys()){
+    bool isAStepRunning = this->isRunningAStep();
+    unsigned int runningStepNo = TABLE_MAPPING.key(this->running["RUNNING"]);
 
-       // if( !progressdisplaydata->isValidKey(stepName)) continue;
-
+    foreach(QString stepName, this->expectedSteps.keys()){      
         int _row = TABLE_MAPPING.key(stepName);
-
         this->summaryTable->setItem(_row, 0, NULL);
 
-     //   qDebug() << stepName << " " << _row << "  " << this->getState(stepName);
-
-        if ( this->getState(stepName) == -1 ){
-            item = progressdisplaydata->getTableWidgetItem(stepName, REDCROSS);
-            _stepsCompleted++;
-
-        }else if (this->getState(stepName) == 0){
-            item = progressdisplaydata->getTableWidgetItem(stepName, PARTIAL);
-        }
-        else if (this->getState(stepName) == 1)  {
-            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-            item = progressdisplaydata->getTableWidgetItem(stepName, GREENCHECK);
-            _stepsCompleted++;
-        }
-        else if (this->getState(stepName) == 2)  {
-            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-            item = progressdisplaydata->getTableWidgetItem(stepName, LOADING );
-        }
-        else if (this->getState(stepName) == -2)  {
-        //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+        if(isAStepRunning && runningStepNo < _row && this->isStepActive(stepName) ) {
             item = progressdisplaydata->getTableWidgetItem(stepName, UNSURE);
+        }
+        else {
+            if ( this->getState(stepName) == -1 ){
+                item = progressdisplaydata->getTableWidgetItem(stepName, REDCROSS);
+                _stepsCompleted++;
+
+            }else if (this->getState(stepName) == 0){
+                item = progressdisplaydata->getTableWidgetItem(stepName, PARTIAL);
+            }
+            else if (this->getState(stepName) == 1)  {
+                //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+                item = progressdisplaydata->getTableWidgetItem(stepName, GREENCHECK);
+                _stepsCompleted++;
+            }
+            else if (this->getState(stepName) == 2)  {
+                //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+                item = progressdisplaydata->getTableWidgetItem(stepName, LOADING );
+            }
+            else if (this->getState(stepName) == -2)  {
+            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+                item = progressdisplaydata->getTableWidgetItem(stepName, UNSURE);
+            }
         }
 
 
@@ -470,8 +596,9 @@ void ProgressDialog::colorRunConfig(){
 
 }
 
-/*
- * When the user presses the run button, this function is called.
+
+/**
+ * @brief ProgressDialog::startRun, When the user presses the run button, this function is called
  */
 void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
@@ -500,7 +627,11 @@ void ProgressDialog::startRun(){
 
 }
 
-
+/**
+ * @brief ProgressDialog::resetRunTab, resets the run tab by enabling
+ * the cancel button, diabling the run button and clearing the output of the
+ * log and steps and then setting the progress bar to 0
+ */
 void ProgressDialog::resetRunTab() {
     cancelButton->setEnabled(true);
     runButton->setEnabled(false);
@@ -512,13 +643,13 @@ void ProgressDialog::resetRunTab() {
 
     _stepsCompleted = 0;
     _totalSteps = TABLE_MAPPING.size(); // used for progress bar
-
-
-
 }
 
-/*
- * A bunch of hard core setup leading up to the firing off of the python process.
+
+
+/**
+ * @brief ProgressDialog::initProcess
+ * A bunch of hard core setup leading up to the firing off of the python process
  */
 void ProgressDialog::initProcess(){
 
@@ -595,6 +726,9 @@ void ProgressDialog::selectedFileChanged(QString file){
 
 }
 
+/**
+ * @brief ProgressDialog::checkFiles, checks for new input files and reloads them
+ */
 void ProgressDialog::checkFiles(){
     QDir currentDir(this->rundata->getParams()["fileInput"]);
     QString fileType = this->rundata->getParams()["INPUT:format"];
@@ -715,6 +849,10 @@ bool ProgressDialog::shouldOverwrite() {
     return this->overwrite->isChecked();
 }
 
+/**
+ * @brief ProgressDialog::~ProgressDialog, destructor for the ProgressDialog
+ * at the end
+ */
 ProgressDialog::~ProgressDialog()
 {
     myProcess->kill();
