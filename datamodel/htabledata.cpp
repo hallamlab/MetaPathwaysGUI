@@ -3,7 +3,7 @@
 #include <QTableWidget>
 
 
-HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bool _hideZeroRows, bool _showRPKM) :
+HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bool _hideZeroRows, VALUETYPE _valueType) :
     QDialog(parent),
     ui(new Ui::HTableData)
 {
@@ -19,7 +19,9 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     subCategoryName = this->findChild<QLabel *>("subCategoryName");
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
-    showRPKM = this->findChild<QCheckBox *>("showRPKM");
+   // showRPKM = this->findChild<QCheckBox *>("showRPKM");
+    valueType = this->findChild<QComboBox *>("valueType");
+    alpha  = this->findChild<QSpinBox *>("alphaValue");
 
 
 #ifdef SECTION
@@ -57,7 +59,9 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
 
     this->hideZeroRows->setChecked(_hideZeroRows);
-    this->showRPKM->setChecked(_showRPKM);
+    this->valueType->setCurrentIndex(_valueType);
+    this->matchAlphaVisible();
+
     this->showHierarchy->setChecked(_showHierachy);
 
     this->showDepth->setValue(spinBoxValue);
@@ -70,7 +74,7 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
     connect(this->showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
     connect(this->hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-    connect(this->showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
+   // connect(this->showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
 
 
     connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
@@ -92,7 +96,9 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
-
+    connect(valueType, SIGNAL(currentIndexChanged(int)), this, SLOT( toggleAlpha(int) )   );
+    connect(valueType, SIGNAL(currentIndexChanged(int) ), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
+    connect(alpha, SIGNAL(valueChanged(int)), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
 
 
 }
@@ -102,6 +108,33 @@ HTableData::~HTableData()
     delete ui;
 }
 
+
+/**
+ * @brief HTableData::disableAlpha, hides the alpha value
+ */
+void HTableData::toggleAlpha(int vType) {
+    if( vType==LCASTAR) { this->alpha->setEnabled(true); this->alpha->show(); }
+    else { this->alpha->setEnabled(false); this->alpha->hide(); }
+    return;
+}
+
+
+/**
+ * @brief HTableData::matchAlphaVisible, this function shows or hides the alpha value spinbox
+ * depending on the current choice of valueType
+ */
+void HTableData::matchAlphaVisible() {
+    VALUETYPE vType = this->getValueType();
+
+    if( vType==LCASTAR) { this->alpha->setEnabled(true); this->alpha->show(); }
+    else { this->alpha->setEnabled(false); this->alpha->hide(); }
+    return;
+}
+
+/**
+ * @brief HTableData::setMaxSpinBoxDepth
+ * @param maxDepth
+ */
 void HTableData::setMaxSpinBoxDepth(unsigned int maxDepth) {
     this->maxSpinBoxDepth  = maxDepth;
     showDepth->setMaximum(maxDepth);
@@ -113,7 +146,10 @@ void HTableData::setShowHierarchy(bool flag) {
     this->showHierarchy->setChecked(flag);
 }
 
-
+/**
+ * @brief HTableData::searchButtonPressed, shows the search button widget to be
+ * able to search on the table
+ */
 void HTableData::searchButtonPressed(){
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->show();
@@ -139,16 +175,29 @@ bool HTableData::isMultiSampleMode() {
     return this->multiSampleMode;
 }
 
-
+/**
+ * @brief HTableData::getSampleNames
+ * @return list of samples in the htable
+ */
 QStringList HTableData::getSampleNames() {
     return this->sampleNames;
 }
 
+/**
+ * @brief HTableData::setSampleNames, set the list of samples in the htable
+ * @param sampleNames
+ */
 void HTableData::setSampleNames(QStringList sampleNames) {
     this->sampleNames = sampleNames;
 }
 
 
+/**
+ * @brief HTableData::getSampleNumber, computes the number of the samples that
+ * are represented by the HTableData
+ * @param sampleName, the name of the sample
+ * @return  the index of the sample
+ */
 unsigned int HTableData::getSampleNumber(QString sampleName) {
     unsigned int i =0;
     QHash<QString, unsigned int> sampleNumbers;
@@ -161,7 +210,11 @@ unsigned int HTableData::getSampleNumber(QString sampleName) {
     return 0;
 }
 
-
+/**
+ * @brief HTableData::getSampleName, gets the name of the ith sample
+ * @param i, sample index
+ * @return QString representing the samplename
+ */
 QString HTableData::getSampleName(unsigned int i) {
    if( this->sampleNames.size() > i )  {
        return this->sampleNames[i];
@@ -234,10 +287,6 @@ void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
 }
 
 void HTableData::spinBoxChanged(int depth) {
-    if(this->subWindow)
-       // this->showSelectedTableData(this->category);
-    this->showTableData();
-    else
         this->showTableData();
 }
 
@@ -249,7 +298,7 @@ void HTableData::showTableData() {
 
 void HTableData::showHierarchyOrZeroRowToggleChanged() {
     if(this->subWindow) {
-        this->showSelectedTableData(this->category);
+        this->showSelectedTableData();
     }
     else {
         this->showTableData();
@@ -259,7 +308,7 @@ void HTableData::showHierarchyOrZeroRowToggleChanged() {
 
 void HTableData::showHierarchyChanged(int state) {
     if(this->subWindow) {
-        this->showSelectedTableData(this->category);
+        this->showSelectedTableData();
 //    this->showTableData();
        // qDebug() << "Show seleced Table Data";
     }
@@ -296,7 +345,10 @@ void HTableData::hideZeroRowsChanged(int state) {
 void HTableData::fillData() {
      QList<ROWDATA *> data;
 
-     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->checkState() ) ;
+     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType()) ;
+
+
+
      QList<ROWDATA *> newdata;
 
 
@@ -306,18 +358,49 @@ void HTableData::fillData() {
          _headers = this->multiSampleHeaders();
      }
 
-     if(hideZeroRows->isChecked()) {
-        foreach(ROWDATA *r, data) {
-            if( isNonZero(r)) newdata.append(r);
-        }
-        this->populateTable(newdata, _headers);
+     if( this->getValueType()==LCASTAR ) {
+         this->populateTable(data, _headers);
      }
      else {
-         this->populateTable(data, _headers);
+         if(hideZeroRows->isChecked()) {
+            foreach(ROWDATA *r, data) {
+                if( isNonZero(r)) newdata.append(r);
+            }
+            this->populateTable(newdata, _headers);
+         }
+         else {
+             this->populateTable(data, _headers);
 
+         }
      }
 }
 
+/**
+ * @brief HTableData::getValueType, gets the value type of the Htable, it is
+ * read from the valueType combobox
+ * @return VALUETYPE of the htable
+ */
+VALUETYPE HTableData::getValueType() {
+    VALUETYPE _valueType;
+
+
+    switch( this->valueType->currentIndex()) {
+         case 0:
+               _valueType = ORFCOUNT;
+               break;
+         case 1:
+               _valueType = LCASTAR;
+               break;
+         case 2:
+               _valueType = RPKMCOUNT;
+               break;
+         default:
+               _valueType = ORFCOUNT;
+               break;
+    }
+
+    return _valueType;
+}
 
 
 /** this function shows data for a functional category
@@ -325,13 +408,12 @@ void HTableData::fillData() {
  *\param maxDepth, the maximum depth of the corresponding functional category
  *\param showHierarchy, a boolean to hide/show the hiearchy
  *\param hideZeroRows, a bool to hide/show the rows with zero values
- *
  *\return the size of the data selected
  **/
 
-unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int maxDepth) {
+unsigned int HTableData::fillSelectedData() {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(),  this->showRPKM->isChecked() ) ;
+     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType() ) ;
 
      QStringList _headers = this->tableParams.headers[this->id.attrType];
 
@@ -340,16 +422,23 @@ unsigned int HTableData::fillSelectedData(QString categoryName, unsigned int max
      }
 
      QList<ROWDATA *> newdata;
-     if(hideZeroRows->isChecked()) {
-        foreach(ROWDATA *r, data) {
-            if( isNonZero(r)) newdata.append(r);
-        }
-        this->populateTable(newdata, _headers );
-        return newdata.size();
+
+
+     if( this->getValueType()==LCASTAR ) {
+         this->populateTable(data, _headers);
      }
      else {
-        this->populateTable(data, _headers);
-        return data.size();
+         if(hideZeroRows->isChecked()) {
+            foreach(ROWDATA *r, data) {
+                if( isNonZero(r)) newdata.append(r);
+            }
+            this->populateTable(newdata, _headers );
+            return newdata.size();
+         }
+         else {
+            this->populateTable(data, _headers);
+            return data.size();
+         }
      }
 }
 
@@ -368,10 +457,8 @@ QStringList HTableData::multiSampleHeaders() {
      return headers;
 }
 
-unsigned int HTableData::showSelectedTableData(QString categoryName) {
-
-    // return this->fillSelectedData(this->showDepth->value()-1, (this->showHierarchy->checkState()==Qt::Checked), hideZeroRows );
-     return this->fillSelectedData(categoryName, this->showDepth->value()-1);
+unsigned int HTableData::showSelectedTableData() {
+     return this->fillSelectedData();
 }
 
 bool HTableData::isNonZero(ROWDATA *r) {
@@ -397,8 +484,6 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     tableWidget->setColumnCount(types.size());
     tableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-
-
     if( this->showHierarchy->isChecked() )
        tableWidget->setSortingEnabled(false);
     else
@@ -408,26 +493,96 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     QTableWidgetItem *item;
     int k = 0;
 
+    if(this->getValueType()==LCASTAR) {
+        computeLCAStar(data);
+    }
+    QList<FREQUENCEY> freq;
+
+    VALUETYPE _valueType = this->getValueType();
     foreach( ROWDATA * datum,  data) {
         if(this->showHierarchy->isChecked())
             item = new QTableWidgetItem(this->indents[datum->depth] + QString(datum->name));
         else
             item = new QTableWidgetItem( QString(datum->name));
 
+
+        QString tooltip ;
+
+
         item->setForeground(this->colors[datum->depth]);
         tableWidget->setItem(k,0,item);
 
         tableWidget->setItem(k,1,new QTableWidgetItem(QString(datum->alias)));
-        for(unsigned int j=0; j <  datum->counts.size(); j++) {
-            tableWidget->setItem(k,2 +j, new QTableWidgetItem(QString::number(datum->counts[j])));
+
+        if(_valueType==LCASTAR) {
+            for(unsigned int j=0; j <  datum->taxons.size(); j++) {
+               freq.clear();
+               item =  new QTableWidgetItem(datum->taxons[j]);
+               unsigned int maxCount = this->getTaxDistribution(datum->name, j, freq);
+
+               if( maxCount > 0) {
+                  tooltip = this->getTaxonsDistribtionTooltipTxt(freq, maxCount);
+                  item->setToolTip(tooltip);
+               }
+
+               tableWidget->setItem(k,2 +j, item);
+            }
+        }
+        else {
+            item->setToolTip("");
+            for(unsigned int j=0; j <  datum->counts.size(); j++) {
+                item = new QTableWidgetItem(QString::number(datum->counts[j]));
+                item->setToolTip("");
+                tableWidget->setItem(k,2 +j, item);
+            }
+
         }
       k++;
     }
     tableWidget->resizeColumnsToContents();
-    //table.resizeRowsToContents();
-  //  tableWidget->horizontalHeader()->setStretchLastSection(true);
-//    tableWidget->resize(tableWidget->sizeHint());
 
+
+}
+
+QString HTableData::getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount ) {
+    QString header = QString(" <table style  width='100%' height='100%'> <caption align='center'> <h3> Taxonomic Distribution </h3> <br></caption>");
+    QString tail =    QString("</table> <br> </div>");
+
+    QString string = header;
+    unsigned int i =0;
+    foreach( FREQUENCEY item, freq) {
+       if( i > 5) break; i++;
+       string += this->getTaxonDistributionToolTipTxt(item.name, item.count, item.percent, maxCount);
+    }
+    string += tail;
+    return string;
+
+}
+
+QString HTableData::getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount) {
+    unsigned int width = static_cast<unsigned int>(static_cast<double>(count)*200/static_cast<double>(maxCount));
+    QString row = QString("<tr> <td style= 'white-space:nowrap;' > ") + name +
+                  QString(" </td>  <td> <img src=':/images/blue.png' height='12' width='") +
+                  QString::number(width) +
+                  QString("' align='left' />  </td> <td style= 'white-space:nowrap;'>") +
+                  QString::number(count) + QString(" (") + QString::number(percent, 'f', 2)  + QString("%) </td> </tr>");
+
+    return row;
+}
+
+
+/**
+ * @brief HTableData::computeLCAStar, computes the LCAStar values for the each of the rows
+ * @param data, where the rows for the table are stored
+ */
+void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
+    LCAStar *lcastar = LCAStar::getLCAStar();
+    lcastar->setParameters(1, 2, static_cast<double>(alpha->value())/100.0);
+
+    foreach(ROWDATA *datum, data) {
+        for(unsigned int i =0; i < datum->taxons.size(); i++ )
+           datum->taxons[i] = this->LCAStarValue(datum->name, i);
+    }
 }
 
 /**
@@ -439,7 +594,7 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
 
     DataManager *datamanager = DataManager::getDataManager();
     // this showdepth value is passed now before a valueChanged signal is connected to the spinbox slot
-    HTableData *htable = new HTableData(0, this->showDepth->value()+ 1 , this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->showRPKM->isChecked());
+    HTableData *htable = new HTableData(0, this->showDepth->value()+ 1 , this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->getValueType());
     htable->setAttribute(Qt::WA_DeleteOnClose); // frees up memory once it's closed
     htable->setMultiSampleMode(this->isMultiSampleMode());
     htable->setSampleNames(this->sampleNames);
@@ -558,7 +713,7 @@ void HTableData::switchCategory(int index) {
 
 
     if(this->id.attrType==this->htableIdentities[index].attrType) {
-        if( this->showSelectedTableData(this->category) !=0 ) {
+        if( this->showSelectedTableData() ) {
             this->show();
         }
         else {
@@ -758,7 +913,6 @@ void HTableData::searchQuery(QString query1, int column1, QString query2, int co
 void HTableData::makeSearch(OPTYPE optype,  bool caseSensitive) {
 
     enum DECISION hit;
-    unsigned int k=0;
 
     Qt::CaseSensitivity _caseSensitive =  caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
@@ -804,8 +958,6 @@ void HTableData::makeSearch(OPTYPE optype,  bool caseSensitive) {
 
 void HTableData::ProvideContexMenu(QPoint pos)
 {
-
-
         unsigned int col = this->tableWidget->itemAt(pos)->column();
         unsigned int row = this->tableWidget->itemAt(pos)->row();
 
@@ -828,3 +980,89 @@ void HTableData::ProvideContexMenu(QPoint pos)
 
     //context->exec(*position);
 }
+
+/**
+ * @brief HTableData::LCAStarValue, computes the LCA star value for the given category for
+ * a sample
+ * @param category, the functional category
+ * @param sampleNum, index of the sample
+ * @return the LCAStar taxonomy
+ */
+QString HTableData::LCAStarValue(const QString &category, unsigned int sampleNum)
+{
+        DataManager *datamanager = DataManager::getDataManager();
+        HTree *htree = datamanager->getHTree(this->id.attrType);
+        HNODE *hnode = htree->getHNODE(category);
+        if( htree==0 || hnode ==0 ) return  QString("root");
+
+        Connector *connector =   this->connectors[sampleNum];
+
+        QList<ORF *> orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+
+        LCAStar *lcastr = LCAStar::getLCAStar();
+
+        QString lcavalue = QString("-");
+        QStringList taxonList;
+
+        if( orfList.size() > 0 ) {
+            foreach(ORF *orf, orfList) {
+               if( orf->attributes.contains(TAXON)  ) taxonList.append( orf->attributes[TAXON]->name);
+            }
+            lcavalue  = lcastr->lca_star(taxonList);
+        }
+        return lcavalue;
+
+    //context->exec(*position);
+}
+
+/**
+ * @brief HTableData::getTaxDistribution, computes the distribution of each taxa
+ * @param category
+ * @param sampleNum
+ * @param freq
+ * @return
+ */
+unsigned int HTableData::getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCEY> &freq) {
+
+    DataManager *datamanager = DataManager::getDataManager();
+    HTree *htree = datamanager->getHTree(this->id.attrType);
+    HNODE *hnode = htree->getHNODE(category);
+    if( htree==0 || hnode ==0 ) return 0;
+
+    Connector *connector =   this->connectors[sampleNum];
+
+    QList<ORF *> orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+
+    QHash<QString, unsigned int>  hashCount;
+    foreach(ORF *orf, orfList) {
+       if( orf->attributes.contains(TAXON)  ) {
+           if( !hashCount.contains( orf->attributes[TAXON]->name ) ) hashCount[orf->attributes[TAXON]->name] =0;
+           hashCount[orf->attributes[TAXON]->name]++;
+       }
+    }
+
+    QList<TaxonFreqQPair > taxonFreqList;
+    double totalCount =0;
+    foreach(QString key, hashCount.keys()) {
+        taxonFreqList.append(TaxonFreqQPair(key, hashCount[key]) );
+        totalCount += static_cast<double>(hashCount[key]);
+    }
+    if( totalCount ==0) totalCount = 1;
+
+    qSort(taxonFreqList.begin(), taxonFreqList.end(), Utilities::compareFreq);
+
+    unsigned int maxCount =0;
+    for(QList<TaxonFreqQPair>::iterator it = taxonFreqList.begin(); it!= taxonFreqList.end(); ++it) {
+        FREQUENCEY item;
+        item.name = it->first;
+        item.count = it->second;
+        item.percent = (it->second/totalCount)*100;
+        freq.append(item);
+        if( item.count > maxCount) maxCount = item.count;
+    }
+
+    return maxCount;
+
+}
+
+

@@ -113,7 +113,11 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
 
 }
 
-
+/**
+ * @brief TableData::createGeneViewData, prepare the data to be displayed by the
+ * geneviewer
+ * @param item
+ */
 void TableData::createGeneViewData(QTableWidgetItem *item) {
 
     unsigned int col = item->column();
@@ -192,6 +196,10 @@ void TableData::setMultiSampleMode(bool multisample) {
     this->multiSampleMode = multisample;
 }
 
+/**
+ * @brief TableData::isMultiSampleMode checks if the table is from the multisample mode
+ * @return  boolean
+ */
 bool TableData::isMultiSampleMode() {
     return this->multiSampleMode;
 }
@@ -300,11 +308,20 @@ void TableData::addSearchFilter(QString query, int column) {
     this->searchFilters.append(searchFilter);
 }
 
+/**
+ * @brief TableData::searchButtonPressed, clicked on the search button to enable the user
+ * to be able to search on the tables
+ */
 void TableData::searchButtonPressed(){
     this->searchWidget = new SearchWidget(this);
     this->searchWidget->show();
 }
 
+
+/**
+ * @brief TableData::exportButtonPressed, the export weidget is shows to enable
+ * the user to export data
+ */
 void TableData::exportButtonPressed(){
     this->exportBox = new ExportBox(this, 0 , this->exportType);
     this->exportBox->setAuxName(this->auxName);
@@ -315,6 +332,10 @@ void TableData::setNumCols(unsigned int numCols) {
     this->numCols = numCols;
 }
 
+/**
+ * @brief TableData::headerClicked, clicked the header
+ * @param index, the column that was clicked
+ */
 void TableData::headerClicked(int index){
     this->largeTable->sortByField(index);
     tableWidget->clearContents();
@@ -328,6 +349,12 @@ void TableData::outputRows(int top){
     this->updateData(top);
 }
 
+/**
+ * @brief TableData::updateData, used for loading partial rows of the table to give the illusion to the
+ * user of having the entire table loaded at once
+ * @param top
+ * @param reload
+ */
 void TableData::updateData(double top, bool reload){
     int pivot =  top;
     if (largeTable->getPivot() -0.9*dw >=  pivot || pivot >= largeTable->getPivot()  + 0.9 *dw || reload){
@@ -338,7 +365,11 @@ void TableData::updateData(double top, bool reload){
     }
 }
 
-
+/**
+ * @brief TableData::setupFromFile, loads the dat from the tab delimited file and populates
+ * the tab widget for the largetable
+ * @param file
+ */
 void TableData::setupFromFile(const QString &file){
 
         TableManager *tableManager = TableManager::getTableManager();
@@ -402,10 +433,7 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
       //  this->exportBox = new ExportBox(this);
 }
 
-/*
- * Creates the actual table widget the data given to it, and populates the table with data and headers given with
- * the pointer to the table given.
- */
+
 
 /**
  * @brief TableData::populateTable Creates the actual table widget the data given to it, and populates
@@ -458,6 +486,16 @@ void TableData::populateTable(int top){
  * Parses a result file. If HAS_COMMENT is true, then it expects that there are lines with DELIM in certain lines
  * of the text file.
  */
+/**
+ * @brief TableData::parseFile, Parses a result file. If HAS_COMMENT is true,
+ * then it expects that there are lines with DELIM in certain lines
+ * of the text file
+ * @param file
+ * @param data
+ * @param DELIM
+ * @param HAS_COMMENT
+ */
+
 void  TableData::parseFile(const QString &file, QList<QStringList> &data, const QChar &DELIM, bool HAS_COMMENT){
     QFile inputFile(file);
     bool firstLine = true;
@@ -569,6 +607,13 @@ bool TableData::saveTableToFile(QString fileName, QChar delim, const QStringList
 
 
 
+/**
+ * @brief TableData::saveSequencesToFile, saves the sequences for the current sample samplename in to
+ * the file fileName
+ * @param fileName, the file where the sequences are save
+ * @param type, the type of table the sequences are related to
+ * @return
+ */
 bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
 
@@ -683,10 +728,19 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     return true;
 }
 
+/**
+ * @brief TableData::setSampleName, sets the current sample name
+ * @param sampleName
+ */
 void TableData::setSampleName(QString sampleName){
     this->sampleName = sampleName;
 }
 
+
+/**
+ * @brief TableData::getSampleName, gets the current sample name
+ * @return
+ */
 QString TableData::getSampleName() {
     return this->sampleName;
 }

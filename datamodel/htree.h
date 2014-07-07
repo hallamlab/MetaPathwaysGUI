@@ -1,17 +1,22 @@
 #ifndef HTREE_H
 #define HTREE_H
 
-#include "datamodel/datamodeltypes.h"
+
 #include <QHash>
 #include <QDebug>
 #include <QList>
 #include <QString>
+
 #include "datamodel/connector.h"
+#include "helper/types.h"
+#include "datamodel/datamodeltypes.h"
 
 typedef struct _ROWDATA {
     QString name;
     QString alias;
+    QString lcaStar;
     QVector<unsigned int> counts;
+    QVector<QString> taxons;
     unsigned int depth;
 } ROWDATA;
 
@@ -29,8 +34,10 @@ public:
     void printTree(HNODE *hnode, unsigned int d =0);
     QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, bool showRPKM = false);
 
-    QList<ROWDATA *> getRows(unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, bool hideZeroRows, bool showRPKM);
-    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, bool hideZeroRows, bool showRPKM);
+    void enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data);
+
+    QList<ROWDATA *> getRows(unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, VALUETYPE valueType);
+    QList<ROWDATA *> getRows(QString category, unsigned int maxDepth, QList< Connector *> &connectors, bool showHierarchy, VALUETYPE valueType);
     HNODE *getHNODE(QString name);
     void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
     void copyDataToSubConnector(HNODE *hnode, Connector *targetConnector, HTree* targetTree, QHash<ORF *, bool> & orfHash);

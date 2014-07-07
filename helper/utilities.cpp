@@ -64,6 +64,7 @@ QHash<QString,QString> Utilities::createMapping(){
     CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_CALCULATION"] = "metapaths_stepsMLTREEMAP_CALCULATION";
     CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_IMAGEMAKER"] = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
     CONFIG_NAME_MAP["metapaths_steps:BUILD_PGDB"] = "metapaths_stepsBUILD_PGDB";
+    CONFIG_NAME_MAP["metapaths_steps:COMPUTE_RPKM"] = "metapaths_stepsCOMPUTE_RPKM";
 
     CONFIG_NAME_MAP["ptools_settings:taxonomic_pruning"] = "ptools_settingsTAXONOMIC_PRUNING";
 
@@ -597,6 +598,16 @@ QString Utilities::getSubSequence(QString str,QString name, unsigned int start, 
 
 
 
+/**
+ * @brief compareFreq compares to taxon based on the taxon frequency
+ * @param a, first taxon
+ * @param b, second taxon
+ * @return
+ */
+bool Utilities::compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b) {
+    //qDebug() << a->strTemp << "  " << b->strTemp << "  " << QString::compare(a->strTemp,   b->strTemp);
+    return a.second  > b.second;
+}
 
 
 

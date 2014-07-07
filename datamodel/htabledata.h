@@ -15,6 +15,7 @@
 #include "datamodel/connector.h"
 #include "datamodel/htree.h"
 #include "datamodel/datamanager.h"
+#include "datamodel/lcastar.h"
 #include "displaywidgets/toolbarmanager.h"
 #include "displaywidgets/toolbarwidgets.h"
 #include "displaywidgets/mdiareawidget.h"
@@ -26,11 +27,20 @@
 #include "helper/globaldatatransit.h"
 
 
+
 typedef struct _HTABLE_IDENTITY {
     QString sampleName;
     ATTRTYPE attrType;
   //  _HTABLE_IDENTITY(ATTRTYPE type, QString name): attrType(type), sampleName(name) {}
 }  HTABLEIDENTITY;
+
+
+typedef struct _FREQUENCE {
+    unsigned int count;
+    double percent;
+    QString name;
+
+} FREQUENCEY;
 
 namespace Ui {
 class HTableData;
@@ -45,7 +55,7 @@ class HTableData : public QDialog
     Q_OBJECT
     
 public:
-    explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = false, bool _hideZeroRows = false, bool _showRPKM =false);
+    explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = false, bool _hideZeroRows = false, VALUETYPE _valueType = ORFCOUNT);
     ~HTableData();
     bool setParameters(HTree *htree, QList<enum TYPE> _types);
     void addConnector(Connector *connector, ATTRTYPE attr);
@@ -54,6 +64,9 @@ public:
     void fillData();
 
     void populateTable(QList<ROWDATA *> &data, const QStringList &headers);
+    void computeLCAStar(QList<ROWDATA *> &data);
+    QString LCAStarValue(const QString &category, unsigned int sampleNum);
+    unsigned int getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCEY> &freq);
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
@@ -63,9 +76,9 @@ public:
     enum TYPE getFieldType(unsigned int i);
 
     void showTableData();
-    unsigned int  showSelectedTableData(QString categoryName);
+    unsigned int  showSelectedTableData();
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
-    unsigned int fillSelectedData(QString category, unsigned int maxDepth);
+    unsigned int fillSelectedData();
     QStringList multiSampleHeaders() ;
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
@@ -80,6 +93,9 @@ public:
     QString getSampleName(unsigned int i);
 
     void initializeSearchFilter(QString query, int column);
+
+    QString getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount);
+    QString getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount);
 
 
 
@@ -119,6 +135,8 @@ private slots:
     void searchButtonPressed();
     void exportButtonPressed();
     void ProvideContexMenu(QPoint pos);
+    void toggleAlpha(int vType);
+    void matchAlphaVisible();
 
 
 signals:
@@ -132,6 +150,8 @@ private:
     void addSearchFilter(QString query, int column);
     void clearSearchFilters();
     void makeSearch(OPTYPE optype,  bool caseSensitive);
+
+    VALUETYPE getValueType();
 
 private:
 
@@ -148,8 +168,13 @@ private:
     QSpinBox *showDepth;
     QLabel *numOrfsLabel;
     QComboBox *categorySelector;
+
     QCheckBox *hideZeroRows;
     QCheckBox *showRPKM;
+
+    QComboBox *valueType;
+    QSpinBox *alpha;
+
 
     bool multiSampleMode;
  //   QStringList headers;

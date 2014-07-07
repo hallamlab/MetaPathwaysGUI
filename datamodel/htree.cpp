@@ -160,21 +160,68 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
 }
 
 
-QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, QList<Connector *> &connectors, bool showHierarchy, bool hideZeroRows,  bool showRPKM) {
+/** This function travels through the functional  hierarchies of several
+ * samples simultaneously
+ \param hnode this is the root node of the HTree
+ \param maxDepth maximum depth of the the current HTree
+ \param showHierarchy sets to show hierarcy or not
+ \param currDepth a variable to keep track of the recursive depth
+ \param data the ROWDATA list to show on the table
+
+*/
+void HTree::enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
+    QVector<QString> vtaxons;
+
+    currDepth++;
+
+    ROWDATA *r = new ROWDATA;
+    r->name = hnode->attribute->name;
+    r->alias = hnode->attribute->alias;
+    r->depth = currDepth;
+
+    // initialize the counts
+    for(unsigned int j=0; j < this->connectors.size(); j++) {
+        vtaxons.push_back(QString("root"));
+    }
+
+
+    if( currDepth != 0 &&( (!showHierarchy && currDepth == maxDepth)  || (showHierarchy && currDepth <= maxDepth)) ) {
+       data.append(r);
+    }
+
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+        this->enumerateTaxons(*it, maxDepth, showHierarchy, currDepth, data);
+    }
+
+    r->taxons = vtaxons;
+
+}
+
+
+
+
+QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, QList<Connector *> &connectors, bool showHierarchy,  VALUETYPE valueType)  {
    QList<ROWDATA *> data;
    this->connectors = connectors;
-   this->countTree(this->root, maxDepth, showHierarchy, -1, data, showRPKM);
+
+   if(valueType==RPKMCOUNT)  this->countTree(this->root, maxDepth, showHierarchy, -1, data, true);
+   if(valueType==ORFCOUNT) this->countTree(this->root, maxDepth, showHierarchy, -1, data, false);
+   if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
+
    return data;
 }
 
 
-QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth,  QList<Connector *> &connectors, bool showHierarchy,  bool hideZeroRows, bool showRPKM) {
+QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth,  QList<Connector *> &connectors, bool showHierarchy, VALUETYPE valueType) {
    QList<ROWDATA *> data;
    this->connectors = connectors;
    HNODE *node = this->getHNODE(category);
   // qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
-   if(node!=0)
-      this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, showRPKM);
+   if(node!=0) {
+      if(valueType==RPKMCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, true);
+      if(valueType==ORFCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, false);
+      if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
+   }
    return data;
 }
 

@@ -4,6 +4,8 @@
 #include <QSettings>
 #include <QDebug>
 
+#include "datamodel/lcastar.h"
+
 #undef MEGAN_VIEW
 
 int main(int argc, char *argv[])
@@ -20,7 +22,21 @@ int main(int argc, char *argv[])
         }
     }
 
-    QApplication a(argc, argv);
+
+/*
+    LCAStar *lcastr = LCAStar::getLCAStar();
+    lcastr->setParameters(1,1,0.90);
+    qDebug() << "loading ";
+    QStringList taxonlist;
+    taxonlist << QString("Deltaproteobacteria") << QString("Deltaproteobacteria") << QString("Alphaproteobacteria") <<
+                  QString("Betaproteobacteria") << QString("Betaproteobacteria") <<  QString("Chloroflexi") << QString("green plants");;
+    QString lcastartaxon = lcastr->lca_star(taxonlist);
+    qDebug() << " The result is : " << lcastartaxon;
+    qDebug() << "Loaded ";
+  */
+
+
+  QApplication a(argc, argv);
     MainFrame *w = new MainFrame();
 
     w->show();

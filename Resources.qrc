@@ -15,5 +15,6 @@
         <file>functional_categories/metacyc_hierarchy.txt</file>
         <file>images/partial.png</file>
         <file>images/unsure.png</file>
+        <file>images/blue.png</file>
     </qresource>
 </RCC>

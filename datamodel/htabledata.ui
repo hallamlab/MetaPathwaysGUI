@@ -20,14 +20,139 @@
    <string>Hierarchical Table</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="5">
+   <item row="0" column="0">
+    <widget class="QComboBox" name="categorySelector"/>
+   </item>
+   <item row="0" column="5" colspan="2">
+    <widget class="QLabel" name="subCategoryName">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QLabel" name="depthLabel">
+     <property name="text">
+      <string>Depth</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="6">
     <widget class="QSpinBox" name="showDepth">
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="8">
+   <item row="2" column="8">
+    <widget class="QPushButton" name="searchButton">
+     <property name="text">
+      <string>Search</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="7">
+    <widget class="QPushButton" name="exportButton">
+     <property name="text">
+      <string>Export</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QComboBox" name="valueType">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>ORF Count</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LCA*</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>RPKM</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="numOrfsLabel">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QSpinBox" name="alphaValue">
+     <property name="toolTip">
+      <string>This is the alpha value in %, to compute majority, for the LCA* algorithm.</string>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
+     </property>
+     <property name="minimum">
+      <number>5</number>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="singleStep">
+      <number>5</number>
+     </property>
+     <property name="value">
+      <number>50</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QLabel" name="depthLabelValue">
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="showHierarchy">
+     <property name="text">
+      <string>Show Hierarchy</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="5">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Level</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="9">
     <widget class="QTableWidget" name="tableWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -40,100 +165,12 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QComboBox" name="categorySelector"/>
-   </item>
-   <item row="2" column="7">
-    <widget class="QPushButton" name="searchButton">
-     <property name="text">
-      <string>Search</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="6">
-    <widget class="QPushButton" name="exportButton">
-     <property name="text">
-      <string>Export</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Level</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="showHierarchy">
-     <property name="text">
-      <string>Show Hierarchy</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="7">
-    <widget class="QLabel" name="depthLabelValue">
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6">
-    <widget class="QLabel" name="depthLabel">
-     <property name="text">
-      <string>Depth</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4" colspan="2">
-    <widget class="QLabel" name="subCategoryName">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="hideZeroRows">
      <property name="text">
       <string>Hide Zero Rows</string>
      </property>
     </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QCheckBox" name="showRPKM">
-     <property name="text">
-      <string>RPKM</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="numOrfsLabel">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

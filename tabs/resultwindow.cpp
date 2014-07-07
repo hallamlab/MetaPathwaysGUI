@@ -253,6 +253,11 @@ void ResultWindow::sampleChanged(QString sampleName){
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
     datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFRPKM) );
 
+    QString functionalTable = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE);
+    datamanager->addTaxons(functionalTable);
+    datamanager->addTaxonToORFs( sampleName, functionalTable);
+
+
     QStringList selectedFileNames;
     selectedFileNames.append(sampleName);
 
@@ -583,7 +588,8 @@ void ResultWindow::ProvideContexMenu(QPoint position)
 
 
 /**
- * @brief ResultWindow::showTable, shows the table
+ * @brief ResultWindow::showTable, shows the table for the functions and the taxa for the selected
+ * set of orfs
  * @param sampleName
  * @param attrType
  */
@@ -610,7 +616,13 @@ void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
 
 }
 
-
+/**
+ * @brief ResultWindow::copyROWData, copies the rows  from src table to a target table
+ * corresponding to the selected ORFs only
+ * @param src
+ * @param tar
+ * @param selectORFs
+ */
 void ResultWindow::copyROWData( QList<ROW *> &src, QList<ROW *> &tar, QList<ORF *> &selectORFs) {
 
     QHash<QString, bool> orfNames;
@@ -670,14 +682,12 @@ void ResultWindow::switchToComparativeMode() {
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
     DataManager *datamanager = DataManager::getDataManager();
-   //// datamanager->createORFs(changed, orfTableName);
+
 
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     datamanager->createDataModel();
     samplercmgr->setOutPutPath(OUTPUTPATH);
 
-
-  //  this->indexSamples(true);
 
     //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
 
@@ -711,6 +721,47 @@ void ResultWindow::switchToComparativeMode() {
     }
     progressbar->hide();
     delete progressbar;
+
+
+    progressbar = new ProgressView("creating Taxons for samples ", 0, numSamplesToLoad, this);
+   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
+    progressbar->show();
+
+    for(int i=0; i < selectedSamples.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+
+        QString functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLE   );
+        datamanager->addTaxons(functionalTable);
+        progressbar->updateprogress(i+1);
+        qApp->processEvents();
+        progressbar->update();
+
+    }
+    progressbar->hide();
+    delete progressbar;
+
+
+    progressbar = new ProgressView("Link  Taxons to ORFs for samples ", 0, numSamplesToLoad, this);
+   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
+    progressbar->show();
+
+    for(int i=0; i < selectedSamples.size(); i++) {
+       if( !this->selectedSamples[i])  continue;
+
+        QString functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLE);
+        datamanager->addTaxonToORFs( files[i], functionalTable);
+        progressbar->updateprogress(i+1);
+        qApp->processEvents();
+        progressbar->update();
+
+    }
+    progressbar->hide();
+    delete progressbar;
+
+
+
+
+
 
 
    QStringList selectedFileNames;

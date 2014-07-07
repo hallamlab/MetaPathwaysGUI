@@ -62,6 +62,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleListToRun()));
     connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
+    connect(runButton,SIGNAL(clicked()), this, SLOT(readStepsLog()) );
 }
 
 
@@ -346,7 +347,7 @@ void ProgressDialog::updateProgressBar(){
 QStringList ProgressDialog::getActiveSteps() {
 
     QStringList activeSteps;
-    foreach(QString stepName, this->status.keys()) {
+    foreach(QString stepName, this->TABLE_MAPPING.values() ) {
         if(QString("redo").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ||\
            QString("yes").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ) {
                activeSteps.append(stepName);
@@ -514,12 +515,14 @@ void ProgressDialog::shadeActiveSteps() {
         activeSteps[stepName] =true;
     }
 
+
     for(unsigned int i =0; i < this->summaryTable->rowCount(); i++){
      //   qDebug() << this->summaryTable->item(0,0)->text();
         item= this->summaryTable->item(i,0);
 
-        if( activeSteps.contains( this->TABLE_MAPPING[i]) && this->isProcessRunning() )
+        if( activeSteps.contains( this->TABLE_MAPPING[i]) && this->isProcessRunning() ) {
             item->setBackgroundColor(Qt::lightGray);
+        }
         else
             item->setBackgroundColor(Qt::white);
     }

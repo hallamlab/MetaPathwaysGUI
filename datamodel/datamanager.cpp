@@ -108,7 +108,12 @@ Connector *DataManager::getConnector( QString sampleName, ATTRTYPE type) {
 }
 
 
-
+/**
+ * @brief DataManager::createCategoryNode, creates a node for CATEGORYNODE
+ *  for the hierarchical tree for the line
+ * @param line
+ * @return
+ */
 CATEGORYNODE DataManager::createCategoryNode(QString line) {
     QRegExp d1("^[\\t]");
     QRegExp d2("^[\\t][\\t]");
@@ -182,8 +187,34 @@ CATEGORYNODE DataManager::createCategoryNode(QString line) {
 }
 
 
+/**
+ * @brief DataManager::getResourceFile, gets the type of resource file for the
+ * run
+ * @param resType
+ * @return
+ */
+QString DataManager::getResourceFile(const RESOURCETYPE &resType) {
 
+    RunData *rundata = RunData::getRunData();
 
+    QString filePath;
+    switch(resType ) {
+         case NCBITREEFILE:
+             filePath =  rundata->getValueFromHash("REFDBS", _CONFIG ) + QDir::separator() + QString("ncbi_tree") + QDir::separator()  + QString("ncbi_taxonomy_tree2.txt");
+
+             break;
+         default:
+              filePath.clear();
+              break;
+    }
+
+    return filePath;
+
+}
+
+/**
+ * @brief DataManager::createDataModel, creates the different functional trees
+ */
 void DataManager::createDataModel() {
 
     if( dataModelCreated ) return;
@@ -222,6 +253,12 @@ void DataManager::createDataModel() {
 
 }
 
+/**
+ * @brief DataManager::createHTree, creates a hierarchical functional tree from the
+ * file that is tab indented at the front to suggest relative level from the preceeding line
+ * @param refDBFileName
+ * @return
+ */
 HTree *DataManager::createHTree(QString refDBFileName) {
     HTree *htree = new HTree();
 
@@ -267,7 +304,9 @@ HTree *DataManager::createHTree(QString refDBFileName) {
     return htree;
 }
 
-
+/**
+ * @brief DataManager::destroyAllHTrees, deallocates all the functional trees
+ */
 void DataManager::destroyAllHTrees() {
     foreach(ATTRTYPE attr, this->htrees.keys()) {
         destroyHTree(attr);
@@ -275,6 +314,11 @@ void DataManager::destroyAllHTrees() {
 
 }
 
+/**
+ * @brief DataManager::_destroyHTree, deletes all the nodes of a  functional (hierarchical) tree
+ * rooted at hnode
+ * @param hnode
+ */
 void DataManager::_destroyHTree(HNODE *hnode) {
     foreach( HNODE *child, hnode->children) {
         _destroyHTree(child);
@@ -283,7 +327,9 @@ void DataManager::_destroyHTree(HNODE *hnode) {
 }
 
 
-
+/**
+ * @brief DataManager::destroyAllAttributes, clears out all the attributes for all types
+ */
 void DataManager::destroyAllAttributes() {
     foreach( ATTRTYPE attr, this->attributes.keys() ) {
         foreach(ATTRIBUTE *attrib, this->attributes[attr].values())
@@ -297,6 +343,20 @@ void DataManager::destroyAllAttributes() {
 
 }
 
+/**
+ * @brief DataManager::destroyAllTaxons, destroys all the taxons held in the
+ * singleton class of Taxons;
+ */
+void DataManager::destroyAllTaxons() {
+    Taxons *taxons = Taxons::getTaxons();
+    taxons->clearTaxons();
+}
+
+
+/**
+ * @brief DataManager::destroyHTree, deletes the tree for an attribute
+ * @param refDB, the name of the attribute to remove the tree for
+ */
 void DataManager::destroyHTree(ATTRTYPE refDB ) {
      HTree *htree = this->getHTree(refDB);
      HNODE *hnode = htree->getRootHNODE();
@@ -305,6 +365,18 @@ void DataManager::destroyHTree(ATTRTYPE refDB ) {
      this->htrees.remove(refDB);
 
 }
+
+/**
+ * @brief DataManager::addTaxons, added the list of taxons to the singleton class Taxons
+ * from the file supplied
+ * @param sampleName
+ */
+void  DataManager::addTaxons(const QString &sampleName) {
+    Taxons *taxons = Taxons::getTaxons();
+    taxons->addTaxons( sampleName, 8);
+}
+
+
 /**
  * @brief DataManager::_createAnORF creates and ORF from the attributes
  * @param attributes attribute list as provided from the orf list tables, orf_annotation
@@ -361,6 +433,12 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
 }
 
 
+/**
+ * @brief DataManager::createORFs, creates the orf for a sample from the given
+ *  file
+ * @param sampleName, the sample name to add the ORFs for
+ * @param fileName, the file than to read the ORF info from
+ */
 void DataManager::createORFs(QString sampleName, QString fileName) {
 
    // if(this->ORFsUptoDateList.contains(sampleName) &&  this->ORFsUptoDateList[sampleName] ) return;
@@ -393,18 +471,26 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
  //   this->ORFsUptoDateList[sampleName] = true;
 }
 
-
+/**
+ * @brief DataManager::destroyAllORFs deletes all the orfs sample by sample
+ */
 void DataManager::destroyAllORFs() {
     foreach( QString sampleName, this->ORFList->keys())
         this->destroyORFs(sampleName);
 }
 
-
+/**
+ * @brief DataManager::destroyAllContigs, deletes all the contigs one sample at a time
+ */
 void DataManager::destroyAllContigs() {
     foreach( QString sampleName, this->contigHash.keys())
         this->destroyContigs(sampleName);
 }
 
+/**
+ * @brief DataManager::destroyContigs, deletes all the contigs for one sample
+ * @param sampleName
+ */
 void DataManager::destroyContigs(QString &sampleName) {
 
     foreach(QString contigName, this->contigHash[sampleName].keys()) {
@@ -414,11 +500,19 @@ void DataManager::destroyContigs(QString &sampleName) {
 }
 
 
+/**
+ * @brief deleteORF, deletes an orf
+ * @param orf
+ */
 void deleteORF(ORF *orf) {
     delete orf;
 
 }
 
+/**
+ * @brief DataManager::destroyORFs, deletes all the orfs for a sample
+ * @param sampleName
+ */
 void DataManager::destroyORFs(QString sampleName) {
 
     if( !this->ORFList->contains(sampleName)) return;
@@ -436,6 +530,72 @@ void DataManager::destroyORFs(QString sampleName) {
 
 }
 
+
+/**
+ * @brief DataManager::addTaxonToORFs, added the Taxon to the ORFs by looking up the functional
+ * and taxonomic table for the sample
+ * @param sampleName, the name of the sample
+ * @param fileName, the file name where the taxonomic mapping is specified.
+ */
+
+void DataManager::addTaxonToORFs(const QString &sampleName, const QString &fileName) {
+
+    QFile inputFile(fileName);
+    QString orfname, taxon;
+
+    QStringList colValues;
+
+    Taxons *taxons = Taxons::getTaxons();
+    if( taxons==0) return;
+    ORF *temporf;
+    QRegExp comment("#[^\"\\n\\r]*");
+    QChar delim = QChar('\t');
+
+    unsigned int col1 = 0, col2 = 8, numCols;
+
+    qDebug() << "Need to remove the redundancy" << sampleName << fileName;
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QHash<QString, ORF *> orfHash;
+        foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
+            orfHash[orf->name] = orf;
+        }
+
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+             QString line = in.readLine().trimmed();
+             if (comment.exactMatch(line)) continue;
+
+             colValues = line.split(QRegExp(delim));
+             numCols = colValues.length();
+             if(numCols <= col2 ) continue;
+
+             orfname = Utilities::getShortORFId(colValues[col1]);
+             taxon = colValues[col2];
+
+
+             if(!orfHash.contains(orfname) ) continue;
+
+             temporf = orfHash[orfname];
+             if( taxons->hasTaxon(taxon) )
+                 temporf->attributes[TAXON] = taxons->getTaxon(taxon);
+             else
+                 temporf->attributes[TAXON] = taxons->getTaxon("root");
+
+        }
+        inputFile.close();
+    }
+}
+
+
+
+
+
+/**
+ * @brief DataManager::addNewAnnotationToORFs, adds the METACYC annotations to the
+ * orfs that are already added and creates new one if they are not already added
+ * @param sampleName
+ * @param fileName
+ */
 void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
 
@@ -489,6 +649,9 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
     this->attributes[METACYC].clear();
 }
 
+
+
+
 /** This function added the RPKM values to the orfs in the sample
  *\param sampleName, name of the sample
  *\param fileName, name of the file name for the RPKM values
@@ -525,7 +688,15 @@ void DataManager::addRPKMToORFs(QString sampleName, QString fileName) {
 }
 
 
-// it creates a new connector from the old connector for the given type of attrbute attrType
+/**
+ * @brief DataManager::createSubConnector, it creates a new connector from the old connector
+ * for the given type of attrbute attrType
+ * @param htree, the functional tree
+ * @param hnode, the root node
+ * @param connector, the cold connector
+ * @param attrType, the attribute to follow, e.g., KEGG, COG, SEED, METACYC
+ * @return the new connector.
+ */
 Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector* connector, ATTRTYPE attrType) {
       Connector *newConnector = new Connector;
       newConnector->setAttrType(attrType);
@@ -548,6 +719,12 @@ Connector *DataManager::createSubConnector(HTree *htree, HNODE *hnode, Connector
       return newConnector;
 }
 
+/**
+ * @brief DataManager::getORFList, gets the list of pointers to all the orfs in a
+ *  sample
+ * @param sampleName
+ * @return
+ */
 QList<ORF *> * DataManager::getORFList(QString sampleName) {
     if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) {
         return this->ORFList->value(sampleName);
@@ -569,6 +746,10 @@ void DataManager::deleteConnector(QString sampleName) {
 
 }
 
+/**
+ * @brief DataManager::deleteAllConnectors, deletes all the connectors associated with the
+ * htable for one sample at a time
+ */
 void DataManager::deleteAllConnectors() {
     foreach(QString sampleName, this->connectors.keys()) {
         this->deleteConnector(sampleName);
@@ -577,6 +758,15 @@ void DataManager::deleteAllConnectors() {
 }
 
 
+/**
+ * @brief DataManager::createConnector, creates the list of subconnectors for a
+ * sample  by looking up the list of ORFs, based on a functional tree of attribute;
+ * @param sampleName, the name of the sample
+ * @param htree, the functional tree
+ * @param attrType, the attribute, e.g., KEGG, COG, SEED
+ * @param orfList list of pointers to ORFs
+ * @return
+ */
 Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {
     if( this->connectors.contains(sampleName) && this->connectors[sampleName].contains(attrType)) {
      //   qDebug() << sampleName <<" retrieving  connector " << this->connectors[sampleName][attrType]->getORFList().size();

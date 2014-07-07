@@ -25,8 +25,8 @@ RunData::RunData(){
     this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
     this->setValue("PYTHON_EXECUTABLE", settings.value("PYTHON_EXECUTABLE").toString(),_CONFIG);
     this->setValue("PERL_EXECUTABLE", settings.value("PERL_EXECUTABLE").toString(),_CONFIG);
-    this->setValue("PATHOLOGIC_EXECUTABLE", settings.value("REFDBS").toString(),_CONFIG);
-    this->setValue("REFDBS", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
+    this->setValue("PATHOLOGIC_EXECUTABLE", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
+    this->setValue("REFDBS", settings.value("REFDBS").toString(),_CONFIG);
 }
 
 

@@ -13,6 +13,7 @@
 #include "datamodel/datamodeltypes.h"
 #include "datamodel/htree.h"
 #include "datamodel/connector.h"
+#include "datamodel/taxons.h"
 
 class DataManager
 {
@@ -42,6 +43,9 @@ public:
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
     void addRPKMToORFs(QString sampleName, QString fileName);
+    void addTaxons(const QString &sampleName);
+    void addTaxonToORFs(const QString &sampleName, const QString &fileName);
+
 
     ORF* _createAnORF(QStringList &attributes, QString &sampleName);
     void destroyORFs(QString sampleName);
@@ -59,12 +63,15 @@ public:
 
     void createDataModel();
     CATEGORYNODE createCategoryNode(QString line);
+    QString getResourceFile(const RESOURCETYPE &resType) ;
+
     HTree *createHTree(QString refDB);
     void destroyAllHTrees();
     void destroyHTree(ATTRTYPE refDB );
     void _destroyHTree(HNODE *hnode );
 
     void destroyAllAttributes();
+    void destroyAllTaxons();
 
 
 private:
