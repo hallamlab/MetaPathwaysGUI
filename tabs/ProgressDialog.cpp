@@ -152,7 +152,6 @@ void ProgressDialog::setExpectedSteps() {
     this->expectedSteps["GENBANK_FILE"] = true;
     this->expectedSteps["CREATE_ANNOT_REPORTS"] = true;
     this->expectedSteps["MLTREEMAP_CALCULATION"] = true;
-    this->expectedSteps["MLTREEMAP_IMAGEMAKER"] = true;
     this->expectedSteps["BUILD_PGDB"] = true;
     this->expectedSteps["COMPUTE_RPKM"] = true;
 }
@@ -180,9 +179,8 @@ void ProgressDialog::initMapping(){
     TABLE_MAPPING[11] = "GENBANK_FILE";
     TABLE_MAPPING[12] = "CREATE_ANNOT_REPORTS";
     TABLE_MAPPING[13] = "MLTREEMAP_CALCULATION";
-    TABLE_MAPPING[14] = "MLTREEMAP_IMAGEMAKER";
-    TABLE_MAPPING[15] = "BUILD_PGDB";
-    TABLE_MAPPING[16] = "COMPUTE_RPKM";
+    TABLE_MAPPING[14] = "BUILD_PGDB";
+    TABLE_MAPPING[15] = "COMPUTE_RPKM";
 
 }
 
@@ -333,7 +331,8 @@ void ProgressDialog::updateProgressBar(){
     _totalSteps = this->countTotalNumberOfSteps();
 
  //   qDebug() << _stepsCompleted << "/" << _totalSteps;
-    progressBar->setMaximum(_totalSteps);
+
+    progressBar->setMaximum( _totalSteps==0 ? 1 : _totalSteps);
 
 }
 
@@ -712,7 +711,7 @@ void ProgressDialog::initProcess(){
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
-    standardOut->append( arguments.join(" ") );
+ //   standardOut->append( arguments.join(" ") );
 
     rundata->setProcess(myProcess); // let rundata know what's good
 

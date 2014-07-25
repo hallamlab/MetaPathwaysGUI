@@ -24,7 +24,7 @@ RunData::RunData(){
     QSettings settings("HallamLab", "MetaPathways");
     this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
     this->setValue("PYTHON_EXECUTABLE", settings.value("PYTHON_EXECUTABLE").toString(),_CONFIG);
-    this->setValue("PERL_EXECUTABLE", settings.value("PERL_EXECUTABLE").toString(),_CONFIG);
+    this->setValue("PGDB_FOLDER", settings.value("PGDB_FOLDER").toString(),_CONFIG);
     this->setValue("PATHOLOGIC_EXECUTABLE", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
     this->setValue("REFDBS", settings.value("REFDBS").toString(),_CONFIG);
 }
@@ -136,8 +136,8 @@ void RunData::setPythonExecutablePath(QString pythonPath) {
     this->CONFIG["PYTHON_EXECUTABLE"] = pythonPath;
 }
 
-void RunData::setPerlExecutablePath(QString perlPath) {
-    this->CONFIG["PERL_EXECUTABLE"]  = perlPath;
+void RunData::setPgdbFolderPath(QString pgdbFolderPath) {
+    this->CONFIG["PGDB_FOLDER"]  = pgdbFolderPath;
 }
 
 void RunData::setMetaPathwaysPath(QString mpPath) {

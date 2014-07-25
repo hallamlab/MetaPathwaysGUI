@@ -26,10 +26,16 @@ TableData::TableData(  QWidget *parent) :
     tableWidget = this->findChild<QTableWidget *>("tableWidget");
     searchButton = this->findChild<QPushButton *>("searchButton");
     exportButton = this->findChild<QPushButton *>("exportButton");
+    alpha  = this->findChild<QComboBox *>("alphaValue");
+    lcaDepth  = this->findChild<QSpinBox *>("lcaDepth");
+
 
 
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(clicked()), this, SLOT(exportButtonPressed()));
+
+    connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT(updateLCAStar(int)) );
+    connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT(updateLCAStar(int)) );
 
     connect(tableWidget->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(outputRows(int)));
     connect(tableWidget->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(headerClicked(int)));
@@ -46,16 +52,24 @@ TableData::TableData(  QWidget *parent) :
     tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
 #endif
 
-
     //this->exportBox = new ExportBox(this);
     //this->exportBox->hide();
     this->p =0;
     this->g =0;
 
     this->exportType = OTHERSTABLEEXP;
+    this->addLCAStar = false;
 }
 
-
+/**
+ * @brief TableData::setParameters, sets the parameters for the table to read and
+ * present the data
+ * @param HAS_COMMENT
+ * @param file
+ * @param _types
+ * @param CACHE
+ * @return
+ */
 bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> _types, bool CACHE) {
 
     top = 0;
@@ -66,6 +80,10 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
     this->setNumCols(_types.size());
     foreach(enum TYPE type, _types) {
         types.append(type);
+    }
+
+    if(this->addLCAStar) {
+        types.append(STRING);
     }
 
     this->file = file;
@@ -82,13 +100,24 @@ void TableData::loadData() {
     this->setupFromFile(this->file);
 }
 
+
+
+void TableData::addLCAStarColumn() {
+    foreach( ROW *row,this->largeTable->wholeTableData ) {
+        row->strVar.append(QString("-"));
+    }
+    this->largeTable->colNames.append("LCAStar");
+    this->largeTable->numCols++;
+    this->largeTable->addLCAStar =true;
+}
+
 // with select columns
 /**
  * @brief TableData::setParameters
  * @param HAS_COMMENT
  * @param file
  * @param _types
- * @param _columns
+ * @param _column-
  * @param CACHE
  * @param filter
  * @return
@@ -236,6 +265,16 @@ void TableData::setAuxName(QString auxname) {
     this->auxName = auxname;
 }
 
+/**
+ * @brief TableData::useLCAStar, decides if the table computes the LCA value
+ * or not
+ * @param value
+ */
+void TableData::useLCAStar(bool value) {
+    this->addLCAStar = value;
+}
+
+
 
 void TableData::setSampleNames(QStringList sampleNames) {
     this->sampleNames = sampleNames;
@@ -349,6 +388,16 @@ void TableData::outputRows(int top){
     this->updateData(top);
 }
 
+
+/**
+ * @brief TableData::updateLCAStar, recompute the LCA Star
+ * @param index
+ */
+void TableData::updateLCAStar(int index) {
+     this->updateData(this->top, true);
+}
+
+
 /**
  * @brief TableData::updateData, used for loading partial rows of the table to give the illusion to the
  * user of having the entire table loaded at once
@@ -360,6 +409,8 @@ void TableData::updateData(double top, bool reload){
     if (largeTable->getPivot() -0.9*dw >=  pivot || pivot >= largeTable->getPivot()  + 0.9 *dw || reload){
          largeTable->setPivot(pivot);
          int from = pivot > dw ? pivot -dw : 0;
+         largeTable->setLCAStarAlpha(this->alpha->currentText().toDouble()/100);
+         largeTable->setLCAStarDepth(this->lcaDepth->value());
          largeTable->getData(bigdata, from, dw);
          this->populateTable(from );
     }
@@ -378,8 +429,19 @@ void TableData::setupFromFile(const QString &file){
 
         if( largeTable ==0 ) {
            largeTable = new LargeTable(file, '\t', true, true, types);
+           if( this->addLCAStar ) {
+               this->addLCAStarColumn();
+               largeTable->sampleName = this->sampleName;
+           }
+
+           largeTable->copyWholeToFilter();
+
            if (CACHE) tableManager->setTable(file, largeTable);
+
+
         }
+        largeTable->setLCAStarAlpha(this->alpha->currentText().toDouble()/100);
+     //   largeTable->setLCAStarDepth(this->);
 
         largeTable->getData(bigdata, 0,dw);
         tableWidget->setRowCount(largeTable->tableData.length());
@@ -393,9 +455,11 @@ void TableData::setupFromFile(const QString &file){
         //this->exportBox = new ExportBox(this);
 }
 
-
+/**
+ * @brief TableData::setupFromFile, reads the table from the file
+ */
 void TableData::setupFromFile(){
-
+        largeTable->setLCAStarAlpha(this->alpha->currentText().toDouble()/100);
         largeTable->getData(bigdata, 0,dw);
 
         tableWidget->setRowCount(largeTable->tableData.length());
@@ -403,6 +467,7 @@ void TableData::setupFromFile(){
         headers = largeTable->colNames;
 
         if(!bigdata.empty() ) {
+
            this->populateTable(0);
         }
 
@@ -418,9 +483,11 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
 
         if( largeTable ==0 ) {
            largeTable = new LargeTable(file, '\t', true, true, types, columns, filter);
+
            if (CACHE) tableManager->setTable(file, largeTable);
         }
 
+        largeTable->setLCAStarAlpha(this->alpha->currentText().toDouble()/100);
         largeTable->getData(bigdata, 0, dw);
         tableWidget->setRowCount(largeTable->tableData.length());
         tableWidget->setColumnCount(largeTable->colNames.length());
@@ -433,8 +500,45 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
       //  this->exportBox = new ExportBox(this);
 }
 
+/**
+ * @brief TableData::computeLCAStarValue, computes the lcastar value and the tooltips for the
+ * the rows that are to be displayed
+ * @param lcainfo
+ */
+void TableData::computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash) {
+    unsigned int col1 = 4, col2 = 8;
 
+    QHash<QString, QStringList> taxonsForContigs;
+    LCAStar *lcastar = LCAStar::getLCAStar();
+    DataManager *datamanager = DataManager::getDataManager();
+    foreach( ROW *datum,  bigdata) {
+        try{
+            QString contigName = datum->strVar.at(largeTable->index[col1]);
 
+            if( !taxonsForContigs.contains(contigName) ) {
+                taxonsForContigs[contigName] = QStringList();
+                QList<ORF *> orfs = datamanager->getORFList(this->sampleName, Utilities::getShortContigId(contigName));
+                foreach(ORF *orf,  orfs) {
+                   taxonsForContigs[contigName].append(orf->attributes[TAXON]->name);
+                }
+            }
+        }
+        catch(...) {
+            continue;
+        }
+    }
+
+    lcainfoHash.clear();
+    foreach(QString contigName, taxonsForContigs.keys() ) {
+        if( lcainfoHash.contains(contigName )) continue;
+        LCASTARINFO lcainfo;
+        lcainfo.lcaStar = lcastar->lca_star(taxonsForContigs[contigName]);
+        lcainfo.tooltip = lcastar->getToolTipText(taxonsForContigs[contigName]) ;
+       // qDebug() <<  contigName;
+
+        lcainfoHash[contigName] = lcainfo;
+    }
+}
 /**
  * @brief TableData::populateTable Creates the actual table widget the data given to it, and populates
  * the table with data and headers given with the pointer to the table given.
@@ -445,12 +549,26 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
  */
 void TableData::populateTable(int top){
 
-    tableWidget->setColumnCount(this->headers.size());
-    tableWidget->setHorizontalHeaderLabels(this->headers);
+    QHash<QString, LCASTARINFO> lcainfo;
+//    qDebug() << this->headers;
+    QStringList headers = this->headers;
+
+    tableWidget->setColumnCount(headers.size());
+    tableWidget->setHorizontalHeaderLabels(headers);
 
     int k = top;
     tableWidget->clearContents();
-    foreach( ROW *datum,  bigdata) {
+
+
+
+    if(this->addLCAStar) {
+        computeLCAStarValue(lcainfo);
+    }
+
+    QTableWidgetItem *item;
+
+
+    foreach( ROW *datum,  bigdata) {     
       for( unsigned int i = 0; i < largeTable->numCols; i++) {
           try{
 
@@ -471,6 +589,17 @@ void TableData::populateTable(int top){
               qDebug() << " Failed at " << i << datum << " double " << datum->doubleVar << " int " << datum->intVar << " str " << datum->strVar;
 
           }
+      }
+
+
+     if(this->addLCAStar) {
+            try{
+               item = tableWidget->item(k, largeTable->numCols -1);
+               item->setToolTip( lcainfo[datum->strVar.at(largeTable->index[4]) ].tooltip);
+            }
+            catch(...) {
+
+            }
       }
       k++;
     }

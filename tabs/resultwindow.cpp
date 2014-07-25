@@ -48,7 +48,9 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
 //    tables["PATHWAYS"] = new TableData();
 //    tables["REACTIONS"] = new TableData();
-    tables["FUNC & TAX"] = new TableData();
+   // tables["FUNC & TAX"] = new TableData();
+   // tables["FUNC & TAX"]->useLCAStar(true);
+
     tables["rRNA"] = new TableData();
 
     displayInfos["FUNC & TAX"] = new DisplayInfo();
@@ -213,7 +215,11 @@ void ResultWindow::updateFileNames(){
 
  }
 
-
+ /**
+ * @brief ResultWindow::sampleChanged, this function loads a new sample and
+ * is triggered through a sample change on the combobox
+ * @param sampleName
+ */
 void ResultWindow::sampleChanged(QString sampleName){
     QRegExp select_sample_regexp = QRegExp("Select sample");
     if( select_sample_regexp.indexIn(sampleName) != -1 ) return;
@@ -405,8 +411,9 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     TableData *func_tax_table;
 
-
-    func_tax_table = this->getFunctionalAndTaxTable(sampleName);
+    func_tax_table = this->getFunctionalAndTaxTable(sampleName,true, true);
+    this->simpleTabGroups.addTable(func_tax_table, sampleName, "FUNC & TAX");
+    func_tax_table->loadData();
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
     resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
 
@@ -432,6 +439,7 @@ void ResultWindow::sampleChanged(QString sampleName){
         }
         else { // table has to be created a new
             t = new TableData;
+            t->useLCAStar(false);
             t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
         }
@@ -439,6 +447,7 @@ void ResultWindow::sampleChanged(QString sampleName){
         t->setType(rRNATABLE);
         t->setSampleName(sampleName);
         t->setAuxName(rRNADatabase);
+
 
         resultTabs->addTab(t, rRNADatabase);
         resultTabs->setTabToolTip(resultTabs->count()-1, rRNADatabase);
@@ -458,6 +467,7 @@ void ResultWindow::sampleChanged(QString sampleName){
         }
         else { // table has to be created a new
             t = new TableData;
+            t->useLCAStar(false);
             t->setParameters(false, tRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, tRNATableFile);
         }
@@ -527,9 +537,9 @@ void ResultWindow::displayMenu(const QPoint &pos)
  * @param sampleName, name of the sample
  * @return  ponter to the functiona and tax table
  */
-TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCache, bool loadData) {
+TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCache,  bool useLCAStar) {
 
-
+    qDebug() << "Get functional table samplename " << sampleName;
     TableData *func_tax_table;
     //FUNCTION AND TAXONOMIC TABLE
     DisplayInfo *p = this->displayInfos["FUNC & TAX"];
@@ -546,17 +556,19 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
     types.clear();
     types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
 
-    if(useCache )
-       func_tax_table = this->tables["FUNC & TAX"];
-    else {
-       func_tax_table = new TableData;
-       func_tax_table->largeTable  = new LargeTable();
+    if(  useCache && this->simpleTabGroups.tableExists(sampleName, "FUNC & TAX") ) {
+        func_tax_table = this->simpleTabGroups.getTable(sampleName, "FUNC & TAX");
     }
+    else { // table has to be created a new
+        func_tax_table = new TableData;
+        func_tax_table->useLCAStar(useLCAStar);
+        func_tax_table->largeTable  = new LargeTable();
+    }
+
     func_tax_table->setSampleName(sampleName);
     func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
 
     // if loaded then it always loads from cache table
-    if(loadData)  func_tax_table->loadData();
     func_tax_table->setPopupListener(p);
     func_tax_table->setExportType(OTHERSTABLEEXP);
     return func_tax_table;
@@ -595,9 +607,10 @@ void ResultWindow::ProvideContexMenu(QPoint position)
  */
 void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
 
-    TableData *originalTable  = getFunctionalAndTaxTable(sampleName);
+    TableData *originalTable  = getFunctionalAndTaxTable(sampleName,true, true); //cache is true because we need the
 
-    TableData *newTable  = getFunctionalAndTaxTable(sampleName, false, false);
+    TableData *newTable  = getFunctionalAndTaxTable(sampleName, false,  true);
+    newTable->useLCAStar(true);
 
     GlobalDataTransit *globalDataTransit = GlobalDataTransit::getGlobalDataTransit();
 
@@ -606,11 +619,19 @@ void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
     this->copyROWData(originalTable->largeTable->tableData,  newTable->largeTable->tableData, globalDataTransit->orfList);
     this->copyROWData(originalTable->largeTable->wholeTableData,  newTable->largeTable->wholeTableData, globalDataTransit->orfList);
 
+
+
     newTable->types = originalTable->types;
     newTable->largeTable->types = originalTable->largeTable->types;
     newTable->largeTable->colNames  = originalTable->largeTable->colNames;
     newTable->largeTable->index = originalTable->largeTable->index;
     newTable->largeTable->numCols = originalTable->largeTable->numCols;
+    newTable->largeTable->lca_star_alpha = originalTable->largeTable->lca_star_alpha;
+    newTable->largeTable->addLCAStar = true;
+    newTable->largeTable->sampleName = sampleName;
+
+    newTable->setSampleName( originalTable->getSampleName());
+
     newTable->setupFromFile( );
     newTable->show();
 
@@ -630,11 +651,11 @@ void ResultWindow::copyROWData( QList<ROW *> &src, QList<ROW *> &tar, QList<ORF 
         orfNames.insert(orf->name, true);
     }
 
-
     QString name;
     foreach(ROW *r , src) {
-      //  qDebug() << r->strVar[0];
+
         name = Utilities::getShortORFId(r->strVar[0]);
+
         if( orfNames.contains(name)) tar.append(r);
     }
 }
@@ -819,6 +840,8 @@ void ResultWindow::switchToComparativeMode() {
    // htable->setHeaders(headers);
     htable->setTableIdentity("COG", COG);
     htable->setMultiSampleMode(true);
+
+
     htable->showTableData();
 
 
@@ -832,6 +855,7 @@ void ResultWindow::switchToComparativeMode() {
     resultTabs->addTab(htable, "COG");
 
 
+    qDebug() << " Done cog ";
     /////////////////  KEGG
     htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
     htable->clearConnectors();

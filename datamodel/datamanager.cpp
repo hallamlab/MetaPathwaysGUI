@@ -401,9 +401,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
         this->contigHash[sampleName][shortContigName] = contig;
         orf->contig = contig;
     }
-
-
-
+    orf->contig->orfList.append(orf);
    // qDebug() << orf->contig->name  << "   " << orf->name << "    ";
 
     if(this->attributes[COG].contains(attributes[2]))
@@ -729,9 +727,25 @@ QList<ORF *> * DataManager::getORFList(QString sampleName) {
     if( sampleName != QString("temp") && this->ORFList->contains(sampleName)  ) {
         return this->ORFList->value(sampleName);
     }
-
     return 0;
 }
+
+
+/**
+ * @brief DataManager::getORFList, gets the list of pointers to all the orfs in a
+ *  sample, in a contig
+ * @param sampleName
+ * @return
+ */
+QList<ORF *> DataManager::getORFList(QString sampleName, QString contig) {
+
+    if( this->contigHash.contains(sampleName) && this->contigHash[sampleName].contains(contig)) {
+        return this->contigHash[sampleName][contig]->orfList;
+    }
+
+    return  QList<ORF *>();
+}
+
 
 /** deletes the connector for a sample
  *\param sampleName, sample name whose connectors is deleted

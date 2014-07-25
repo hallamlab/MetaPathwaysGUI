@@ -62,7 +62,6 @@ QHash<QString,QString> Utilities::createMapping(){
     CONFIG_NAME_MAP["metapaths_steps:GENBANK_FILE"] = "metapaths_stepsGENBANK_FILE";
     CONFIG_NAME_MAP["metapaths_steps:CREATE_ANNOT_REPORTS"] = "metapaths_stepsCREATE_ANNOT_REPORTS";
     CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_CALCULATION"] = "metapaths_stepsMLTREEMAP_CALCULATION";
-    CONFIG_NAME_MAP["metapaths_steps:MLTREEMAP_IMAGEMAKER"] = "metapaths_stepsMLTREEMAP_IMAGEMAKER";
     CONFIG_NAME_MAP["metapaths_steps:BUILD_PGDB"] = "metapaths_stepsBUILD_PGDB";
     CONFIG_NAME_MAP["metapaths_steps:COMPUTE_RPKM"] = "metapaths_stepsCOMPUTE_RPKM";
 

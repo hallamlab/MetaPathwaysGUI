@@ -11,6 +11,7 @@
 #include <QLabel>
 #include <QPalette>
 #include <QTableWidgetItem>
+#include <QThread>
 
 #include "datamodel/connector.h"
 #include "datamodel/htree.h"
@@ -35,12 +36,6 @@ typedef struct _HTABLE_IDENTITY {
 }  HTABLEIDENTITY;
 
 
-typedef struct _FREQUENCE {
-    unsigned int count;
-    double percent;
-    QString name;
-
-} FREQUENCEY;
 
 namespace Ui {
 class HTableData;
@@ -66,6 +61,9 @@ public:
     void populateTable(QList<ROWDATA *> &data, const QStringList &headers);
     void computeLCAStar(QList<ROWDATA *> &data);
     QString LCAStarValue(const QString &category, unsigned int sampleNum);
+
+    void getTaxonList(ROWDATA *datum, unsigned int sampleNum, QStringList &taxonList);
+
     unsigned int getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCEY> &freq);
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
@@ -93,11 +91,6 @@ public:
     QString getSampleName(unsigned int i);
 
     void initializeSearchFilter(QString query, int column);
-
-    QString getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount);
-    QString getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount);
-
-
 
 
     QTableWidget* tableWidget;
@@ -173,7 +166,8 @@ private:
     QCheckBox *showRPKM;
 
     QComboBox *valueType;
-    QSpinBox *alpha;
+    QComboBox *alpha;
+    QSpinBox *lcaDepth;
 
 
     bool multiSampleMode;

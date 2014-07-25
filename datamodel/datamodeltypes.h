@@ -14,12 +14,6 @@ typedef struct _ATTRIBUTE {
 } ATTRIBUTE;
 
 
-typedef struct _CONTIG {
-    QString name;
-    unsigned int length;
-} CONTIG;
-
-
 typedef struct _HNODE HNODE;
 
 typedef struct _HNODE {
@@ -36,6 +30,17 @@ typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, TAXON, RPKM}  ATTRTYPE;
 typedef struct _HTABLE_PARAMS {
     QHash<ATTRTYPE, QStringList>  headers;
 } HTABLE_PARAMS;
+
+
+
+struct _ORF;
+typedef struct _ORF ORF;
+
+typedef struct _CONTIG {
+    QList<ORF *> orfList;
+    QString name;
+    unsigned int length;
+} CONTIG;
 
 
 typedef struct _ORF {
@@ -56,6 +61,7 @@ typedef struct _ORF {
     }
 
 } ORF;
+
 
 typedef struct _CATEGORYNODE {
     QString name;

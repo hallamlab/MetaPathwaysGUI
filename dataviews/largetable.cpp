@@ -3,6 +3,7 @@
 LargeTable::LargeTable()
 {
      numCols = 0;
+     this->addLCAStar = false;
 }
 
 
@@ -15,6 +16,8 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
     this->types = new enum TYPE[ _types.length()];
 
     this->numCols = _types.size();
+    this->addLCAStar = false;
+
     unsigned int i =0;
     foreach(enum TYPE type, _types) {
         *(this->types + i) = type;
@@ -35,6 +38,8 @@ LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreCo
     this->types = new enum TYPE[ _types.length()];
 
     this->numCols = _types.size();
+    this->addLCAStar = false;
+
     unsigned int i =0;
     foreach(enum TYPE type, _types) {
         *(this->types + i) = type;
@@ -67,6 +72,25 @@ void LargeTable::setPivot(int pivot){
     this->pivotPointer = pivot;
 }
 
+/**
+ * @brief LargeTable::wholeTableData, copies all the rows to the filtered
+ * list
+ */
+void LargeTable::copyWholeToFilter() {
+    this->tableData.clear();
+    foreach(ROW *row, this->wholeTableData)
+        this->tableData.append(row);
+}
+
+/**
+ * @brief LargeTable::readDataFile, reads file of data from a file with the given delim and ignore comments flag
+ * and firstRowAsHeads flag
+ * @param fileName
+ * @param delim
+ * @param ignoreComments
+ * @param firstRowAsHeaders
+ * @return
+ */
 int LargeTable::readDataFile(const QString fileName, const QChar delim,  const bool ignoreComments, const bool firstRowAsHeaders ){
     QFile inputFile(fileName);
 
@@ -82,7 +106,6 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
         if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
     }
 
-
   //  qDebug() << "Reading in the file at 55 " << fileName;
     unsigned int i = -1;
     QRegExp comment("#[^\"\\n\\r]*");
@@ -93,7 +116,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             QString line = in.readLine().trimmed();
 
             if(i== -1 && firstRowAsHeaders ) {
-                colNames = line.split(QRegExp(delim));
+                colNames = line.split(QRegExp(delim));                
                 numCols = colNames.length();
                 i++;
                 continue;
@@ -132,7 +155,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
                        list->strVar.append(QString(qlist[k]));
                    }
                  }
-                 tableData.append(list);
+           //      tableData.append(list);
                  wholeTableData.append(list);
                  list->rank = i;
             }
@@ -188,10 +211,9 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
 
             if(i== -1 && firstRowAsHeaders ) {
                 fields = line.split(QRegExp(delim), QString::KeepEmptyParts);
-           //       qDebug() << line << firstRowAsHeaders << lastColumn << fields.size();
+
                 if(fields.size() <= lastColumn) continue;
 
-         //         qDebug() << line << firstRowAsHeaders << lastColumn << fields.size() << numCols;
                 for(unsigned int j=0; j < numCols; j++){
                     colNames << fields[columns[j]] ;
                 }
@@ -359,20 +381,80 @@ void LargeTable::sortByField(unsigned int fieldNum) {
         sortingDirectionForward = false;
     else
         sortingDirectionForward = true;
-
-
-
 }
+
 
 
 unsigned int LargeTable::getBegData( int pivotPoint, unsigned int  deltaW) {
     return  pivotPoint;
 }
 
+
+/**
+ * @brief LargeTable::setLCAStarAlpha, sets the lca star value
+ * @param value
+ */
+void LargeTable::setLCAStarAlpha(double value) {
+    this->lca_star_alpha = value;
+}
+
+
+/**
+ * @brief LargeTable::setLCAStarDepth, sets the min depth for the
+ * lca depth
+ * @param depth
+ */
+void LargeTable::setLCAStarDepth(unsigned int depth) {    
+    this->lca_star_min_depth = depth;
+}
+
+/**
+ * @brief LargeTable::lca_star, computes the lca star value of the list of orfs
+ * @param orfList
+ * @param lcastar
+ * @return
+ */
+QString LargeTable::lca_star(const QList<ORF *> &orfList, LCAStar *lcastar) {
+    QStringList taxalist;
+
+    foreach( ORF *orf, orfList) {
+        taxalist.append( orf->attributes[TAXON]->name);
+    }
+
+    lcastar->setLCAStarAlpha(this->lca_star_alpha);
+    lcastar->setLCAStarDepth(this->lca_star_min_depth);
+    return lcastar->lca_star(taxalist);
+
+}
+
+/**
+ * @brief LargeTable::getData, gets the rows required to fill the visible part of the dta
+ * is the data to select, pivotpoint is where the selection starts and deltaW is the width
+ * or buffer before the load new data trigger is set off
+ * @param data
+ * @param pivotPoint
+ * @param deltaW
+ */
 void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  deltaW) {
+    LCAStar *lcastar = LCAStar::getLCAStar();
+
+    DataManager *datamanager = DataManager::getDataManager();
+    unsigned int contigCol = 1, lcaCol = 6;
+
     data.clear();
 
+    QHash<QString, QString> lcaForContigs;
+
     for (unsigned int i = pivotPoint; i < pivotPoint + 2*deltaW && i < tableData.length(); i++){
+        if(this->addLCAStar ) {
+            QString contig = Utilities::getShortContigId(tableData.at(i)->strVar[contigCol]);
+            if( !lcaForContigs.contains(contig)) {
+                  QList<ORF *> orfs = datamanager->getORFList(this->sampleName, contig);
+                  lcaForContigs[contig] = this->lca_star(orfs, lcastar);
+            }
+            tableData[i]->strVar[lcaCol] = lcaForContigs[contig];
+        }
+
         data.append(tableData.at(i));
     }
 }

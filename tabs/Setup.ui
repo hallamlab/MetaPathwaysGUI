@@ -14,37 +14,28 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="9" column="1">
-    <widget class="QLineEdit" name="dbDirectoryTxt">
-     <property name="placeholderText">
-      <string>Location of database</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLabel" name="label">
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="pythonExecTxt">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>25</height>
-      </size>
+     <property name="placeholderText">
+      <string>/path/to/python_executable</string>
      </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="pythonLabel">
      <property name="font">
       <font>
-       <pointsize>24</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Setup</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <string>Python Executable</string>
      </property>
     </widget>
    </item>
@@ -80,28 +71,49 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="pythonLabel">
+   <item row="9" column="1">
+    <widget class="QLineEdit" name="dbDirectoryTxt">
+     <property name="placeholderText">
+      <string>Location of database</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>25</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Setup</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="metapathwaysLabel_2">
      <property name="font">
       <font>
        <pointsize>18</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>Python Executable</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLineEdit" name="pythonExecTxt">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="placeholderText">
-      <string>/path/to/python_executable</string>
+      <string>Database Directory</string>
      </property>
     </widget>
    </item>
@@ -119,27 +131,15 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="perlLabel">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Perl Executable</string>
-     </property>
-    </widget>
-   </item>
    <item row="5" column="1">
-    <widget class="QLineEdit" name="perlExecTxt">
+    <widget class="QLineEdit" name="pgdbFolderTxt">
      <property name="placeholderText">
-      <string>/path/to/perl_executable</string>
+      <string>/path/to/ptools-local/pgdbs/users</string>
      </property>
     </widget>
    </item>
    <item row="5" column="2">
-    <widget class="QPushButton" name="perlBrowseButton">
+    <widget class="QPushButton" name="pgdbFolderBrowseButton">
      <property name="text">
       <string>Browse</string>
      </property>
@@ -182,18 +182,6 @@
     <widget class="Line" name="line_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="metapathwaysLabel_2">
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Database Directory</string>
      </property>
     </widget>
    </item>
@@ -251,13 +239,25 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="pgdbFolderLabel">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>PGDB Folder Path</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>pythonExecTxt</tabstop>
   <tabstop>pythonBrowseButton</tabstop>
-  <tabstop>perlExecTxt</tabstop>
-  <tabstop>perlBrowseButton</tabstop>
+  <tabstop>pgdbFolderTxt</tabstop>
+  <tabstop>pgdbFolderBrowseButton</tabstop>
   <tabstop>pathMetaPathwaysTxt</tabstop>
   <tabstop>metapathwaysBrowseButton</tabstop>
   <tabstop>dbDirectoryTxt</tabstop>

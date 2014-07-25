@@ -1,25 +1,35 @@
 #include "lcastar.h"
 
 LCAStar *LCAStar::lcastar =0;
+QMutex LCAStar::mutexLock;
 
 LCAStar *LCAStar::getLCAStar() {
-    if( LCAStar::lcastar ==0 ) {
+  //  if( LCAStar::lcastar ==0 ) {
         LCAStar::lcastar = new LCAStar();
-        LCAStar::lcastar->loadTree();
-    }
+  //  }
 
     return LCAStar::lcastar;
 }
 
 
+void LCAStar::setNCBITree(NCBITree *ncbitree) {
+    this->ncbitree = ncbitree;
+}
+
+
+
+
+
+/**
+ * @brief LCAStar::loadTree, loads the NCBI tree
+ */
 void LCAStar::loadTree() {
 
     DataManager *datamanager = DataManager::getDataManager();
     QString ncbifile = datamanager->getResourceFile(NCBITREEFILE);
 
-    qDebug() << ncbifile;
 
-    ProgressView progressbar("Please wait while the NCBI tree file " +  ncbifile, 0, 0, 0);
+    ProgressView progressbar("Reading NCBI tree file \n" +  ncbifile, 0, 0, 0);
 
     QString ncbiTree = ncbifile;
     QFile inputFile(ncbiTree);
@@ -35,36 +45,79 @@ void LCAStar::loadTree() {
             fields = line.split(QRegExp(delim));
             if(fields.size()  !=3 ) continue;
 
-            this->name_to_id[fields[0]] = fields[1];
-            this->id_to_name[fields[1]] = fields[0];
+            ncbitree->name_to_id[fields[0]] = fields[1];
+            ncbitree->id_to_name[fields[1]] = fields[0];
 
-            this->taxid_to_ptaxid[fields[1]] << fields[2] << 0 << 0;
-            if( !this->ptaxid_to_taxid.contains(fields[2]))
-                this->ptaxid_to_taxid[fields[2]] = QHash<QString, bool>();
+            ncbitree->taxid_to_ptaxid[fields[1]] << fields[2] << 0 << 0;
+            if( !ncbitree->ptaxid_to_taxid.contains(fields[2]))
+                ncbitree->ptaxid_to_taxid[fields[2]] = QHash<QString, bool>();
 
             if( !(  fields[2].compare(QString("1")) ==0  || fields[1].compare(QString("1")) ))
-                this->ptaxid_to_taxid[fields[2]][fields[1]] = false;
+                ncbitree->ptaxid_to_taxid[fields[2]][fields[1]] = false;
 
         }
     }
     else return;
 
-    /*
-    qDebug() << " name to id " << this->name_to_id.size();
-    qDebug() << " id to name " << this->id_to_name.size();
-    qDebug() << " tax id to pid " << this->taxid_to_ptaxid.size();
-    qDebug() << " pid to tax " << this->ptaxid_to_taxid.size();
-*/
-
     inputFile.close();
     progressbar.hide();
+}
+
+void LCAStar::setData(LCA_THREAD_DATA data) {
+   // qDebug() << data.data->size() << data.data->size();
+
+    this->data = data;
+}
+
+void LCAStar::run() {
+    this->lca_star(this->data.data, this->data.connectors, this->data.attrType);
 
 }
+
+void LCAStar::lca_star( QList<ROWDATA *> *data, const QList<Connector *> *connectors,  ATTRTYPE attrType) {
+
+    QStringList taxonList;
+    unsigned int Total = data->size();
+    unsigned int step = this->data.numThreads;
+
+  //  qDebug() << "rows are computing";
+    unsigned int i = this->data.threadid;
+    for(QList<ROWDATA *>::iterator datum = data->begin() + this->data.threadid ; i < Total ; datum = datum + step, i+= step) {
+        for(unsigned int i =0; i < (*datum)->taxons.size(); i++ ) {
+            taxonList.clear();
+            this->getTaxonList(*datum, i, connectors, taxonList, attrType);
+            (*datum)->taxons[i] = this->lca_star(taxonList);
+        }
+    }
+}
+
+
+void LCAStar::getTaxonList(ROWDATA *datum, unsigned int sampleNum, const QList<Connector *> *connectors,  QStringList &taxonList, ATTRTYPE attrType) {
+
+    QString category = datum->name;
+
+    DataManager *datamanager = DataManager::getDataManager();
+    HTree *htree = datamanager->getHTree(attrType);
+    HNODE *hnode = htree->getHNODE(category);
+    if( htree==0 || hnode ==0 ) return;
+
+    Connector *connector =   connectors->operator [](sampleNum);
+
+    QList<ORF *> orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+
+    foreach(ORF *orf, orfList) {
+      if( orf->attributes.contains(TAXON)  ) taxonList.append( orf->attributes[TAXON]->name);
+    }
+    return;
+
+}
+
+
 
 QString LCAStar::lca_star(const QStringList &taxalist) {
     QStringList _taxalist = this->filter_taxa_list(taxalist);
 
-    if( _taxalist.isEmpty() ) return QString("root");
+    if( _taxalist.isEmpty() ) return QString("-");
 
 
     QString majority = this->__lca_majority(_taxalist);
@@ -76,13 +129,18 @@ QString LCAStar::lca_star(const QStringList &taxalist) {
     this->__read_counts(_taxalist, read_counts);
 
 
+
     this->__annotate_tree_counts( read_counts );
 
     this->__color_tree(read_counts);
 
+
     QString result_id = __create_majority("1", read_counts);
 
+
+
     this->__clear_lca_star_data_structure();
+
 
     QString results_taxon = this->translateIdToName(result_id);
 
@@ -192,9 +250,9 @@ void LCAStar::__color_tree(const QHash<QString, unsigned int> &read_counts) {
         QString id = this->translateNameToID(taxon);
 
         QString tid = id;
-        while( this->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1")) !=0) {
-            QString pid = this->taxid_to_ptaxid[tid][0];
-            this->ptaxid_to_taxid[pid][tid] = true;
+        while( ncbitree->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1")) !=0) {
+            QString pid = ncbitree->taxid_to_ptaxid[tid][0];
+            ncbitree->ptaxid_to_taxid[pid][tid] = true;
             tid = pid;
         }
     }
@@ -206,6 +264,13 @@ typedef struct _CANDIDATE {
     QString first;
     double second;
 } CANDIDATE;
+
+
+
+
+
+
+
 /**
  * @brief LCAStar::__create_majority, crates a majority by climbing up the NCBI tree until a majority
  * is found with least entropy distortion
@@ -213,6 +278,9 @@ typedef struct _CANDIDATE {
  * @param read_name_counts
  * @return the majority of the new collapsed taxons
  */
+
+
+
 QString LCAStar::__create_majority(const QString &root, const QHash<QString, unsigned int> &read_name_counts) {
 
     QHash<QString, unsigned int> read_counts;
@@ -229,14 +297,120 @@ QString LCAStar::__create_majority(const QString &root, const QHash<QString, uns
     candidate.second = 100000000.0;
     QStack<QString> Stack;
     Stack.push(root);
-/*
-    foreach(QString key, read_name_counts.keys())
-        qDebug() << " key -value " << key <<  read_name_counts[key];
 
-    qDebug() << " id to H " << this->id_to_H.size();
-    qDebug() << " id to V " << this->id_to_V.size();
-    qDebug() << " ptaxid to taxid " << this->ptaxid_to_taxid.size();
-*/
+//    foreach(QString key, read_name_counts.keys())
+  //      qDebug() << " key -value " << key <<  read_name_counts[key];
+
+   // qDebug() << " id to H " << this->id_to_H.size();
+   // qDebug() << " id to V " << this->id_to_V.size();
+   // qDebug() << " ptaxid to taxid " << this->ptaxid_to_taxid.size();
+
+
+
+    while(! Stack.isEmpty()) {
+        QString id = Stack.pop();
+      //  qDebug() << "  id " << id;
+
+        if( this->id_to_V.contains(id )) { //way up to the tree
+            QStringList C;
+
+            if(ncbitree->ptaxid_to_taxid.contains(id))
+                C = ncbitree->ptaxid_to_taxid[id].keys();
+
+            this->id_to_H[id] = 0;
+
+
+            foreach(QString child, C) {
+                if( ncbitree->ptaxid_to_taxid.contains(id)  )
+                     if( ncbitree->ptaxid_to_taxid[id].contains(child) )
+                          if( this->id_to_F[child] ) { this->id_to_F[id] = true; break; }
+             }
+
+            if(this->id_to_F[id] ==false)
+                if( read_counts.contains(id)) {
+                    this->id_to_S[id] =  static_cast<double>(read_counts[id]);
+                    this->id_to_L[id] =  static_cast<double>(read_counts[id])*log( static_cast<double>(read_counts[id]));
+                }
+                else {
+                   this->id_to_S[id] = 0;
+                   this->id_to_L[id] = 0;
+                }
+
+
+            if( this->id_to_F[id] ==false)
+              foreach(QString child, C) {
+                 if( ncbitree->ptaxid_to_taxid.contains(id)  )
+                    if( ncbitree->ptaxid_to_taxid[id].contains(child) && ncbitree->ptaxid_to_taxid[id][child] ==true ) {
+                        this->id_to_S[id] += this->id_to_S[child];
+                        this->id_to_L[id] += this->id_to_L[child];
+                    }
+               }
+
+
+            if( this->id_to_S[id] >= Total*this->lca_star_alpha && this->id_to_F[id] == false ) {
+
+                try {
+                    this->id_to_H[id] = -(this->id_to_L[id]/this->id_to_S[id] - log(this->id_to_S[id]) );
+                }
+                catch(...) {
+                    QMessageBox::warning(0, "Error while LCA star computation", QString("Problem with ID :") + id, QMessageBox::Ok);
+                }
+
+                this->id_to_F[id] = true;
+                if(candidate.second > this->id_to_H[id ]) {
+                    candidate.first = id;
+                    candidate.second = this->id_to_H[id];
+                }
+            }
+        }
+        else {  // way down to the tree
+            QStringList C;
+            this->id_to_V[id] = true;
+
+            this->id_to_F[id] = false;
+
+            if( ncbitree->ptaxid_to_taxid.contains(id))
+                C = ncbitree->ptaxid_to_taxid[id].keys();
+
+            Stack.append(id);
+            foreach(QString child, C) {
+                if( ncbitree->ptaxid_to_taxid.contains(id)  )
+                    if( ncbitree->ptaxid_to_taxid[id].contains(child) && ncbitree->ptaxid_to_taxid[id][child] ==true) {
+                        Stack.append(child);
+                    }
+            }
+        } //end else of if-else
+
+    }//end while
+
+    return candidate.first;
+}
+
+/*
+QString LCAStar::__create_majority(const QString &root, const QHash<QString, unsigned int> &read_name_counts) {
+
+    QHash<QString, unsigned int> read_counts;
+    unsigned int Total=0;
+
+    foreach(QString taxon, read_name_counts.keys() ) {
+        QString id = this->translateNameToID(taxon);
+        read_counts[id] = read_name_counts[taxon];
+        Total += read_name_counts[taxon];
+    }
+
+    CANDIDATE candidate;
+    candidate.first = QString("1");
+    candidate.second = 100000000.0;
+    QStack<QString> Stack;
+    Stack.push(root);
+
+//    foreach(QString key, read_name_counts.keys())
+  //      qDebug() << " key -value " << key <<  read_name_counts[key];
+
+   // qDebug() << " id to H " << this->id_to_H.size();
+   // qDebug() << " id to V " << this->id_to_V.size();
+   // qDebug() << " ptaxid to taxid " << this->ptaxid_to_taxid.size();
+
 
 
     while(! Stack.isEmpty()) {
@@ -302,17 +476,47 @@ QString LCAStar::__create_majority(const QString &root, const QHash<QString, uns
 
     return candidate.first;
 }
-
+*/
 
 /**
  * @brief LCAStar::__clear_lca_star_data_structure, clear the structure
  */
 void LCAStar::__clear_lca_star_data_structure() {
+
+    for(QHash<QString, double>::iterator it = this->id_to_S.begin(); it!= this->id_to_S.end(); it++ ) {
+        it.value() = 0;
+    }
+
+    for(QHash<QString, double>::iterator it = this->id_to_L.begin(); it!= this->id_to_L.end(); it++ ) {
+        it.value() = 0;
+    }
+
+    for(QHash<QString, double>::iterator it = this->id_to_H.begin(); it!= this->id_to_H.end(); it++ ) {
+        it.value() = 0;
+    }
+
+
+
+    for(QHash<QString, bool>::iterator it = this->id_to_V.begin(); it!= this->id_to_V.end(); it++ ) {
+        it.value() = false;
+    }
+
+
+    for(QHash<QString, bool>::iterator it = this->id_to_F.begin(); it!= this->id_to_F.end(); it++ ) {
+        it.value() = false;
+    }
+
     this->id_to_R.clear();
+
+    return;
+    //this->id_to_R.clear();
+
     this->id_to_S.clear();
     this->id_to_L.clear();
     this->id_to_H.clear();
+
     this->id_to_V.clear();
+    this->id_to_F.clear();
 }
 
 
@@ -323,8 +527,8 @@ void LCAStar::__clear_lca_star_data_structure() {
  * @return
  */
 QString LCAStar::translateIdToName(const QString &id) {
-    if( !this->id_to_name.contains(id)) return QString();
-    return  this->id_to_name[id];
+    if( !ncbitree->id_to_name.contains(id)) return QString();
+    return  ncbitree->id_to_name[id];
 }
 
 /**
@@ -334,8 +538,8 @@ QString LCAStar::translateIdToName(const QString &id) {
  * @return
  */
 QString LCAStar::translateNameToID(const QString &name) {
-    if( !this->name_to_id.contains(name)) QString();
-    return this->name_to_id[name];
+    if( !ncbitree->name_to_id.contains(name)) QString();
+    return ncbitree->name_to_id[name];
 }
 
 /**
@@ -350,14 +554,14 @@ void LCAStar::__decolor_tree() {
         QString id = S.pop();
 
         QStringList C;
-        if(this->ptaxid_to_taxid.contains(id)) {
-            C = this->ptaxid_to_taxid[id].keys();
+        if(ncbitree->ptaxid_to_taxid.contains(id)) {
+            C = ncbitree->ptaxid_to_taxid[id].keys();
         }
 
         foreach(QString child, C) {
-            if( this->ptaxid_to_taxid.contains(id)  )
-                if( this->ptaxid_to_taxid[id].contains(child)) {
-                    this->ptaxid_to_taxid[id][child] =false;
+            if( ncbitree->ptaxid_to_taxid.contains(id)  )
+                if( ncbitree->ptaxid_to_taxid[id].contains(child)) {
+                    ncbitree->ptaxid_to_taxid[id][child] =false;
                     S.push(child);
                 }
         }
@@ -380,6 +584,24 @@ void LCAStar::setParameters(unsigned int min_reads, unsigned int min_depth, doub
 
 
 /**
+  * @brief LCAStar::setLCAStarAlpha, sets the lca start alpha
+  * @param alpha
+  */
+void LCAStar::setLCAStarAlpha(double alpha) {
+     this->lca_star_alpha = alpha;
+}
+
+
+/**
+  * @brief LCAStar::setLCAStarDepth, sets the lca min depth
+  * @param depth
+  */
+void LCAStar::setLCAStarDepth(unsigned int depth) {
+     this->lca_star_min_depth =depth;
+}
+
+
+/**
  * @brief LCAStar::taxon_depth, returns the depth of the taxon starting with 0
  * for the root
  * @param taxon
@@ -393,8 +615,8 @@ unsigned int LCAStar::taxon_depth(const QString &taxon) {
     unsigned int depth = 0;
     //climb up the tree from the taxon to the root
     // the number of climbing steps is the depth
-    while( this->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1"))!=0  ) {
-        tid = this->taxid_to_ptaxid[tid][0];
+    while( ncbitree->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1"))!=0  ) {
+        tid = ncbitree->taxid_to_ptaxid[tid][0];
         depth += 1;
     }
 
@@ -402,6 +624,101 @@ unsigned int LCAStar::taxon_depth(const QString &taxon) {
 }
 
 
+
+/**
+ * @brief LCAStar::getToolTipText, creates the tool tip for the list of taxons
+ * @param taxons
+ * @return
+ */
+QString LCAStar::getToolTipText(const QStringList &taxons ) {
+    QList<FREQUENCEY> freq;
+
+    unsigned int maxCount = this->getTaxonsDistributions(taxons, freq);
+
+    QString tooltip = this->getTaxonsDistribtionTooltipTxt(freq, maxCount);
+
+    return tooltip;
+}
+
+
+/**
+ * @brief LCAStar::getTaxonsDistributions, creates a list of taxon distribution from a
+ * list of taxons
+ * @param taxons
+ * @param freq
+ * @return
+ */
+unsigned int LCAStar::getTaxonsDistributions(const QStringList &taxons, QList<FREQUENCEY> &freq) {
+    QHash<QString, unsigned int>  hashCount;
+    foreach(QString taxon, taxons) {
+        if( !hashCount.contains( taxon) ) hashCount[taxon] =0;
+         hashCount[taxon]++;
+    }
+
+
+    QList<TaxonFreqQPair > taxonFreqList;
+    double totalCount =0;
+    foreach(QString key, hashCount.keys()) {
+        taxonFreqList.append(TaxonFreqQPair(key, hashCount[key]) );
+        totalCount += static_cast<double>(hashCount[key]);
+    }
+    if( totalCount ==0) totalCount = 1;
+
+    qSort(taxonFreqList.begin(), taxonFreqList.end(), Utilities::compareFreq);
+
+    unsigned int maxCount =0;
+    for(QList<TaxonFreqQPair>::iterator it = taxonFreqList.begin(); it!= taxonFreqList.end(); ++it) {
+        FREQUENCEY item;
+        item.name = it->first;
+        item.count = it->second;
+        item.percent = (it->second/totalCount)*100;
+        freq.append(item);
+        if( item.count > maxCount) maxCount = item.count;
+    }
+
+    return maxCount;
+
+}
+
+/**
+ * @brief LCAStar::getTaxonsDistribtionTooltipTxt, creates the distribution for the tooltip
+ * display, maxCount is use for the scaling
+ * @param freq
+ * @param maxCount, used for the scaling  of the tooltip image
+ * @return
+ */
+QString LCAStar::getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount ) {
+    QString header = QString(" <table style  width='100%' height='100%'> <caption align='center'> <h3> Taxonomic Distribution (At most top 5) </h3> <br></caption>");
+    QString tail =    QString("</table> <br> </div>");
+
+    QString string = header;
+    unsigned int i =0;
+    foreach( FREQUENCEY item, freq) {
+       if( i > 5) {
+           string += this->getTaxonDistributionToolTipTxt(QString("......."), 0, 0, 0, true);
+           break;
+       }
+       i++;
+       string += this->getTaxonDistributionToolTipTxt(item.name, item.count, item.percent, maxCount);
+    }
+    string += tail;
+    return string;
+
+}
+
+QString LCAStar::getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount, bool shorten) {
+    unsigned int width = static_cast<unsigned int>(static_cast<double>(count)*200/static_cast<double>(maxCount));
+    QString row = QString("<tr> <td style= 'white-space:nowrap;' > ") + name +
+                  QString(" </td>  <td> <img src=':/images/blue.png' height='12' width='") +
+                  QString::number(width) +
+                  QString("' align='left' />  </td> <td style= 'white-space:nowrap;'>");
+    if( !shorten)
+        row += QString::number(count) + QString(" (") + QString::number(percent, 'f', 2)  + QString("%)");
+
+    row +=  QString("</td> </tr>");
+
+    return row;
+}
 
 LCAStar::LCAStar()
 {
@@ -411,4 +728,10 @@ LCAStar::LCAStar()
     this->lca_star_min_depth = 1;
     this->lca_star_alpha = 0.30;
 
+    mutexLock.lock();
+    this->ncbitree = NCBITree::getNCBITree();
+    mutexLock.unlock();
+
+  //  qDebug() << " ptax " << this->ncbitree->ptaxid_to_taxid.size();
+  //  qDebug() << "tax id " << this->ncbitree->taxid_to_ptaxid.size();
 }

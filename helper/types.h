@@ -27,6 +27,10 @@ typedef enum _RESOURCETYPE{ NCBITREEFILE } RESOURCETYPE;
 
 typedef enum _VALUETYPE { ORFCOUNT, LCASTAR, RPKMCOUNT} VALUETYPE;
 
+
+
+
+
 /**
  * the types for the export boxes
  */

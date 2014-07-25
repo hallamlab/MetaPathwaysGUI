@@ -21,7 +21,8 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
    // showRPKM = this->findChild<QCheckBox *>("showRPKM");
     valueType = this->findChild<QComboBox *>("valueType");
-    alpha  = this->findChild<QSpinBox *>("alphaValue");
+    alpha  = this->findChild<QComboBox *>("alphaValue");
+    lcaDepth  = this->findChild<QSpinBox *>("lcaDepth");
 
 
 #ifdef SECTION
@@ -98,7 +99,8 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
     connect(valueType, SIGNAL(currentIndexChanged(int)), this, SLOT( toggleAlpha(int) )   );
     connect(valueType, SIGNAL(currentIndexChanged(int) ), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
-    connect(alpha, SIGNAL(valueChanged(int)), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
+    connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
+    connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
 
 
 }
@@ -113,8 +115,14 @@ HTableData::~HTableData()
  * @brief HTableData::disableAlpha, hides the alpha value
  */
 void HTableData::toggleAlpha(int vType) {
-    if( vType==LCASTAR) { this->alpha->setEnabled(true); this->alpha->show(); }
-    else { this->alpha->setEnabled(false); this->alpha->hide(); }
+    if( vType==LCASTAR) {
+        this->alpha->setEnabled(true); this->alpha->show();
+        this->lcaDepth->setEnabled(true); this->lcaDepth->show();
+    }
+    else {
+        this->alpha->setEnabled(false); this->alpha->hide();
+        this->lcaDepth->setEnabled(false); this->lcaDepth->hide();
+    }
     return;
 }
 
@@ -126,8 +134,15 @@ void HTableData::toggleAlpha(int vType) {
 void HTableData::matchAlphaVisible() {
     VALUETYPE vType = this->getValueType();
 
-    if( vType==LCASTAR) { this->alpha->setEnabled(true); this->alpha->show(); }
-    else { this->alpha->setEnabled(false); this->alpha->hide(); }
+
+    if( vType==LCASTAR) {
+        this->alpha->setEnabled(true); this->alpha->show();
+         this->lcaDepth->setEnabled(true); this->lcaDepth->show();
+    }
+    else {
+        this->alpha->setEnabled(false); this->alpha->hide();
+        this->lcaDepth->setEnabled(false); this->lcaDepth->hide();
+    }
     return;
 }
 
@@ -284,6 +299,7 @@ void HTableData::setHeaders(QStringList &headers) {
 void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
    this->id.attrType = attrType;
    this->id.sampleName = sampleName;
+
 }
 
 void HTableData::spinBoxChanged(int depth) {
@@ -479,7 +495,9 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
     tableWidget->clear();
     tableWidget->setColumnCount(headers.size());
+
     tableWidget->setHorizontalHeaderLabels(headers);
+
     tableWidget->setRowCount(data.size());
     tableWidget->setColumnCount(types.size());
     tableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -496,6 +514,9 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     if(this->getValueType()==LCASTAR) {
         computeLCAStar(data);
     }
+
+    LCAStar *lcastar = LCAStar::getLCAStar();
+
     QList<FREQUENCEY> freq;
 
     VALUETYPE _valueType = this->getValueType();
@@ -521,7 +542,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
                unsigned int maxCount = this->getTaxDistribution(datum->name, j, freq);
 
                if( maxCount > 0) {
-                  tooltip = this->getTaxonsDistribtionTooltipTxt(freq, maxCount);
+                   tooltip = lcastar->getTaxonsDistribtionTooltipTxt(freq, maxCount);
                   item->setToolTip(tooltip);
                }
 
@@ -544,31 +565,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
 }
 
-QString HTableData::getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount ) {
-    QString header = QString(" <table style  width='100%' height='100%'> <caption align='center'> <h3> Taxonomic Distribution </h3> <br></caption>");
-    QString tail =    QString("</table> <br> </div>");
 
-    QString string = header;
-    unsigned int i =0;
-    foreach( FREQUENCEY item, freq) {
-       if( i > 5) break; i++;
-       string += this->getTaxonDistributionToolTipTxt(item.name, item.count, item.percent, maxCount);
-    }
-    string += tail;
-    return string;
-
-}
-
-QString HTableData::getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount) {
-    unsigned int width = static_cast<unsigned int>(static_cast<double>(count)*200/static_cast<double>(maxCount));
-    QString row = QString("<tr> <td style= 'white-space:nowrap;' > ") + name +
-                  QString(" </td>  <td> <img src=':/images/blue.png' height='12' width='") +
-                  QString::number(width) +
-                  QString("' align='left' />  </td> <td style= 'white-space:nowrap;'>") +
-                  QString::number(count) + QString(" (") + QString::number(percent, 'f', 2)  + QString("%) </td> </tr>");
-
-    return row;
-}
 
 
 /**
@@ -576,13 +573,69 @@ QString HTableData::getTaxonDistributionToolTipTxt(const QString &name, const un
  * @param data, where the rows for the table are stored
  */
 void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
-    LCAStar *lcastar = LCAStar::getLCAStar();
-    lcastar->setParameters(1, 2, static_cast<double>(alpha->value())/100.0);
 
-    foreach(ROWDATA *datum, data) {
-        for(unsigned int i =0; i < datum->taxons.size(); i++ )
-           datum->taxons[i] = this->LCAStarValue(datum->name, i);
+    ProgressView progressbar("Recomputing LCA* values", 0, 0, 0);
+  //  LCAStar *lcastar = LCAStar::getLCAStar();
+
+
+   // qDebug() <<  "Number of counts " << QThread::idealThreadCount();
+    unsigned int value =55;
+    unsigned int depth = 1;
+    try {
+    bool ok;
+        alpha->currentText().toUInt(&ok);
+        if(ok)
+           value = alpha->currentText().toUInt(&ok);
+
+        depth = this->lcaDepth->value();
     }
+    catch(...) {
+       value = 55;
+       depth = 1;
+    }
+
+
+  // lcastar->setParameters(1, depth, static_cast<double>(value)/100.0);
+
+#define THREAD_LCASTAR
+#ifdef THREAD_LCASTAR
+
+    LCA_THREAD_DATA lca_thread_data;
+    lca_thread_data.data = &data;
+    lca_thread_data.connectors = &this->connectors;
+    lca_thread_data.attrType =this->id.attrType;
+
+    lca_thread_data.numThreads =  static_cast<unsigned int>( 0.8* static_cast<double>(QThread::idealThreadCount()));
+    if( lca_thread_data.numThreads < 1 ) lca_thread_data.numThreads = 1;
+
+    LCAStar * lcastars =  new LCAStar[lca_thread_data.numThreads];
+    for(unsigned int i =0 ; i < lca_thread_data.numThreads; i++) {
+       lca_thread_data.threadid = i;
+       lcastars[i].setData(lca_thread_data);
+       lcastars[i].start();
+    }
+
+    for(unsigned int i =0 ; i < lca_thread_data.numThreads; i++) {
+        lcastars[i].wait();
+    }
+
+    delete []lcastars;
+
+   // lcastar->lca_star(data,this->connectors, this->id.attrType )    ;
+
+#else
+    QStringList taxonList;
+    foreach(ROWDATA *datum, data) {
+        for(unsigned int i =0; i < datum->taxons.size(); i++ ) {
+            taxonList.clear();
+            this->getTaxonList(datum, i, taxonList);
+            datum->taxons[i] = lcastar->lca_star(taxonList);
+        }
+    }
+#endif
+
+    progressbar.hide();
+
 }
 
 /**
@@ -965,21 +1018,47 @@ void HTableData::ProvideContexMenu(QPoint pos)
 
         QString category = this->tableWidget->item(row, 0)->text();
 
+
         DataManager *datamanager = DataManager::getDataManager();
         HTree *htree = datamanager->getHTree(this->id.attrType);
         HNODE *hnode = htree->getHNODE(category);
 
         GlobalDataTransit *dataTransit = GlobalDataTransit::getGlobalDataTransit();
 
+
         if( htree==0 || hnode ==0 ) return;
 
         Connector *connector =   this->connectors[col - 2];
         dataTransit->orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
 
+
         emit showTable( this->sampleNames[col-2], this->id.attrType);
 
     //context->exec(*position);
 }
+
+void HTableData::getTaxonList(ROWDATA *datum, unsigned int sampleNum, QStringList &taxonList) {
+
+    QString category = datum->name;
+
+
+
+    DataManager *datamanager = DataManager::getDataManager();
+    HTree *htree = datamanager->getHTree(this->id.attrType);
+    HNODE *hnode = htree->getHNODE(category);
+    if( htree==0 || hnode ==0 ) return;
+
+    Connector *connector =   this->connectors[sampleNum];
+
+    QList<ORF *> orfList = connector->getORFList(htree->getLeafAttributesOf(hnode));
+
+    foreach(ORF *orf, orfList) {
+      if( orf->attributes.contains(TAXON)  ) taxonList.append( orf->attributes[TAXON]->name);
+    }
+    return;
+
+}
+
 
 /**
  * @brief HTableData::LCAStarValue, computes the LCA star value for the given category for
@@ -993,7 +1072,7 @@ QString HTableData::LCAStarValue(const QString &category, unsigned int sampleNum
         DataManager *datamanager = DataManager::getDataManager();
         HTree *htree = datamanager->getHTree(this->id.attrType);
         HNODE *hnode = htree->getHNODE(category);
-        if( htree==0 || hnode ==0 ) return  QString("root");
+        if( htree==0 || hnode ==0 ) return  QString("-");
 
         Connector *connector =   this->connectors[sampleNum];
 
@@ -1004,11 +1083,13 @@ QString HTableData::LCAStarValue(const QString &category, unsigned int sampleNum
         QString lcavalue = QString("-");
         QStringList taxonList;
 
+
+
         if( orfList.size() > 0 ) {
             foreach(ORF *orf, orfList) {
                if( orf->attributes.contains(TAXON)  ) taxonList.append( orf->attributes[TAXON]->name);
             }
-            lcavalue  = lcastr->lca_star(taxonList);
+            lcavalue  =  lcastr->lca_star(taxonList);
         }
         return lcavalue;
 

@@ -15,6 +15,7 @@
 #include "caching/tablemanager.h"
 #include "helper/utilities.h"
 #include "datamodel/samplercmanager.h"
+#include "datamodel/lcastar.h"
 #include "tabs/resultwindow.h"
 
 
@@ -49,6 +50,8 @@ public:
     bool setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter);
     void loadData();
 
+    void addLCAStarColumn();
+
     void setPopupListener(DisplayInfo *p);
     void setPopupListener(GenomeView *g);
     void addSearchFilter(QString query, int column=0) ;
@@ -69,6 +72,9 @@ public:
     void setType(TABLETYPE type);
     void setExportType(TABLEEXPORTTYPE type);
     void setAuxName(QString auxname);
+    void useLCAStar(bool value);
+
+    void computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash);
 
     QList<enum TYPE> types;
 
@@ -90,6 +96,7 @@ public:
     QTableWidget* tableWidget;
     TABLETYPE  type;
     TABLEEXPORTTYPE exportType;
+    bool addLCAStar ;
 
 
 
@@ -100,9 +107,11 @@ public slots:
     void searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type, bool caseSensitive);
     void createGeneViewData(QTableWidgetItem *item);
 
+
 private slots:
     void searchButtonPressed();
     void exportButtonPressed();
+     void updateLCAStar(int index);
 
 signals:
     void transmitSequenceData(QTableWidgetItem *item, GeneBrowserData gbdata);
@@ -124,7 +133,8 @@ private:
     QString auxName;
 
     QList<SEARCH> searchFilters;
-
+    QComboBox *alpha;
+    QSpinBox *lcaDepth;
 
     bool multiSampleMode;
     QStringList sampleNames;

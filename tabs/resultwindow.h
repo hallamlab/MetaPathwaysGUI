@@ -95,7 +95,7 @@ private:
     void indexSamples(bool useResourceFolder, bool forcereindex =false);
     void indexSample(QString sampleName, bool userResourceFolder) ;
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
-    TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool loadData = true);
+    TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool useLCAStar = false);
 
 public:
     QHash<HTableData *, bool> htablesAddSignals;

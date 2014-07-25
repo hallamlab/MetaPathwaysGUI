@@ -26,7 +26,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="3">
+   <item row="1" column="4">
     <widget class="QPushButton" name="searchButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -45,7 +45,138 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="4">
+   <item row="1" column="3">
+    <widget class="QPushButton" name="exportButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Export</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0">
+    <widget class="QComboBox" name="alphaValue">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the majority threshold required for a taxon to be decided as the LCA* taxonomy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="currentIndex">
+      <number>9</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>20</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>25</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>30</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>35</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>40</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>45</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>50</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>55</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>60</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>65</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>70</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>75</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>80</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>85</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>90</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>95</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>100</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5">
     <widget class="QTableWidget" name="tableWidget">
      <property name="enabled">
       <bool>true</bool>
@@ -67,16 +198,16 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="exportButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="lcaDepth">
+     <property name="toolTip">
+      <string>Filter ORFs with taxa with depth lower than this for purpose of LCA* calculation. The taxa with lower depth does not have enough specific information about a taxa. The root is considered to be at depth 0. </string>
      </property>
-     <property name="text">
-      <string>Export</string>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>6</number>
      </property>
     </widget>
    </item>

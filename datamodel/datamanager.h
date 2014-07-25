@@ -27,6 +27,7 @@ public:
     QList<ATTRTYPE> getConnectorSampleAttributes(QString sampleName);
 
     QList<ORF *> *getORFList(QString sampleName);
+    QList<ORF *> getORFList(QString sampleName, QString contig);
 
     void setIndexFileFaa(QString sampleName, QString fileName);
     void setIndexFileFna(QString sampleName, QString fileName);

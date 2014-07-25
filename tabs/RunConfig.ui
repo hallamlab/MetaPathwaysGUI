@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
+    <width>823</width>
     <height>904</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <weight>50</weight>
+    <bold>false</bold>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -43,12 +49,12 @@
    </property>
    <item>
     <property name="text">
-     <string>gbk-annotated</string>
+     <string>fasta</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>fasta</string>
+     <string>gbk-annotated</string>
     </property>
    </item>
    <item>
@@ -125,7 +131,7 @@
      <x>90</x>
      <y>253</y>
      <width>495</width>
-     <height>511</height>
+     <height>481</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -264,11 +270,6 @@ The output of the prodigal run is a set of untranslated and translated (into ami
    <row>
     <property name="text">
      <string>MLTREEMAP CALCULATION</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
-     <string>MLTREEMAP IMAGEMAKER</string>
     </property>
    </row>
    <row>
@@ -1094,93 +1095,11 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_IMAGEMAKER">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>670</y>
-     <width>314</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#c41e33;&quot;&gt;MlTreeMap is currently disabled and is undergoing some changes. Near future versions of MetaPathways will have this feature enabled.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string>GroupBox</string>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="mltreemap_imagemakerYES">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="mltreemap_imagemakerSKIP">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="mltreemap_imagemakerREDO">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>false</bool>
-    </property>
-   </widget>
-  </widget>
   <widget class="QGroupBox" name="metapaths_stepsBUILD_PGDB">
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>700</y>
+     <y>670</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1316,7 +1235,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>730</y>
+     <y>700</y>
      <width>314</width>
      <height>31</height>
     </rect>
@@ -1602,7 +1521,6 @@ p, li { white-space: pre-wrap; }
   <zorder>metapaths_stepsBUILD_PGDB</zorder>
   <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
   <zorder>runOptionsGroupBox</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_IMAGEMAKER</zorder>
   <zorder>metapaths_stepsORF_TO_AMINO</zorder>
   <zorder>metapaths_stepsCOMPUTE_REFSCORES</zorder>
   <zorder>metapaths_stepsFILTER_AMINOS</zorder>
@@ -1654,9 +1572,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mltreemap_calculationYES</tabstop>
   <tabstop>mltreemap_calculationSKIP</tabstop>
   <tabstop>mltreemap_calculationREDO</tabstop>
-  <tabstop>mltreemap_imagemakerYES</tabstop>
-  <tabstop>mltreemap_imagemakerSKIP</tabstop>
-  <tabstop>mltreemap_imagemakerREDO</tabstop>
   <tabstop>build_pgdbYES</tabstop>
   <tabstop>build_pgdbSKIP</tabstop>
   <tabstop>build_pgdbREDO</tabstop>

@@ -75,7 +75,8 @@ SOURCES += main.cpp\
     tabs/simpletabgroups.cpp \
     helper/globaldatatransit.cpp \
     datamodel/taxons.cpp \
-    datamodel/lcastar.cpp
+    datamodel/lcastar.cpp \
+    datamodel/ncbitree.cpp
 
 
 
@@ -139,7 +140,8 @@ HEADERS  += \
     tabs/simpletabgroups.h \
     helper/globaldatatransit.h \
     datamodel/taxons.h \
-    datamodel/lcastar.h
+    datamodel/lcastar.h \
+    datamodel/ncbitree.h
 
 
 

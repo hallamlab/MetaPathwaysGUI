@@ -13,14 +13,14 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     ui->setupUi(this);
 
     pythonBrowseButton = this->findChild<QPushButton *>("pythonBrowseButton");
-    perlBrowseButton = this->findChild<QPushButton *>("perlBrowseButton");
+    pgdbFolderBrowseButton = this->findChild<QPushButton *>("pgdbFolderBrowseButton");
     metapathwaysBrowseButton = this->findChild<QPushButton *>("metapathwaysBrowseButton");
     saveButton = this->findChild<QPushButton *>("saveButton");
     databaseButton = this->findChild<QPushButton *>("databaseButton");
     pathologicButton = this->findChild<QPushButton *>("pathologicButton");
 
     pythonExecTxt = this->findChild<QLineEdit *>("pythonExecTxt");
-    perlExecTxt = this->findChild<QLineEdit *>("perlExecTxt");
+    pgdbFolderTxt = this->findChild<QLineEdit *>("pgdbFolderTxt");
     dbDirectoryTxt = this->findChild<QLineEdit *>("dbDirectoryTxt");
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
     pathologicTxt = this->findChild<QLineEdit *>("pathologicTxt");
@@ -29,13 +29,13 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     // sets up values from the hash, if they exist
 
     connect(pythonBrowseButton, SIGNAL(clicked()), this, SLOT(pythonBrowse()));
-    connect(perlBrowseButton, SIGNAL(clicked()), this, SLOT(perlBrowse()));
+    connect(pgdbFolderBrowseButton, SIGNAL(clicked()), this, SLOT(pgdbFolderBrowse()));
     connect(metapathwaysBrowseButton, SIGNAL(clicked()), this, SLOT(metapathwaysBrowse()));
     connect(databaseButton, SIGNAL(clicked()), this, SLOT(databaseBrowse()));
     connect(pathologicButton,SIGNAL(clicked()), this, SLOT(pathologicBrowse()));
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSetup()));
     connect(pythonExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
-    connect(perlExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
+    connect(pgdbFolderTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(pathologicTxt, SIGNAL(textEdited(QString)), this, SLOT(canSave()));
@@ -49,7 +49,7 @@ void Setup::updateValues(){
     RunData *rundata = RunData::getRunData();
 
     pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
-    perlExecTxt->setText(rundata->getValueFromHash("PERL_EXECUTABLE",_CONFIG));
+    pgdbFolderTxt->setText(rundata->getValueFromHash("PGDB_FOLDER",_CONFIG));
     dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
     pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
     pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
@@ -62,7 +62,7 @@ void Setup::updateValues(){
 void Setup::canSave(){
     if (
           (!pythonExecTxt->text().isEmpty()) \
-       && (!perlExecTxt->text().isEmpty()) \
+       && (!pgdbFolderTxt->text().isEmpty()) \
        && (!pathMetaPathwaysTxt->text().isEmpty()) \
        && (!dbDirectoryTxt->text().isEmpty() \
        && (!pathologicTxt->text().isEmpty()))
@@ -71,8 +71,8 @@ void Setup::canSave(){
         saveButton->setEnabled(true);
         if(pythonPath.isEmpty())
            pythonPath = pythonExecTxt->text();
-        if(perlPath.isEmpty())
-           perlPath = perlExecTxt->text();
+        if(pgdbFolderPath.isEmpty())
+           pgdbFolderPath = pgdbFolderTxt->text();
         if(mpPath.isEmpty())
            mpPath = pathMetaPathwaysTxt->text();
         if(databasePath.isEmpty())
@@ -108,10 +108,9 @@ void Setup::pythonBrowse(){
 
 }
 
-void Setup::perlBrowse(){
-
-    perlPath = QFileDialog::getOpenFileName(this,tr("Select Perl Executable"));
-    perlExecTxt->setText(perlPath);
+void Setup::pgdbFolderBrowse(){
+    pgdbFolderPath = QFileDialog::getExistingDirectory(this,tr("Select PGDB Folder"));
+    pgdbFolderTxt->setText(pgdbFolderPath);
     canSave();
 
 }
@@ -196,9 +195,9 @@ void Setup::saveSetup(){
         temp["PYTHON_EXECUTABLE"] = pythonExecTxt->text();
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
     }
-    if (!perlExecTxt->text().isEmpty()) {
-        temp["PERL_EXECUTABLE"] = perlExecTxt->text();
-        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PERL_EXECUTABLE", perlExecTxt->text(), false, false);
+    if (!pgdbFolderTxt->text().isEmpty()) {
+        temp["PGDB_FOLDER"] = pgdbFolderTxt->text();
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PGDB_FOLDER", pgdbFolderTxt->text(), false, false);
     }
     if (!dbDirectoryTxt->text().isEmpty()) {
         temp["REFDBS"] = dbDirectoryTxt->text();
@@ -226,9 +225,9 @@ void Setup::loadPathVariables(){
         pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
         rundata->setPythonExecutablePath(settings.value("PYTHON_EXECUTABLE").toString());
     }
-    if( settings.allKeys().contains("PERL_EXECUTABLE") ) {
-        perlExecTxt->setText(settings.value("PERL_EXECUTABLE").toString());
-        rundata->setPerlExecutablePath(settings.value("PERL_EXECUTABLE").toString());
+    if( settings.allKeys().contains("PGDB_FOLDER") ) {
+        pgdbFolderTxt->setText(settings.value("PGDB_FOLDER").toString());
+        rundata->setPgdbFolderPath(settings.value("PGDB_FOLDER").toString());
     }
     if( settings.allKeys().contains("REFDBS") ) {
         dbDirectoryTxt->setText(settings.value("REFDBS").toString());
@@ -257,9 +256,9 @@ void Setup::savePathVariables(){
         settings.setValue("PYTHON_EXECUTABLE", pythonExecTxt->text());
         run->setPythonExecutablePath(pythonExecTxt->text());
     }
-    if( !perlExecTxt->text().isEmpty()){
-        settings.setValue("PERL_EXECUTABLE", perlExecTxt->text());
-        run->setPerlExecutablePath(perlExecTxt->text());
+    if( !pgdbFolderTxt->text().isEmpty()){
+        settings.setValue("PGDB_FOLDER", pgdbFolderTxt->text());
+        run->setPgdbFolderPath(pgdbFolderTxt->text());
     }
     if( !dbDirectoryTxt->text().isEmpty()) {
        settings.setValue("REFDBS",  dbDirectoryTxt->text());

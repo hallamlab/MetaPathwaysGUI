@@ -29,7 +29,7 @@ public:
     static const QString DEFAULT_TEMPLATE_CONFIG;
 
     void setPythonExecutablePath(QString pythonPath);
-    void setPerlExecutablePath(QString perlPath);
+    void setPgdbFolderPath(QString pgdbFolderPath);
     void setMetaPathwaysPath(QString mpPath);
     void setDatabasesPath(QString databasePath);
 

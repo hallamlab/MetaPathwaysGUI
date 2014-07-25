@@ -12,6 +12,7 @@
 #include <QChar>
 
 #include "helper/types.h"
+#include "datamodel/lcastar.h"
 
 
 typedef struct row{
@@ -48,9 +49,15 @@ public:
     void reRank();
     void getSelectRows(QList<ROW *> & sourcerows,  QList<ROW *> & selectrows, QString search, unsigned int col, enum TYPE type);
 
+    void copyWholeToFilter();
+    QString lca_star(const QList<ORF *> &orfList, LCAStar *lcastar);
+    void setLCAStarAlpha(double value);
+    void setLCAStarDepth(unsigned int depth);
+
     QList< ROW *> tableData;   // stores the filtered data
     QList<ROW *>  wholeTableData;  //stores all the data, and copied to the tableData when filtered
     QStringList colNames;
+    QString sampleName;
 
     unsigned int lastUsedField;
     unsigned int numCols;
@@ -58,6 +65,9 @@ public:
     unsigned int *varType;
     unsigned int *index;
     bool sortingDirectionForward;
+    bool addLCAStar;
+    double lca_star_alpha;
+    unsigned int lca_star_min_depth;
 
 private:
     int pivotPointer;

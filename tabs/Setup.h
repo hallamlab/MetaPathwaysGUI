@@ -32,7 +32,7 @@ public:
 
 public slots:
     void pythonBrowse();
-    void perlBrowse();
+    void pgdbFolderBrowse();
     void metapathwaysBrowse();
     void saveSetup();
     void cancelSetup();
@@ -48,19 +48,19 @@ private:
     Ui::Setup *ui;
 
     QString pythonPath;
-    QString perlPath;
+    QString pgdbFolderPath;
     QString mpPath;
     QString databasePath;
     QString pathologicPath;
 
     QPushButton *pythonBrowseButton;
-    QPushButton *perlBrowseButton;
+    QPushButton *pgdbFolderBrowseButton;
     QPushButton *metapathwaysBrowseButton;
     QPushButton *saveButton;
     QPushButton *databaseButton;
     QPushButton *pathologicButton;
 
-    QLineEdit *perlExecTxt;
+    QLineEdit *pgdbFolderTxt;
     QLineEdit *pythonExecTxt;
     QLineEdit *dbDirectoryTxt;
     QLineEdit *pathMetaPathwaysTxt;
