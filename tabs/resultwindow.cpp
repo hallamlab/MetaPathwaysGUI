@@ -255,7 +255,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     QStringList headers;
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
-    datamanager->createORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFTABLE) );
+    datamanager->createORFs(sampleName );
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
     datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFRPKM) );
 
@@ -326,7 +326,6 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
     HTableData *htable;
-
     types.clear();
     types << STRING << STRING << INT;
     //headers = this->tableParams.headers[KEGG];
@@ -442,12 +441,14 @@ void ResultWindow::sampleChanged(QString sampleName){
             t->useLCAStar(false);
             t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
+
         }
         t->setExportType(rRNATABLEEXP);
         t->setType(rRNATABLE);
         t->setSampleName(sampleName);
         t->setAuxName(rRNADatabase);
-
+        t->hideLCAControl();
+        t->hideFunctionalPopupControl();
 
         resultTabs->addTab(t, rRNADatabase);
         resultTabs->setTabToolTip(resultTabs->count()-1, rRNADatabase);
@@ -474,6 +475,9 @@ void ResultWindow::sampleChanged(QString sampleName){
         t->setExportType(tRNATABLEEXP);
         t->setType(tRNATABLE);
         t->setSampleName(sampleName);
+        t->hideLCAControl();
+        t->hideFunctionalPopupControl();
+
         resultTabs->addTab(t, "tRNA-Scan");
         resultTabs->setTabToolTip(resultTabs->count()-1, "tRNA-Scan");
     }
@@ -592,8 +596,6 @@ void ResultWindow::ProvideContexMenu(QPoint position)
 
          }
          */
-
-    qDebug() << " something index";
     //context->exec(*position);
 }
 
@@ -619,8 +621,6 @@ void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
     this->copyROWData(originalTable->largeTable->tableData,  newTable->largeTable->tableData, globalDataTransit->orfList);
     this->copyROWData(originalTable->largeTable->wholeTableData,  newTable->largeTable->wholeTableData, globalDataTransit->orfList);
 
-
-
     newTable->types = originalTable->types;
     newTable->largeTable->types = originalTable->largeTable->types;
     newTable->largeTable->colNames  = originalTable->largeTable->colNames;
@@ -634,7 +634,6 @@ void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
 
     newTable->setupFromFile( );
     newTable->show();
-
 }
 
 /**
@@ -676,7 +675,7 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
     htable->addSampleName(sampleName);
     htable->setMultiSampleMode(false);
     htable->setShowHierarchy(true);
-   // htable->setHeaders(headers);
+
     htable->setTableIdentity(sampleName, attr);
     htable->showTableData();
     return htable;
@@ -710,8 +709,6 @@ void ResultWindow::switchToComparativeMode() {
     samplercmgr->setOutPutPath(OUTPUTPATH);
 
 
-    //// datamanager->addNewAnnotationToORFs(changed, orfMetaCycTableName);
-
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
 
@@ -728,7 +725,7 @@ void ResultWindow::switchToComparativeMode() {
        if( !this->selectedSamples[i])  continue;
 
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
-        datamanager->createORFs(files[i], orfTableName);
+        datamanager->createORFs(files[i]);
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
 
@@ -779,12 +776,6 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->hide();
     delete progressbar;
 
-
-
-
-
-
-
    QStringList selectedFileNames;
    for(unsigned int i=0; i < selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
@@ -817,7 +808,6 @@ void ResultWindow::switchToComparativeMode() {
     HTableData *htable = CreateWidgets::getHtableData(COG); //new HTableData;
     htable->clearConnectors();
 
-
     types.clear();
     types << STRING << STRING;
 
@@ -841,9 +831,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->setTableIdentity("COG", COG);
     htable->setMultiSampleMode(true);
 
-
     htable->showTableData();
-
 
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -851,22 +839,15 @@ void ResultWindow::switchToComparativeMode() {
        QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
        this->htablesAddSignals.insert(htable, true);
     }
-
     resultTabs->addTab(htable, "COG");
 
 
-    qDebug() << " Done cog ";
     /////////////////  KEGG
     htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
     htable->clearConnectors();
 
     types.clear();
     types << STRING << STRING;
-
-    /*
-    headers.clear();
-    headers << "KEGG Function" << "KEGG function (alias)" ;
-    */
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
     progressbar->show();
@@ -897,10 +878,6 @@ void ResultWindow::switchToComparativeMode() {
        this->htablesAddSignals.insert(htable, true);
     }
 
-
-  //  htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-   // QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT(  ProvideContexMenu(QPoint) )  );
-   // QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
     resultTabs->addTab(htable, "KEGG");
 
 
@@ -911,13 +888,6 @@ void ResultWindow::switchToComparativeMode() {
 
     types.clear();
     types << STRING << STRING;
-
-    /*
-    headers.clear();
-    headers << "Pathway/Reaction" << "Common name" ;
-    htable->clearConnectors();
-*/
-
 
     for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
@@ -943,8 +913,6 @@ void ResultWindow::switchToComparativeMode() {
        QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
        this->htablesAddSignals.insert(htable, true);
     }
-
-
     resultTabs->addTab(htable, "METACYC");
 
 
@@ -954,11 +922,6 @@ void ResultWindow::switchToComparativeMode() {
 
     types.clear();
     types << STRING << STRING;
-
-    /*
-    headers.clear();
-    headers << "SEED Subsystem Category" << "SEED Subsystem (Alias) ";
-    */
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
     progressbar->show();

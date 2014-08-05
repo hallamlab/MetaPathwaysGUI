@@ -70,14 +70,14 @@ void ExportBox::clickedChoice() {
      }
      qSort(cols.begin(), cols.end(), compareColumns);
 
-
      for(unsigned int i=0; i< numSel; i++) {
          cols[i].rank = i;
      }
-
+/*
      foreach(EXPORT_SELECT a, cols) {
          a.checkbox->setText( a.name + " [" + QString::number(a.rank + 1 ) + "]");
      }
+     */
 
  }
 
@@ -134,9 +134,25 @@ QStringList ExportBox::getAllHeaders() {
 
          this->Columns.append(s);
      }
+
+     QGroupBox *control = new QGroupBox;
+     QHBoxLayout *controlLayout = new QHBoxLayout;
+
+     QPushButton *selectAll = new QPushButton("Select All");
+     QPushButton *clearAll = new QPushButton("Clear All");
+     controlLayout->addWidget(selectAll);
+     controlLayout->addWidget(clearAll);
+     control->setLayout(controlLayout);
+     controlLayout->addStretch(1);
+
      groupBox->setLayout(grid);
      pvbox->addWidget(groupBox);
+     pvbox->addWidget(control);
+     connect(selectAll, SIGNAL(clicked()), this, SLOT(selectAllHeadersSlot()));
+     connect(clearAll, SIGNAL(clicked()), this, SLOT(clearAllHeadersSlot()));
 
+
+     /////////////////////////
 
      if( this->td->isMultiSampleMode()) {
          this->samplesCheckboxes.clear();
@@ -150,9 +166,26 @@ QStringList ExportBox::getAllHeaders() {
              sampleGrid->addWidget(checkBox1,(int)i/5, i%5);
              this->samplesCheckboxes.append(checkBox1);
          }
+
+         control = new QGroupBox;
+         controlLayout = new QHBoxLayout;
+
+         selectAll = new QPushButton("Select All");
+         clearAll = new QPushButton("Clear All");
+         controlLayout->addWidget(selectAll);
+         controlLayout->addWidget(clearAll);
+         control->setLayout(controlLayout);
+         controlLayout->addStretch(1);
+
          sampleGroupBox->setLayout(sampleGrid);
          pvbox->addWidget(sampleGroupBox);
+         pvbox->addWidget(control);
+
+         connect(selectAll, SIGNAL(clicked()), this, SLOT(selectAllSamplesSlot()));
+         connect(clearAll, SIGNAL(clicked()), this, SLOT(clearAllSamplesSlot()));
      }
+
+
 
      exportFormat = new QGroupBox(tr("Export Format"));
      tsvRadio = new QCheckBox(tr("tsv"));
@@ -205,6 +238,37 @@ QStringList ExportBox::getAllHeaders() {
 
      return groupBox;
  }
+
+ void ExportBox::selectAllHeadersSlot() {
+     this->setHeadersCheck(true);
+ }
+
+ void ExportBox::clearAllHeadersSlot() {
+     this->setHeadersCheck(false);
+ }
+
+
+ void ExportBox::setHeadersCheck(bool state) {
+     for(unsigned int i=0; i < Columns.size(); i++)
+        Columns[i].checkbox->setChecked(state);
+ }
+
+
+
+ void ExportBox::selectAllSamplesSlot() {
+     this->setSamplesCheck(true);
+ }
+
+ void ExportBox::clearAllSamplesSlot() {
+     this->setSamplesCheck(false);
+ }
+
+
+ void ExportBox::setSamplesCheck(bool state) {
+     foreach(QCheckBox *chbox, this->samplesCheckboxes)
+        chbox->setChecked(state);
+ }
+
 
 
  ExportBox::~ExportBox()

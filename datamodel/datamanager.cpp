@@ -193,22 +193,32 @@ CATEGORYNODE DataManager::createCategoryNode(QString line) {
  * @param resType
  * @return
  */
-QString DataManager::getResourceFile(const RESOURCETYPE &resType) {
+QStringList DataManager::getResourceFiles(const RESOURCETYPE &resType) {
 
+    QString NCBI_TREE_FILE  = QString("NCBI_TAXONOMY_TREE.TXT");
     RunData *rundata = RunData::getRunData();
 
-    QString filePath;
+    QStringList filePaths;
+    QString dirPath = rundata->getValueFromHash("REFDBS", _CONFIG ) + QDir::separator() + QString("ncbi_tree") + QDir::separator();
+    QDir dir(dirPath);
+    if(!dir.exists() ) return filePaths;
+
     switch(resType ) {
          case NCBITREEFILE:
-             filePath =  rundata->getValueFromHash("REFDBS", _CONFIG ) + QDir::separator() + QString("ncbi_tree") + QDir::separator()  + QString("ncbi_taxonomy_tree2.txt");
+             if(QFileInfo(dirPath + QDir::separator()+NCBI_TREE_FILE).exists()) filePaths.append(dirPath + QDir::separator() + NCBI_TREE_FILE);
 
+             foreach(QString fileName, dir.entryList()) {
+                 if( fileName.compare(QString("."))==0  || fileName.compare(QString(".."))==0  || fileName.compare(NCBI_TREE_FILE)==0) continue;
+                 filePaths.append(dirPath + QDir::separator() + fileName);
+             }
              break;
+
          default:
-              filePath.clear();
+              filePaths.clear();
               break;
     }
 
-    return filePath;
+    return filePaths;
 
 }
 
@@ -437,7 +447,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
  * @param sampleName, the sample name to add the ORFs for
  * @param fileName, the file than to read the ORF info from
  */
-void DataManager::createORFs(QString sampleName, QString fileName) {
+void DataManager::createORFs(QString sampleName) {
 
    // if(this->ORFsUptoDateList.contains(sampleName) &&  this->ORFsUptoDateList[sampleName] ) return;
     //return if already created;
@@ -449,15 +459,49 @@ void DataManager::createORFs(QString sampleName, QString fileName) {
         this->ORFList->clear(); //memory leak
        // qDebug() << "Clearing the clog";
     }*/
+
+    SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
+    QString orfTableName = samplercmgr->getFilePath(sampleName, ORFTABLE);
+
     this->ORFList->insert(sampleName, new QList<ORF *>);
 
-    QFile inputFile(fileName);
+    QHash<QString, bool>  _orfList;
+
+    QFile inputFile(orfTableName);
+    unsigned int count = 0;
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
-            if(line.size() < 4) continue;
-            (this->ORFList->value(sampleName))->append(this->_createAnORF(line, sampleName));
+            if(line.size() < 4) { continue; }
+            ORF *orf = this->_createAnORF(line, sampleName);
+            (this->ORFList->value(sampleName))->append(orf);
+            _orfList[orf->name] = true;
+            count++;
+        }
+        inputFile.close();
+    }
+
+
+    QString functionalTableName = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE);
+
+    QString skip= "ORF_ID";
+    inputFile.setFileName(functionalTableName);
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
+            if(line.size() <4 ) { continue; }
+            QStringList attributes;
+            attributes << line[0] << line[4] << QString("") << QString("") << QString("");
+            if( line[0].compare(skip)==0) continue;
+
+            QString shortORFName = Utilities::getShortORFId(attributes[0]);
+            if( _orfList.contains(shortORFName) ) continue;
+            ORF *orf = this->_createAnORF(attributes, sampleName);
+            (this->ORFList->value(sampleName))->append(orf);
+            _orfList[orf->name] = true;
+            count++;
         }
         inputFile.close();
     }
@@ -747,6 +791,27 @@ QList<ORF *> DataManager::getORFList(QString sampleName, QString contig) {
 }
 
 
+/**
+ * @brief DataManager::getORFByNames, get the ORF * by the ORF names
+ * @param sampleName, name of the sample
+ * @param orfNames, QHash that has the orfNames
+ * @return
+ */
+QList<ORF *> DataManager::getORFByNames(const QString &sampleName, const  QHash<QString, bool>  &orfNames) {
+
+    QList<ORF *> orfList;
+
+    if( !ORFList->contains(sampleName) )   return orfList;
+
+    foreach(ORF * orf, *(ORFList->value(sampleName))) {
+        if(orfNames.contains(orf->name)) orfList.append(orf);
+    }
+
+    return orfList;
+ }
+
+
+
 /** deletes the connector for a sample
  *\param sampleName, sample name whose connectors is deleted
  *
@@ -775,6 +840,7 @@ void DataManager::deleteAllConnectors() {
 /**
  * @brief DataManager::createConnector, creates the list of subconnectors for a
  * sample  by looking up the list of ORFs, based on a functional tree of attribute;
+ * this table is cached if it does not exist already
  * @param sampleName, the name of the sample
  * @param htree, the functional tree
  * @param attrType, the attribute, e.g., KEGG, COG, SEED
@@ -787,6 +853,23 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
 
         return this->connectors[sampleName][attrType];
     }
+
+
+    Connector *connector = this->_createConnector(sampleName, htree, attrType, orfList);
+
+    return connector;
+}
+
+
+/**
+ * @brief DataManager::_createConnector, creates connector from scratch
+ * @param sampleName
+ * @param htree
+ * @param attrType
+ * @param orfList
+ * @return
+ */
+Connector *DataManager::_createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList ) {
 
     if(htree==0) { qDebug() <<"return zero connector "; return 0; }
     QList<ORF *>::const_iterator it;
@@ -811,6 +894,15 @@ Connector *DataManager::createConnector(QString sampleName, HTree *htree, ATTRTY
        this->connectors[sampleName][attrType] = connector;
      }
 
-  //  qDebug() << "created a new conn of size " << connector->getNumOfORFs();
+
     return connector;
 }
+
+
+
+
+
+
+
+
+

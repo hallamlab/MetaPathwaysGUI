@@ -28,6 +28,7 @@ TableData::TableData(  QWidget *parent) :
     exportButton = this->findChild<QPushButton *>("exportButton");
     alpha  = this->findChild<QComboBox *>("alphaValue");
     lcaDepth  = this->findChild<QSpinBox *>("lcaDepth");
+    functionTable = this->findChild<QPushButton *>("functionTable");
 
 
 
@@ -42,6 +43,8 @@ TableData::TableData(  QWidget *parent) :
 
   //  this->searchWidget = new SearchWidget(this);
    // this->searchWidget->hide();
+
+    connect(functionTable, SIGNAL(clicked()), this, SLOT(spawnFunctionTable()) );
 
 #ifdef SECTION
     tableWidget->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
@@ -274,7 +277,23 @@ void TableData::useLCAStar(bool value) {
     this->addLCAStar = value;
 }
 
+/**
+ * @brief TableData::hideLCAControl, hides the LCA controls from the rRNA and tRNA tables
+ */
+void TableData::hideLCAControl() {
 
+    this->lcaDepth->hide();
+    this->alpha->hide();
+
+}
+
+/**
+ * @brief TableData::hideFunctionalPopupControl, hides the functional popup table from rRNA
+ * and tRNA tables
+ */
+void TableData::hideFunctionalPopupControl() {
+    this->functionTable->hide();
+}
 
 void TableData::setSampleNames(QStringList sampleNames) {
     this->sampleNames = sampleNames;
@@ -369,6 +388,27 @@ void TableData::exportButtonPressed(){
 
 void TableData::setNumCols(unsigned int numCols) {
     this->numCols = numCols;
+}
+
+/**
+ * @brief TableData::spawnFunctionTable, spawns a few function table
+ */
+void TableData::spawnFunctionTable() {
+
+
+    QList<QString> orfNames = this->largeTable->getORFNames();
+
+    QHash<QString, bool> orfNamesHash;
+    foreach(QString orfName, orfNames) {
+        orfNamesHash[orfName] = true;
+    }
+    DataManager *datamanager = DataManager::getDataManager();
+
+    QList<ORF *> orflist = datamanager->getORFByNames(this->sampleName, orfNamesHash);
+
+    HTableData::spawnInformativeTable(this->sampleName, orflist);
+
+
 }
 
 /**
@@ -528,13 +568,18 @@ void TableData::computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash) {
         }
     }
 
+
     lcainfoHash.clear();
     foreach(QString contigName, taxonsForContigs.keys() ) {
         if( lcainfoHash.contains(contigName )) continue;
         LCASTARINFO lcainfo;
-        lcainfo.lcaStar = lcastar->lca_star(taxonsForContigs[contigName]);
-        lcainfo.tooltip = lcastar->getToolTipText(taxonsForContigs[contigName]) ;
-       // qDebug() <<  contigName;
+        lcainfo.lcaStar =  lcastar->lca_star(taxonsForContigs[contigName]);
+
+        FREQUENCY __lca__star;
+        __lca__star.name = lcainfo.lcaStar.taxon;
+        __lca__star.count = lcainfo.lcaStar.count;
+
+        lcainfo.tooltip = lcastar->getToolTipText(taxonsForContigs[contigName], __lca__star) ;
 
         lcainfoHash[contigName] = lcainfo;
     }

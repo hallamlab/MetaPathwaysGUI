@@ -512,12 +512,12 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     int k = 0;
 
     if(this->getValueType()==LCASTAR) {
-        computeLCAStar(data);
+        this->computeLCAStar(data);
     }
 
     LCAStar *lcastar = LCAStar::getLCAStar();
 
-    QList<FREQUENCEY> freq;
+    QList<FREQUENCY> freq;
 
     VALUETYPE _valueType = this->getValueType();
     foreach( ROWDATA * datum,  data) {
@@ -539,10 +539,18 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
             for(unsigned int j=0; j <  datum->taxons.size(); j++) {
                freq.clear();
                item =  new QTableWidgetItem(datum->taxons[j]);
-               unsigned int maxCount = this->getTaxDistribution(datum->name, j, freq);
+               FREQUENCY __lca_star__;
+               __lca_star__.name = datum->taxons[j];
+               __lca_star__.count = datum->counts[j];
+               __lca_star__.total = datum->lcaresults[j].total;
+               __lca_star__.valid = datum->lcaresults[j].valid;
+
+               unsigned int totalorfs;
+               unsigned int maxCount = this->getTaxDistribution(datum->name, j, freq, totalorfs);
+               __lca_star__.percent = (float)__lca_star__.count*100/((float)totalorfs);
 
                if( maxCount > 0) {
-                   tooltip = lcastar->getTaxonsDistribtionTooltipTxt(freq, maxCount);
+                   tooltip = lcastar->getTaxonsDistribtionTooltipTxt(freq, maxCount, __lca_star__);
                   item->setToolTip(tooltip);
                }
 
@@ -577,8 +585,6 @@ void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
     ProgressView progressbar("Recomputing LCA* values", 0, 0, 0);
   //  LCAStar *lcastar = LCAStar::getLCAStar();
 
-
-   // qDebug() <<  "Number of counts " << QThread::idealThreadCount();
     unsigned int value =55;
     unsigned int depth = 1;
     try {
@@ -595,8 +601,8 @@ void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
     }
 
 
-  // lcastar->setParameters(1, depth, static_cast<double>(value)/100.0);
 
+#include <unistd.h>
 #define THREAD_LCASTAR
 #ifdef THREAD_LCASTAR
 
@@ -609,15 +615,19 @@ void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
     if( lca_thread_data.numThreads < 1 ) lca_thread_data.numThreads = 1;
 
     LCAStar * lcastars =  new LCAStar[lca_thread_data.numThreads];
+
+
     for(unsigned int i =0 ; i < lca_thread_data.numThreads; i++) {
+       lcastars[i].setParameters(1, depth, static_cast<double>(value)/100.0);
        lca_thread_data.threadid = i;
        lcastars[i].setData(lca_thread_data);
        lcastars[i].start();
     }
-
     for(unsigned int i =0 ; i < lca_thread_data.numThreads; i++) {
         lcastars[i].wait();
+
     }
+
 
     delete []lcastars;
 
@@ -638,6 +648,94 @@ void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
 
 }
 
+
+/**
+ * @brief HTableData::showInformativeTable this creates a new table from the item, that what selected
+ * @param item, the item that was clicked.
+ */
+void HTableData::spawnInformativeTable(const QString &sampleName, const  QList<ORF *> &orfList) {
+
+
+    DataManager *datamanager = DataManager::getDataManager();
+
+    HTableData *htable = new HTableData(0, 1, false, false);
+    htable->show();
+    // this showdepth value is passed now before a valueChanged signal is connected to the spinbox slot
+
+    //HTableData *htable = new HTableData(0, this->showDepth->value()+ 1 , this->showHierarchy->isChecked(), this->hideZeroRows->isChecked(), this->getValueType());
+    htable->setAttribute(Qt::WA_DeleteOnClose); // frees up memory once it's closed
+    htable->setMultiSampleMode(false);
+    htable->sampleNames.append(sampleName);
+
+    htable->clearConnectors();
+
+    htable->categorySelector->setVisible(true);
+    htable->categorySelector->setCurrentIndex(KEGG);
+    htable->subWindow = true;
+    htable->level = 1;
+    htable->types << STRING << STRING << INT;
+    htable->id.attrType = KEGG;
+    htable->id.sampleName = sampleName;
+
+    QString title = "Selected ORFs";
+
+    htable->setWindowTitle(title );
+
+    HTree *htree = datamanager->getHTree(KEGG);
+    HNODE *hnode = htree->getRootHNODE();
+
+    htable->subCategoryName->setVisible(true);
+
+    if(hnode != 0)
+       htable->subCategoryName->setText(hnode->attribute->alias);
+    else
+       htable->subCategoryName->setText(htable->category);
+
+    htable->depthLabelValue->setText(QString::number(htable->level));
+    htable->depthLabelValue->setVisible(true);
+
+
+
+    htable->clearConnectors();
+
+    QList<ATTRTYPE> attrs;
+    attrs << KEGG << COG <<  METACYC << SEED;
+
+    QList<ORF *> *_orfList = new QList<ORF *>;
+    foreach(ORF *orf, orfList)
+      _orfList->append(orf);
+
+
+    foreach( ATTRTYPE attr, attrs) {
+       Connector *connector = datamanager->_createConnector(htable->sampleNames[0], datamanager->getHTree(attr), attr, _orfList);
+       htable->allConnectors[attr].append(connector);
+    }
+
+
+   // qDebug() << "Category depth " << this->id.attrType << "  " << datamanager->getHTree(this->id.attrType)->getTreeDepth();
+    htable->numOrfsLabel->setText(QString("ORFs count : " +  QString::number(orfList.size()) ));
+    htable->setToolTip("Total number of ORFs | Number of distinct ORFs");
+    htable->numOrfsLabel->setVisible(true);
+
+    // this also starts loading the data
+    htable->switchCategory(htable->id.attrType);
+
+    /*
+    ResultWindow *resultwindow = ResultWindow::getResultWindow();
+
+    if( !resultwindow->htablesAddSignals.contains(htable)) {
+       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+       connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
+       connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), resultwindow, SLOT( showTable(QString, ATTRTYPE)  ));
+       resultwindow->htablesAddSignals.insert(htable, true);
+    }*/
+
+
+}
+
+
+
+
 /**
  * @brief HTableData::showInformativeTable this creates a new table from the item, that what selected
  * @param item, the item that was clicked.
@@ -652,7 +750,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->setMultiSampleMode(this->isMultiSampleMode());
     htable->setSampleNames(this->sampleNames);
 
-
  //   htable->setMaxSpinBoxDepth(datamanager->getHTree(this->id.attrType)->getTreeDepth());
     htable->clearConnectors();
 
@@ -663,7 +760,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->level = this->level +1;
     htable->types = this->types;
     htable->windowtitles = this->windowtitles;
-
 
     QString title;
     foreach( QString _title, htable->windowtitles) {
@@ -698,8 +794,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     QList<ORF *>orfList;
     unsigned int totNumOrfs =0 , _totNumOrfs =0;
 
-
-
     for(unsigned int i =0; i < this->htableIdentities.size(); i++) {
 
         totNumOrfs = 0;
@@ -723,8 +817,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     // this also starts loading the data
     htable->switchCategory(this->id.attrType);
 
-
-
     ResultWindow *resultwindow = ResultWindow::getResultWindow();
 
     if( !resultwindow->htablesAddSignals.contains(htable)) {
@@ -734,7 +826,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
        resultwindow->htablesAddSignals.insert(htable, true);
     }
 
-
     /** kishori's changes
     HTabWidget *htab = new HTabWidget(htable->category,  ":images/cross.png");
     ToolBarManager *toolbarManager = ToolBarManager::getToolBarManager();
@@ -742,8 +833,11 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     WidgetStacker *wStacker = WidgetStacker::getWidgetStacker();
     wStacker->stackWidget(htable);
     mdiAreaWidget->getMdiArea()->cascadeSubWindows(); */
-
 }
+
+
+
+
 
 /** this function is activated when the user switched the functional
  *category--KEGG, COG, MetaCyc, SEED are functional categories--
@@ -1089,7 +1183,7 @@ QString HTableData::LCAStarValue(const QString &category, unsigned int sampleNum
             foreach(ORF *orf, orfList) {
                if( orf->attributes.contains(TAXON)  ) taxonList.append( orf->attributes[TAXON]->name);
             }
-            lcavalue  =  lcastr->lca_star(taxonList);
+            lcavalue  =  lcastr->lca_star(taxonList).taxon;
         }
         return lcavalue;
 
@@ -1103,7 +1197,7 @@ QString HTableData::LCAStarValue(const QString &category, unsigned int sampleNum
  * @param freq
  * @return
  */
-unsigned int HTableData::getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCEY> &freq) {
+unsigned int HTableData::getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCY> &freq, unsigned int &totalorfs) {
 
     DataManager *datamanager = DataManager::getDataManager();
     HTree *htree = datamanager->getHTree(this->id.attrType);
@@ -1129,12 +1223,13 @@ unsigned int HTableData::getTaxDistribution(const QString &category, unsigned in
         totalCount += static_cast<double>(hashCount[key]);
     }
     if( totalCount ==0) totalCount = 1;
+    totalorfs = totalCount;
 
     qSort(taxonFreqList.begin(), taxonFreqList.end(), Utilities::compareFreq);
 
     unsigned int maxCount =0;
     for(QList<TaxonFreqQPair>::iterator it = taxonFreqList.begin(); it!= taxonFreqList.end(); ++it) {
-        FREQUENCEY item;
+        FREQUENCY item;
         item.name = it->first;
         item.count = it->second;
         item.percent = (it->second/totalCount)*100;

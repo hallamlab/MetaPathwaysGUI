@@ -78,11 +78,12 @@ private slots:
 
     void startRun();
     void setProcessToZero();
+
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
     unsigned int countTotalNumberOfSteps();
     unsigned int getNumStepsCompleted();
 
-    void resetRunTab() ;
+    void resetRunTab(bool status, bool clearlog = true) ;
     void updateOverwriteChoice();
 
 public:
@@ -99,6 +100,7 @@ private:
 
     unsigned int _totalSteps;
     unsigned int _stepsCompleted;
+    QHash<QString, STATUS_SYMBOL> _stepstatus;
 
     QPushButton *cancelButton;
     QPushButton *hideButton;
@@ -118,6 +120,7 @@ private:
     QComboBox* sampleSelect;
     QCheckBox* runVerbose;
     QCheckBox *overwrite;
+    QString runid;
 
 };
 

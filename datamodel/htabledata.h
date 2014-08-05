@@ -64,7 +64,7 @@ public:
 
     void getTaxonList(ROWDATA *datum, unsigned int sampleNum, QStringList &taxonList);
 
-    unsigned int getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCEY> &freq);
+    unsigned int getTaxDistribution(const QString &category, unsigned int sampleNum,  QList<FREQUENCY> &freq, unsigned int &totalorfs);
 
     void setMaxSpinBoxDepth(unsigned int maxDepth);
     void setShowHierarchy(bool flag);
@@ -92,6 +92,7 @@ public:
 
     void initializeSearchFilter(QString query, int column);
 
+    static void spawnInformativeTable(const QString &sampleName, const QList<ORF *> &orfList);
 
     QTableWidget* tableWidget;
     unsigned int numCols;

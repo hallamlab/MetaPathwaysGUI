@@ -73,6 +73,9 @@ public:
     void setExportType(TABLEEXPORTTYPE type);
     void setAuxName(QString auxname);
     void useLCAStar(bool value);
+    void hideLCAControl();
+    void hideFunctionalPopupControl();
+
 
     void computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash);
 
@@ -112,6 +115,7 @@ private slots:
     void searchButtonPressed();
     void exportButtonPressed();
      void updateLCAStar(int index);
+     void spawnFunctionTable();
 
 signals:
     void transmitSequenceData(QTableWidgetItem *item, GeneBrowserData gbdata);
@@ -138,6 +142,7 @@ private:
 
     bool multiSampleMode;
     QStringList sampleNames;
+    QPushButton *functionTable;
 
 
     Ui::TableData *ui;

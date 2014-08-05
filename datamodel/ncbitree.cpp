@@ -13,25 +13,38 @@ NCBITree::NCBITree()
 NCBITree *NCBITree::getNCBITree() {
     if(  NCBITree::ncbitree ==0 ) {
          NCBITree::ncbitree = new NCBITree;
-         NCBITree::ncbitree->loadTree();
+         NCBITree::ncbitree->loadTrees();
     }
 
     return NCBITree::ncbitree;
 }
 
+void NCBITree::loadTrees() {
+    DataManager *datamanager = DataManager::getDataManager();
+    qDebug() << " loading the trees";
+    QStringList treefiles = datamanager->getResourceFiles(NCBITREEFILE);
+
+
+    foreach(QString treefile, treefiles) {
+
+        this->loadTree(treefile);
+    }
+
+
+}
+
+
 /**
  * @brief LCAStar::loadTree, loads the NCBI tree
  */
-void NCBITree::loadTree() {
+void NCBITree::loadTree(QString treefile) {
 
-    DataManager *datamanager = DataManager::getDataManager();
-    QString ncbifile = datamanager->getResourceFile(NCBITREEFILE);
+    if(!QFileInfo(treefile).exists() ) return;
+
+    ProgressView progressbar("Reading NCBI tree file \n" +  QFileInfo(treefile).baseName(), 0, 0, 0);
 
 
-    ProgressView progressbar("Reading NCBI tree file \n" +  ncbifile, 0, 0, 0);
-
-    QString ncbiTree = ncbifile;
-    QFile inputFile(ncbiTree);
+    QFile inputFile(treefile);
     QChar delim = QChar('\t');
     QStringList fields;
 

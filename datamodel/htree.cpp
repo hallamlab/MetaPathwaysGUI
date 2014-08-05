@@ -171,6 +171,8 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
 */
 void HTree::enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data) {
     QVector<QString> vtaxons;
+    QVector<unsigned int> vcounts;
+    QVector<LCARESULT> vlcaresults;
 
     currDepth++;
 
@@ -182,6 +184,8 @@ void HTree::enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierar
     // initialize the counts
     for(unsigned int j=0; j < this->connectors.size(); j++) {
         vtaxons.push_back(QString("root"));
+        vcounts.push_back(0);
+        vlcaresults.push_back( LCARESULT() );
     }
 
 
@@ -194,6 +198,8 @@ void HTree::enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierar
     }
 
     r->taxons = vtaxons;
+    r->counts = vcounts;
+    r->lcaresults = vlcaresults;
 
 }
 

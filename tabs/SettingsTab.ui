@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>685</width>
+    <width>759</width>
     <height>804</height>
    </rect>
   </property>
@@ -20,6 +20,22 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="1">
+    <widget class="QComboBox" name="orf_predictionALGORITHM">
+     <item>
+      <property name="text">
+       <string>prodigal</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="17" column="0">
+    <widget class="QLabel" name="label_21">
+     <property name="text">
+      <string>Taxonomic Pruning</string>
+     </property>
+    </widget>
+   </item>
    <item row="16" column="0" colspan="2">
     <widget class="QLabel" name="label_20">
      <property name="sizePolicy">
@@ -35,6 +51,62 @@
      </property>
      <property name="text">
       <string>Pathway Tools Settings</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QLabel" name="label_7">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>ORF Annotation Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1" colspan="5">
+    <widget class="QListWidget" name="rrnaREFDBS">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>6666666</width>
+       <height>100</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="5">
+    <widget class="QListWidget" name="annotationDBS">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>100</height>
+      </size>
      </property>
     </widget>
    </item>
@@ -59,44 +131,40 @@
      </property>
     </widget>
    </item>
-   <item row="17" column="0">
-    <widget class="QLabel" name="label_21">
+   <item row="6" column="3">
+    <widget class="QLabel" name="label_14">
      <property name="text">
-      <string>Taxonomic Pruning</string>
+      <string>Maximum Hits</string>
      </property>
     </widget>
    </item>
-   <item row="14" column="1" colspan="2">
-    <widget class="QTextEdit" name="rrnaMAX_EVALUE">
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>20</height>
-      </size>
+   <item row="6" column="1">
+    <widget class="QComboBox" name="annotationALGORITHM">
+     <property name="editable">
+      <bool>false</bool>
      </property>
-     <property name="html">
-      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <property name="maxVisibleItems">
+      <number>4</number>
      </property>
+     <property name="maxCount">
+      <number>2</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>BLAST</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LAST</string>
+      </property>
+     </item>
     </widget>
    </item>
-   <item row="14" column="0">
-    <widget class="QLabel" name="label_17">
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_8">
      <property name="text">
-      <string>Maximum EValue</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="4" colspan="2">
-    <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>10000</number>
+      <string>Algorithm</string>
      </property>
     </widget>
    </item>
@@ -126,74 +194,10 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="13" column="0">
-    <widget class="QLabel" name="label_18">
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_10">
      <property name="text">
-      <string>Mininum Identity         </string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="1" colspan="5">
-    <widget class="QListWidget" name="rrnaREFDBS">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>6666666</width>
-       <height>100</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="0">
-    <widget class="QLabel" name="label_16">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Databases</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" colspan="6">
-    <widget class="Line" name="line_3">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0" colspan="2">
-    <widget class="QLabel" name="label_15">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>18</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>rRNA Annotation Parameters</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QSpinBox" name="annotationMIN_SCORE">
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>10000</number>
+      <string>Mininum BSR</string>
      </property>
     </widget>
    </item>
@@ -201,6 +205,20 @@ p, li { white-space: pre-wrap; }
     <widget class="QLabel" name="label_12">
      <property name="text">
       <string>Mininum Score</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Quality Control</string>
      </property>
     </widget>
    </item>
@@ -250,74 +268,28 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_10">
-     <property name="text">
-      <string>Mininum BSR</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="3">
-    <widget class="QLabel" name="label_14">
-     <property name="text">
-      <string>Maximum Hits</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QComboBox" name="annotationALGORITHM">
-     <property name="editable">
-      <bool>false</bool>
-     </property>
-     <property name="maxVisibleItems">
-      <number>4</number>
-     </property>
-     <property name="maxCount">
-      <number>2</number>
-     </property>
-     <item>
-      <property name="text">
-       <string>BLAST</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>LAST</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_8">
-     <property name="text">
-      <string>Algorithm</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="5">
-    <widget class="QListWidget" name="annotationDBS">
+   <item row="12" column="0">
+    <widget class="QLabel" name="label_16">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>50</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>100</height>
-      </size>
+     <property name="text">
+      <string>Databases</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
-    <widget class="QLabel" name="label_7">
+   <item row="10" column="0" colspan="6">
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0" colspan="2">
+    <widget class="QLabel" name="label_15">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -330,7 +302,93 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>ORF Annotation Parameters</string>
+      <string>rRNA Annotation Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="label_18">
+     <property name="text">
+      <string>Mininum Identity         </string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="1" colspan="2">
+    <widget class="QTextEdit" name="rrnaMAX_EVALUE">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;0.000001&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0">
+    <widget class="QLabel" name="label_17">
+     <property name="text">
+      <string>Maximum EValue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="4" colspan="2">
+    <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label_22">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Run Parameters</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>Maximum EValue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Delete Replicates</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Mininum Length</string>
      </property>
     </widget>
    </item>
@@ -345,36 +403,6 @@ p, li { white-space: pre-wrap; }
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3" colspan="2">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Mininum Length</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QComboBox" name="orf_predictionALGORITHM">
-     <item>
-      <property name="text">
-       <string>prodigal</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>ORF Prediction</string>
      </property>
     </widget>
    </item>
@@ -417,19 +445,6 @@ p, li { white-space: pre-wrap; }
      </item>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label_5">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Algorithm</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="2">
     <widget class="QSpinBox" name="quality_controlMIN_LENGTH">
      <property name="maximum">
@@ -443,15 +458,15 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
-   <item row="1" column="3" colspan="2">
-    <widget class="QLabel" name="label_3">
+   <item row="2" column="3" colspan="2">
+    <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Delete Replicates</string>
+      <string>Mininum Length</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_4">
      <property name="font">
       <font>
        <pointsize>13</pointsize>
@@ -460,45 +475,17 @@ p, li { white-space: pre-wrap; }
       </font>
      </property>
      <property name="text">
-      <string>Quality Control</string>
+      <string>ORF Prediction</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="8" column="1">
+    <widget class="QSpinBox" name="annotationMIN_SCORE">
+     <property name="minimum">
+      <number>1</number>
      </property>
-     <property name="text">
-      <string>Mininum Length</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="label_22">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>24</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Run Parameters</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="3">
-    <widget class="QLabel" name="label_11">
-     <property name="text">
-      <string>Maximum EValue</string>
+     <property name="maximum">
+      <number>10000</number>
      </property>
     </widget>
    </item>
@@ -525,11 +512,108 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </item>
+   <item row="2" column="2">
+    <widget class="QComboBox" name="orf_predictionTRANSLATION_TABLE">
+     <property name="toolTip">
+      <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Translation Table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="editable">
+      <bool>false</bool>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string extracomment="Standard">1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>9</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>11</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>12</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>13</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>14</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>15</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>21</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>22</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>23</string>
+      </property>
+     </item>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>quality_controlMIN_LENGTH</tabstop>
-  <tabstop>orf_predictionALGORITHM</tabstop>
   <tabstop>annotationDBS</tabstop>
   <tabstop>annotationALGORITHM</tabstop>
   <tabstop>annotationMIN_BSR</tabstop>

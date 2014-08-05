@@ -30,7 +30,8 @@ public:
 private:
     NCBITree();
     static NCBITree * ncbitree;
-    void loadTree();
+    void loadTree(QString treefile);
+    void loadTrees();
 
 
 };

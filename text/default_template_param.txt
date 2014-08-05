@@ -13,6 +13,7 @@ quality_control:delete_replicates  yes
 # ORF prediction parameters 
 orf_prediction:algorithm        prodigal
 orf_prediction:min_length        60
+orf_prediction:translation_table 11
 
 # ORF annotation parameters
 annotation:algorithm LAST
@@ -53,7 +54,6 @@ metapaths_steps:PATHOLOGIC_INPUT        yes
 metapaths_steps:GENBANK_FILE        yes
 metapaths_steps:CREATE_ANNOT_REPORTS        yes
 metapaths_steps:MLTREEMAP_CALCULATION        skip
-metapaths_steps:MLTREEMAP_IMAGEMAKER        skip
 metapaths_steps:BUILD_PGDB        yes
 metapaths_steps:COMPUTE_RPKM        yes
 

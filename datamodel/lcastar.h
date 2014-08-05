@@ -23,18 +23,22 @@
 
 #include <math.h>
 
+
+
 typedef struct _LCASTARINFO {
-    QString lcaStar;
+    LCARESULT lcaStar;
     QString tooltip;
 
 } LCASTARINFO;
 
-typedef struct _FREQUENCE {
+typedef struct _FREQUENCY {
     unsigned int count;
     double percent;
     QString name;
+    unsigned int total;
+    unsigned int valid;
 
-} FREQUENCEY;
+} FREQUENCY;
 
 
 typedef struct _LCA_THREAD_DATA {
@@ -45,14 +49,24 @@ typedef struct _LCA_THREAD_DATA {
    unsigned int threadid;
 } LCA_THREAD_DATA;
 
+
+typedef struct _CANDIDATE {
+    QString first;
+    double second;
+    unsigned int count;
+} CANDIDATE;
+
+
+
 class LCAStar:public QThread
 {
 
 public:
     static LCAStar *getLCAStar();
     void setNCBITree(NCBITree *ncbitree );
-    void loadTree();
-    QString lca_star(const QStringList &taxalist);
+    void loadTrees();
+    void loadTree(QString treefile);
+    LCARESULT lca_star(const QStringList &taxalist);
 
     void setData(LCA_THREAD_DATA data);
 
@@ -68,11 +82,11 @@ public:
 
 private:
     QStringList filter_taxa_list(const QStringList &taxalist);
-    QString __lca_majority(const QStringList &taxalist);
+    LCARESULT __lca_majority(const QStringList &taxalist);
     unsigned int __read_counts(QStringList taxalist, QHash<QString, unsigned int> &read_counts);
     void __annotate_tree_counts(const  QHash<QString , unsigned int> &read_counts);
     void __color_tree(const  QHash<QString , unsigned int> &read_counts);
-    QString __create_majority(const QString &root,  const  QHash<QString , unsigned int> &read_name_counts );
+    LCARESULT __create_majority(const QString &root,  const  QHash<QString , unsigned int> &read_name_counts );
     void __clear_lca_star_data_structure();
     QString  translateIdToName(const QString &id);
     void __decolor_tree();
@@ -82,9 +96,9 @@ private:
 
 
 public:
-    QString getToolTipText(const QStringList &taxons );
-    unsigned int getTaxonsDistributions(const QStringList &taxons, QList<FREQUENCEY> &freq);
-    QString getTaxonsDistribtionTooltipTxt(const QList<FREQUENCEY> &freq, const unsigned int maxCount);
+    QString getToolTipText(const QStringList &taxons , const FREQUENCY &__lca_star);
+    unsigned int getTaxonsDistributions(const QStringList &taxons, QList<FREQUENCY> &freq);
+    QString getTaxonsDistribtionTooltipTxt(const QList<FREQUENCY> &freq, const unsigned int maxCount, const FREQUENCY &__lca_star__);
     QString getTaxonDistributionToolTipTxt(const QString &name, const unsigned int count, const float percent, const unsigned int maxCount, bool shorten =false);
     LCAStar();
 private:
@@ -103,17 +117,17 @@ private:
 
  //   QHash<QString, QHash<QString, bool> > ptaxid_to_taxid;
     //a map from id to value, which has the S = sum n,  value for each id
+   QHash<QString, QString> id_to_R;
 
-    QHash<QString, QString> id_to_R;
     // a map from id to value, which has the S = sum n,  value for each id
-
     QHash<QString, double> id_to_S;
+
     // a map from id to value, which has the L = sum n log n,  value for each id
-
     QHash<QString, double> id_to_L;
-    //a map from id to value, which has the entropy H value for each id
 
+    //a map from id to value, which has the entropy H value for each id
     QHash<QString, double> id_to_H;
+
     // a map to keep track of visited nodes
 
     QHash<QString, bool> id_to_V;
@@ -129,6 +143,7 @@ private:
 
     static QMutex mutexLock;
     LCA_THREAD_DATA data;
+    unsigned int id;
 };
 
 #endif // LCASTAR_H

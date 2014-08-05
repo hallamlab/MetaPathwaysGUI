@@ -50,7 +50,16 @@ public slots:
     bool saveAs();
     bool cancelWindow();
 
+private slots:
+    void selectAllHeadersSlot();
+    void clearAllHeadersSlot();
+    void selectAllSamplesSlot();
+    void clearAllSamplesSlot();
+
 private:
+    void setHeadersCheck(bool state);
+    void setSamplesCheck(bool state);
+
     void createWidget();
     QStringList getCheckedHeaders();
     QStringList getAllHeaders();
@@ -61,7 +70,7 @@ private:
 
     QGroupBox *exportFormat;
     QCheckBox *tsvRadio, *csvRadio;
-    QHBoxLayout *vbox;
+    QHBoxLayout *vbox, *hbox1;
     QPushButton *cancelButton, *exportButton;
 
     QCheckBox *fasta ;

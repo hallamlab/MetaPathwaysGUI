@@ -27,6 +27,7 @@ QHash<QString,QString> Utilities::createMapping(){
 
     CONFIG_NAME_MAP["orf_prediction:algorithm"] = "orf_predictionALGORITHM";
     CONFIG_NAME_MAP["orf_prediction:min_length"] = "orf_predictionMIN_LENGTH";
+    CONFIG_NAME_MAP["orf_prediction:translation_table"] = "orf_predictionTRANSLATION_TABLE";
 
     CONFIG_NAME_MAP["annotation:algorithm"] = "annotationALGORITHM";
     CONFIG_NAME_MAP["annotation:dbs"] = "annotationDBS";

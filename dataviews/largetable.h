@@ -38,6 +38,8 @@ public:
     int readDataFile(const QString fileName, const QChar delim,  const bool ignoreComments = true, const bool firstRowAsHeaders = true);
     int readDataFile(const QString fileName, const QChar delim,  QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments = true, const bool firstRowAsHeaders = true);
     void getData(QList<ROW *> &data,  int pivotPoint = 0, unsigned int deltaW = 100);
+
+    QList<QString> getORFNames();
     unsigned int getBegData( int pivotPoint = 0, unsigned int deltaW = 100);
     void sortByField(unsigned int fieldNum);
 

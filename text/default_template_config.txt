@@ -5,7 +5,7 @@
 
 # Paths for the Python, Perl and Pathway Tools
 PYTHON_EXECUTABLE '/path/to/python' 
-PERL_EXECUTABLE  '/path/to/perl'
+PGDB_FOLDER '/path/to/ptoosl-local/pgdbs/user'
 METAPATHWAYS_PATH  '/path/to/metapathways'
 
 # Replace with your current
@@ -13,16 +13,16 @@ PATHOLOGIC_EXECUTABLE '/path/to/ptools'
 
 REFDBS '/path/to/dbs'  
 
-# Executables: replace 'mac' to your platform linux, mac, win
 # Bit type - bit32 or bit64 
-FORMATDB_EXECUTABLE  'executables/mac/bit64/makeblastdb'
-BLASTP_EXECUTABLE  'executables/mac/bit64/blastp'
-BLASTN_EXECUTABLE  'executables/mac/bit64/blastn'
-EXECUTABLES_DIR  'executables'
+FORMATDB_EXECUTABLE  'makeblastdb'
+BLASTP_EXECUTABLE  'blastp'
+BLASTN_EXECUTABLE  'blastn'
+EXECUTABLES_DIR  'executables/mac/bit64'
+LASTDB_EXECUTABLE  'lastdb'
+LAST_EXECUTABLE  'lastal'
+ORF_PREDICTION 'prodigal' 
 RESOURCES_DIR           'resources/'
-LASTDB_EXECUTABLE  'executables/mac/bit64/lastdb'
-LAST_EXECUTABLE  'executables/mac/bit64/lastal'
-ORF_PREDICTION 'executables/mac/bit64/prodigal' 
+SCAN_tRNA      'trnascan-1.4' 
 
 # This is the folder where the scripts folder of the MetaPathways  pipeline 
 # # is installed
@@ -36,7 +36,7 @@ PARSE_FUNC_SEARCH 'libs/python_scripts/MetaPathways_parse_blast.py'
 ANNOTATE_ORFS 'libs/python_scripts/MetaPathways_annotate_fast.py'
 GENBANK_FILE 'libs/python_scripts/MetaPathways_create_genbank_ptinput_sequin.py'  
 CREATE_ANNOT_REPORTS 'libs/python_scripts/MetaPathways_create_reports_fast.py' 
+RUN_PATHOLOGIC 'libs/python_scripts/MetaPathways_run_pathologic.py' 
 SCAN_rRNA 'libs/python_scripts/MetaPathways_rRNA_stats_calculator.py'
-SCAN_tRNA      'executables/mac/bit64/trnascan-1.4' 
-MLTREEMAP_IMAGEMAKER 'mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl' 
-MLTREEMAP_CALCULATION 'mltreemap/mltreemap_calculation/mltreemap.pl' 
+MLTREEMAP_CALCULATION 'libs/python_scripts/MetaPathways_mltreemap.py' 
+RPKM_CALCULATION 'libs/python_scripts/MetaPathways_rpkm.py' 

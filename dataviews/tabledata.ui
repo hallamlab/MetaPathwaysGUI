@@ -26,7 +26,55 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QSpinBox" name="lcaDepth">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Minimum depth filter. Taxa higher in NCBI Tree are excluded from calculation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>6</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="6">
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="4">
+    <widget class="QPushButton" name="exportButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Export</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
     <widget class="QPushButton" name="searchButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -44,32 +92,6 @@
       <string>Search</string>
      </property>
     </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="exportButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Export</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
    <item row="1" column="0">
     <widget class="QComboBox" name="alphaValue">
@@ -176,38 +198,23 @@
      </item>
     </widget>
    </item>
-   <item row="0" column="0" colspan="5">
-    <widget class="QTableWidget" name="tableWidget">
-     <property name="enabled">
-      <bool>true</bool>
+   <item row="1" column="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
+     <property name="sizeHint" stdset="0">
       <size>
-       <width>0</width>
-       <height>0</height>
+       <width>40</width>
+       <height>20</height>
       </size>
      </property>
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-    </widget>
+    </spacer>
    </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="lcaDepth">
-     <property name="toolTip">
-      <string>Filter ORFs with taxa with depth lower than this for purpose of LCA* calculation. The taxa with lower depth does not have enough specific information about a taxa. The root is considered to be at depth 0. </string>
-     </property>
-     <property name="minimum">
-      <number>1</number>
-     </property>
-     <property name="maximum">
-      <number>6</number>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="functionTable">
+     <property name="text">
+      <string>Function</string>
      </property>
     </widget>
    </item>

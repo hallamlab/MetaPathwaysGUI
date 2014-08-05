@@ -14,6 +14,7 @@
 #include "datamodel/htree.h"
 #include "datamodel/connector.h"
 #include "datamodel/taxons.h"
+#include "datamodel/samplercmanager.h"
 
 class DataManager
 {
@@ -28,19 +29,21 @@ public:
 
     QList<ORF *> *getORFList(QString sampleName);
     QList<ORF *> getORFList(QString sampleName, QString contig);
+    QList<ORF *> getORFByNames(const QString &sampleName, const QHash<QString, bool> &orfNames);
 
     void setIndexFileFaa(QString sampleName, QString fileName);
     void setIndexFileFna(QString sampleName, QString fileName);
     void setIndexFileFasta(QString sampleName, QString fileName);
     Connector *getConnector(QString sampleName, ATTRTYPE type);
     Connector *createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList);
+    Connector *_createConnector(QString sampleName, HTree *htree, ATTRTYPE attrType, QList<ORF *> *orfList);
 
     Connector *createSubConnector(HTree *tree, HNODE *hnode, Connector* connector, ATTRTYPE attrType);
 
     void deleteConnector(QString sampleName) ;
     void deleteAllConnectors();
 
-    void createORFs(QString sampleName, QString fileName);
+    void createORFs(QString sampleName);
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
     void addRPKMToORFs(QString sampleName, QString fileName);
@@ -64,7 +67,7 @@ public:
 
     void createDataModel();
     CATEGORYNODE createCategoryNode(QString line);
-    QString getResourceFile(const RESOURCETYPE &resType) ;
+    QStringList getResourceFiles(const RESOURCETYPE &resType) ;
 
     HTree *createHTree(QString refDB);
     void destroyAllHTrees();

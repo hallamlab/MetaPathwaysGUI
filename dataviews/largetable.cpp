@@ -423,7 +423,7 @@ QString LargeTable::lca_star(const QList<ORF *> &orfList, LCAStar *lcastar) {
 
     lcastar->setLCAStarAlpha(this->lca_star_alpha);
     lcastar->setLCAStarDepth(this->lca_star_min_depth);
-    return lcastar->lca_star(taxalist);
+    return lcastar->lca_star(taxalist).taxon;
 
 }
 
@@ -457,6 +457,22 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
 
         data.append(tableData.at(i));
     }
+}
+
+
+/**
+ * @brief LargeTable::getORFNames, gets the list of ORF names in the tableData
+ * @return
+ */
+QList< QString> LargeTable::getORFNames() {
+
+    QList<QString> orfNames;
+    unsigned orfCol = 0;
+    for (unsigned int i = 0;  i < tableData.length(); i++){
+        QString orfName = Utilities::getShortORFId(tableData.at(i)->strVar[orfCol]);
+        orfNames.append(orfName);
+    }
+    return orfNames;
 }
 
 

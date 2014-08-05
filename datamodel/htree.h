@@ -11,12 +11,14 @@
 #include "helper/types.h"
 #include "datamodel/datamodeltypes.h"
 
+
 typedef struct _ROWDATA {
     QString name;
     QString alias;
     QString lcaStar;
     QVector<unsigned int> counts;
     QVector<QString> taxons;
+    QVector<LCARESULT> lcaresults;
     unsigned int depth;
 } ROWDATA;
 

@@ -8,6 +8,13 @@
 
 
 
+typedef struct _LCARESULT {
+    QString taxon;
+    unsigned int count;
+    unsigned int total;
+    unsigned int valid;
+} LCARESULT;
+
 typedef struct _ATTRIBUTE {
     QString name, alias;
     ~_ATTRIBUTE() {}
