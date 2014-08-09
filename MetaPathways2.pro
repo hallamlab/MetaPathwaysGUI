@@ -13,6 +13,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 TARGET = MetaPathways2
 TEMPLATE = app
 
+DEFINES -= SECTION
 #CONFIG += console
 
 

@@ -13,8 +13,6 @@
 #include <QDebug>
 #include <QAction>
 #include <QMenu>
-#include <QPlastiqueStyle>
-
 
 #include "ProgressDialog.h"
 #include "resultpage.h"

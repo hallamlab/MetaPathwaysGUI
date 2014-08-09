@@ -2,7 +2,7 @@
 #define SETTINGSTAB_H
 #include "RunConfig.h"
 #include <QWidget>
-#include <qlist>
+#include <QList>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QListWidget>
