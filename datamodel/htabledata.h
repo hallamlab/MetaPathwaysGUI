@@ -27,6 +27,7 @@
 #include "helper/types.h"
 #include "helper/globaldatatransit.h"
 
+#include <unistd.h>
 
 
 typedef struct _HTABLE_IDENTITY {

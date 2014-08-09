@@ -602,7 +602,7 @@ void HTableData::computeLCAStar(QList<ROWDATA *> &data) {
 
 
 
-#include <unistd.h>
+
 #define THREAD_LCASTAR
 #ifdef THREAD_LCASTAR
 

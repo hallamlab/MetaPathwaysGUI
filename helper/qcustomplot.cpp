@@ -8593,7 +8593,8 @@ QCustomPlot::QCustomPlot(QWidget *parent) :
   xAxis2->grid()->setLayer("grid");
   yAxis2->grid()->setLayer("grid");
   legend->setLayer("legend");
-  
+  this->setGeometry(QRect(12,12,300,300));
+  this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   setViewport(rect()); // needs to be called after mPlotLayout has been created
   
 #ifdef Q_OS_WIN

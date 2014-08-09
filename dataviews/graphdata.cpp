@@ -13,6 +13,9 @@ GraphData::GraphData( QWidget *parent) :
     titleLabel = this->findChild<QLabel *>("titleLabel");
     graph = this->findChild<QCustomPlot *>("graph");
     exportButton = this->findChild<QPushButton *>("exportButton");
+    this->setMinimumSize(200,300);
+    this->setMaximumSize(700,900);
+    this->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     connect(exportButton,SIGNAL(clicked()),this,SLOT(saveImage()));
 }

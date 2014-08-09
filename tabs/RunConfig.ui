@@ -128,7 +128,7 @@
   <widget class="QTableWidget" name="tableWidget">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>150</x>
      <y>253</y>
      <width>495</width>
      <height>481</height>
@@ -320,7 +320,7 @@ The output of the prodigal run is a set of untranslated and translated (into ami
   <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>280</y>
      <width>314</width>
      <height>31</height>
@@ -388,7 +388,7 @@ The output of the prodigal run is a set of untranslated and translated (into ami
   <widget class="QGroupBox" name="metapaths_stepsORF_TO_AMINO">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>310</y>
      <width>314</width>
      <height>31</height>
@@ -451,7 +451,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORES">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>370</y>
      <width>314</width>
      <height>31</height>
@@ -514,7 +514,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsFUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>400</y>
      <width>314</width>
      <height>31</height>
@@ -580,7 +580,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPARSE_FUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>309</x>
      <y>430</y>
      <width>314</width>
      <height>31</height>
@@ -644,7 +644,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_rRNA">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>309</x>
      <y>460</y>
      <width>314</width>
      <height>31</height>
@@ -707,7 +707,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_tRNA">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>309</x>
      <y>490</y>
      <width>314</width>
      <height>31</height>
@@ -771,7 +771,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>309</x>
      <y>550</y>
      <width>314</width>
      <height>31</height>
@@ -835,7 +835,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE_ORFS">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>309</x>
      <y>520</y>
      <width>314</width>
      <height>31</height>
@@ -899,7 +899,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>580</y>
      <width>314</width>
      <height>31</height>
@@ -966,7 +966,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>610</y>
      <width>314</width>
      <height>31</height>
@@ -1027,7 +1027,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>640</y>
      <width>314</width>
      <height>31</height>
@@ -1109,7 +1109,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsBUILD_PGDB">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>670</y>
      <width>314</width>
      <height>31</height>
@@ -1167,7 +1167,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_INPUT">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>250</y>
      <width>314</width>
      <height>30</height>
@@ -1245,7 +1245,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_RPKM">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>700</y>
      <width>314</width>
      <height>31</height>
@@ -1361,7 +1361,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
   <widget class="QGroupBox" name="metapaths_stepsFILTER_AMINOS">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>310</x>
      <y>340</y>
      <width>314</width>
      <height>31</height>
@@ -1521,6 +1521,31 @@ p, li { white-space: pre-wrap; }
     <string>Select Samples</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>260</y>
+     <width>51</width>
+     <height>471</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777211</height>
+    </size>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/mp_depend.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>tableWidget</zorder>
   <zorder>label</zorder>
   <zorder>fileInputFormat</zorder>
@@ -1554,6 +1579,7 @@ p, li { white-space: pre-wrap; }
   <zorder>inputLine</zorder>
   <zorder>outputLine</zorder>
   <zorder>selectSamplesButton</zorder>
+  <zorder>label_5</zorder>
  </widget>
  <tabstops>
   <tabstop>inputLine</tabstop>
@@ -1592,6 +1618,8 @@ p, li { white-space: pre-wrap; }
   <tabstop>setupGrids</tabstop>
   <tabstop>blastWithGrid</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

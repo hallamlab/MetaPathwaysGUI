@@ -279,10 +279,13 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->addTab(statTableView, "RUN STATS");
     resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
+
     QString contigLengthsFile = samplercmgr->getFilePath(sampleName, CONTIGLENGTH);
     QFile file(contigLengthsFile);
 
     GraphData *g;
+
+
     if( file.exists() ) {
         if( this->simpleGraphGroups.tableExists(sampleName, contigLengthsFile)) {
             g = this->simpleGraphGroups.getTable(sampleName, contigLengthsFile);
@@ -298,6 +301,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     }
 
 
+
     QString orfsLengthsFile = samplercmgr->getFilePath(sampleName, ORFLENGTH);
     file.setFileName(orfsLengthsFile);
     if( file.exists() ) {
@@ -310,6 +314,9 @@ void ResultWindow::sampleChanged(QString sampleName){
             g->prepareInput("ORF Length (amino)", "Frequencey");
             this->simpleGraphGroups.addTable(g, sampleName, orfsLengthsFile);
         }
+
+      //  g->show();
+
         resultTabs->addTab(g,"ORF LEN HIST");
         resultTabs->setTabToolTip(resultTabs->count()-1, "ORF Length (amino) Distribution");
     }
@@ -323,7 +330,6 @@ void ResultWindow::sampleChanged(QString sampleName){
      statTableView->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
      statTableView->verticalHeader()->setResizeMode(QHeaderView::Stretch);
  #endif
-
 
     HTableData *htable;
     types.clear();
