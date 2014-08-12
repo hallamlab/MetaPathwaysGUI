@@ -27,11 +27,15 @@ public:
      */
 
     QHash<QString, QHash<QString, bool> > ptaxid_to_taxid;
+     QString getLineage(QString taxon);
 private:
     NCBITree();
     static NCBITree * ncbitree;
     void loadTree(QString treefile);
+
     void loadTrees();
+    QString translateNameToID(const QString &name) ;
+    QString translateIdToName(const QString &id) ;
 
 
 };

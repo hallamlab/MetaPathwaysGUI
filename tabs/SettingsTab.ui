@@ -190,21 +190,21 @@
    <item row="13" column="3">
     <widget class="QLabel" name="label_19">
      <property name="text">
-      <string>Mininum Bitscore</string>
+      <string>Minimum Bitscore</string>
      </property>
     </widget>
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="label_10">
      <property name="text">
-      <string>Mininum BSR</string>
+      <string>Minimum BSR</string>
      </property>
     </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="label_12">
      <property name="text">
-      <string>Mininum Score</string>
+      <string>Minimum Score</string>
      </property>
     </widget>
    </item>
@@ -241,7 +241,7 @@
    <item row="7" column="3">
     <widget class="QLabel" name="label_13">
      <property name="text">
-      <string>Mininum Length</string>
+      <string>Minimum Length</string>
      </property>
     </widget>
    </item>
@@ -309,7 +309,7 @@
    <item row="13" column="0">
     <widget class="QLabel" name="label_18">
      <property name="text">
-      <string>Mininum Identity         </string>
+      <string>Minimum Identity         </string>
      </property>
     </widget>
    </item>
@@ -388,7 +388,7 @@ p, li { white-space: pre-wrap; }
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Mininum Length</string>
+      <string>Minimum Length</string>
      </property>
     </widget>
    </item>
@@ -461,7 +461,7 @@ p, li { white-space: pre-wrap; }
    <item row="2" column="3" colspan="2">
     <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Mininum Length</string>
+      <string>Minimum Length</string>
      </property>
     </widget>
    </item>

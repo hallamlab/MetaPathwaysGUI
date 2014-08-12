@@ -56,6 +56,7 @@ public:
 
     short int getState(const QString &stepName);
 
+    bool updateItem(const QString stepName, STATUS_SYMBOL status, ProgressDisplayData *progressdisplaydata) ;
     void colorRunConfig();
     void initMapping();
 

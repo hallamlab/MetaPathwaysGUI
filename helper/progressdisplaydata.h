@@ -16,6 +16,10 @@ public:
     static ProgressDisplayData *getProgressDisplayData();
     void createWidgets(const QStringList &stepNames);
     void destroyWidgets();
+
+    void reCreateWidgets(const QString &stepName, const STATUS_SYMBOL status );
+    bool widgetsCreated();
+
     QTableWidgetItem *getTableWidgetItem(const QString &key, const STATUS_SYMBOL);
     QMovie *getLoadingMovie(const QString &key);
     QLabel *getImageLabel(const QString &key) ;

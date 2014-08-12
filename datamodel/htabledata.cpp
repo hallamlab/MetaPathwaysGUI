@@ -908,11 +908,12 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
         int j = 0;
         delimOn = false;
         foreach(QString header, _headers) {
-            if(delimOn)  out << delim;
             if( !includeColumn[header])
                 continue;
-            else
+            else {
+                if(delimOn)  out << delim;
                 delimOn = true;
+            }
             out << header;
         }
         out << "\n";

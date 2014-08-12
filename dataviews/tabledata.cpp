@@ -546,7 +546,7 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
  * @param lcainfo
  */
 void TableData::computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash) {
-    unsigned int col1 = 4, col2 = 8;
+    unsigned int col1 = 4;
 
     QHash<QString, QStringList> taxonsForContigs;
     LCAStar *lcastar = LCAStar::getLCAStar();
@@ -573,7 +573,7 @@ void TableData::computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash) {
     foreach(QString contigName, taxonsForContigs.keys() ) {
         if( lcainfoHash.contains(contigName )) continue;
         LCASTARINFO lcainfo;
-        lcainfo.lcaStar =  lcastar->lca_star(taxonsForContigs[contigName]);
+        lcainfo.lcaStar =   lcastar->lca_star(taxonsForContigs[contigName]);
 
         FREQUENCY __lca__star;
         __lca__star.name = lcainfo.lcaStar.taxon;
@@ -600,6 +600,8 @@ void TableData::populateTable(int top){
 
     tableWidget->setColumnCount(headers.size());
     tableWidget->setHorizontalHeaderLabels(headers);
+    QHeaderView *HorzHdr = tableWidget->horizontalHeader();
+    HorzHdr->setStretchLastSection(true);
 
     int k = top;
     tableWidget->clearContents();
@@ -611,7 +613,9 @@ void TableData::populateTable(int top){
     }
 
     QTableWidgetItem *item;
+    NCBITree *ncbitree = NCBITree::getNCBITree();
 
+    QString string;
 
     foreach( ROW *datum,  bigdata) {     
       for( unsigned int i = 0; i < largeTable->numCols; i++) {
@@ -625,8 +629,9 @@ void TableData::populateTable(int top){
                   tableWidget->setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
               }
               if(types[i] == STRING) {
-
-                  tableWidget->setItem(k,i,new QTableWidgetItem(QString(datum->strVar.at(largeTable->index[i]))));
+                  string = datum->strVar.at(largeTable->index[i]);
+                  if(i==8) string=ncbitree->getLineage(string);
+                  tableWidget->setItem(k,i,new QTableWidgetItem(string));
               }
 
           }
@@ -641,6 +646,9 @@ void TableData::populateTable(int top){
             try{
                item = tableWidget->item(k, largeTable->numCols -1);
                item->setToolTip( lcainfo[datum->strVar.at(largeTable->index[4]) ].tooltip);
+             //  item->setText(ncbitree->getLineage(lcainfo[datum->strVar.at(largeTable->index[4]) ].lcaStar.taxon));
+               QString lineage =  ncbitree->getLineage(lcainfo[datum->strVar.at(largeTable->index[4]) ].lcaStar.taxon);
+               item->setText(lineage);
             }
             catch(...) {
 
@@ -649,7 +657,6 @@ void TableData::populateTable(int top){
       k++;
     }
     tableWidget->resizeColumnsToContents();
-    //table.resizeRowsToContents();
     tableWidget->horizontalHeader()->setStretchLastSection(true);
 }
 

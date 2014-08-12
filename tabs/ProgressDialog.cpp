@@ -275,8 +275,6 @@ void ProgressDialog::readStepsLog(){
 
     _stepsCompleted = 0;
 
-    //if(!this->checkInputOutPutLocations()) return;
-
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + QDir::separator() + sampleForLog + QDir::separator() + "metapathways_steps_log.txt";
 
@@ -307,9 +305,7 @@ void ProgressDialog::readStepsLog(){
 
     // update icons for each step
     colorRunConfig();
-
     shadeActiveSteps();
-
 
     if( myProcess !=0 ) {
         updateProgressBar();
@@ -527,10 +523,10 @@ void ProgressDialog::shadeActiveSteps() {
         item= this->summaryTable->item(i,0);
 
         if( activeSteps.contains( this->TABLE_MAPPING[i]) && this->isProcessRunning() ) {
-            item->setBackgroundColor(Qt::lightGray);
+            item->setBackground(Qt::lightGray);
         }
         else
-            item->setBackgroundColor(Qt::white);
+            item->setBackground(Qt::white);
     }
 }
 
@@ -550,68 +546,69 @@ bool ProgressDialog::isStepActive(QString stepName) {
     return false;
 }
 
+bool ProgressDialog::updateItem(const QString stepName, STATUS_SYMBOL status, ProgressDisplayData *progressdisplaydata ) {
+  int _row = TABLE_MAPPING.key(stepName);
+ // qDebug() << this->_stepstatus.contains(stepName) << "   " << this->_stepstatus[stepName] << "  " << status;
+  if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=status) {
+       this->summaryTable->setItem(_row, 0, NULL);
+       progressdisplaydata->reCreateWidgets(stepName,status);
+       QTableWidgetItem *item = progressdisplaydata->getTableWidgetItem(stepName, status);
+       this->summaryTable->setItem(_row, 0, item);
+    //   qDebug() << "item " << item;
+       this->_stepstatus[stepName] = status;
+       return true;
+  }
+
+
+  return false;
+
+}
 
 /**
  * @brief ProgressDialog::colorRunConfig,
  * Update the table with the appropriate widget depending on the status for that step
  */
 void ProgressDialog::colorRunConfig(){
-
-    QHash<QString,STATUS> ::iterator it;
     _stepsCompleted = 0;
    // this->summaryTable->clearContents();
-    QTableWidgetItem *item;
 
     ProgressDisplayData *progressdisplaydata = ProgressDisplayData::getProgressDisplayData();
-    progressdisplaydata->destroyWidgets();
+    //if( !progressdisplaydata->widgetsCreated() )
+   // progressdisplaydata->destroyWidgets();
+    if( !progressdisplaydata->widgetsCreated() )
     progressdisplaydata->createWidgets(this->expectedSteps.keys());
 
     bool isAStepRunning = this->isRunningAStep();
     unsigned int runningStepNo = TABLE_MAPPING.key(this->running["RUNNING"]);
 
-
-
-
+   // qDebug() << " runnint step no " << runningStepNo;
     foreach(QString stepName, this->expectedSteps.keys()){      
         int _row = TABLE_MAPPING.key(stepName);
-        this->summaryTable->setItem(_row, 0, NULL);
-
-        if(isAStepRunning && runningStepNo < _row && this->isStepActive(stepName) ) {
-            if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=UNSURE)
-               item = progressdisplaydata->getTableWidgetItem(stepName, UNSURE);
+    //    qDebug() << stepName << this->getState(stepName);
+        if(isAStepRunning && runningStepNo < _row &&  this->isStepActive(stepName) ) {
+             this->updateItem(stepName, UNSURE,progressdisplaydata);
         }
         else {
             if ( this->getState(stepName) == -1 ){
-                if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=REDCROSS)
-                item = progressdisplaydata->getTableWidgetItem(stepName, REDCROSS);
-                _stepsCompleted++;
+                if( this->updateItem(stepName, REDCROSS ,progressdisplaydata)) _stepsCompleted++;
 
             }else if (this->getState(stepName) == 0){
-               if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=PARTIAL)
-                item = progressdisplaydata->getTableWidgetItem(stepName, PARTIAL);
+                  this->updateItem(stepName, PARTIAL ,progressdisplaydata);
             }
             else if (this->getState(stepName) == 1)  {
-                //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-                if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=GREENCHECK)
-                item = progressdisplaydata->getTableWidgetItem(stepName, GREENCHECK);
-                _stepsCompleted++;
+                 if(this->updateItem(stepName, GREENCHECK,progressdisplaydata)) _stepsCompleted++;
             }
             else if (this->getState(stepName) == 2)  {
-                //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-                if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=LOADING)
-                item = progressdisplaydata->getTableWidgetItem(stepName, LOADING );
+                  this->updateItem(stepName, LOADING,progressdisplaydata);
             }
             else if (this->getState(stepName) == -2)  {
-            //item->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
-               if( !this->_stepstatus.contains(stepName)|| this->_stepstatus[stepName]!=UNSURE)
-                item = progressdisplaydata->getTableWidgetItem(stepName, UNSURE);
+                  this->updateItem(stepName, UNSURE ,progressdisplaydata);
             }
+            else {
+                qDebug() << "undefined state";
+              }
         }
-
-
-        this->summaryTable->setItem(_row,0, item);
     }
-
 }
 
 
@@ -733,6 +730,7 @@ void ProgressDialog::initProcess(){
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
+
 
  //   standardOut->append( arguments.join(" ") );
 

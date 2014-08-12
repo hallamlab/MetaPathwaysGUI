@@ -34,6 +34,9 @@
        <pointsize>18</pointsize>
       </font>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This field should have the python executable name. In Mac, Linux or Unix this can be found out by typing &amp;quot;which python&amp;quot; in a terminal.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Python Executable</string>
      </property>
@@ -112,6 +115,9 @@
        <pointsize>18</pointsize>
       </font>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The folder that contains the functional and taxonomic reference databases. This folder is usually names as &amp;quot;MetaPathways_DBs&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Database Directory</string>
      </property>
@@ -158,6 +164,9 @@
       <font>
        <pointsize>18</pointsize>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the location of the MetaPathways_Python directory that contains the actual pipeline stages, that is written mostly in Python&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>MetaPathways Directory</string>
@@ -234,6 +243,9 @@
        <pointsize>18</pointsize>
       </font>
      </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The location of the PathwayTools executable that is used to view existing  ePGDBs and also create new ePGDBs. Usually it is installed in the folder structure ~/pathway-tools/pathway-tools  under your home directory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Pathway Tools Executable</string>
      </property>
@@ -245,6 +257,9 @@
       <font>
        <pointsize>18</pointsize>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The location of the pgdb folder that stores the ePGDBs. Usually it is installed in the folder structure ~/ptools-local/pgdbs/user under your home directory&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>PGDB Folder Path</string>

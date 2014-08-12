@@ -18,10 +18,49 @@ void ProgressDisplayData::destroyWidgets() {
             _tablewidgetitem[status].remove(key);
         }
     }
+}
 
+
+
+bool ProgressDisplayData::widgetsCreated() {
+
+  if(this->_tablewidgetitem[REDCROSS].size() > 1  ) return true;
+  return false;
 
 }
 
+
+void ProgressDisplayData::reCreateWidgets(const QString &stepName, const STATUS_SYMBOL status) {
+   QImage img;
+
+   switch(status) {
+         case REDCROSS:
+                img  = QImage(":/images/cross.png");
+                break;
+         case GREENCHECK:
+                img  = QImage(":/images/check.png");
+                break;
+         case PARTIAL:
+                img  = QImage(":/images/partial.png");
+               break;
+         case UNSURE:
+                img  = QImage(":/images/unsure.png");
+                break;
+         case LOADING:
+                img = QImage(":/images/running.png");
+                break;
+         default:
+                break;
+     }
+
+     if( _tablewidgetitem[status][stepName] ==0) delete _tablewidgetitem[status][stepName];
+     _tablewidgetitem[status][stepName] =0;
+
+
+     _tablewidgetitem[status][stepName] = new QTableWidgetItem();
+     _tablewidgetitem[status][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(img).scaled(12,12));
+
+}
 
 bool ProgressDisplayData::isValidKey(const QString &stepName) {
     return _tablewidgetitem[REDCROSS].contains(stepName);
@@ -31,8 +70,6 @@ void ProgressDisplayData::createWidgets(const QStringList &stepNames) {
 
 
     foreach(QString stepName, stepNames) {
-
-
         QImage rimg  = QImage(":/images/cross.png");
         _tablewidgetitem[REDCROSS][stepName] = new QTableWidgetItem();
         _tablewidgetitem[REDCROSS][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(rimg).scaled(12,12));
@@ -48,7 +85,6 @@ void ProgressDisplayData::createWidgets(const QStringList &stepNames) {
         QImage eimg  = QImage(":/images/unsure.png");
         _tablewidgetitem[UNSURE][stepName] = new QTableWidgetItem();
         _tablewidgetitem[UNSURE][stepName]->setData(Qt::DecorationRole, QPixmap::fromImage(eimg).scaled(8,20));
-
 
         QImage loadmov  = QImage(":/images/running.png");
         _tablewidgetitem[LOADING][stepName] = new QTableWidgetItem();

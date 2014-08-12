@@ -90,6 +90,7 @@ private:
 
     QScrollArea* stageScroll;
     QScrollArea* settingsScroll;
+    QScrollArea* progressScroll;
 
     QWidget *centralWidget;
     QStackedWidget* stackedWidget;

@@ -14,6 +14,10 @@ TARGET = MetaPathways2
 TEMPLATE = app
 
 DEFINES -= SECTION
+
+
+DEFINES += DEBIAN
+
 #CONFIG += console
 
 

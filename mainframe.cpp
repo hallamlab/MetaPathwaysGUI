@@ -139,13 +139,18 @@ void MainFrame::addRemainingTabs() {
 
     stageScroll = new QScrollArea();
     settingsScroll = new QScrollArea();
+    progressScroll = new QScrollArea();
 
     stageScroll->setWidget(stages);
     settingsScroll->setWidget(settings);
+    progressScroll->setWidget(progress);
+
     stackedWidget->addWidget(stageScroll);
     stackedWidget->addWidget(settingsScroll);
+    stackedWidget->addWidget(progressScroll);
+
     stackedWidget->addWidget(resultWindow);
-    stackedWidget->addWidget(progress);
+
 
     connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
@@ -353,7 +358,7 @@ void MainFrame::executionPrep(){
 
 void MainFrame::displayProgress(){
     this->updateWidgets();
-    stackedWidget->setCurrentWidget(progress);
+    stackedWidget->setCurrentWidget(progressScroll);
 }
 
 void MainFrame::openSetup(){

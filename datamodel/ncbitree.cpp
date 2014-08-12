@@ -75,5 +75,30 @@ void NCBITree::loadTree(QString treefile) {
     progressbar.hide();
 }
 
+QString NCBITree::translateNameToID(const QString &name) {
+    if( !ncbitree->name_to_id.contains(name)) QString();
+    return ncbitree->name_to_id[name];
+}
 
+
+QString NCBITree::translateIdToName(const QString &id) {
+    if( !this->id_to_name.contains(id)) return QString();
+    return  this->id_to_name[id];
+}
+
+QString NCBITree::getLineage(QString taxon) {
+  QString id = this->translateNameToID(taxon);
+
+  QString tid = id;
+  QString lineage = taxon;
+  while( this->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1")) !=0) {
+      QString pid = this->taxid_to_ptaxid[tid][0];
+      lineage = this->translateIdToName(pid) + ";" + lineage;
+      this->ptaxid_to_taxid[pid][tid] = true;
+      tid = pid;
+  }
+
+  return lineage;
+
+}
 

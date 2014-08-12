@@ -56,11 +56,17 @@ LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreCo
 }
 
 LargeTable::~LargeTable() {
-
-
     foreach(ROW *r, wholeTableData ){
+       try{
         delete r;
+        }
+        catch(...) {
+          qDebug() << "Error : in deleting LargeTable";
+        }
     }
+
+
+
 }
 
 
@@ -442,7 +448,7 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
     unsigned int contigCol = 1, lcaCol = 6;
 
     data.clear();
-
+    NCBITree *ncbitree = NCBITree::getNCBITree();
     QHash<QString, QString> lcaForContigs;
 
     for (unsigned int i = pivotPoint; i < pivotPoint + 2*deltaW && i < tableData.length(); i++){
@@ -452,7 +458,8 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
                   QList<ORF *> orfs = datamanager->getORFList(this->sampleName, contig);
                   lcaForContigs[contig] = this->lca_star(orfs, lcastar);
             }
-            tableData[i]->strVar[lcaCol] = lcaForContigs[contig];
+
+            tableData[i]->strVar[lcaCol] =  lcaForContigs[contig];
         }
 
         data.append(tableData.at(i));
