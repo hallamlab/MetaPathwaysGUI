@@ -21,13 +21,18 @@ NCBITree *NCBITree::getNCBITree() {
 
 void NCBITree::loadTrees() {
     DataManager *datamanager = DataManager::getDataManager();
-    qDebug() << " loading the trees";
     QStringList treefiles = datamanager->getResourceFiles(NCBITREEFILE);
 
 
     foreach(QString treefile, treefiles) {
-
         this->loadTree(treefile);
+    }
+
+    QStringList mapfiles = datamanager->getResourceFiles(NCBINAMEMAPFILE);
+    qDebug() << mapfiles;
+
+    foreach(QString mapfile, mapfiles) {
+        this->loadMeganMap(mapfile);
     }
 
 
@@ -75,25 +80,82 @@ void NCBITree::loadTree(QString treefile) {
     progressbar.hide();
 }
 
+/**
+ * @brief LCAStar::loadMeganMap, loads the NCBI taxon name map
+ */
+void NCBITree::loadMeganMap(QString mapfile) {
+
+    if(!QFileInfo(mapfile).exists() ) return;
+
+    ProgressView progressbar("Reading NCBI taxon map file \n" +  QFileInfo(mapfile).baseName(), 0, 0, 0);
+
+
+    QFile inputFile(mapfile);
+    QChar delim = QChar('\t');
+    QStringList fields;
+
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        while ( !in.atEnd() )  {
+            QString line = in.readLine().trimmed();
+            if (this->begin_pattern.indexIn(line) != -1  ) continue;
+
+            fields = line.split(QRegExp(delim));
+            if(fields.size()  !=3 ) continue;
+            this->id_to_namemap[fields[0]] = fields[1];
+        }
+    }
+    else return;
+
+    inputFile.close();
+    progressbar.hide();
+}
+
+
 QString NCBITree::translateNameToID(const QString &name) {
     if( !ncbitree->name_to_id.contains(name)) QString();
     return ncbitree->name_to_id[name];
 }
 
 
-QString NCBITree::translateIdToName(const QString &id) {
+QString NCBITree::translateIdToName(const QString &id, bool meganfirst) {
+
+  if(meganfirst && this->id_to_namemap.contains(id)) return this->id_to_namemap[id];
+
     if( !this->id_to_name.contains(id)) return QString();
     return  this->id_to_name[id];
+}
+
+
+QString NCBITree::grabNameinQuotes(const QString &name) {
+    QRegExp pattern1, pattern2;
+    QString newName;
+    pattern1.setPattern("[\"](.*)[\"]");
+    pattern2.setPattern("['](.*)[']");
+
+    newName = name;
+
+    int pos  = pattern1.indexIn(newName);
+    if( pos > -1 ) {
+        newName = pattern1.cap(1);
+    }
+
+    pos  = pattern2.indexIn(newName);
+    if( pos > -1 ) {
+        newName = pattern2.cap(1);
+    }
+
+    return newName;
 }
 
 QString NCBITree::getLineage(QString taxon) {
   QString id = this->translateNameToID(taxon);
 
   QString tid = id;
-  QString lineage = taxon;
+  QString lineage = this->grabNameinQuotes( taxon);
   while( this->taxid_to_ptaxid.contains(tid) && tid.compare(QString("1")) !=0) {
       QString pid = this->taxid_to_ptaxid[tid][0];
-      lineage = this->translateIdToName(pid) + ";" + lineage;
+      lineage = this->grabNameinQuotes(this->translateIdToName(pid,true)) + ";" + lineage;
       this->ptaxid_to_taxid[pid][tid] = true;
       tid = pid;
   }

@@ -647,8 +647,10 @@ void TableData::populateTable(int top){
                item = tableWidget->item(k, largeTable->numCols -1);
                item->setToolTip( lcainfo[datum->strVar.at(largeTable->index[4]) ].tooltip);
              //  item->setText(ncbitree->getLineage(lcainfo[datum->strVar.at(largeTable->index[4]) ].lcaStar.taxon));
-               QString lineage =  ncbitree->getLineage(lcainfo[datum->strVar.at(largeTable->index[4]) ].lcaStar.taxon);
-               item->setText(lineage);
+
+               //for now
+               //  QString lineage =  ncbitree->getLineage(lcainfo[datum->strVar.at(largeTable->index[4]) ].lcaStar.taxon);
+              // item->setText(lineage);
             }
             catch(...) {
 

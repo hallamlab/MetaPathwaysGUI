@@ -34,6 +34,12 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     tableWidget->verticalHeader()->setResizeMode(QHeaderView::Stretch);
 #endif
 
+#ifndef LCASTAR
+    alpha->hide();
+    lcaDepth->hide();
+#endif
+
+
     HTABLEIDENTITY a;
    // order is important
     a.attrType = KEGG; a.sampleName="KEGG";
@@ -97,7 +103,11 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(released()), this, SLOT(exportButtonPressed()));
+
+#ifdef LCASTAR
     connect(valueType, SIGNAL(currentIndexChanged(int)), this, SLOT( toggleAlpha(int) )   );
+#endif
+
     connect(valueType, SIGNAL(currentIndexChanged(int) ), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
     connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
     connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
@@ -115,6 +125,7 @@ HTableData::~HTableData()
  * @brief HTableData::disableAlpha, hides the alpha value
  */
 void HTableData::toggleAlpha(int vType) {
+#ifdef LCASTAR
     if( vType==LCASTAR) {
         this->alpha->setEnabled(true); this->alpha->show();
         this->lcaDepth->setEnabled(true); this->lcaDepth->show();
@@ -124,6 +135,7 @@ void HTableData::toggleAlpha(int vType) {
         this->lcaDepth->setEnabled(false); this->lcaDepth->hide();
     }
     return;
+#endif
 }
 
 
@@ -134,7 +146,7 @@ void HTableData::toggleAlpha(int vType) {
 void HTableData::matchAlphaVisible() {
     VALUETYPE vType = this->getValueType();
 
-
+#ifdef LCASTAR
     if( vType==LCASTAR) {
         this->alpha->setEnabled(true); this->alpha->show();
          this->lcaDepth->setEnabled(true); this->lcaDepth->show();
@@ -143,6 +155,7 @@ void HTableData::matchAlphaVisible() {
         this->alpha->setEnabled(false); this->alpha->hide();
         this->lcaDepth->setEnabled(false); this->lcaDepth->hide();
     }
+#endif
     return;
 }
 
@@ -181,7 +194,6 @@ void HTableData::setMultiSampleMode(bool multisample) {
 
 void HTableData::addSampleName(QString sampleName, bool clearPrev) {
     if( clearPrev) this->sampleNames.clear();
-
     if( !this->sampleNames.contains(sampleName))
         this->sampleNames.append(sampleName);
 }
@@ -196,6 +208,14 @@ bool HTableData::isMultiSampleMode() {
  */
 QStringList HTableData::getSampleNames() {
     return this->sampleNames;
+}
+
+/**
+ * @brief HTableData::clearSampleNames
+ * @return list of samples in the htable
+ */
+void HTableData::clearSampleNames() {
+    return this->sampleNames.clear();
 }
 
 /**
@@ -374,10 +394,14 @@ void HTableData::fillData() {
          _headers = this->multiSampleHeaders();
      }
 
+#ifdef LCASTAR
      if( this->getValueType()==LCASTAR ) {
          this->populateTable(data, _headers);
      }
-     else {
+     else
+#endif
+
+     {
          if(hideZeroRows->isChecked()) {
             foreach(ROWDATA *r, data) {
                 if( isNonZero(r)) newdata.append(r);
@@ -401,13 +425,15 @@ VALUETYPE HTableData::getValueType() {
 
 
     switch( this->valueType->currentIndex()) {
-         case 0:
+         case ORFCOUNT:
                _valueType = ORFCOUNT;
                break;
+#ifdef LCASTAR
          case 1:
                _valueType = LCASTAR;
                break;
-         case 2:
+#endif
+         case RPKMCOUNT:
                _valueType = RPKMCOUNT;
                break;
          default:
@@ -439,11 +465,13 @@ unsigned int HTableData::fillSelectedData() {
 
      QList<ROWDATA *> newdata;
 
-
+#ifdef LCASTAR
      if( this->getValueType()==LCASTAR ) {
          this->populateTable(data, _headers);
      }
-     else {
+     else
+#endif
+       {
          if(hideZeroRows->isChecked()) {
             foreach(ROWDATA *r, data) {
                 if( isNonZero(r)) newdata.append(r);
@@ -511,9 +539,11 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     QTableWidgetItem *item;
     int k = 0;
 
+#ifdef LCASTAR
     if(this->getValueType()==LCASTAR) {
         this->computeLCAStar(data);
     }
+#endif
 
     LCAStar *lcastar = LCAStar::getLCAStar();
 
@@ -535,6 +565,7 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
         tableWidget->setItem(k,1,new QTableWidgetItem(QString(datum->alias)));
 
+#ifdef LCASTAR
         if(_valueType==LCASTAR) {
             for(unsigned int j=0; j <  datum->taxons.size(); j++) {
                freq.clear();
@@ -557,7 +588,9 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
                tableWidget->setItem(k,2 +j, item);
             }
         }
-        else {
+        else
+#endif
+          {
             item->setToolTip("");
             for(unsigned int j=0; j <  datum->counts.size(); j++) {
                 item = new QTableWidgetItem(QString::number(datum->counts[j]));

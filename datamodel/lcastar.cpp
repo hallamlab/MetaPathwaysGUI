@@ -528,7 +528,9 @@ void LCAStar::__clear_lca_star_data_structure() {
  * @param id
  * @return
  */
-QString LCAStar::translateIdToName(const QString &id) {
+QString LCAStar::translateIdToName(const QString &id, bool meganfirst) {
+
+    if(meganfirst && ncbitree->id_to_namemap.contains(id)) return ncbitree->id_to_namemap[id];
     if( !ncbitree->id_to_name.contains(id)) return QString();
     return  ncbitree->id_to_name[id];
 }

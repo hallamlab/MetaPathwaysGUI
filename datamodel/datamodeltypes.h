@@ -58,6 +58,9 @@ typedef struct _ORF {
     bool strand;
     float rpkm;
 
+    _ORF() {
+       rpkm=0;
+    }
 
     ~_ORF() {
         /*

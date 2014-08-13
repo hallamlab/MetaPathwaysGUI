@@ -80,11 +80,6 @@
      </item>
      <item>
       <property name="text">
-       <string>LCA*</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>RPKM</string>
       </property>
      </item>
@@ -116,6 +111,9 @@
      <property name="horizontalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
     </widget>
    </item>
    <item row="2" column="0">
@@ -147,6 +145,9 @@
    </item>
    <item row="2" column="3">
     <widget class="QComboBox" name="alphaValue">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This is the majority threshold required for a taxon to be decided as the LCA* taxonomy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -272,6 +273,9 @@
    </item>
    <item row="2" column="4">
     <widget class="QSpinBox" name="lcaDepth">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Filter ORFs with taxa with depth lower than this for purpose of LCA* calculation. The taxa with lower depth does not have enough specific information about a taxa. The  root is considered to be at depth 0. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>

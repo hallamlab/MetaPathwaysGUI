@@ -88,7 +88,7 @@ private:
     void __color_tree(const  QHash<QString , unsigned int> &read_counts);
     LCARESULT __create_majority(const QString &root,  const  QHash<QString , unsigned int> &read_name_counts );
     void __clear_lca_star_data_structure();
-    QString  translateIdToName(const QString &id);
+    QString  translateIdToName(const QString &id, bool meganfirst = false);
     void __decolor_tree();
 
     unsigned int taxon_depth(const QString &taxon);

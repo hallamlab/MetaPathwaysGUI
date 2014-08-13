@@ -201,6 +201,8 @@ QStringList DataManager::getResourceFiles(const RESOURCETYPE &resType) {
     QStringList filePaths;
     QString dirPath = rundata->getValueFromHash("REFDBS", _CONFIG ) + QDir::separator() + QString("ncbi_tree") + QDir::separator();
     QDir dir(dirPath);
+
+    QDir mapDir(dirPath + QDir::separator() + "mapping");
     if(!dir.exists() ) return filePaths;
 
     switch(resType ) {
@@ -212,6 +214,15 @@ QStringList DataManager::getResourceFiles(const RESOURCETYPE &resType) {
                  filePaths.append(dirPath + QDir::separator() + fileName);
              }
              break;
+
+      case NCBINAMEMAPFILE:
+
+          if(mapDir.exists())
+            foreach(QString fileName, dir.entryList()) {
+                if( fileName.compare(QString("."))==0  || fileName.compare(QString(".."))==0) continue;
+                filePaths.append(dirPath + QDir::separator() + fileName);
+            }
+          break;
 
          default:
               filePaths.clear();
@@ -664,6 +675,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
             line.removeFirst();
             line.removeFirst();
             foreach(QString _orfName, line) {
+
                orfName = Utilities::getShortORFId(_orfName);
 
                if( orfHash.contains(orfName)) {
@@ -675,6 +687,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
                }
 
                temporf->name = orfName;
+
                if( this->attributes[METACYC].contains(name)) {
                    temporf->attributes[METACYC] = this->attributes[METACYC][name];
                }

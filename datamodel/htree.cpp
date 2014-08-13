@@ -210,9 +210,13 @@ QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, QList<Connector *> &conne
    QList<ROWDATA *> data;
    this->connectors = connectors;
 
+
    if(valueType==RPKMCOUNT)  this->countTree(this->root, maxDepth, showHierarchy, -1, data, true);
    if(valueType==ORFCOUNT) this->countTree(this->root, maxDepth, showHierarchy, -1, data, false);
+
+#ifdef LCASTAR
    if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
+#endif
 
    return data;
 }
@@ -226,7 +230,9 @@ QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth,  QList<
    if(node!=0) {
       if(valueType==RPKMCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, true);
       if(valueType==ORFCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, false);
+#ifdef LCASTAR
       if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
+#endif
    }
    return data;
 }

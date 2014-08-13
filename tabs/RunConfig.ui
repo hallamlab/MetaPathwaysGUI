@@ -199,7 +199,7 @@
      <string>PREPROCESS INPUT</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.&lt;/p&gt;&lt;p&gt;The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of ambiguous nucleotide positions. Contigs with ambiguous sequences are split into, separate contigs, at the regions where ambiguous sequences appear. The resulting conigs are filtered out if they are below the minimum length threshold. The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -207,7 +207,7 @@
      <string>ORF PREDICTION</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/p&gt;&lt;p&gt;The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &amp;quot;orf_prediction&amp;quot; folder. The translation is done based on the translation  table id provided by the user, by default it 11&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocessed nucleotide sequences (contigs) are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/p&gt;&lt;p&gt;The output of the prodigal run is a set of (open reading frames) ORFs and the same ORFs translated (into amino acid sequences). The resulting files are available in the &amp;quot;orf_prediction&amp;quot; folder. The translation is done based on the translation table id provided by the user, by default it 11&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -215,7 +215,7 @@
      <string>ORF TO AMINO</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences.The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences and gff files that contains more detailed information such as orf_length, strand, start and end positions, contig_length, etc .The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -223,7 +223,7 @@
      <string>FILTER AMINOS</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa. &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#010501;&quot;&gt;These amino acid sequences can be used in the downstream process of annotating them functionally and taxonomically (using LCA rule)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -231,7 +231,7 @@
      <string>COMPUTE REFSCORES</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20e542;&quot;&gt;the orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio for the hits.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting files are in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#30d85c;&quot;&gt;blast_results&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in a file named with a &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1f17d1;&quot;&gt;.refscore.algorithm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (where algorith is BLAST/LAST depending on the algoirthm) extension&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amino acid sequences in the orf_prediction folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio (BSR) for the hits.  The BSR ratio can be defined at the ratio of a the bit-score between a query and a target sequence to the bit-score when both the query and target sequences are the query sequence. Usually, a BSR ratio of 0.4 or more is considered as a good hit for protein sequences. Note that BSR ratio is designed in some sense to have a normalized value for the bit-score  since the score is also influenced by the length of the query. &lt;/p&gt;&lt;p&gt;The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -239,12 +239,15 @@
      <string>FUNC SEARCH</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered sequences &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;are used to BLAST/LAST against the functional reference database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This step of the computation can be done using multiple girds (to use batch processing system)&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each of the databases. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;samplename.dbname.algorithmout&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered  amino acid sequences &amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;samplename&amp;gt;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are used to BLAST/LAST against the  reference protein database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each database. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;&amp;lt;samplename&amp;gt;.&amp;lt;dbname&amp;gt;.&amp;lt;algorithm&amp;gt;out&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In the case of large number of amino acid sequences, this step of the computation can be also done using multiple grids (to use batch processing system)&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
     <property name="text">
      <string>PARSE FUNC SEARCH</string>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The BLAST/LAST search results of the amino acid sequences against the reference protein databases are produced in a tabular format. In the context of MetaPathways these files are available in the in the folder blast_results folder. The results, in a tabular format,  are put in individual files for each of the databases and algorithms. This script parses these results  and uses the hits based on the specified cutoffs for the evalue, bit score ratio, etc the parsed results are put in file named according to the format&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;samplename&amp;gt;&amp;lt;dbname&amp;gt;&amp;lt;algorithm&amp;gt;out.parsed.txt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -252,7 +255,7 @@
      <string>SCAN rRNA</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The nuceoltide sequences in the &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ab531;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;quot; folder in the step &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2a31bf;&quot;&gt;PREPROCESS INPUT&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are blasted against the selected rRNA databases such as LUS or SSU  Silva sequence databases and SSU Greengene database. The hits with high bit scores are flagged as rRNA and the resulting taxonomy from the databases are assigned.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results from this step are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2bc643;&quot;&gt;results/rRNA folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, with one tsv file for each rRNA database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The nucleotide sequences (in the case of MetaPathway in the &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ab531;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;quot; folder in the step &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2a31bf;&quot;&gt;PREPROCESS INPUT)&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are blasted against the selected rRNA databases such as SSU or LSU Silva sequence databases and SSU Greengene database. The hits with high bit scores are flagged as rRNA and the resulting taxonomy from the databases are assigned.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results from this step are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2bc643;&quot;&gt;results/rRNA folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, with one tsv file for each rRNA database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -268,7 +271,7 @@
      <string>ANNOTATE ORFS</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the annotations created, for the ORFs, in the ANNOTATE ORFS step the input for Pathologic (the pathway prediction algorithm in the Pathway Tools software) are computed. Annotation for an ORF consist of the funtional and taxonomic information. &lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional annotation is done by synthezing the annotations from the reference databases, after removing redundant texts and also making sure that the annotations from different reference databses are in agreement with each other.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (loweset common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the parsed homology search results against reference protein databases, tRNA scan results and matches against the LSU and SSU rRNA   sequence databases annotations for individual ORFs are created.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional annotation is done by synthesizing  the annotations from the reference databases, after removing redundant texts and also making sure that the annotations from different reference databases are in agreement with each other.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (lowest common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -276,7 +279,7 @@
      <string>PATHOLOGIC INPUT</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs for the Pathway-Tools's Pathologic algorithm used to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -292,7 +295,7 @@
      <string>CREATE ANNOT REPORTS</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -300,7 +303,7 @@
      <string>MLTREEMAP CALCULATION</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences as coming from some taxons in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences  in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -316,7 +319,7 @@
      <string>COMPUTE RPKM</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the avialability of the sam files, in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#49d760;&quot;&gt;results/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; resutling from the bwa run to recrut the short reads into the contigs the read per kilobase per milliion (RPKM) value for each orf is computed.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are dropped in the r&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36d741;&quot;&gt;esults/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder are used by the tool for reporting RPKM values values. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Based on the availability of the sam files, in the folder results/rpkm resulting from the BWA run to recruit the short reads into the contigs the read per kilobase per million (RPKM) value for each ORF is computed. The results are dropped in the results/rpkm folder are used by the tool for reporting RPKM values values. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <column>
@@ -364,7 +367,7 @@
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The filtered nucleotide sequences are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/p&gt;&lt;p&gt;The output of the prodigal run is a set of untranslated and translated (into amino acid sequences). The resulting files are available in the &amp;quot;orf_prediction&amp;quot; folder. The translation is done based on the translation  table id provided by the user, by default it 11&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocessed nucleotide sequences (contigs) are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/p&gt;&lt;p&gt;The output of the prodigal run is a set of (open reading frames) ORFs and the same ORFs translated (into amino acid sequences). The resulting files are available in the &amp;quot;orf_prediction&amp;quot; folder. The translation is done based on the translation table id provided by the user, by default it 11&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -435,7 +438,7 @@
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences.The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences and gff files that contains more detailed information such as orf_length, strand, start and end positions, contig_length, etc .The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -497,8 +500,8 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20e542;&quot;&gt;the orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio for the hits.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting files are in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#30d85c;&quot;&gt;blast_results&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in a file named with a &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1f17d1;&quot;&gt;.refscore.algorithm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (where algorith is BLAST/LAST depending on the algoirthm) extension&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The amino acid sequences in the orf_prediction folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio (BSR) for the hits.  The BSR ratio can be defined at the ratio of a the bit-score between a query and a target sequence to the bit-score when both the query and target sequences are the query sequence. Usually, a BSR ratio of 0.4 or more is considered as a good hit for protein sequences. Note that BSR ratio is designed in some sense to have a normalized value for the bit-score  since the score is also influenced by the length of the query. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -560,11 +563,9 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered sequences &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are used to BLAST/LAST against the functional reference database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This step of the computation can be done using multiple girds (to use batch processing system)&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each of the databases. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;samplename.dbname.algorithmout&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered  amino acid sequences &amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;samplename&amp;gt;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are used to BLAST/LAST against the  reference protein database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each database. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;&amp;lt;samplename&amp;gt;.&amp;lt;dbname&amp;gt;.&amp;lt;algorithm&amp;gt;out&amp;quot;&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In the case of large number of amino acid sequences, this step of the computation can be also done using multiple grids (to use batch processing system)&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -626,9 +627,8 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The BLAST/LAST results in the tabular form dropped in the folder blast_results folder are parsed to find out the BLAST/LAST hits for individual ORF with the minimum bit score ratio or e-value specified.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The parsed results are put in the blast_results folder,  with individual files for each of the databases. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;samplename.dbname.algorithmout.parse.dtxt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The BLAST/LAST search results of the amino acid sequences against the reference protein databases are produced in a tabular format. In the context of MetaPathways these files are available in the in the folder blast_results folder. The results, in a tabular format,  are put in individual files for each of the databases and algorithms. This script parses these results  and uses the hits based on the specified cutoffs for the evalue, bit score ratio, etc the parsed results are put in file named according to the format&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;samplename&amp;gt;&amp;lt;dbname&amp;gt;&amp;lt;algorithm&amp;gt;out.parsed.txt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -690,7 +690,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The nuceoltide sequences in the &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ab531;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;quot; folder in the step &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2a31bf;&quot;&gt;PREPROCESS INPUT&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are blasted against the selected rRNA databases such as LUS or SSU  Silva sequence databases and SSU Greengene database. The hits with high bit scores are flagged as rRNA and the resulting taxonomy from the databases are assigned.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The nucleotide sequences (in the case of MetaPathway in the &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ab531;&quot;&gt;preprocessed&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;quot; folder in the step &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2a31bf;&quot;&gt;PREPROCESS INPUT)&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are blasted against the selected rRNA databases such as  SSU or LSU Silva sequence databases and SSU Greengene database. The hits with high bit scores are flagged as rRNA and the resulting taxonomy from the databases are assigned.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results from this step are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2bc643;&quot;&gt;results/rRNA folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, with one tsv file for each rRNA database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
@@ -815,7 +815,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs for the Pathway-Tools's Pathologic algorithm used to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -877,11 +877,9 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the annotations created, for the ORFs, in the ANNOTATE ORFS step the input for Pathologic (the pathway prediction algorithm in the Pathway Tools software) are computed. Annotation for an ORF consist of the funtional and taxonomic information. &lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional annotation is done by synthezing  the annotations from the reference databases, after removing redundant texts and also making sure that the annotations from different reference databses are in agreement with each other.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (loweset common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the parsed homology search results against reference protein databases, tRNA scan results and matches against the LSU and SSU rRNA   sequence databases annotations for individual ORFs are created.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional annotation is done by synthesizing  the annotations from the reference databases, after removing redundant texts and also making sure that the annotations from different reference databases are in agreement with each other.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (lowest common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
@@ -944,9 +942,8 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create genbank files for each of the samples.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create a genbank file.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In MetaPathways, the outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1007,7 +1004,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1068,7 +1065,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences as coming from some taxons in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1208,8 +1205,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="toolTip">
-    <string>The preprocess step filters out the contigs based on the minimum length, presence of abmiguous nucelotide positions.
-The resulting filtered sequences are made available into the folder &quot;preprocessed&quot;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of ambiguous nucleotide positions. Contigs with ambiguous sequences are split into, separate contigs, at the regions where ambiguous sequences appear. The resulting conigs are filtered out if they are below the minimum length threshold. The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1286,7 +1282,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
     </rect>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the avialability of the sam files, in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#49d760;&quot;&gt;results/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; resutling from the bwa run to recrut the short reads into the contigs the read per kilobase per milliion (RPKM) value for each orf is computed.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are dropped in the r&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36d741;&quot;&gt;esults/rpkm&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder are used by the tool for reporting RPKM values values. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Based on the availability of the sam files, in the folder results/rpkm resulting from the BWA run to recruit the short reads into the contigs the read per kilobase per million (RPKM) value for each ORF is computed. The results are dropped in the results/rpkm folder are used by the tool for reporting RPKM values values. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>
@@ -1343,7 +1339,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
   <widget class="QGroupBox" name="runOptionsGroupBox">
    <property name="geometry">
     <rect>
-     <x>280</x>
+     <x>340</x>
      <y>200</y>
      <width>301</width>
      <height>41</height>
@@ -1407,7 +1403,7 @@ The resulting filtered sequences are made available into the folder &quot;prepro
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa. &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#010501;&quot;&gt;These amino acid sequences can be used in the downstream process of annotating them functionally and taxonomically (using LCA rule)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
     <string>GroupBox</string>

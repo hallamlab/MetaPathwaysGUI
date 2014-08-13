@@ -94,6 +94,7 @@ private:
     void indexSample(QString sampleName, bool userResourceFolder) ;
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
     TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool useLCAStar = false);
+    TableData *_createFunctionalAndTaxTable(const QString &sampleName);
 
 public:
     QHash<HTableData *, bool> htablesAddSignals;

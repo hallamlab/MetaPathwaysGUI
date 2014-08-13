@@ -381,10 +381,12 @@ void ResultWindow::sampleChanged(QString sampleName){
     htable->setMultiSampleMode(false);
     resultTabs->addTab(htable, "METACYC");
     resultTabs->setTabToolTip(resultTabs->count()-1, "METACYC");
+
     if( !this->htablesAddSignals.contains(htable)) {
        htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
        connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
        connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
+       qDebug() << " connecting showtable metacyc";
        this->htablesAddSignals.insert(htable, true);
     }
     resultTabs->setStyleSheet( "QTabBar::tab { min-width: 25ex;}");
@@ -414,14 +416,16 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->addTab(m, "TAXONOMIC");
 #endif
 
-    TableData *func_tax_table;
 
-    func_tax_table = this->getFunctionalAndTaxTable(sampleName,true, true);
+    TableData *func_tax_table;
+    /*func_tax_table = this->getFunctionalAndTaxTable(sampleName,true, true);
     this->simpleTabGroups.addTable(func_tax_table, sampleName, "FUNC & TAX");
     func_tax_table->loadData();
+    */
+
+    func_tax_table = this->_createFunctionalAndTaxTable(sampleName);
     resultTabs->addTab(func_tax_table, "FUNC & TAX");
     resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
-
     progressbar.hide();
 
 
@@ -542,16 +546,9 @@ void ResultWindow::displayMenu(const QPoint &pos)
 }
 */
 
-/**
- * @brief ResultWindow::addFunctionalAndTaxTable, add the functional and taxonomic table for the sample sampleName
- * @param sampleName, name of the sample
- * @return  ponter to the functiona and tax table
- */
-TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCache,  bool useLCAStar) {
-
-    qDebug() << "Get functional table samplename " << sampleName;
+TableData *ResultWindow::_createFunctionalAndTaxTable(const QString &sampleName) {
     TableData *func_tax_table;
-    //FUNCTION AND TAXONOMIC TABLE
+
     DisplayInfo *p = this->displayInfos["FUNC & TAX"];
     p->removeFileIndexes();
 
@@ -561,26 +558,75 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
     p->addFileIndex(fileIndex,4);
     fileIndex = samplercmgr->getFileIndex(sampleName, AMINOFAA);
     p->addFileIndex(fileIndex,0);
-
     QList<enum TYPE> types;
     types.clear();
     types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
 
-    if(  useCache && this->simpleTabGroups.tableExists(sampleName, "FUNC & TAX") ) {
-        func_tax_table = this->simpleTabGroups.getTable(sampleName, "FUNC & TAX");
+
+    func_tax_table = new TableData;
+    func_tax_table->useLCAStar(true);
+    func_tax_table->largeTable  = new LargeTable();
+    func_tax_table->setSampleName(sampleName);
+    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+    this->simpleTabGroups.addTable(func_tax_table, sampleName, "FUNC & TAX");
+
+    func_tax_table->setPopupListener(p);
+    func_tax_table->setExportType(OTHERSTABLEEXP);
+    func_tax_table->loadData();
+  //  resultTabs->addTab(func_tax_table, "FUNC & TAX");
+  //  resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
+    return func_tax_table;
+}
+
+
+
+
+/**
+ * @brief ResultWindow::addFunctionalAndTaxTable, add the functional and taxonomic table for the sample sampleName
+ * @param sampleName, name of the sample
+ * @return  ponter to the functiona and tax table
+ */
+TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCache,  bool useLCAStar) {
+
+  //  qDebug() << "Get functional table samplename " << sampleName;
+    TableData *func_tax_table;
+    if(  useCache ) {
+        if(this->simpleTabGroups.tableExists(sampleName, "FUNC & TAX") ) {
+            func_tax_table = this->simpleTabGroups.getTable(sampleName, "FUNC & TAX");
+        }
+        else {
+            func_tax_table= this->_createFunctionalAndTaxTable(sampleName);
+        }
     }
     else { // table has to be created a new
+
+        DisplayInfo *p = this->displayInfos["FUNC & TAX"];
+        p->removeFileIndexes();
+
+        SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
+
+        FileIndex *fileIndex = samplercmgr->getFileIndex(sampleName, NUCFASTA);
+        p->addFileIndex(fileIndex,4);
+        fileIndex = samplercmgr->getFileIndex(sampleName, AMINOFAA);
+        p->addFileIndex(fileIndex,0);
+
+        QList<enum TYPE> types;
+        types.clear();
+        types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
         func_tax_table = new TableData;
         func_tax_table->useLCAStar(useLCAStar);
         func_tax_table->largeTable  = new LargeTable();
-    }
 
-    func_tax_table->setSampleName(sampleName);
-    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+        func_tax_table->setSampleName(sampleName);
+        func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
 
     // if loaded then it always loads from cache table
-    func_tax_table->setPopupListener(p);
-    func_tax_table->setExportType(OTHERSTABLEEXP);
+        func_tax_table->setPopupListener(p);
+        func_tax_table->setExportType(OTHERSTABLEEXP);
+       // this->simpleTabGroups.addTable(func_tax_table, sampleName,"FUNC & TAX" );
+       // func_tax_table->loadData();
+      }
+
     return func_tax_table;
 }
 
@@ -615,14 +661,22 @@ void ResultWindow::ProvideContexMenu(QPoint position)
  */
 void ResultWindow::showTable(QString sampleName,  ATTRTYPE attrType) {
 
-    TableData *originalTable  = getFunctionalAndTaxTable(sampleName,true, true); //cache is true because we need the
+    TableData *originalTable  = getFunctionalAndTaxTable(sampleName,true, true);
+    //cache is true because we need the existing one
 
     TableData *newTable  = getFunctionalAndTaxTable(sampleName, false,  true);
+
     newTable->useLCAStar(true);
 
     GlobalDataTransit *globalDataTransit = GlobalDataTransit::getGlobalDataTransit();
 
     newTable->setWindowTitle("Functional and Taxonomic Table - " +  sampleName);
+
+    /*
+    foreach(ORF *o, globalDataTransit->orfList) {
+        qDebug() << sampleName <<  o->name ;
+    }*/
+
     newTable->largeTable->tableData.clear();
     this->copyROWData(originalTable->largeTable->tableData,  newTable->largeTable->tableData, globalDataTransit->orfList);
     this->copyROWData(originalTable->largeTable->wholeTableData,  newTable->largeTable->wholeTableData, globalDataTransit->orfList);
@@ -654,13 +708,13 @@ void ResultWindow::copyROWData( QList<ROW *> &src, QList<ROW *> &tar, QList<ORF 
     QHash<QString, bool> orfNames;
     foreach(ORF *orf, selectORFs) {
         orfNames.insert(orf->name, true);
+       // qDebug() << "--->" << orf->name;
     }
 
     QString name;
+   // qDebug() << "src size " << src.size();
     foreach(ROW *r , src) {
-
         name = Utilities::getShortORFId(r->strVar[0]);
-
         if( orfNames.contains(name)) tar.append(r);
     }
 }
@@ -679,6 +733,7 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
     htable->setMaxSpinBoxDepth(datamanager->getHTree(attr)->getTreeDepth());
 
     htable->addSampleName(sampleName);
+
     htable->setMultiSampleMode(false);
     htable->setShowHierarchy(true);
 
@@ -819,6 +874,9 @@ void ResultWindow::switchToComparativeMode() {
 
     progressbar = new ProgressView("linking ORFs  to COG categories ", 0, 0, this);
     progressbar->show();
+
+
+    htable->clearSampleNames();
     for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(COG), COG, datamanager->getORFList(files[i]) );
@@ -857,6 +915,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
     progressbar->show();
+    htable->clearSampleNames();
     for( int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
@@ -894,7 +953,7 @@ void ResultWindow::switchToComparativeMode() {
 
     types.clear();
     types << STRING << STRING;
-
+    htable->clearSampleNames();
     for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
@@ -931,6 +990,7 @@ void ResultWindow::switchToComparativeMode() {
     htable->clearConnectors();
     progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
     progressbar->show();
+    htable->clearSampleNames();
     for(int i=0; i < this->selectedSamples.size(); i++) {
        if( !this->selectedSamples[i])  continue;
        connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );

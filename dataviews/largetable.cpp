@@ -171,7 +171,6 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
 
     inputFile.close();
 
-
     return 0;
 
 }
@@ -445,7 +444,7 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
     LCAStar *lcastar = LCAStar::getLCAStar();
 
     DataManager *datamanager = DataManager::getDataManager();
-    unsigned int contigCol = 1, lcaCol = 6;
+    unsigned int contigCol = 1, lcaCol = 6, taxcol =4;
 
     data.clear();
     NCBITree *ncbitree = NCBITree::getNCBITree();
@@ -459,8 +458,11 @@ void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  delt
                   lcaForContigs[contig] = this->lca_star(orfs, lcastar);
             }
 
-            tableData[i]->strVar[lcaCol] =  lcaForContigs[contig];
+            tableData[i]->strVar[lcaCol] =  ncbitree->getLineage( lcaForContigs[contig]);
+
+            tableData[i]->strVar[taxcol]  = ncbitree->getLineage(tableData[i]->strVar[taxcol]);
         }
+
 
         data.append(tableData.at(i));
     }
