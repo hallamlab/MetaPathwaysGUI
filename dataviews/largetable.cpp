@@ -26,9 +26,19 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
 
     int read = readDataFile(fileName, delim, firstRowAsHeaders);
 
+    this->addLineageToTaxons();
+
     pivotPointer = 0.0;
     lastUsedField = 1000000;
     sortingDirectionForward = true;
+}
+
+
+void LargeTable::addLineageToTaxons() {
+  unsigned int taxcol = 4;
+  foreach(ROW *datum, this->wholeTableData ) {
+      qDebug() << datum->strVar[taxcol];
+  }
 
 
 }
