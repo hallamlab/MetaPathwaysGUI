@@ -130,11 +130,19 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
     }
 
 
+
+
     unsigned int j;
     foreach(double v, graphData) {
         j = (unsigned int)((v - gdata->xmin)/gdata->bucketSize);
-        if(j > gdata->numBuckets) j = gdata->numBuckets -1;
-        gdata->y[j]++;
+        if(j > gdata->numBuckets - 1) j = gdata->numBuckets -1;
+        try{
+
+            gdata->y[j]++;
+        }
+        catch(...) {
+
+        }
     }
 
 
@@ -143,8 +151,6 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
         if (v > _ymax) _ymax = v;
     }
     gdata->ymax = _ymax;
-
-  //  qDebug() << gdata->xmin << " " << gdata->xmax << "  " << gdata->ymin << "  " << gdata->ymax;
 }
 
 

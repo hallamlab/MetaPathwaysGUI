@@ -5,3 +5,5 @@ MetaPathways.app
 ui_*.h
 *.o
 *.dmg
+Makefile
+MetaPathways2.pro.user.*

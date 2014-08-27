@@ -26,7 +26,7 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
 
     int read = readDataFile(fileName, delim, firstRowAsHeaders);
 
-    this->addLineageToTaxons();
+   // this->addLineageToTaxons();
 
     pivotPointer = 0.0;
     lastUsedField = 1000000;
