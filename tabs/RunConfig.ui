@@ -130,7 +130,7 @@
     <rect>
      <x>150</x>
      <y>253</y>
-     <width>495</width>
+     <width>161</width>
      <height>481</height>
     </rect>
    </property>
@@ -1203,6 +1203,12 @@ p, li { white-space: pre-wrap; }
      <width>314</width>
      <height>30</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of ambiguous nucleotide positions. Contigs with ambiguous sequences are split into, separate contigs, at the regions where ambiguous sequences appear. The resulting conigs are filtered out if they are below the minimum length threshold. The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
