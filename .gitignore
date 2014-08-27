@@ -6,4 +6,5 @@ ui_*.h
 *.o
 *.dmg
 Makefile
-MetaPathways2.pro.user.*
+MetaPathways2.pro.*
+MetaPathways2
