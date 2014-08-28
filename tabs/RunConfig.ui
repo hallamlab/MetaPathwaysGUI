@@ -360,9 +360,9 @@
   <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>280</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -370,7 +370,7 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocessed nucleotide sequences (contigs) are used as input to a gene prediction algorithm, currently prodigal, to detect the gene coding regions.&lt;/p&gt;&lt;p&gt;The output of the prodigal run is a set of (open reading frames) ORFs and the same ORFs translated (into amino acid sequences). The resulting files are available in the &amp;quot;orf_prediction&amp;quot; folder. The translation is done based on the translation table id provided by the user, by default it 11&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -378,7 +378,7 @@
    <widget class="QRadioButton" name="orf_predictionYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -391,7 +391,7 @@
    <widget class="QRadioButton" name="orf_predictionSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -404,7 +404,7 @@
    <widget class="QRadioButton" name="orf_predictionREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -427,9 +427,9 @@
   <widget class="QGroupBox" name="metapaths_stepsORF_TO_AMINO">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>310</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -441,7 +441,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences and gff files that contains more detailed information such as orf_length, strand, start and end positions, contig_length, etc .The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -449,7 +449,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="orf_to_aminoYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -462,7 +462,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="orf_to_aminoSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -475,7 +475,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="orf_to_aminoREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -489,9 +489,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORES">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>370</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -504,7 +504,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -512,7 +512,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="compute_refscoresYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -525,7 +525,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="compute_refscoresSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -538,7 +538,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="compute_refscoresREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -552,9 +552,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsFUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>400</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -568,7 +568,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In the case of large number of amino acid sequences, this step of the computation can be also done using multiple grids (to use batch processing system)&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -576,7 +576,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="func_searchYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -589,7 +589,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="func_searchSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -602,7 +602,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="func_searchREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -616,9 +616,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPARSE_FUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>309</x>
+     <x>312</x>
      <y>430</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -631,7 +631,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;samplename&amp;gt;&amp;lt;dbname&amp;gt;&amp;lt;algorithm&amp;gt;out.parsed.txt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -639,7 +639,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="parse_func_searchYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -652,7 +652,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="parse_func_searchSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -665,7 +665,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="parse_func_searchREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -679,9 +679,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_rRNA">
    <property name="geometry">
     <rect>
-     <x>309</x>
+     <x>312</x>
      <y>460</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -694,7 +694,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results from this step are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2bc643;&quot;&gt;results/rRNA folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;, with one tsv file for each rRNA database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -702,7 +702,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_rrnaYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -715,7 +715,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_rrnaSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -728,7 +728,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_rrnaREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -742,9 +742,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_tRNA">
    <property name="geometry">
     <rect>
-     <x>309</x>
+     <x>312</x>
      <y>490</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -756,7 +756,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered nucleotide sequences, in the  &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#30db3d;&quot;&gt;preprocessed &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;folder produced in the PREPROCESS INPUT step are scanned with tRNA-Scan 1.4 to find the tRNAs The results are put in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#10c42a;&quot;&gt;results/tRNA&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder, in a tabular form, with the predicted tRNA type, location, length etc.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -764,7 +764,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_trnaYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -777,7 +777,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_trnaSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -790,7 +790,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="scan_trnaREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -804,9 +804,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
    <property name="geometry">
     <rect>
-     <x>309</x>
+     <x>312</x>
      <y>550</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -818,7 +818,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -826,7 +826,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="pathologic_inputYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -839,7 +839,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="pathologic_inputSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -852,7 +852,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="pathologic_inputREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -866,9 +866,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE_ORFS">
    <property name="geometry">
     <rect>
-     <x>309</x>
+     <x>312</x>
      <y>520</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -883,7 +883,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -891,7 +891,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="annotate_orfsYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -904,7 +904,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="annotate_orfsSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -917,7 +917,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="annotate_orfsREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -931,9 +931,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>580</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -946,7 +946,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In MetaPathways, the outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -954,7 +954,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="genbank_fileYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -967,7 +967,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="genbank_fileSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -980,7 +980,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="genbank_fileREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -997,9 +997,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>610</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -1007,7 +1007,7 @@ p, li { white-space: pre-wrap; }
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1015,7 +1015,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="create_annot_reportsYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1028,7 +1028,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="create_annot_reportsSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1041,7 +1041,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="create_annot_reportsREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1058,9 +1058,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>640</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -1068,7 +1068,7 @@ p, li { white-space: pre-wrap; }
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1079,7 +1079,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1098,7 +1098,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1123,7 +1123,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1140,9 +1140,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsBUILD_PGDB">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>670</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -1150,7 +1150,7 @@ p, li { white-space: pre-wrap; }
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The pathway prediction algorithm, &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2c3bd2;&quot;&gt;Pathologic&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#3a48d7;&quot;&gt;Pathway Tools&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; software, is run with the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2de14d;&quot;&gt;ptools&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; as the input. The result of this step is an ePGDB (environmental pathway genome database).&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting ePGDB is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1bd429;&quot;&gt;~/ptools-local/pgdbs/user&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder. They can be viewed using the Pathway Tools software.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1158,7 +1158,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="build_pgdbYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1171,7 +1171,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="build_pgdbSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1184,7 +1184,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="build_pgdbREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
@@ -1198,9 +1198,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_INPUT">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>250</y>
-     <width>314</width>
+     <width>281</width>
      <height>30</height>
     </rect>
    </property>
@@ -1214,7 +1214,7 @@ p, li { white-space: pre-wrap; }
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of ambiguous nucleotide positions. Contigs with ambiguous sequences are split into, separate contigs, at the regions where ambiguous sequences appear. The resulting conigs are filtered out if they are below the minimum length threshold. The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1222,7 +1222,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="preprocess_inputYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1235,7 +1235,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="preprocess_inputSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1248,7 +1248,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="preprocess_inputREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1281,9 +1281,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_RPKM">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>700</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -1291,7 +1291,7 @@ p, li { white-space: pre-wrap; }
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Based on the availability of the sam files, in the folder results/rpkm resulting from the BWA run to recruit the short reads into the contigs the read per kilobase per million (RPKM) value for each ORF is computed. The results are dropped in the results/rpkm folder are used by the tool for reporting RPKM values values. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1299,7 +1299,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="compute_rpkmYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1315,7 +1315,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1328,7 +1328,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="compute_rpkmREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1345,21 +1345,24 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="runOptionsGroupBox">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>310</x>
      <y>200</y>
-     <width>301</width>
+     <width>281</width>
      <height>41</height>
     </rect>
    </property>
    <property name="title">
     <string>GroupBox</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
    <widget class="QRadioButton" name="runAllRadioButton">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>81</width>
+      <width>71</width>
       <height>20</height>
      </rect>
     </property>
@@ -1397,9 +1400,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsFILTER_AMINOS">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>313</x>
      <y>340</y>
-     <width>314</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
@@ -1412,7 +1415,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa. &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#010501;&quot;&gt;These amino acid sequences can be used in the downstream process of annotating them functionally and taxonomically (using LCA rule)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string/>
    </property>
    <property name="flat">
     <bool>true</bool>
@@ -1420,7 +1423,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="filter_aminosYES">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>20</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1433,7 +1436,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="filter_aminosSKIP">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>120</x>
       <y>0</y>
       <width>51</width>
       <height>41</height>
@@ -1446,7 +1449,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QRadioButton" name="filter_aminosREDO">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>220</x>
       <y>0</y>
       <width>61</width>
       <height>41</height>
