@@ -10,6 +10,7 @@ ProgressView::ProgressView(QString text, unsigned int i , unsigned int j, QWidge
 
     layout = new QVBoxLayout(this);
 
+
     if(i < j ) {
         progressBar = new QProgressBar(parent);
        progressBar->setRange(i, j);

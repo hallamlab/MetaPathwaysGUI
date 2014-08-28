@@ -864,7 +864,6 @@ void ResultWindow::switchToComparativeMode() {
 #endif
 
 
-
     ////////////////////////   COG
     HTableData *htable = CreateWidgets::getHtableData(COG); //new HTableData;
     htable->clearConnectors();
