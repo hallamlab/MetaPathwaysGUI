@@ -200,6 +200,7 @@ void ResultWindow::updateFileNames(){
     foreach (QString f, files){
         if (!existing.contains(f)){
             sampleSelect->addItem(f);
+            sampleSelect->setItemData(sampleSelect->count()-1, f, Qt::ToolTipRole);
         }
     }
     rundata->setCurrentSample(files[0]);
