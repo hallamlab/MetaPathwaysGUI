@@ -16,6 +16,7 @@ ProgressView::ProgressView(QString text, unsigned int i , unsigned int j, QWidge
        progressBar->setRange(i, j);
        progressBar->setAlignment(Qt::AlignCenter);
        progressBar->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+       progressBar->setTextVisible(true);
        layout->addWidget(progressBar);
     }
 
