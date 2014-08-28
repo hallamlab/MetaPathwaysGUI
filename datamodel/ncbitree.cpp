@@ -46,7 +46,7 @@ void NCBITree::loadTree(QString treefile) {
 
     if(!QFileInfo(treefile).exists() ) return;
 
-    ProgressView progressbar("Reading NCBI tree file \n" +  QFileInfo(treefile).baseName(), 0, 0, 0);
+   // ProgressView progressbar("Reading NCBI tree file \n" +  QFileInfo(treefile).baseName(), 0, 0, 0);
 
 
     QFile inputFile(treefile);
@@ -77,7 +77,7 @@ void NCBITree::loadTree(QString treefile) {
     else return;
 
     inputFile.close();
-    progressbar.hide();
+   // progressbar.hide();
 }
 
 /**
