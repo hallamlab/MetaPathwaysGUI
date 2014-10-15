@@ -17,8 +17,10 @@ QTableView *CreateWidgets::getStatsTableView() {
        CreateWidgets::statTableView = 0;
     }
 
-    if(CreateWidgets::statTableView == 0)
+    if(CreateWidgets::statTableView == 0) {
         CreateWidgets::statTableView =  new QTableView;
+        CreateWidgets::statTableView->horizontalHeader()->setStretchLastSection(true);
+    }
     return CreateWidgets::statTableView;
 }
 

@@ -4,10 +4,10 @@ LCAStar *LCAStar::lcastar =0;
 QMutex LCAStar::mutexLock;
 
 LCAStar *LCAStar::getLCAStar() {
-  //  if( LCAStar::lcastar ==0 ) {
-        LCAStar::lcastar = new LCAStar();
-  //  }
 
+    if( LCAStar::lcastar ==0 ) {
+        LCAStar::lcastar = new LCAStar();
+    }
     return LCAStar::lcastar;
 }
 

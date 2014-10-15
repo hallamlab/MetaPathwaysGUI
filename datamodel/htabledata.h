@@ -26,6 +26,7 @@
 #include "displaywidgets/progressview.h"
 #include "helper/types.h"
 #include "helper/globaldatatransit.h"
+#include "helper/labels.h"
 
 #include <unistd.h>
 
@@ -51,7 +52,7 @@ class HTableData : public QDialog
     Q_OBJECT
     
 public:
-    explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = false, bool _hideZeroRows = false, VALUETYPE _valueType = ORFCOUNT);
+    explicit HTableData(QWidget *parent = 0, int spinBoxValuem = 1, bool _showHierachy = true, bool _hideZeroRows = false, VALUETYPE _valueType = ORFCOUNT);
     ~HTableData();
     bool setParameters(HTree *htree, QList<enum TYPE> _types);
     void addConnector(Connector *connector, ATTRTYPE attr);
@@ -73,6 +74,7 @@ public:
     QStringList getHeaders();
     QString getHeader(unsigned int i);
     enum TYPE getFieldType(unsigned int i);
+    ATTRTYPE getattrType();
 
     void showTableData();
     unsigned int  showSelectedTableData();
@@ -93,8 +95,10 @@ public:
     QString getSampleName(unsigned int i);
 
     void initializeSearchFilter(QString query, int column);
-
     static void spawnInformativeTable(const QString &sampleName, const QList<ORF *> &orfList);
+    QString getScrollToFunction(ATTRTYPE attrType);
+    void setScrollToFunction(ATTRTYPE attrType, QString function);
+
 
     QTableWidget* tableWidget;
     unsigned int numCols;
@@ -104,7 +108,6 @@ public:
     QList<Connector *> connectors;
     QHash<ATTRTYPE, QList<Connector *> > allConnectors;
 
-
     HTree *htree;
     bool subWindow;
     QString category;
@@ -113,19 +116,19 @@ public:
     QLabel *depthLabelValue;
     QList<HTABLEIDENTITY> htableIdentities;
 
-
+   QHash<ATTRTYPE, QString> scrollToFunction;
     HTABLEIDENTITY id;
 
-    HTABLE_PARAMS tableParams;
 private:
      bool isNonZero(ROWDATA *r);
+
 
 private slots:
 
     void spinBoxChanged(int depth);
     void showHierarchyChanged(int state);
     void hideZeroRowsChanged(int state);
-    void showHierarchyOrZeroRowToggleChanged();
+    void showHierarchyOrZeroRowToggleChanged(int i);
     void showInformativeTable(QTableWidgetItem *item);
     void switchCategory(int);
     void searchButtonPressed();

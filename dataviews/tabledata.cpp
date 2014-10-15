@@ -35,8 +35,14 @@ TableData::TableData(  QWidget *parent) :
     connect(searchButton, SIGNAL(clicked()), this, SLOT(searchButtonPressed()));
     connect(exportButton, SIGNAL(clicked()), this, SLOT(exportButtonPressed()));
 
+#ifdef DISABLE_LCASTAR
     connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT(updateLCAStar(int)) );
     connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT(updateLCAStar(int)) );
+#else
+    alpha->hide();
+    lcaDepth->hide();
+#endif
+
 
     connect(tableWidget->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(outputRows(int)));
     connect(tableWidget->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(headerClicked(int)));
@@ -395,7 +401,6 @@ void TableData::setNumCols(unsigned int numCols) {
  */
 void TableData::spawnFunctionTable() {
 
-
     QList<QString> orfNames = this->largeTable->getORFNames();
 
     QHash<QString, bool> orfNamesHash;
@@ -407,8 +412,6 @@ void TableData::spawnFunctionTable() {
     QList<ORF *> orflist = datamanager->getORFByNames(this->sampleName, orfNamesHash);
 
     HTableData::spawnInformativeTable(this->sampleName, orflist);
-
-
 }
 
 /**
@@ -469,6 +472,7 @@ void TableData::setupFromFile(const QString &file){
 
         if( largeTable ==0 ) {
            largeTable = new LargeTable(file, '\t', true, true, types);
+
            if( this->addLCAStar ) {
                this->addLCAStarColumn();
                largeTable->sampleName = this->sampleName;
@@ -606,14 +610,10 @@ void TableData::populateTable(int top){
     int k = top;
     tableWidget->clearContents();
 
-
-
-    if(this->addLCAStar) {
-        computeLCAStarValue(lcainfo);
-    }
+    if(this->addLCAStar) computeLCAStarValue(lcainfo);
 
     QTableWidgetItem *item;
-    NCBITree *ncbitree = NCBITree::getNCBITree();
+    NCBITree *ncbitree =  this->addLCAStar ? NCBITree::getNCBITree() : 0;
 
     QString string;
 
@@ -630,7 +630,7 @@ void TableData::populateTable(int top){
               }
               if(types[i] == STRING) {
                   string = datum->strVar.at(largeTable->index[i]);
-                  if(i==8) string=ncbitree->getLineage(string);
+                  if(this->addLCAStar && i==8) string=ncbitree->getLineage(string);
                   tableWidget->setItem(k,i,new QTableWidgetItem(string));
               }
 

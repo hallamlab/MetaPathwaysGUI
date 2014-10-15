@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QList>
 #include <QDialogButtonBox>
+#include <QScrollArea>
 
 #include "tabs/resultwindow.h"
 #include "tabs/RunConfig.h"
@@ -30,10 +31,15 @@ public:
     void addSamples(QStringList samples);
     void setReceiver(ResultWindow *resultWindow  );
     void setReceiver(RunConfig *runconfigWindow  );
+private:
+    void resizeWidget();
+    void closeWidget();
 
 
 private slots:
     void sendSelection();
+    void closeOnCancel();
+    void sampleClicked(int i);
 
 public slots:
     void selectAllSlot();
@@ -48,6 +54,8 @@ private:
     QList<QCheckBox *> checkboxes;
     QPushButton *selectAll, *clearAll;
     QStringList samples;
+    QList<unsigned int> clickedSamples;
+    QScrollArea *scroll;
 };
 
 #endif // SELECTSAMPLES_H

@@ -40,6 +40,7 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 #endif
 
 
+
     HTABLEIDENTITY a;
    // order is important
     a.attrType = KEGG; a.sampleName="KEGG";
@@ -50,6 +51,8 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     htableIdentities << a;
     a.attrType = SEED; a.sampleName="SEED";
     htableIdentities << a;
+    a.attrType = CAZY; a.sampleName="CAZY";
+    htableIdentities << a;
 
     foreach(HTABLEIDENTITY identity, htableIdentities) {
        categorySelector->addItem(identity.sampleName);   ///sample name is a short cut and wrong
@@ -59,30 +62,20 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     subCategoryName->hide();
     numOrfsLabel->hide();
     categorySelector->hide();
-
     this->subWindow = false;
-
     this->level = 0;
-
 
     this->hideZeroRows->setChecked(_hideZeroRows);
     this->valueType->setCurrentIndex(_valueType);
     this->matchAlphaVisible();
-
     this->showHierarchy->setChecked(_showHierachy);
-
     this->showDepth->setValue(spinBoxValue);
-    connect(this->showDepth, SIGNAL(valueChanged(int) ), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-   //     connect(showDepth, SIGNAL(valueChanged(int) ), this, SLOT( switchCategory(int))  );
-    /*
-    connect(showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyChanged(int) ) );
-    connect(hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(hideZeroRowsChanged(int) ) );
-    */
 
-    connect(this->showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-    connect(this->hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
-   // connect(this->showRPKM, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged()) );
 
+    connect(this->showDepth, SIGNAL(valueChanged(int))  , this, SLOT(showHierarchyOrZeroRowToggleChanged(int)) );
+    connect(this->showHierarchy, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged(int)) );
+    connect(this->hideZeroRows, SIGNAL(stateChanged(int)), this, SLOT(showHierarchyOrZeroRowToggleChanged(int)) );
+    connect(valueType, SIGNAL(currentIndexChanged(int) ), this, SLOT( showHierarchyOrZeroRowToggleChanged(int)) );
 
     connect(tableWidget, SIGNAL(itemDoubleClicked(QTableWidgetItem *)), this, SLOT( showInformativeTable(QTableWidgetItem *) ));
     connect(categorySelector, SIGNAL(currentIndexChanged(int)), this, SLOT(switchCategory(int)) );
@@ -90,12 +83,6 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
     colors  << QBrush(Qt::black) <<  QBrush(Qt::red) << QBrush(Qt::blue) << QBrush(QColor(0,153,0)) << QBrush(QColor(255,128,0)) <<  QBrush(QColor(102,0,102)) << QBrush(QColor(76,0,183)) << QBrush(QColor(204,0,102))   << QBrush(Qt::gray);
     indents << QString("")       << QString("\t")    << QString("\t\t")  << QString("\t\t\t")       << QString("\t\t\t\t")       <<  QString("\t\t\t\t\t")     << QString("\t\t\t\t\t\t")  << QString("\t\t\t\t\t\t\t")   << QString("\t\t\t\t\t\t\t\t")   ;
-
-    tableParams.headers[KEGG] << "KEGG Function" << "KEGG function (alias) " << "ORF Count";
-    tableParams.headers[COG] << "COG Category" << "COG Category (Alias) " << "ORF Count";
-    tableParams.headers[METACYC] << "Pathway/Reaction" << "Common name" << "ORF Count";
-    tableParams.headers[SEED] << "SEED Subsystem Category" << "SEED Subsystem (Alias) " << "ORF Count";
-
 
     searchButton = this->findChild<QPushButton *>("searchButton");
     exportButton = this->findChild<QPushButton *>("exportButton");
@@ -106,12 +93,9 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
 
 #ifdef LCASTAR
     connect(valueType, SIGNAL(currentIndexChanged(int)), this, SLOT( toggleAlpha(int) )   );
+    connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged(int)) );
+    connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged(int)) );
 #endif
-
-    connect(valueType, SIGNAL(currentIndexChanged(int) ), this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
-    connect(alpha, SIGNAL(currentIndexChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
-    connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged()) );
-
 
 }
 
@@ -264,8 +248,9 @@ bool HTableData::setParameters(HTree *htree,  QList<TYPE> _types) {
     this->setNumCols(_types.size());
 
     this->types = _types;
-
     this->htree = htree;
+
+
 }
 
 void HTableData::clearConnectors() {
@@ -285,7 +270,9 @@ void HTableData::setNumCols(unsigned int numCols) {
 
 QStringList HTableData::getHeaders(){
 
-    QStringList _headers = this->tableParams.headers[this->id.attrType];
+    Labels *labels = Labels::getLabels();
+
+    QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
     if(multiSampleMode) {
         _headers = this->multiSampleHeaders();
@@ -295,7 +282,10 @@ QStringList HTableData::getHeaders(){
 }
 
 QString HTableData::getHeader(unsigned int i){
-    QStringList _headers = this->tableParams.headers[this->id.attrType];
+
+    Labels *labels = Labels::getLabels();
+
+    QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
     if(multiSampleMode) {
         _headers = this->multiSampleHeaders();
@@ -322,6 +312,33 @@ void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
 
 }
 
+/**
+ * @brief HTableData::getattrType, get attr type
+ * @return
+ */
+ATTRTYPE HTableData::getattrType() {
+  return this->id.attrType;
+}
+
+/**
+ * @brief HTableData::getScrollToFunction, for an ATTRTYPE it gets the function that was selected if any
+ * @param attrType
+ * @return
+ */
+QString HTableData::getScrollToFunction(ATTRTYPE attrType) {
+  if( this->scrollToFunction.contains(attrType)) return this->scrollToFunction[attrType];
+  return QString();
+}
+/**
+ * @brief HTableData::setScrollToFunction, for an ATTRYPE it sets the function that was selected
+ * @param attrType
+ * @param function
+ */
+void HTableData::setScrollToFunction(ATTRTYPE attrType, QString function) {
+  this->scrollToFunction[attrType] = function.trimmed();
+}
+
+
 void HTableData::spinBoxChanged(int depth) {
         this->showTableData();
 }
@@ -332,7 +349,13 @@ void HTableData::showTableData() {
 }
 
 
-void HTableData::showHierarchyOrZeroRowToggleChanged() {
+void HTableData::showHierarchyOrZeroRowToggleChanged(int i) {
+
+  qDebug() << " show the data " << i;
+    if( this->tableWidget->selectedItems().size() > 0) {
+        this->setScrollToFunction(this->getattrType(), this->tableWidget->selectedItems()[0]->text());
+    }
+
     if(this->subWindow) {
         this->showSelectedTableData();
     }
@@ -364,7 +387,7 @@ void HTableData::showHierarchyChanged(int state) {
 void HTableData::hideZeroRowsChanged(int state) {
     if(this->subWindow)
 //        this->showSelectedTableData(this->category,  (this->hideZeroRows->checkState()==Qt::Checked));
-    this->showTableData();
+       this->showTableData();
 
     else
         this->showTableData();
@@ -381,14 +404,41 @@ void HTableData::hideZeroRowsChanged(int state) {
 void HTableData::fillData() {
      QList<ROWDATA *> data;
 
+     if( ( this->htree->getAttrType()!=METACYC && this->htree->getAttrType()!=METACYCBASE)
+           &&  (
+                 this->getValueType()==BASEPWY_ORF ||
+                 this->getValueType()==BASEPWY_RXNCOV ||
+                 this->getValueType()==BASEPWY_RXNTOT
+             )
+     )
+     {
+
+         QWidget *parent = static_cast<QWidget*>(this);
+         Utilities::showInfo(parent, QString("BASEPWY ORF, BASEPWY RXNCOV and BASEPWY RXNTOT are applicable only for  MetaCyc Functional Category"));
+         return;
+     }
+
+     if( this->htree->getAttrType()==METACYC || this->htree->getAttrType()==METACYCBASE) {
+            DataManager *datamanager = DataManager::getDataManager();
+            if (
+                 this->getValueType()==BASEPWY_ORF ||
+                 this->getValueType()==BASEPWY_RXNCOV ||
+                 this->getValueType()==BASEPWY_RXNTOT
+             ){
+                 this->htree = datamanager->getHTree(METACYCBASE);
+             }
+             else {
+                 this->htree = datamanager->getHTree(METACYC);
+             }
+     }
+
+     qDebug() << " Iterating through trees";
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType()) ;
+     qDebug() << " done iterating";
 
+     Labels *labels = Labels::getLabels();
 
-
-     QList<ROWDATA *> newdata;
-
-
-     QStringList _headers = this->tableParams.headers[this->id.attrType];
+     QStringList _headers = labels->getHtableHeader(this->id.attrType,this->getValueType());
 
      if(multiSampleMode) {
          _headers = this->multiSampleHeaders();
@@ -399,20 +449,16 @@ void HTableData::fillData() {
          this->populateTable(data, _headers);
      }
      else
-#endif
-
+#endif     
      {
-         if(hideZeroRows->isChecked()) {
-            foreach(ROWDATA *r, data) {
-                if( isNonZero(r)) newdata.append(r);
-            }
-            this->populateTable(newdata, _headers);
+       if(hideZeroRows->isChecked() || this->getattrType()==CAZY) {
+         foreach(ROWDATA *r, data) {
+            r->active =  isNonZero(r) ? true : false;
          }
-         else {
-             this->populateTable(data, _headers);
-
-         }
+       }
+       this->populateTable(data, _headers);
      }
+
 }
 
 /**
@@ -436,6 +482,15 @@ VALUETYPE HTableData::getValueType() {
          case RPKMCOUNT:
                _valueType = RPKMCOUNT;
                break;
+         case BASEPWY_ORF:
+               _valueType = BASEPWY_ORF;
+               break;
+         case BASEPWY_RXNCOV:
+               _valueType = BASEPWY_RXNCOV;
+               break;
+         case BASEPWY_RXNTOT:
+               _valueType = BASEPWY_RXNTOT;
+               break;
          default:
                _valueType = ORFCOUNT;
                break;
@@ -455,15 +510,18 @@ VALUETYPE HTableData::getValueType() {
 
 unsigned int HTableData::fillSelectedData() {
      QList<ROWDATA *> data;
-     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType() ) ;
 
-     QStringList _headers = this->tableParams.headers[this->id.attrType];
+        qDebug() << " Iterating through trees for selected data";
+     data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType() ) ;
+     qDebug() << " done ";
+
+     Labels *labels = Labels::getLabels();
+     QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
+
 
      if(multiSampleMode) {
          _headers = this->multiSampleHeaders();
      }
-
-     QList<ROWDATA *> newdata;
 
 #ifdef LCASTAR
      if( this->getValueType()==LCASTAR ) {
@@ -471,18 +529,16 @@ unsigned int HTableData::fillSelectedData() {
      }
      else
 #endif
-       {
-         if(hideZeroRows->isChecked()) {
-            foreach(ROWDATA *r, data) {
-                if( isNonZero(r)) newdata.append(r);
-            }
-            this->populateTable(newdata, _headers );
-            return newdata.size();
+     {
+       if(hideZeroRows->isChecked() || this->getattrType()==CAZY) {
+         foreach(ROWDATA *r, data) {
+            r->active =  isNonZero(r) ? true : false;
          }
-         else {
-            this->populateTable(data, _headers);
-            return data.size();
-         }
+       }
+
+       this->populateTable(data, _headers);
+       return data.size();
+
      }
 }
 
@@ -493,8 +549,14 @@ unsigned int HTableData::fillSelectedData() {
  */
 QStringList HTableData::multiSampleHeaders() {
      QStringList headers;
-     headers.append(this->tableParams.headers[this->id.attrType][0]);
-     headers.append(this->tableParams.headers[this->id.attrType][1]);
+
+     Labels *labels = Labels::getLabels();
+
+     headers.append(labels->getHtableHeader(this->id.attrType,this->getValueType())[0]);
+
+     headers.append(labels->getHtableHeader(this->id.attrType,this->getValueType())[1]);
+
+
      foreach( QString sampleName, this->sampleNames)
          headers.append(sampleName);
 
@@ -505,6 +567,12 @@ unsigned int HTableData::showSelectedTableData() {
      return this->fillSelectedData();
 }
 
+
+/**
+ * @brief HTableData::isNonZero, checks across a row if it is zero or now
+ * @param r
+ * @return
+ */
 bool HTableData::isNonZero(ROWDATA *r) {
     QVector<unsigned int>::const_iterator  it;
     for(it = r->counts.begin(); it!=r->counts.end(); it++) {
@@ -526,7 +594,13 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
 
     tableWidget->setHorizontalHeaderLabels(headers);
 
-    tableWidget->setRowCount(data.size());
+    unsigned int size =0;
+    foreach( ROWDATA * datum,  data)  if(datum->active) size++;
+    tableWidget->setRowCount(size);
+    QString scrollToName = this->getScrollToFunction(this->getattrType());
+    int scrollToRow = 0;
+
+
     tableWidget->setColumnCount(types.size());
     tableWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -545,20 +619,17 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
     }
 #endif
 
-    LCAStar *lcastar = LCAStar::getLCAStar();
-
-    QList<FREQUENCY> freq;
-
-    VALUETYPE _valueType = this->getValueType();
     foreach( ROWDATA * datum,  data) {
+
+        if( !datum->active) continue; // hide zero
+        if(datum->name== scrollToName) scrollToRow = k;
+
+
+
         if(this->showHierarchy->isChecked())
             item = new QTableWidgetItem(this->indents[datum->depth] + QString(datum->name));
         else
             item = new QTableWidgetItem( QString(datum->name));
-
-
-        QString tooltip ;
-
 
         item->setForeground(this->colors[datum->depth]);
         tableWidget->setItem(k,0,item);
@@ -566,6 +637,9 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
         tableWidget->setItem(k,1,new QTableWidgetItem(QString(datum->alias)));
 
 #ifdef LCASTAR
+        LCAStar *lcastar = LCAStar::getLCAStar();
+        QList<FREQUENCY> freq;
+        VALUETYPE _valueType = this->getValueType();
         if(_valueType==LCASTAR) {
             for(unsigned int j=0; j <  datum->taxons.size(); j++) {
                freq.clear();
@@ -602,11 +676,10 @@ void HTableData::populateTable( QList<ROWDATA *> &data, const QStringList &heade
       k++;
     }
     tableWidget->resizeColumnsToContents();
-
-
+    tableWidget->horizontalHeader()->setStretchLastSection(true);
+    tableWidget->scrollToItem( tableWidget->item(scrollToRow,0), QAbstractItemView::PositionAtCenter);
+    tableWidget->setCurrentCell(scrollToRow,0);
 }
-
-
 
 
 /**
@@ -793,6 +866,8 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->level = this->level +1;
     htable->types = this->types;
     htable->windowtitles = this->windowtitles;
+    htable->scrollToFunction = this->scrollToFunction;
+    htable->setScrollToFunction(this->getattrType(), this->tableWidget->item(row,0)->text());
 
     QString title;
     foreach( QString _title, htable->windowtitles) {
@@ -868,10 +943,6 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     mdiAreaWidget->getMdiArea()->cascadeSubWindows(); */
 }
 
-
-
-
-
 /** this function is activated when the user switched the functional
  *category--KEGG, COG, MetaCyc, SEED are functional categories--
  *\param index : decides which of the categories is select from the drop down list at the
@@ -919,7 +990,10 @@ void HTableData::switchCategory(int index) {
 bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders) {
     QFile outFile(fileName);
 
-    QStringList _headers = this->tableParams.headers[this->id.attrType];
+    Labels *labels = Labels::getLabels();
+
+    QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
+
 
     if(multiSampleMode) {
         _headers = this->multiSampleHeaders();

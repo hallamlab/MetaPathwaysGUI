@@ -47,8 +47,6 @@ RunConfig::RunConfig(QWidget *parent) :
     //connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(saveInput()));
     connect(outputLine, SIGNAL(textChanged(QString)), this, SLOT(saveOutput(QString)));
     connect(fileInputFormat, SIGNAL(currentIndexChanged(QString)), rundata, SLOT(updateInputFileFormat(QString)) );
-
-
 }
 
 

@@ -240,12 +240,10 @@ void DataManager::createDataModel() {
 
     if( dataModelCreated ) return;
 
-    RunData *rundata = RunData::getRunData();
-
   //  QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
     //QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
     QString COG_categories = QString(":/functional_categories/") + "COG_categories.txt";
-    HTree *htree = createHTree(COG_categories);
+    HTree *htree = createHTree(COG_categories, COG);
 
     htree->hashNodes(htree->root);
     this->htrees[COG] = htree;
@@ -254,21 +252,32 @@ void DataManager::createDataModel() {
 
     //QString KEGG_categories = refDBFolder + "/functional_categories/" + "KO_classification.txt";
     QString KEGG_categories =  QString(":/functional_categories/") + "KO_classification.txt";
-    htree = createHTree(KEGG_categories);
+    htree = createHTree(KEGG_categories, KEGG);
     htree->hashNodes(htree->root);
     this->htrees[KEGG] = htree;
 
     //QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
     QString MetaCyc_hierarchy = QString(":/functional_categories/") + "metacyc_hierarchy.txt";
-    htree = createHTree(MetaCyc_hierarchy);
+    htree = createHTree(MetaCyc_hierarchy, METACYC);
     htree->hashNodes(htree->root);
     this->htrees[METACYC] = htree;
 
+    htree = this->createBaseTree(this->htrees[METACYC]);
+    htree->hashNodes(htree->root);
+    htree->setAttrType(METACYCBASE);
+    this->htrees[METACYCBASE] = htree;
+
+
     //QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
     QString Seed_subsystems =  QString(":/functional_categories/") + "SEED_subsystems.txt";
-    htree = createHTree(Seed_subsystems);
+    htree = createHTree(Seed_subsystems, SEED);
     htree->hashNodes(htree->root);
     this->htrees[SEED] = htree;
+
+    QString CAZY_hierarchy =  QString(":/functional_categories/") + "CAZY_hierarchy.txt";
+    htree = createHTree(CAZY_hierarchy, CAZY);
+    htree->hashNodes(htree->root);
+    this->htrees[CAZY] = htree;
 
     this->setDataModelCreated(true);
 
@@ -280,9 +289,10 @@ void DataManager::createDataModel() {
  * @param refDBFileName
  * @return
  */
-HTree *DataManager::createHTree(QString refDBFileName) {
+HTree *DataManager::createHTree(QString refDBFileName, ATTRTYPE type) {
     HTree *htree = new HTree();
 
+    htree->setAttrType(type);
     QStack<HNODE *> S;
     QHash<QString, ATTRIBUTE *> created;
 
@@ -326,6 +336,51 @@ HTree *DataManager::createHTree(QString refDBFileName) {
 }
 
 /**
+ * @brief DataManager::createBaseTree, takes a tree and creates a tree only with the base pathways, i.e., the node with the
+ * nodes before the leave nodes
+ * @param shtree, the source tree
+ * @return
+ */
+HTree *DataManager::createBaseTree(HTree *shtree) {
+    HTree *htree = new HTree();
+    QHash<QString, bool> created;
+
+    HNODE *hnode = new HNODE;
+    htree->root = hnode;
+    hnode->attribute = new ATTRIBUTE;
+    hnode->attribute->name = "root";
+    hnode->attribute->alias = "root";
+    hnode->children.clear();
+    hnode->depth = -1;
+    created["root"] = hnode->attribute;
+    _createBaseTree(shtree->root, htree->root, created);
+    return htree;
+}
+
+/**
+ * @brief DataManager::_createBaseTree, it recursively creates the  base pathway tree
+ * @param hnode, the recursively travelled node
+ * @param newnode, the root of the new tree
+ * @param created, hash to keep track of which nodes have been created
+ * @return true if exists through the leaf and false otherwise
+ */
+bool DataManager::_createBaseTree(HNODE *hnode, HNODE *newnode, QHash<QString, bool> &created){
+
+    if( hnode->children.isEmpty() ) return true;
+
+    foreach( HNODE *cnode, hnode->children) {
+        if( _createBaseTree(cnode, newnode, created) && ! created.contains(hnode->attribute->name) ) {
+            newnode->children.append(hnode);
+            created[hnode->attribute->name] = true;
+        }
+    }
+
+    return false;
+}
+
+
+
+/**
  * @brief DataManager::destroyAllHTrees, deallocates all the functional trees
  */
 void DataManager::destroyAllHTrees() {
@@ -341,8 +396,18 @@ void DataManager::destroyAllHTrees() {
  * @param hnode
  */
 void DataManager::_destroyHTree(HNODE *hnode) {
+
     foreach( HNODE *child, hnode->children) {
-        _destroyHTree(child);
+
+        try {
+            // qDebug() << QString("Error while destropying HTree for treetype ") + hnode->attribute->name;
+            _destroyHTree(child);
+        }
+        catch(...) {
+         //   qDebug() << QString("Error while destropying HTree for treetype ") + hnode->attribute->name;
+            Utilities::showInfo(0, QString("Error while destropying HTree for treetype ") + hnode->attribute->name );
+            return;
+        }
     }
     delete hnode;
 }
@@ -376,16 +441,28 @@ void DataManager::destroyAllTaxons() {
 
 /**
  * @brief DataManager::destroyHTree, deletes the tree for an attribute
- * @param refDB, the name of the attribute to remove the tree for
+ * @param treeType, the name of the attribute to remove the tree for
  */
-void DataManager::destroyHTree(ATTRTYPE refDB ) {
-     HTree *htree = this->getHTree(refDB);
-     HNODE *hnode = htree->getRootHNODE();
-     _destroyHTree(hnode);
-     hnode = 0;
-     this->htrees.remove(refDB);
+void DataManager::destroyHTree(ATTRTYPE treeType ) {
 
+     HTree *htree = this->getHTree(treeType);
+
+     if( htree->getAttrType() == METACYCBASE)  { this->htrees.remove(treeType); return; }
+
+     HNODE *hnode = htree->getRootHNODE();
+     try {
+      //   qDebug() << "value of htree " << hnode;
+        //  qDebug() << QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType()) ;
+         _destroyHTree(hnode);
+     }
+     catch(...) {
+         qDebug() << QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType()) ;
+         Utilities::showInfo(0, QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType() ));
+     }
+     hnode = 0;
+     this->htrees.remove(treeType);
 }
+
 
 /**
  * @brief DataManager::addTaxons, added the list of taxons to the singleton class Taxons
@@ -425,6 +502,8 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
     orf->contig->orfList.append(orf);
    // qDebug() << orf->contig->name  << "   " << orf->name << "    ";
 
+   // qDebug() << attributes;
+    if( attributes.size() <= 2) return orf;
     if(this->attributes[COG].contains(attributes[2]))
         orf->attributes[COG] = this->attributes[COG][attributes[2]];
     else {
@@ -433,6 +512,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
         this->attributes[COG][attributes[2]] = orf->attributes[COG];
     }
 
+    if( attributes.size() <= 3) return orf;
     if(this->attributes[KEGG].contains(attributes[3]))
         orf->attributes[KEGG] = this->attributes[KEGG][attributes[3]];
     else {
@@ -441,6 +521,7 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
         this->attributes[KEGG][attributes[3]] = orf->attributes[KEGG];
     }
 
+    if( attributes.size() <= 4) return orf;
     if(this->attributes[SEED].contains(attributes[4]))
         orf->attributes[SEED] = this->attributes[SEED][attributes[4]];
     else {
@@ -448,6 +529,17 @@ ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
         orf->attributes[SEED]->name = attributes[4];
         this->attributes[SEED][attributes[4]] = orf->attributes[SEED];
     }
+
+    if( attributes.size() <= 5) return orf;
+    if(this->attributes[CAZY].contains(attributes[5]))
+        orf->attributes[CAZY] = this->attributes[CAZY][attributes[5]];
+    else {
+        orf->attributes[CAZY] = new ATTRIBUTE;
+        orf->attributes[CAZY]->name = attributes[5];
+        this->attributes[CAZY][attributes[5]] = orf->attributes[CAZY];
+    }
+   // qDebug() << attributes.size();
+
     return orf;
 }
 
@@ -484,7 +576,7 @@ void DataManager::createORFs(QString sampleName) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
-            if(line.size() < 4) { continue; }
+            if(line.size() < 5) { continue; }
             ORF *orf = this->_createAnORF(line, sampleName);
             (this->ORFList->value(sampleName))->append(orf);
             _orfList[orf->name] = true;
@@ -520,6 +612,7 @@ void DataManager::createORFs(QString sampleName) {
     this->attributes[COG].clear();
     this->attributes[KEGG].clear();
     this->attributes[SEED].clear();
+    this->attributes[CAZY].clear();
 
  //   this->ORFsUptoDateList[sampleName] = true;
 }

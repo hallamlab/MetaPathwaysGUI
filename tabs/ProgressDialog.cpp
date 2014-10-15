@@ -60,11 +60,12 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
     connect(sampleSelect, SIGNAL( currentIndexChanged(QString)), this, SLOT(readStepsLog() ) );
+    // connect(sampleSelect,SIGNAL(currentIndexChanged(int)) , this, SLOT(readStepsLog()) );
     connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleListToRun()));
     connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
     connect(runButton,SIGNAL(clicked()), this, SLOT(readStepsLog()) );
-    connect(sampleSelect,SIGNAL(currentIndexChanged(int)) , this, SLOT(readStepsLog()) );
+
 
 }
 
@@ -77,10 +78,10 @@ void ProgressDialog::showErrors() {
   /* OLD WAY StatusView *statusview = StatusView::getStatusView();
    statusview->showTreeView();
    */
-    RunData *rundata= RunData::getRunData();
 
     TreeModel *model = new TreeModel;
-    model->setSampleNames(rundata->getFileList(rundata->getCurrentInputFormat() ));
+
+    model->setSampleNames(this->rundata->getSamplesSubsetToRun());
     model->readFiles();
 
     QTreeView *view = new QTreeView;
@@ -101,8 +102,6 @@ void ProgressDialog::showErrors() {
 void ProgressDialog::loadSampleListToRun() {
 
     QStringList files =  this->rundata->getSamplesSubsetToRun();
-
-
     sampleSelect->clear();
     foreach (QString f, files){
         sampleSelect->addItem(f); // sampleselect lets the user monitor the status of multiple samples
@@ -313,7 +312,60 @@ void ProgressDialog::readStepsLog(){
         QByteArray read = myProcess->readAll();
         if (!read.isEmpty()) standardOut->append(QString(read));
     }
+
+    updateCurrentRunningProcessStatus();
+
 }
+
+/**
+ * @brief ProgressDialog::isProcessingSample, checks if the sample has been processed by validating the current
+ *        runid in the log, if present that means it was done in the current run.
+ * @param sampleName
+ * @return
+ */
+bool ProgressDialog::isProcessingSample(QString sampleName) {
+    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
+    QString pathToLog = OUTPUTPATH + QDir::separator() + sampleName + QDir::separator() + "metapathways_steps_log.txt";
+
+    QFile inputFile(pathToLog);
+    QRegExp commentLine("#[^\"\\n\\r]*");
+
+    if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine();
+            if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
+               // qDebug() << line;
+                if(line.contains(this->runid) ) return true;
+            }
+       }
+       inputFile.close();
+    }else{
+        logBrowser->append("The log file has not yet been generated. Please wait.");
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief ProgressDialog::updateCurrentRunningProcessStatus, updates the currnet running process to
+ * display the last running process
+ */
+void ProgressDialog::updateCurrentRunningProcessStatus() {
+    for(int i = 0; i < sampleSelect->count(); i++) {
+        QString sampleName = sampleSelect->itemText(i);
+        if(!this->rundata->isAlreadyProcessedSample(sampleName) && this->isProcessingSample(sampleName) ) {
+            this->rundata->addToProcessedSamples(sampleName);
+            this->sampleSelect->setCurrentIndex(i);
+            return;
+        }
+    }
+}
+
+
 
 
 /**

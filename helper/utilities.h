@@ -61,6 +61,7 @@ public:
     static unsigned int uniqueORFsCount(const QList<ORF *> &orfList);
     static QString getSubSequence(QString, QString, unsigned int start, unsigned int end);
     static bool compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b);
+    static void showInfo(QWidget *parent, QString info);
 };
 
 

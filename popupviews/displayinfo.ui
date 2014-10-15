@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>DisplayInfo</class>
  <widget class="QDialog" name="DisplayInfo">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,11 +14,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Sequence Information</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
     <widget class="QPushButton" name="orfMap">
+     <property name="toolTip">
+      <string>Displays the contig and its ORFs.</string>
+     </property>
      <property name="text">
       <string>Show ORFs</string>
      </property>

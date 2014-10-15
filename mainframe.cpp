@@ -47,7 +47,7 @@ MainFrame::MainFrame(QWidget *parent) :
     settings = 0;
     gridProgress = 0;
 
-    this->setWindowTitle("MetaPathways 2.0");
+    this->setWindowTitle("MetaPathways 2.4.2");
     welcomeWindow = new Welcome();
     welcomeWindow->show();
     qSleep(2500);
@@ -181,6 +181,7 @@ void MainFrame::displayParams(){
  */
 void MainFrame::updateWidgets(){
     // if(stackedWidget->currentWidget() == settingsScroll)
+
     {
         // the user was looking at the param setup screen
 

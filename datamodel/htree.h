@@ -15,11 +15,12 @@
 typedef struct _ROWDATA {
     QString name;
     QString alias;
-    QString lcaStar;
+   // QString lcaStar;
     QVector<unsigned int> counts;
     QVector<QString> taxons;
     QVector<LCARESULT> lcaresults;
     unsigned int depth;
+    bool active ;
 } ROWDATA;
 
 
@@ -35,6 +36,7 @@ public:
 
     void printTree(HNODE *hnode, unsigned int d =0);
     QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, bool showRPKM = false);
+    QVector<unsigned int> countTreeRxnInfo(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, VALUETYPE valueType) ;
 
     void enumerateTaxons(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data);
 
@@ -44,12 +46,15 @@ public:
     void copyDataToSubConnector(HNODE *hnode, Connector *srcConnector, Connector *targetConnector);
     void copyDataToSubConnector(HNODE *hnode, Connector *targetConnector, HTree* targetTree, QHash<ORF *, bool> & orfHash);
     HNODE *getRootHNODE();
+    void setAttrType(ATTRTYPE type);
+    ATTRTYPE getAttrType();
     HNODE *root;
 private:
     void _getLeafAttributesOf(HNODE *hnode, QList<ATTRIBUTE *> &attrList);
     short _getTreeDepth(HNODE *hnode, short currDepth) ;
     QHash<QString, HNODE *> nodes;
     QList<Connector *> connectors;
+    ATTRTYPE type;
 };
 
 #endif // HTREE_H

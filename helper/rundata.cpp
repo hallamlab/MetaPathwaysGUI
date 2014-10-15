@@ -224,14 +224,46 @@ void RunData::setupDefaultParams(){
 
     this->setParams(parsed);
 }
+
+
+/**
+ * @brief RunData::setCurrentSample, sets the sample name that is currently or last running
+ * @param currentSample
+ */
+void RunData::addToProcessedSamples(QString sampleName) {
+    this->processedSamples[sampleName]= true;
+}
+
+
+/**
+ * @brief RunData::isAlreadyProcessedSample, checks if the sample is already  in the list of processed sample
+ * @param sampleName
+ * @return
+ */
+bool RunData::isAlreadyProcessedSample(QString sampleName) {
+    return this->processedSamples.contains(sampleName);
+}
+
+/**
+ * @brief RunData::setCurrentSample, set the current sample  to show the status from
+ * @param currentSample
+ */
 void RunData::setCurrentSample(QString currentSample) {
     this->currentSample = currentSample;
 }
-
+/**
+ * @brief RunData::getCurrentSample, gets the current sample running from
+ * @return  currentSample name
+ */
 QString RunData::getCurrentSample() {
     return this->currentSample;
 }
 
+
+/**
+ * @brief RunData::getCurrentInputFormat gets the current input format, such as, fasta, gbk, etc
+ * @return
+ */
 QString RunData::getCurrentInputFormat() {
 
     return this->currentInputFormat;
@@ -250,6 +282,10 @@ bool RunData::checkParams(){
     else return false;
 }
 
+/**
+ * @brief RunData::getNumRRNADB, gets the number of rRNA gene databases used
+ * @return
+ */
 unsigned int RunData::getNumRRNADB(){
     return this->nRRNADB;
 }
@@ -258,6 +294,10 @@ unsigned int RunData::getNumADB(){
     return this->nADB;
 }
 
+/**
+ * @brief RunData::getrNADBNames, gets the name of the rRNA SSU or LSU databese names
+ * @return  name of the database
+ */
 QStringList RunData::getrNADBNames() {
    return this->rrnaDBS;
 }
@@ -489,7 +529,9 @@ QStringList RunData::getSubFolders(const QString & folder) {
  * @param selection
  */
 void RunData::setSamplesSubsetToRun(QList<QString> &selection) {
+    qDebug()<< "ABCD selection " << selection;
    this->selectSamplesToRun = selection;
+   qSort(this->selectSamplesToRun.begin(), this->selectSamplesToRun.end());
 }
 
 /**
@@ -512,6 +554,7 @@ void RunData::emitloadSampleList() {
     emit loadSampleList();
 }
 
+
 QString RunData::getSystem() {
     return this->system;
 }
@@ -527,10 +570,10 @@ bool RunData::saveContext(const QString &key, QVariant value) {
      return true;
 }
 
-/*
- * Checks if the Qsettings has a context by the name of the key
- * \param key : key for the value
- * \return true
+/**
+ * @brief RunData::hasContext Checks if the Qsettings has a context by the name of the key
+ * @param key : key for the value
+ * @return true
  */
 bool RunData::hasContext(const QString &key) {
      QSettings settings("HallamLab", "MetaPathways");

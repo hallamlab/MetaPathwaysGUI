@@ -16,7 +16,7 @@ orf_prediction:min_length 60
 orf_prediction:translation_table 11
 
 # ORF annotation parameters
-annotation:algorithm BLAST
+annotation:algorithm LAST
 # e.g. blast or last
 
 #annotation:dbs COG_2013-12-27,kegg-pep-2011-06-18,refseq-nr-2014-01-18,metacyc-v4-2011-07-03,seed-2014-01-30 

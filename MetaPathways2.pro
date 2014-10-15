@@ -82,7 +82,8 @@ SOURCES += main.cpp\
     helper/globaldatatransit.cpp \
     datamodel/taxons.cpp \
     datamodel/lcastar.cpp \
-    datamodel/ncbitree.cpp
+    datamodel/ncbitree.cpp \
+    helper/labels.cpp
 
 
 
@@ -147,7 +148,8 @@ HEADERS  += \
     helper/globaldatatransit.h \
     datamodel/taxons.h \
     datamodel/lcastar.h \
-    datamodel/ncbitree.h
+    datamodel/ncbitree.h \
+    helper/labels.h
 
 
 

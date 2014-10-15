@@ -13,6 +13,7 @@
         <file>functional_categories/KO_classification.txt</file>
         <file>functional_categories/SEED_subsystems.txt</file>
         <file>functional_categories/metacyc_hierarchy.txt</file>
+        <file>functional_categories/CAZY_hierarchy.txt</file>
         <file>images/partial.png</file>
         <file>images/unsure.png</file>
         <file>images/blue.png</file>

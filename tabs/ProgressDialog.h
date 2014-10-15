@@ -36,10 +36,12 @@ class ProgressDialog : public QWidget
 public:
     explicit ProgressDialog(QWidget *parent = 0);
     void updateProgressBar();
+    void updateCurrentRunningProcessStatus();
     void initProcess();
     QStringList getActiveSteps() ;
     void shadeActiveSteps();
 
+    bool isProcessingSample(QString sampleName);
 
     RunData *rundata;
     QString METAPATH;

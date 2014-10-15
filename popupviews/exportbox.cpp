@@ -15,7 +15,7 @@ ExportBox::ExportBox(HTableData* td, QWidget *parent)
     this->td = new ExportSource(td);
     this->exportType = OTHERSTABLEEXP;
 
-
+   // this->setSizePolicy();
     this->createWidget();
 }
 
@@ -25,10 +25,22 @@ void ExportBox::createWidget() {
      setLayout(vbox);
 
      setWindowTitle(tr("Export"));
-     resize(480, 200);
+
      this->setAttribute(Qt::WA_DeleteOnClose, true);
      connect(exportButton, SIGNAL(clicked()), this, SLOT(saveAs()) );
      connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancelWindow()) );
+
+
+     this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+     scroll = new QScrollArea;
+     scroll->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::MinimumExpanding);
+     scroll->setWidget(this);
+     QSize wSize = this->size();
+
+     int w = wSize.width() < 600 ? wSize.width() :600;
+     int h = wSize.height() < 300 ? wSize.height() : 300;
+     scroll->resize(w, h);
+     scroll->show();
 
  }
 
@@ -41,6 +53,7 @@ void ExportBox::setExportType(TABLEEXPORTTYPE type) {
 }
 
 bool ExportBox::cancelWindow() {
+    this->scroll->close();
     this->close();
 }
 
@@ -199,14 +212,17 @@ QStringList ExportBox::getAllHeaders() {
      fasta = new QCheckBox(tr("Contigs"));
      fna = new QCheckBox(tr("ORFs"));
      faa = new QCheckBox(tr("Amino"));
+     megan = new QCheckBox(tr("MEGAN"));
 
-     fasta->setToolTip("Exports the contigs where the ORFs originated");
-     fna->setToolTip("Exports the ORFs");
-     faa->setToolTip("Exports the translated ORFs");
+     fasta->setToolTip("Exports the contigs (nucleotide sequences) where the ORFs originated");
+     fna->setToolTip("Exports the ORFs (predicted gene coding regions of the nucleotide sequences)");
+     faa->setToolTip("Exports the translated (in to amino acid sequences) ORFs ");
+     megan->setToolTip("Exports the ORF-wise homology search results to further analyze using the MEGAN software");
 
      vbox->addWidget(fasta);
      vbox->addWidget(fna);
      vbox->addWidget(faa);
+     vbox->addWidget(megan);
 
 
      if(this->exportType == rRNATABLEEXP) {
@@ -225,6 +241,7 @@ QStringList ExportBox::getAllHeaders() {
          fasta->show();
          fna->show();
          faa->show();
+         megan->show();
      }
 
      vbox->addStretch(1);
@@ -375,7 +392,10 @@ typedef struct _EXPORT_FILES_INFO {
 
 
      this->hide();
+
+     this->scroll->close();
      this->destroy();
+
 
 
      return true;

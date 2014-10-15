@@ -42,6 +42,7 @@
 
 #include "tabs/simpletabgroups.h"
 #include "helper/globaldatatransit.h"
+#include "helper/labels.h"
 #include "tabs/simpletabgroups.cpp"
 
 
@@ -74,7 +75,7 @@ public slots:
     void sampleChanged(QString changed);
     void updateFileNames();
     void setVisible(int);
-    void receiveSelection(QList<bool> &selection);
+    void receiveSelection(QList<unsigned int> &selection);
 
 
     void ProvideContexMenu(QPoint position);
@@ -128,14 +129,10 @@ private:
     QHash<QString, MeganView *> meganviews;
 
     HTABLE_PARAMS tableParams;
-    QList<bool> selectedSamples;
+    QList<unsigned int> selectedSamples;
 
     DataManager *datamanager;
     bool disableSampleChanged;
-
-
-
-
 
 };
 

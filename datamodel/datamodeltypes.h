@@ -6,6 +6,8 @@
 #include <QHash>
 #include <QDebug>
 
+#include "helper/types.h"
+
 
 
 typedef struct _LCARESULT {
@@ -30,12 +32,12 @@ typedef struct _HNODE {
     short int depth;
 } HNODE;
 
-typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, TAXON, RPKM}  ATTRTYPE;
+typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, CAZY, TAXON, RPKM, METACYCBASE}  ATTRTYPE;
 
 
 
 typedef struct _HTABLE_PARAMS {
-    QHash<ATTRTYPE, QStringList>  headers;
+    QHash<ATTRTYPE, QHash<VALUETYPE, QStringList> >  headers;
 } HTABLE_PARAMS;
 
 

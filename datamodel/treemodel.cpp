@@ -166,6 +166,7 @@
      QList<QVariant> columnData;
 
      columnData << "GENERAL ERRORS" << " " << " ";
+     qDebug() << "Whatever " << this->sampleNames;
      TreeItem *treeitem = new TreeItem(columnData, parent);
      parent->appendChild(treeitem);
 
@@ -183,11 +184,16 @@
      }
 
 
+
+
      foreach(QString filename, this->sampleNames) {
+         qDebug() << "error for file " << filename;
         QHash<QString, QHash<QString, QList<QStringList > > > data;
         QString runstatsFile = samplercmgr->getFilePath(filename, ERRORS);
-        if( this->readDataFromFile(runstatsFile, filename, data) )
+        if( this->readDataFromFile(runstatsFile, filename, data) ) {
+            qDebug() << "Error filename " << filename << " " << runstatsFile;
            this->addWarningsFromSample(filename, data, parent, true);
+        }
         else  this->addWarningsFromSample(filename, data, parent, false);
        // qDebug() << data;
      }

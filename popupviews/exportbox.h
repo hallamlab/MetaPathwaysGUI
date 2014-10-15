@@ -9,6 +9,7 @@
 #include <QList>
 #include <QRadioButton>
 #include <QFileDialog>
+#include <QScrollArea>
 
 #include "dataviews/tabledata.h"
 #include "datamodel/htabledata.h"
@@ -76,7 +77,9 @@ private:
     QCheckBox *fasta ;
     QCheckBox *fna ;
     QCheckBox *faa ;
+    QCheckBox *megan;
 
+    QScrollArea *scroll;
     QList<EXPORT_SELECT> Columns;
     QList<QCheckBox *> samplesCheckboxes;
     TABLEEXPORTTYPE exportType;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>904</height>
+    <width>736</width>
+    <height>862</height>
    </rect>
   </property>
   <property name="font">
@@ -17,7 +17,13 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Run Configuration</string>
+  </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
@@ -1311,7 +1317,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QRadioButton" name="compute_rpkmSKIP">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -1365,6 +1371,9 @@ p, li { white-space: pre-wrap; }
       <width>71</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>If the Run option is selected </string>
     </property>
     <property name="text">
      <string>Run All</string>

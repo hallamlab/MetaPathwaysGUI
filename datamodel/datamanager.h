@@ -69,9 +69,11 @@ public:
     CATEGORYNODE createCategoryNode(QString line);
     QStringList getResourceFiles(const RESOURCETYPE &resType) ;
 
-    HTree *createHTree(QString refDB);
+    HTree *createHTree(QString refDB, ATTRTYPE type);
+    HTree *createBaseTree(HTree *shtree);
+    bool  _createBaseTree(HNODE *snode, HNODE *hnode, QHash<QString, bool> &created);
     void destroyAllHTrees();
-    void destroyHTree(ATTRTYPE refDB );
+    void destroyHTree(ATTRTYPE treeType );
     void _destroyHTree(HNODE *hnode );
 
     void destroyAllAttributes();

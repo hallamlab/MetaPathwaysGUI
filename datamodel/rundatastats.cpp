@@ -57,8 +57,6 @@ bool RunDataStats::readStatFiles() {
     typedef QPair<QString, unsigned int> RankPair;
 
     foreach( RankPair pair, pairs ) {
-     //   qDebug() << pair.second;
-     //   if( !statNames.contains(pair.first)) continue;
         this->dataVectorMap[pair.first] = QList<QString>();
         foreach(QString sample, this->filenames) {
             if( this->statsData[sample].contains(pair.first))
@@ -135,12 +133,12 @@ int RunDataStats::columnCount(const QModelIndex & /* parent */) const
 
 QVariant RunDataStats::data(const QModelIndex &index, int role) const
 {
-   int count;
+
    if (!index.isValid())
        return QVariant();
 
    if (role == Qt::TextAlignmentRole) {
-       return int(Qt::AlignRight | Qt::AlignVCenter);
+       return int(Qt::AlignLeft | Qt::AlignVCenter);
    }
    else if (role == Qt::DisplayRole) {
 

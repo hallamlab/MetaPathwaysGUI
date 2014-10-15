@@ -615,6 +615,14 @@ bool Utilities::compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b) {
     return a.second  > b.second;
 }
 
+/**
+ * @brief showInfo, displaying any information to the user
+ * @param info, the string that contains the info
+ */
+void Utilities::showInfo(QWidget *parent, QString info) {
+    QMessageBox::warning(parent, info, info, QMessageBox::Ok);
+}
+
 
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>831</width>
-    <height>853</height>
+    <width>912</width>
+    <height>977</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -39,8 +39,17 @@
    </item>
    <item row="2" column="7">
     <widget class="QSpinBox" name="showDepth">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::PlusMinus</enum>
+     </property>
+     <property name="maximum">
+      <number>9</number>
      </property>
     </widget>
    </item>
@@ -83,6 +92,21 @@
        <string>RPKM</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>BasePwy ORF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BasePwy RxnTot</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>BasePwy RxnCov</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="1" column="0" colspan="10">
@@ -99,11 +123,14 @@
        <height>0</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="midLineWidth">
       <number>1</number>
      </property>
      <property name="editTriggers">
-      <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::EditKeyPressed</set>
+      <set>QAbstractItemView::DoubleClicked</set>
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>

@@ -85,6 +85,22 @@ void HTree::printTree(HNODE *hnode, unsigned int d) {
 
 }
 
+/**
+ * @brief HTree::setAttrType, sets the ATTRYPE of the tree
+ * @param type
+ */
+void HTree::setAttrType(ATTRTYPE type) {
+    this->type = type;
+}
+
+/**
+ * @brief HTree::getAttrType, gets the ATTRYPE of the tree
+ * @param type
+ */
+ATTRTYPE HTree::getAttrType() {
+    return this->type;
+}
+
 
 /**
  * @brief HTree::getHNODE, it retrieves a new node in a tree based on the name of the category
@@ -122,6 +138,7 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
     r->name = hnode->attribute->name;
     r->alias = hnode->attribute->alias;
     r->depth = currDepth;
+    r->active = true;
 
 
     // initialize the counts
@@ -158,6 +175,72 @@ QVector<unsigned int> HTree::countTree(HNODE *hnode, unsigned int maxDepth, bool
 
     return vcount;
 }
+
+
+
+
+/** This function travels through the functional  hierarchies of several
+ * samples simultaneously
+ \param hnode this is the root node of the HTree
+ \param maxDepth maximum depth of the the current HTree
+ \param showHierarchy sets to show hierarcy or not
+ \param currDepth a variable to keep track of the recursive depth
+ \param data the ROWDATA list to show on the table
+ \param showRPKM shows/hides RPKM values instead of count
+
+ \return vcount it is a vector of counts, one per sample
+*/
+QVector<unsigned int> HTree::countTreeRxnInfo(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, VALUETYPE valueType) {
+    QVector<unsigned int> vcount;
+    QVector<unsigned int> tempcount;
+
+    currDepth++;
+
+    ROWDATA *r = new ROWDATA;
+    r->name = hnode->attribute->name;
+    r->alias = hnode->attribute->alias;
+    r->depth = currDepth;
+    r->active = true;
+
+
+    // initialize the counts
+    for(unsigned int j=0; j < this->connectors.size(); j++) {
+        vcount.push_back(0);
+    }
+
+    // we reached the bottom leaves
+    if(hnode->children.size()==0) {
+    //    qDebug() << "Bottom " << hnode->attribute->name;
+        for(unsigned int j=0; j < this->connectors.size(); j++) {
+
+           if( valueType == BASEPWY_RXNTOT) vcount[j]=1;
+
+           if(valueType == BASEPWY_RXNCOV ) {
+               if( this->connectors[j]->connected.contains(hnode->attribute)) {
+                   vcount[j] =  this->connectors[j]->connected[hnode->attribute].size() > 0 ? 1 : 0;
+               }
+               else
+                   vcount[j] = 0;
+           }
+        }
+    }
+
+   // qDebug() << r->name << " " << currDepth << " " << maxDepth;
+
+    if( currDepth != 0 &&( (!showHierarchy && currDepth == maxDepth)  || (showHierarchy && currDepth <= maxDepth)) ) {
+       data.append(r);
+    }
+
+    for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
+        tempcount = this->countTreeRxnInfo(*it, maxDepth, showHierarchy, currDepth, data, valueType);
+        for(unsigned int j=0; j < this->connectors.size(); j++) vcount[j] += tempcount[j];
+    }
+    r->counts= vcount;
+
+    return vcount;
+}
+
+
 
 
 /** This function travels through the functional  hierarchies of several
@@ -212,7 +295,11 @@ QList<ROWDATA *> HTree::getRows(unsigned int maxDepth, QList<Connector *> &conne
 
 
    if(valueType==RPKMCOUNT)  this->countTree(this->root, maxDepth, showHierarchy, -1, data, true);
-   if(valueType==ORFCOUNT) this->countTree(this->root, maxDepth, showHierarchy, -1, data, false);
+   if(valueType==ORFCOUNT || valueType == BASEPWY_ORF) this->countTree(this->root, maxDepth, showHierarchy, -1, data, false);
+
+   if(valueType==BASEPWY_RXNTOT || valueType == BASEPWY_RXNCOV)
+       this->countTreeRxnInfo(this->root, maxDepth, showHierarchy, -1, data, valueType);
+
 
 #ifdef LCASTAR
    if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
@@ -229,7 +316,10 @@ QList<ROWDATA *> HTree::getRows(QString category, unsigned int maxDepth,  QList<
   // qDebug() << "Hnode " << node << " category " << category << " depth " << node->depth;
    if(node!=0) {
       if(valueType==RPKMCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, true);
-      if(valueType==ORFCOUNT) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, false);
+      if(valueType==ORFCOUNT || valueType == BASEPWY_ORF) this->countTree(node, maxDepth, showHierarchy, -1 + node->depth, data, false);
+
+      if(valueType==BASEPWY_RXNTOT || valueType == BASEPWY_RXNCOV)
+          this->countTreeRxnInfo(this->root, maxDepth, showHierarchy, -1, data, valueType);
 #ifdef LCASTAR
       if( valueType==LCASTAR) this->enumerateTaxons(this->root, maxDepth, showHierarchy, -1, data);
 #endif

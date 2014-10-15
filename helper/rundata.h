@@ -68,6 +68,9 @@ public:
 
     QString getCurrentSample();
 
+    void addToProcessedSamples(QString sampleName);
+    bool isAlreadyProcessedSample(QString sampleName);
+
     static RunData* getRunData();
 
     void addFileToList(QString file);
@@ -122,7 +125,10 @@ private:
     QStringList rrnaDBS;
     QStringList annotationDBS;
     QProcess *process;
+
     QString currentSample;
+    QHash<QString, bool> processedSamples;
+
     QString system;
     QList<QString> selectSamplesToRun;
     QStringList outputFolders;

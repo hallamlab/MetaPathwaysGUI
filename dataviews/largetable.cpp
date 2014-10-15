@@ -364,6 +364,11 @@ bool compareStrRev(const  ROW *a, const ROW *b) {
     return a->strTemp > b->strTemp;
 }
 
+
+/**
+ * @brief LargeTable::sortByField, sortd the data by the column
+ * @param fieldNum
+ */
 void LargeTable::sortByField(unsigned int fieldNum) {
 
     if(lastUsedField!=fieldNum) {
@@ -451,13 +456,14 @@ QString LargeTable::lca_star(const QList<ORF *> &orfList, LCAStar *lcastar) {
  * @param deltaW
  */
 void LargeTable::getData( QList<ROW *> &data, int pivotPoint, unsigned int  deltaW) {
-    LCAStar *lcastar = LCAStar::getLCAStar();
 
     DataManager *datamanager = DataManager::getDataManager();
     unsigned int contigCol = 1, lcaCol = 6, taxcol =4;
-
     data.clear();
-    NCBITree *ncbitree = NCBITree::getNCBITree();
+
+    LCAStar *lcastar = this->addLCAStar ?  LCAStar::getLCAStar() : 0 ;
+    NCBITree *ncbitree= this->addLCAStar ? NCBITree::getNCBITree() : 0;
+
     QHash<QString, QString> lcaForContigs;
 
     for (unsigned int i = pivotPoint; i < pivotPoint + 2*deltaW && i < tableData.length(); i++){

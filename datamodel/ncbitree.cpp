@@ -1,6 +1,7 @@
 #include "ncbitree.h"
 
 
+
 NCBITree *NCBITree::ncbitree = 0;
 
 NCBITree::NCBITree()
@@ -15,6 +16,8 @@ NCBITree *NCBITree::getNCBITree() {
          NCBITree::ncbitree = new NCBITree;
          NCBITree::ncbitree->loadTrees();
     }
+
+
 
     return NCBITree::ncbitree;
 }
