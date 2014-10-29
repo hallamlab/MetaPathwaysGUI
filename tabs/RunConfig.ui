@@ -1373,10 +1373,10 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="toolTip">
-     <string>If the Run option is selected </string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Runs all steps that have not been previously completed &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>Run All</string>
+     <string>Run</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="skipAllRadioButton">
@@ -1388,8 +1388,11 @@ p, li { white-space: pre-wrap; }
       <height>20</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Skipped steps will not be run &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="text">
-     <string>Skip All</string>
+     <string>Skip</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="redoAllRadioButton">
@@ -1397,12 +1400,15 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>20</y>
-      <width>51</width>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Will delete associated files (if previously completed) and run step again&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
     <property name="text">
-     <string>Redo All</string>
+     <string>Redo</string>
     </property>
    </widget>
   </widget>

@@ -432,9 +432,7 @@ void HTableData::fillData() {
              }
      }
 
-     qDebug() << " Iterating through trees";
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType()) ;
-     qDebug() << " done iterating";
 
      Labels *labels = Labels::getLabels();
 
@@ -1099,6 +1097,48 @@ bool HTableData::saveSequencesToFile(QString sampleName, QString fileName,  RESO
     progressbar.hide();
     return true;
 }
+
+/** Saves the tabular BLAST/LAST results to to a local file for MEGAN export
+ * \param sampleName : name of the sample
+ * \param fileName : name of the file/folder to save it in, creates a new folder
+ * \param type: type of sequences to export to the file, should be MEGANLASTFILE or MEGANBLASTFILE
+ **/
+bool HTableData::saveMeganExportToFile(QString sampleName, QString fileName,  RESOURCE type) {
+    DataManager *datamanager = DataManager::getDataManager();
+    HTree *htree = datamanager->getHTree(this->id.attrType);
+
+    // take any connector, since they all have the same set of ORFs
+
+    Connector *connector = this->allConnectors[this->id.attrType][this->getSampleNumber(sampleName)];
+
+    if( datamanager==0 || htree ==0 || connector == 0 ) return false;
+    QList<ORF *>orfList = connector->getORFList();
+
+  //  connector->getORFList(htree->getLeafAttributesOf(hnode));
+    QHash<QString, bool> orfNames;
+    ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
+
+    foreach(ORF *orf, orfList) {
+         orfNames[orf->name] = true;
+    }
+   // }
+
+    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
+
+    QFile inputTable;
+
+    inputTable.setFileName(sampleResourceManager->getFilePath(sampleName, type));
+
+    if( inputTable.exists())
+         Utilities::exportMeganCompatibleFile(inputTable.fileName(), fileName, orfNames);
+    else {
+        QMessageBox::warning(this, QString("Cannot find input file ") + fileName + QString(" to input from"), QString("Missing expected file ") + fileName);
+    }
+    progressbar.hide();
+    return true;
+}
+
+
 
 
 /**

@@ -530,7 +530,6 @@ QStringList Utilities::getFilesWithPattern(const QString &folderName, const QReg
 
     for (int i = 0; i <  files.size(); ++i) {
         int pos = pattern.indexIn(files[i]);
-
         if(pos != -1 ) {
           foundFiles.append(folder.absoluteFilePath(files[i]));
         }
@@ -624,8 +623,35 @@ void Utilities::showInfo(QWidget *parent, QString info) {
 }
 
 
+/**
+ * @brief Utilities::exportMeganCompatibleFile, exports the LAST/BLAST lines for the set of orfNames to a megan usable table
+ * @param inputFileName, the LAST/BLAST result file
+ * @param outputFileName, the file to output to
+ * @param orfNames, the list of ORFs to output
+ * @return
+ */
+bool Utilities::exportMeganCompatibleFile( QString inputFileName, QString outputFileName,  QHash<QString, bool> orfNames) {
+    QFile inputFile(inputFileName);
+    QFile outputFile(outputFileName);
 
-
-
+    if (outputFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outputFile);
+        if(inputFile.open(QIODevice::ReadOnly | QIODevice::Text )) {
+           QTextStream in(&inputFile);
+           while ( !in.atEnd() )  {
+               QString rawline = in.readLine().remove(("[\\n]"));
+               QStringList line = rawline.split(QRegExp("[\\t]"));
+               if(line.size() != 12) { continue; }
+               if( line.size() ==0 ) { continue; }
+               if( !orfNames.contains(Utilities::getShortORFId(line[0])) ) { continue; }
+               out << rawline << "\n";
+           }
+           inputFile.close();
+        }
+        outputFile.close();
+        return true;
+    }
+    return false;
+}
 
 

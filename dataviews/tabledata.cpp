@@ -800,8 +800,6 @@ bool TableData::saveTableToFile(QString fileName, QChar delim, const QStringList
 bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     QFile outFile(fileName);
 
-
-
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
 
@@ -910,6 +908,68 @@ bool TableData::saveSequencesToFile( QString fileName,  RESOURCE type) {
     }
     return true;
 }
+
+/**
+ * @brief TableData::saveMeganExportToFile, exports the BLAST or LAST hits to be used for MEGAN
+ * @param fileName
+ * @param type, either MEGANBLASTFILE or MEGANLASTFILE
+ * @return
+ */
+bool TableData::saveMeganExportToFile( QString fileName,  RESOURCE type) {
+    QFile outFile(fileName);
+
+    switch(type) {
+        case MEGANBLASTFILE:
+             break;
+        case MEGANLASTFILE:
+             break;
+        default:
+             return false;
+    }
+
+    if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
+        QTextStream out(&outFile);
+
+        //type can be only of NUCFASTA, NUCFNA or AMINOFAA
+        SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
+
+        ProgressView progressbar("Exporting MEGAN usable file for sample : " + sampleName, 0, 0, this);
+
+        unsigned int col;
+        if( type==MEGANLASTFILE || type==MEGANBLASTFILE ) col = 0;
+
+        QString name, shortname;
+          //  qDebug() << "Size to export " << this->largeTable->tableData.size();
+
+        QHash<QString, bool> orfNames;
+
+        for(int i =0; i < this->largeTable->tableData.size();  i++) {
+            name = this->largeTable->tableData[i]->strVar[this->largeTable->index[col]];
+            QString seqName;
+            if(type==MEGANLASTFILE || type==MEGANBLASTFILE) {
+                shortname = Utilities::getShortORFId(name);
+                seqName = shortname;
+                orfNames[seqName] = true;
+            }
+         }
+
+        QFile inputTable;
+        inputTable.setFileName(sampleResourceManager->getFilePath(sampleName, type));
+
+        if( inputTable.exists())
+             Utilities::exportMeganCompatibleFile(inputTable.fileName(), fileName, orfNames);
+        else {
+            QMessageBox::warning(this, QString("Cannot find input file ") + fileName + QString(" to input from"), QString("Missing expected file ") + fileName);
+        }
+
+        progressbar.hide();
+        outFile.close();
+    }
+    return true;
+}
+
+
+
 
 /**
  * @brief TableData::setSampleName, sets the current sample name

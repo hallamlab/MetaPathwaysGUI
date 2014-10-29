@@ -560,9 +560,38 @@ QString RunData::getSystem() {
 }
 
 
-/* Saves the context against the key
- * \param key: the value for the key
- * \return the value of the key as a QVariant
+/**
+ * @brief RunData::setDirtyBit, sets the dirty bit
+ * @param key
+ */
+void RunData::setDirtyBit(QString key) {
+    this->dirtybits[key] = true;
+}
+
+
+/**
+ * @brief RunData::clearDirtyBit, clears the dirty bit
+ * @param key
+ */
+void RunData::clearsDirtyBit(QString key) {
+    if( this->dirtybits.contains(key)) this->dirtybits[key] = false;
+}
+
+/**
+ * @brief isBitDirty, is the bit dirty
+ * @return
+ */
+bool RunData::isBitDirty(QString key) {
+    if(!this->dirtybits.contains(key)) return false;
+    return this->dirtybits[key];
+}
+
+
+/**
+ * @brief RunData::saveContext, Saves the context against the key
+ * @param key, the key
+ * @param value, the value against the key
+ * @return
  */
 bool RunData::saveContext(const QString &key, QVariant value) {
      QSettings settings("HallamLab", "MetaPathways");

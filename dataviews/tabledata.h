@@ -60,6 +60,8 @@ public:
 
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString fileName,  RESOURCE type);
+
+    bool saveMeganExportToFile(QString fileName,  RESOURCE type);
     void setSampleName(QString sampleName);
     QString getSampleName();
     void setMultiSampleMode(bool multisample);

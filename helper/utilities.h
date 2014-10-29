@@ -62,6 +62,7 @@ public:
     static QString getSubSequence(QString, QString, unsigned int start, unsigned int end);
     static bool compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b);
     static void showInfo(QWidget *parent, QString info);
+    static bool exportMeganCompatibleFile(QString inputFileName, QString outputFileName, QHash<QString, bool> orfNames);
 };
 
 

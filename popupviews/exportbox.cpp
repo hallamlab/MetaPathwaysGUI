@@ -362,21 +362,23 @@ typedef struct _EXPORT_FILES_INFO {
      // export the sequences now
       QDir dir(fileName);
 
-      foreach( QString sampleName, this->td->getSampleNames() ) {
 
+
+      foreach( QString sampleName, this->td->getSampleNames() ) {
+      //iterate through each sample
           if( this->td->isMultiSampleMode() && !sampleSequencesToExport.contains(sampleName)) continue;  // skip the sample if it is not selected
              for(unsigned int i = 0; i < filesInfo.suffixes.size(); i++ ) {
                  if( filesInfo.checkBoxes[i]->isChecked()) {
                      if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
 
-                     if( i==0 ) {
+                     if( i==0 ) { // the trna and rrna tables is treated separately since there only one of them
                           if(this->exportType==tRNATABLEEXP) {
                               exportFileName = fileName +"/" + sampleName + QString(".tRNA") +  QString(filesInfo.suffixes[i]);
                           }
                           else if(this->exportType==rRNATABLEEXP) {
                               exportFileName = fileName +"/" + sampleName + QString(".rRNA") + QString(".") + QString(this->auxName) +    QString(filesInfo.suffixes[i]);
                           }
-                          else {
+                          else {  /* other tables */
                               exportFileName = fileName +"/" + sampleName +  QString(filesInfo.suffixes[i]);
                           }
                      }
@@ -384,15 +386,27 @@ typedef struct _EXPORT_FILES_INFO {
                         exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
                      }
 //                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
+
                      this->td->saveSequencesToFile(sampleName, exportFileName, filesInfo.resources[i]);
                      //waitScreen->hide();
-                 }
+                 } //if the sequence type to export selected
+             } // fasta, fna and faa files
+
+             //here comes the megan
+             if(this->megan->isChecked() ) {
+                 RunData *rundata = RunData::getRunData();
+                 if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
+                 exportFileName = fileName +"/" + sampleName + QString(".") + rundata->getValueFromHash("annotation:algorithm", _PARAMS) + QString(".MEGAN.txt");
+
+                 if( rundata->getValueFromHash("annotation:algorithm", _PARAMS).compare("LAST")==0)
+                     this->td->saveMeganExportToFile(sampleName, exportFileName, MEGANLASTFILE);
+                 else if( rundata->getValueFromHash("annotation:algorithm", _PARAMS).compare("BLAST")==0)
+                     this->td->saveMeganExportToFile(sampleName, exportFileName,MEGANBLASTFILE);
              }
-       }
+      }  // samplewise for
 
 
      this->hide();
-
      this->scroll->close();
      this->destroy();
 

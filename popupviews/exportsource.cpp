@@ -99,10 +99,16 @@ bool ExportSource::saveTableToFile(QString fileName, QChar delim, const QStringL
 
 }
 
-
+/**
+ * @brief ExportSource::saveSequencesToFile, exports sequences to file
+ * @param sampleName, the name of the sample to export for
+ * @param fileName, the name of the file
+ * @param type, type of sequences, Contig, Untranslated ORF or amino acid sequences.
+ * @return
+ */
 bool ExportSource::saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type) {
     switch(this->index) {
-        case 0: // functional and tax tables
+        case 0: // functional-and-tax tables
              return td0->saveSequencesToFile(fileName, type);
              break;
         case 1: //KEGG, COG, TABLE
@@ -111,8 +117,29 @@ bool ExportSource::saveSequencesToFile(QString sampleName, QString fileName,  RE
         default:
             return UNKNOWN;
     }
-
 }
+
+/**
+ * @brief ExportSource::saveMeganExportToFile, saves the LAST/BLAST lines for exporting into MEGAN
+ * @param sampleName
+ * @param fileName
+ * @param type, either MEGANBLASTFILE or MEGANLASTFILE
+ * @return
+ */
+bool ExportSource::saveMeganExportToFile(QString sampleName, QString fileName,  RESOURCE type) {
+    switch(this->index) {
+        case 0: // functional-and-tax tables
+             return td0->saveMeganExportToFile(fileName, type);
+             break;
+        case 1: //KEGG, COG, TABLE
+
+             return td1->saveMeganExportToFile(sampleName, fileName, type);
+             break;
+        default:
+            return UNKNOWN;
+    }
+}
+
 
 bool ExportSource::isMultiSampleMode() {
     switch(this->index) {

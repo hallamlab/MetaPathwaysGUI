@@ -28,6 +28,7 @@ RunConfig::RunConfig(QWidget *parent) :
     selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
     gridSetup = 0;
 
+
     rundata = RunData::getRunData();
 
     setStyling();
@@ -153,6 +154,10 @@ void RunConfig::saveOutput(QString text) {
    if( !text.isEmpty()) emit fileSet();
    this->rundata->saveContext(OUTPUT_FOLDER, QVariant(text));
    this->rundata->emitloadSampleList();
+   /* this saves into the PARAMS */
+
+   this->rundata->setValue("folderOutput", text, _PARAMS);
+   this->rundata->setDirtyBit("folderOutput");
 }
 
 void RunConfig::browseFolder(){

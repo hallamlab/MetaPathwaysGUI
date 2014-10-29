@@ -47,7 +47,7 @@ MainFrame::MainFrame(QWidget *parent) :
     settings = 0;
     gridProgress = 0;
 
-    this->setWindowTitle("MetaPathways 2.4.2");
+    this->setWindowTitle("MetaPathways 2.4.5");
     welcomeWindow = new Welcome();
     welcomeWindow->show();
     qSleep(2500);
@@ -253,8 +253,9 @@ void MainFrame::updateWidgets(){
                 }
                 // concatenate all the databases together by commas
             }
-         //   qDebug() << "configName : " << configName << " value : " << value;
-            rundata->setValue(configName, value,_PARAMS);
+            if( !rundata->isBitDirty(value))
+                rundata->setValue(configName, value, _PARAMS);
+            rundata->clearsDirtyBit(value);
             // now write them to the parameter file
           //  qDebug() << " Writing out the file";
             Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] + QDir::separator() + "config" +  QDir::separator() + RunData::TEMPLATE_PARAM, "PARAMS", configName, value, false, false);
@@ -299,8 +300,15 @@ void MainFrame::updateWidgets(){
         rundata->setValue(inputTypeKey,stages->fileInputFormat->currentText(),_PARAMS);
 
         //save file input and output selected
+
         rundata->setValue("fileInput", stages->selectedFiles,_PARAMS);
-        rundata->setValue("folderOutput", stages->selectedFolder,_PARAMS);
+        if( this->rundata->isBitDirty("folderOutput")) {
+           this->rundata->clearsDirtyBit("folderOutput");
+            stages->selectedFolder = this->rundata->getValueFromHash("folderOutput", _PARAMS);
+        }
+        else {
+           this->rundata->setValue("folderOutput", stages->selectedFolder,_PARAMS);
+        }
 
         //override grid choice - if the user chose redo or yes with this ticked, then the step param should be "grid"
         if (stages->gridBlastChoice->isChecked() && rundata->getParams().operator []("metapaths_steps:BLAST_REFDB")!="skip"){

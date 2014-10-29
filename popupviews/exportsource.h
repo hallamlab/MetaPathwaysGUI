@@ -17,6 +17,8 @@ public:
     enum TYPE getFieldType(unsigned int i);
     bool saveTableToFile(QString fileName, QChar delim, const QStringList &selectedHeaders);
     bool saveSequencesToFile(QString sampleName, QString fileName,  RESOURCE type);
+
+    bool saveMeganExportToFile(QString sampleName, QString fileName,  RESOURCE type);
     bool isMultiSampleMode();
     unsigned int getIndex();
     HTableData *getHTableDataPointer();

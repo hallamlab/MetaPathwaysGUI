@@ -101,6 +101,10 @@ public:
     bool hasContext(const QString &key);
     QVariant getContext(const QString &key);
 
+    void setDirtyBit(QString key);
+    void clearsDirtyBit(QString key);
+    bool isBitDirty(QString key);
+
 signals:
     void loadSampleList();
 
@@ -133,6 +137,7 @@ private:
     QList<QString> selectSamplesToRun;
     QStringList outputFolders;
     QString currentInputFormat;
+    QHash<QString, bool> dirtybits;
 };
 
 

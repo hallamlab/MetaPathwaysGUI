@@ -29,6 +29,7 @@ SampleResourceManager* SampleResourceManager::getSampleResourceManager() {
 
 QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE type) {
      QString path;
+     QStringList files;
 
      switch(type) {
          case NUCSTATS:
@@ -71,10 +72,15 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
             path =OUTPUTPATH + "/" + sampleName + "/results/rpkm/" + sampleName + ".orf_rpkm.txt";
             break;
          case MEGANLASTFILE:
-            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/" + sampleName + ".refseq.LASTout";
+            files = this->getFilePaths(sampleName, MEGANLASTFILE);
+            path = (files.size() > 0 ) ?  files[0] : QString();
             break;
          case MEGANBLASTFILE:
-            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/" + sampleName + ".refseq.BLASTout";
+            files = this->getFilePaths(sampleName, MEGANBLASTFILE);
+            path = (files.size() > 0 ) ?  files[0] : QString();
+            break;
+         case BLAST_RESULTS_FOLDER:
+            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/";
             break;
          case RUNSTATS:
             path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
@@ -118,8 +124,6 @@ QString SampleResourceManager::extractDBName(const QString &sampleName, const QS
              break;
     }
 
-
-
     unsigned int pos = pattern.indexIn(TableFile, 0);
     if( pos >= 0 )
         return pattern.cap(1);
@@ -140,6 +144,7 @@ QStringList SampleResourceManager::getFilePaths(const QString &sampleName,  RESO
 
      QString folderpath;
      QRegExp pattern;
+
      switch(type) {
          case rRNATABLES:
               folderpath = this->getFilePath(sampleName, rRNATABLES);
@@ -149,6 +154,17 @@ QStringList SampleResourceManager::getFilePaths(const QString &sampleName,  RESO
          case tRNATABLES:
               folderpath = this->getFilePath(sampleName, tRNATABLES);
               pattern.setPattern(sampleName + "[.]tRNA.stats.txt$");
+              break;
+
+         case MEGANBLASTFILE:
+              folderpath = this->getFilePath(sampleName, BLAST_RESULTS_FOLDER);
+              pattern.setPattern(sampleName + "[.]refseq.*[.]BLASTout$");
+              pattern.setCaseSensitivity(Qt::CaseInsensitive);
+              break;
+         case MEGANLASTFILE:
+              folderpath = this->getFilePath(sampleName, BLAST_RESULTS_FOLDER);
+              pattern.setPattern(sampleName + "[.]refseq.*[.]LASTout$");
+              pattern.setCaseSensitivity(Qt::CaseInsensitive);
               break;
          default:
               return QStringList();

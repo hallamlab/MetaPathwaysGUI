@@ -55,6 +55,8 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     cancelButton->setEnabled(false);
     runButton->setEnabled(true);
 
+    overwrite->hide();
+
     connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
     connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));

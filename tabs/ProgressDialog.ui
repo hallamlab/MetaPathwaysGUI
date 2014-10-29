@@ -444,6 +444,9 @@
      <property name="text">
       <string>Overwrite</string>
      </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
    <item row="6" column="0" rowspan="2" colspan="5">
