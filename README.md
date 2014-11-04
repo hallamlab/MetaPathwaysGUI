@@ -1,4 +1,4 @@
-# MetaPathways2 GUI
+# MetaPathways v202 GUI
 Niels W. Hanson, Kishori M. Konwar, Shang-Ju Wu, and Steven J. Hallam
 
 ## About
@@ -11,4 +11,4 @@ Please see the [MetaPathways v2.0 repository](https://github.com/hallamlab/metap
 If you choose to compile your own version of the GUI, simply replace the GUI executable in the python repository with your own compiled binary and change your MetaPathways2 setup paths, if necessary.
 
 ## Dependencies
-Qt 5.2.1 clang 64bit
+- Qt 5.2.1 clang 64bit
