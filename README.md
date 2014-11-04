@@ -1,4 +1,4 @@
-# MetaPathways v202 GUI
+# MetaPathways v2.0 GUI
 Niels W. Hanson, Kishori M. Konwar, Shang-Ju Wu, and Steven J. Hallam
 
 ## About
