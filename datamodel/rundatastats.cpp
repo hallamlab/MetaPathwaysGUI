@@ -5,7 +5,7 @@
 RunDataStats::RunDataStats(QObject *parent) :
     QAbstractTableModel(parent)
 {
-
+     this->initializeTags();
 }
 
 
@@ -14,10 +14,49 @@ void RunDataStats::setFileNames(const QStringList &filenames) {
 }
 
 bool compareAttributes(QPair<QString, unsigned int> &pair1, QPair<QString, unsigned int> &pair2 ) {
-    if(pair1.second > pair2.second) return true;
+    if(pair1.second < pair2.second) return true;
     return false;
 }
 
+
+
+void RunDataStats::initializeTags() {
+    this->replace[FULL_REPL][QString("1000")] = QString("Number of sequences in input file BEFORE QC (nucleotide)");
+    this->replace[FULL_REPL][QString("1001")] = QString("-min length (bps)");
+    this->replace[FULL_REPL][QString("1002")] = QString("-avg length (bps)");
+    this->replace[FULL_REPL][QString("1003")] = QString("-max length (bps)");
+    this->replace[FULL_REPL][QString("1004")] = QString("-total base pairs (bps)");
+
+
+    this->replace[FULL_REPL][QString("1005")] = QString("Number of sequences AFTER QC (nucleotide)");
+    this->replace[FULL_REPL][QString("1006")] = QString("-min length (bps)");
+    this->replace[FULL_REPL][QString("1007")] = QString("-avg length (bps)");
+    this->replace[FULL_REPL][QString("1008")] = QString("-max length (bps)");
+    this->replace[FULL_REPL][QString("1009")] = QString("-total base pairs (bps)");
+
+
+    this->replace[FULL_REPL][QString("2000")] = QString("Number of translated ORFs BEFORE QC (amino)");
+    this->replace[FULL_REPL][QString("2001")] = QString("-min length (bps)");
+    this->replace[FULL_REPL][QString("2002")] = QString("-avg length (bps)");
+    this->replace[FULL_REPL][QString("2003")] = QString("-max length (bps)");
+    this->replace[FULL_REPL][QString("2004")] = QString("-total base pairs (bps)");
+
+
+    this->replace[FULL_REPL][QString("2005")] = QString("Number of translated ORFs AFTER QC (amino)");
+    this->replace[FULL_REPL][QString("2006")] = QString("-min length (bps)");
+    this->replace[FULL_REPL][QString("2007")] = QString("-avg length (bps)");
+    this->replace[FULL_REPL][QString("2008")] = QString("-max length (bps)");
+    this->replace[FULL_REPL][QString("2009")] = QString("-total base pairs (bps)");
+
+
+
+}
+
+
+/**
+ * @brief RunDataStats::readStatFiles, this function reads the stats files for the runs
+ * @return
+ */
 bool RunDataStats::readStatFiles() {
     RunData *rundata = RunData::getRunData();
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
@@ -31,64 +70,132 @@ bool RunDataStats::readStatFiles() {
        this->readDataFromFile(runstatsFile, filename);
     }
 
-
     QList< QPair<QString, unsigned int> > pairs;
 
     QPair<QString, unsigned int> pair;
 
-
-    foreach( QString attribute, this->ranking.keys()) {
-        pair.first = attribute;
-        pair.second = this->ranking[attribute];
-        pairs.append(pair);
+    /*
+    // correct code to tag maps for 6005
+    if( this->codeToTagLine.contains(QString("6005"))) {
+        this->codeToTagLine[QString("6999")] =  this->codeToTagLine[QString("6005")];
+        this->codeToTagLine.remove(QString("6005"));
     }
 
+    //also correct it for every sample
+    foreach( QString sample,this->filenames) {
+        if( this->statsData[sample].contains(QString("6005"))) {
+            this->statsData[sample][QString("6999")] =  this->statsData[sample][QString("6005")];
+            this->statsData[sample].remove(QString("6005"));
+        }
+    }
+*/
+
+    // this sorts the ranks of the attributes by key/code
+    foreach( QString attribute, this->codeToTagLine.keys()) {
+        pair.first = attribute;
+        bool ok;
+        attribute.toInt(&ok);
+        pair.second =  ok ?  attribute.toInt(&ok) : 0;
+        pairs.append(pair);
+
+     //  qDebug() << "  +++ " << pair.first << "   " << pair.second;
+    }
+
+
+    // now sort them
     qSort(pairs.begin(), pairs.end(), compareAttributes);
 
 
-    foreach(QString sample, this->statsData.keys()) {
-        foreach(QString stat, this->statsData[sample].keys()) {
-            this->statNames[stat] =true;
-        }
-    }
-
     this->dataVectorMap.clear();
-
     typedef QPair<QString, unsigned int> RankPair;
 
-    foreach( RankPair pair, pairs ) {
+    // now add the partial label related data in to the statsData
+    foreach(QString sample, this->filenames)
+        foreach(QString code, this->partialstatsData[sample].keys())
+            this->statsData[sample][code] = this->partialstatsData[sample][code];
+
+
+    int count = 0;
+    foreach( RankPair pair, pairs ) { 
+       // replace with the new taglines
+        if( this->replace[FULL_REPL].contains(pair.first) ) {
+            this->codeToTagLine[pair.first]=  this->replace[FULL_REPL][pair.first];
+        }
+        this->orderCodes.append(pair.first);
+
         this->dataVectorMap[pair.first] = QList<QString>();
+
         foreach(QString sample, this->filenames) {
             if( this->statsData[sample].contains(pair.first))
                 this->dataVectorMap[pair.first].append( this->statsData[sample][pair.first]);
             else
                 this->dataVectorMap[pair.first].append("0");
         }
+        count++;
     }
 
-
+    foreach(QString code, this->orderCodes) {
+        qDebug() << code << "   " << this->codeToTagLine[code];
+    }
 }
 
 void RunDataStats::clear() {
     this->dataVectorMap.clear();
-    this->statNames.clear();
     this->statsData.clear();
-    this->ranking.clear();
+    this->codeToTagLine.clear();
+    this->orderCodes.clear();
+    this->partialstatsData.clear();
+    this->partialOrder.clear();
+
 }
 
+/**
+ * @brief RunDataStats::insertIntoPartial, this inserts a new field into the partial Order to be
+ * able to order the labels globally consistentaly across all samples
+ * @param field
+ * @param baserange
+ */
+
+void RunDataStats::insertIntoPartial( QString field, unsigned int baserange) {
+    if( this->partialOrder.isEmpty() )
+        this->partialOrder[field] = baserange;
+    else { // not empty
+        if(!this->partialOrder.contains(field))
+           this->partialOrder[field] = baserange + this->partialOrder.size();
+    }
+
+}
+
+/**
+ * @brief RunDataStats::getParialCode, return the code from the partialOrder
+ * @param field
+ * @return
+ */
+QString RunDataStats::getPartialCode(QString field) {
+    if( !this->partialOrder.contains(field)) return QString("");
+
+    return  QString::number(this->partialOrder[field]);
+
+
+}
+
+/**
+ * @brief RunDataStats::readDataFromFile, this function reads one stats file
+ * @param filename, name of the stats file
+ * @param sample, name of the sample
+ * @return
+ */
 bool RunDataStats::readDataFromFile(const QString &filename, const QString &sample) {
     QFileInfo fileinfo(filename);
 
     this->statsData[sample] = QHash<QString, QString>();
+    this->partialstatsData[sample] = QHash<QString, QString>();
 
-    if (!fileinfo.exists())  {
-        return false;
-    }
+    if (!fileinfo.exists()) return false;
 
     QFile inputFile(filename);
-    QList<QPair<QString, QString > > cols;
-    QPair<QString, QString> pair;
 
+    unsigned int codeValue;
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
@@ -98,21 +205,55 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
 
             bool ok;
             fields[0].trimmed().toInt(&ok);
-            if( ok )
-               this->ranking[fields[0].trimmed() + " " + fields[1]] = fields[0].trimmed().toInt(&ok);
-            else
-               this->ranking[fields[0].trimmed() + " " +fields[1]] = 0;
+            codeValue = ok ? fields[0].toInt(&ok) : 0;
 
-            pair.first= fields[0].trimmed() + " " +  fields[1].trimmed();
-            pair.second= fields[2].trimmed();
-            cols.append(pair);
+            if( codeValue >= 5000 && codeValue <= 8000) {
+
+
+
+
+                if(codeValue >= 5000 && codeValue < 6000 ) {
+                    fields[1] = fields[1].replace(QString("Total Protein Annotations"), QString("Number of hits from"), Qt::CaseSensitive);
+                    this->insertIntoPartial(fields[1], 5000);
+                }
+
+
+                else if(codeValue >= 7000 && codeValue < 8000 ) {
+                    fields[1] = fields[1].replace(QString("Taxonomic hits in"), QString("rRNA hits meeting user defined thresholds from"), Qt::CaseSensitive);
+                    this->insertIntoPartial(fields[1], 7000);
+                }
+
+
+                else if(codeValue >= 6000 && codeValue < 7000 ) {
+
+                    if( fields[1].compare("Total Protein Annotations")==0) {
+                        this->partialOrder[fields[1]] = 6999;
+                    }
+                    else {
+                        fields[1] = fields[1].replace(QString("Protein Annotations from"), QString("Annotations meeting user defined thresholds from"), Qt::CaseSensitive);
+                        this->insertIntoPartial(fields[1], 6000);
+                    }
+                }
+
+
+             //   qDebug() << codeValue << "  " << fields[1];
+
+                QString code = this->getPartialCode(fields[1]);
+
+                qDebug() << code << "  " << fields[1];
+                if(code.isEmpty()) continue;
+
+                this->partialstatsData[sample][code] = fields[2].trimmed();
+                this->codeToTagLine[code] = fields[1].trimmed();
+
+                continue;
+            }
+
+
+            this->codeToTagLine[fields[0].trimmed()] = fields[1].trimmed();
+            this->statsData[sample][fields[0].trimmed()] = fields[2].trimmed();
         }
         inputFile.close();
-
-
-        for( QList<QPair<QString, QString> >::iterator it= cols.begin(); it!= cols.end(); it++) {
-            this->statsData[sample][it->first] =  it->second;
-        }
     }
 
     return true;
@@ -120,30 +261,41 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
 
 
 
+/**
+ * @brief RunDataStats::rowCount, gets the number of rows in the data
+ * @return
+ */
 int RunDataStats::rowCount(const QModelIndex & /* parent */) const
 {
    return dataVectorMap.size();
 }
+
+/**
+ * @brief RunDataStats::columnCount, gets the number of columsn in the data/table
+ * @return
+ */
 int RunDataStats::columnCount(const QModelIndex & /* parent */) const
 {
    return filenames.count();
 }
 
-
+/**
+ * @brief RunDataStats::data, this function deals with the data retrieval
+ * @param index
+ * @param role
+ * @return
+ */
 
 QVariant RunDataStats::data(const QModelIndex &index, int role) const
 {
-
-   if (!index.isValid())
-       return QVariant();
+   if (!index.isValid()) return QVariant();
 
    if (role == Qt::TextAlignmentRole) {
        return int(Qt::AlignLeft | Qt::AlignVCenter);
    }
    else if (role == Qt::DisplayRole) {
-
        if( index.row() < dataVectorMap.size() ) {
-           QString key =  (dataVectorMap.begin()+ index.row()).key();
+           QString key =  this->orderCodes[index.row()];
            if( index.column() < dataVectorMap[key].size() ) {
                return dataVectorMap[key][index.column()];
            }
@@ -158,18 +310,22 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
    return QVariant();
 }
 
-
+/**
+ * @brief RunDataStats::headerData, this function creates the header in the tables
+ * @param section
+ * @param orientation
+ * @param role
+ * @return
+ */
 QVariant RunDataStats::headerData(int section, Qt::Orientation orientation, int role) const
 {
    if (role != Qt::DisplayRole)
        return QVariant();
 
    if( orientation==Qt::Horizontal) return filenames[section];
-   QString rowAttribute = (dataVectorMap.begin()+ section).key();
 
-   QRegExp re("^\\d+");
+   QString rowAttribute = this->codeToTagLine[this->orderCodes[section]];
 
-   return rowAttribute.remove(re);
+   return rowAttribute;
 
-  // return (dataVectorMap.begin()+ section).key();
 }

@@ -15,6 +15,7 @@
 #include "helper/rundata.h"
 #include "datamodel/samplercmanager.h"
 
+enum { FULL_REPL, PARTIAL_REPL};
 
 class RunDataStats : public QAbstractTableModel
 {
@@ -27,8 +28,11 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     void setFileNames(const QStringList &filenames);
+    void initializeTags();
     bool readStatFiles();
     bool readDataFromFile(const QString &filename, const QString &sample);
+    void insertIntoPartial( QString field, unsigned int baserange) ;
+    QString getPartialCode(QString field);
     void clear();
     
 signals:
@@ -39,9 +43,13 @@ private:
     QMap<QString, QList<QString> > dataVectorMap;
     QStringList filenames;
 
-    QHash<QString, QHash<QString, QString> > statsData;
-    QHash<QString, unsigned int> ranking;
-    QHash<QString, bool> statNames;
+    QHash<QString, QHash<QString, QString> > statsData, partialstatsData;
+    QHash<QString, unsigned int > partialOrder;
+
+    QHash<QString, QString> codeToTagLine;
+  //  QHash<QString, bool> statNames;
+    QHash<QString, QString> replace[2];
+    QStringList orderCodes;
 };
 
 
