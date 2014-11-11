@@ -29,6 +29,7 @@ public:
     void loadPathVariables();
     void savePathVariables();
     void updateValues();
+    bool hasValidBinaries(QString metapathways_dir, QString folder);
 
 public slots:
     void pythonBrowse();
@@ -39,6 +40,7 @@ public slots:
     void databaseBrowse();
     void pathologicBrowse();
     void canSave();
+    QStringList getExecutablesPath(QString metapathways_dir);
 
 signals:
     void continueFromSetup();
@@ -48,6 +50,7 @@ private:
     Ui::Setup *ui;
 
     QString pythonPath;
+    QString executablesPath;
     QString pgdbFolderPath;
     QString mpPath;
     QString databasePath;
@@ -65,6 +68,7 @@ private:
     QLineEdit *dbDirectoryTxt;
     QLineEdit *pathMetaPathwaysTxt;
     QLineEdit *pathologicTxt;
+    QComboBox *executablesCombo;
 
 };
 

@@ -66,7 +66,7 @@ RunData* RunData::getRunData(){
  * @param type, the type of avlue
  * @return
  */
-QString RunData::getValueFromHash(QString key,SETTING_TYPE type){
+QString RunData::getValueFromHash(QString key, SETTING_TYPE type){
     if (type==_CONFIG)
         return this->CONFIG.contains(key)  ?  this->CONFIG.value(key): QString("");
     if (type==_PARAMS)
@@ -100,6 +100,105 @@ void RunData::setConfigMapping(QHash<QString,QString> CONFIG_MAPPING){
 void RunData::setProcess(QProcess *process){
     this->process = process;
 }
+
+
+/**
+ * @brief RunData::checkBinaries, checks the binaries in the executables folder for the OS
+ *  reports errors if it finds any missing, unspecified or invalid binaries
+ * @param executablesDir
+ */
+bool RunData::checkBinaries() {
+
+    QString executablesDir = this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +\
+                                QDir::separator() + this->getValueFromHash("EXECUTABLES_DIR", _CONFIG);
+
+    QHash<QString, QStringList> binaries;
+
+    binaries["LASTDB_EXECUTABLE"] = (QStringList() << "-h");
+    binaries["LAST_EXECUTABLE"] = (QStringList() << "-h");
+    binaries["FORMATDB_EXECUTABLE"] = QStringList("-help");
+
+    binaries["BLASTP_EXECUTABLE"] = QStringList("-h");
+    binaries["BLASTN_EXECUTABLE"] = QStringList("-h");
+
+    binaries["PRODIGAL_EXECUTABLE"]= (QStringList() << "-h");
+    binaries["SCAN_tRNA_EXECUTABLE"] =QStringList("-h");
+    binaries["RPKM_EXECUTABLE"] = QStringList("-h");
+
+
+    QProcess binaryTester;
+
+    QHash<QString, QString> status;
+
+    bool error = false;
+    foreach(QString name, binaries.keys() ) {
+        QString executable = this->getValueFromHash(name, _CONFIG);
+
+        if( executable.isEmpty() ) {
+            status[name] = QString("BINARY UNSPECIFIED");
+            error = true;
+            continue;
+        }
+
+        QFileInfo file;
+        file.setFile(executablesDir + QDir::separator() + executable);
+        if( !file.exists() ) {
+            status[name] = QString("BINARY MISSING");
+            error = true;
+            continue;
+        }
+
+        binaryTester.start(executablesDir + QDir::separator() + executable, binaries[name]);
+        binaryTester.waitForStarted();
+        binaryTester.closeWriteChannel();
+        binaryTester.waitForFinished();
+
+        int exitCode=  binaryTester.exitCode();
+
+        if( exitCode!=0) {
+            status[name]=QString("INVALID BINARY");
+            error= true;
+            continue;
+        }
+
+        status[name]=QString("VALID BINARY");
+    }
+
+    QString  message( "OS Specific executables check\n\n");
+
+    message += QString("FOLDER : ") + executablesDir + "\n";
+    message += QString("FIX    : Please correct the location for \"OS Specific Executables\" in the Setup tab\n");
+    message += QString("       : Alternatively,  you can update the EXECUTABLES_DIR key in the config file \"config/template_config.txt\"\n\n" );
+
+
+    foreach(QString name, status.keys()) {
+        message +=  name +  "  :  " +   status[name]  + "\n";
+    }
+
+
+    QMessageBox report;
+    report.setText(message);
+    if(error) report.exec();
+    return !error;
+
+}
+
+/**
+ * @brief RunData::getProcessEnvironment, returns the environment for the process for the libs
+ * @param METAPATH
+ * @return
+ */
+
+QProcessEnvironment RunData::getProcessEnvironment(QString METAPATH) {
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("CURRDIR", QDir::toNativeSeparators(METAPATH));
+    env.insert("METAPATH", QDir::toNativeSeparators(METAPATH));
+    env.insert("METAPATHLIB", QDir::toNativeSeparators(METAPATH + QDir::separator() + "libs"));
+   // env.insert("STARCLUSTERLIB", QDir::toNativeSeparators(METAPATH + "libs" + QDir::separator() + "starcluster"));
+    env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
+    return env;
+}
+
 
 /**
  * @brief RunData::getProcess
@@ -227,12 +326,28 @@ void RunData::setupDefaultParams(){
 
 
 /**
- * @brief RunData::setCurrentSample, sets the sample name that is currently or last running
+ * @brief RunData::addToProcessedSamples, sets the sample name that is currently or last running
  * @param currentSample
  */
 void RunData::addToProcessedSamples(QString sampleName) {
     this->processedSamples[sampleName]= true;
 }
+
+/**
+ * @brief RunData::clearProcessedSamples, pretends the processed samples
+ */
+void RunData::clearProcessedSamples() {
+    this->processedSamples.clear();
+}
+
+/**
+ * @brief RunData::numberOfProcessedSamples, pretends the processed samples
+ */
+int RunData::numberOfProcessedSamples() {
+    return this->processedSamples.size();
+}
+
+
 
 
 /**
@@ -416,7 +531,7 @@ void RunData::loadInputFiles(const QString &fileType){
     QList<QRegExp> regList;
 
     // for fasta type only
-    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$") << QRegExp("[.][gG][bB][kK]$");
 
 
     QStringList filesDetected;
@@ -427,20 +542,21 @@ void RunData::loadInputFiles(const QString &fileType){
 
         QString suffix = QString(".") + file.last();
 
-
-        if (fileType.compare(QString("fasta"))== 0){
+     //   if (fileType.compare(QString("fasta"))== 0){
             foreach(QRegExp reg, regList ) {
                if(suffix.indexOf(reg,0) != -1 ) {
                    filesDetected.append( temp.remove(reg).replace('.','_') );
                    break;
                }
             }
-        }
+       // }
+
+        /*
         else if (  fileType.compare( QString("gbk-annotated")) ==0 || fileType.compare(QString("gbk-unannotated"))==0){
             if (file.last().compare(QString("gbk"),Qt::CaseInsensitive) ==0){
                 filesDetected.append(file.first());
             }
-        }
+        }*/
     }
 
 
@@ -529,7 +645,7 @@ QStringList RunData::getSubFolders(const QString & folder) {
  * @param selection
  */
 void RunData::setSamplesSubsetToRun(QList<QString> &selection) {
-    qDebug()<< "ABCD selection " << selection;
+  //  qDebug()<< "ABCD selection " << selection;
    this->selectSamplesToRun = selection;
    qSort(this->selectSamplesToRun.begin(), this->selectSamplesToRun.end());
 }

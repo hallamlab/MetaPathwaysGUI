@@ -35,7 +35,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>File Input Format :</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QComboBox" name="fileInputFormat">
@@ -137,7 +137,7 @@
      <x>150</x>
      <y>253</y>
      <width>161</width>
-     <height>481</height>
+     <height>451</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -306,14 +306,6 @@
    </row>
    <row>
     <property name="text">
-     <string>MLTREEMAP CALCULATION</string>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences  in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
      <string>BUILD ePGDB</string>
     </property>
     <property name="toolTip">
@@ -368,8 +360,8 @@
     <rect>
      <x>313</x>
      <y>280</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -386,7 +378,7 @@
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -399,7 +391,7 @@
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -412,7 +404,7 @@
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -435,8 +427,8 @@
     <rect>
      <x>313</x>
      <y>310</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -457,7 +449,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -470,7 +462,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -483,7 +475,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -497,8 +489,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>370</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -520,7 +512,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -533,7 +525,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -546,7 +538,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -560,8 +552,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>400</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -584,7 +576,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -597,7 +589,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -610,7 +602,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -624,8 +616,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>312</x>
      <y>430</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -647,7 +639,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -660,7 +652,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -673,7 +665,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -687,8 +679,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>312</x>
      <y>460</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -710,7 +702,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -723,7 +715,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -736,7 +728,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -750,8 +742,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>312</x>
      <y>490</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -772,7 +764,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -785,7 +777,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -798,7 +790,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -812,8 +804,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>312</x>
      <y>550</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -834,7 +826,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -847,7 +839,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -860,7 +852,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -874,8 +866,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>312</x>
      <y>520</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -899,7 +891,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -912,7 +904,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -925,7 +917,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -939,8 +931,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>580</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -962,7 +954,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -975,7 +967,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -988,7 +980,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1005,8 +997,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>610</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1023,7 +1015,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1036,7 +1028,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1049,97 +1041,12 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsMLTREEMAP_CALCULATION">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>313</x>
-     <y>640</y>
-     <width>281</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'arial'; font-size:12pt; color:#090102;&quot;&gt;MLTreeMap step searches for a set of 40 universally present COGs as marker genes and taxonomically identifies some sequences in the Tree of Life.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="mltreemap_calculationYES">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="mltreemap_calculationSKIP">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string/>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="mltreemap_calculationREDO">
-    <property name="enabled">
-     <bool>true</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>51</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="checkable">
-     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -1147,9 +1054,9 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>313</x>
-     <y>670</y>
-     <width>281</width>
-     <height>31</height>
+     <y>650</y>
+     <width>256</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1165,8 +1072,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>0</y>
-      <width>51</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1178,8 +1085,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>0</y>
-      <width>51</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1191,8 +1098,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>0</y>
-      <width>61</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1206,8 +1113,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>250</y>
-     <width>281</width>
-     <height>30</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1230,7 +1137,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1243,7 +1150,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1256,7 +1163,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1287,10 +1194,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_RPKM">
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>700</y>
-     <width>281</width>
-     <height>31</height>
+     <x>310</x>
+     <y>680</y>
+     <width>256</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1306,8 +1213,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>0</y>
-      <width>51</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1322,8 +1229,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>0</y>
-      <width>51</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1335,8 +1242,8 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>0</y>
-      <width>51</width>
+      <y>-10</y>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1417,8 +1324,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>313</x>
      <y>340</y>
-     <width>281</width>
-     <height>31</height>
+     <width>256</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1440,7 +1347,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1453,7 +1360,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>51</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1466,7 +1373,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>61</width>
+      <width>16</width>
       <height>41</height>
      </rect>
     </property>
@@ -1618,7 +1525,6 @@ p, li { white-space: pre-wrap; }
   <zorder>blastWithGrid</zorder>
   <zorder>setupGrids</zorder>
   <zorder>metapaths_stepsBUILD_PGDB</zorder>
-  <zorder>metapaths_stepsMLTREEMAP_CALCULATION</zorder>
   <zorder>runOptionsGroupBox</zorder>
   <zorder>metapaths_stepsORF_TO_AMINO</zorder>
   <zorder>metapaths_stepsCOMPUTE_REFSCORES</zorder>
@@ -1669,9 +1575,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>genbank_fileYES</tabstop>
   <tabstop>genbank_fileSKIP</tabstop>
   <tabstop>genbank_fileREDO</tabstop>
-  <tabstop>mltreemap_calculationYES</tabstop>
-  <tabstop>mltreemap_calculationSKIP</tabstop>
-  <tabstop>mltreemap_calculationREDO</tabstop>
   <tabstop>build_pgdbYES</tabstop>
   <tabstop>build_pgdbSKIP</tabstop>
   <tabstop>build_pgdbREDO</tabstop>

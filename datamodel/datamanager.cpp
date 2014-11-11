@@ -195,7 +195,7 @@ CATEGORYNODE DataManager::createCategoryNode(QString line) {
  */
 QStringList DataManager::getResourceFiles(const RESOURCETYPE &resType) {
 
-    QString NCBI_TREE_FILE  = QString("NCBI_TAXONOMY_TREE.TXT");
+    QString NCBI_TREE_FILE  = QString("ncbi_taxonomy_tree.txt");
     RunData *rundata = RunData::getRunData();
 
     QStringList filePaths;

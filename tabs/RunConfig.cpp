@@ -47,7 +47,10 @@ RunConfig::RunConfig(QWidget *parent) :
 
     //connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(saveInput()));
     connect(outputLine, SIGNAL(textChanged(QString)), this, SLOT(saveOutput(QString)));
-    connect(fileInputFormat, SIGNAL(currentIndexChanged(QString)), rundata, SLOT(updateInputFileFormat(QString)) );
+
+    //connect(fileInputFormat, SIGNAL(currentIndexChanged(QString)), rundata, SLOT(updateInputFileFormat(QString)) );
+
+    fileInputFormat->setVisible(false);
 }
 
 
@@ -55,6 +58,7 @@ RunConfig::RunConfig(QWidget *parent) :
 void RunConfig::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
+
     this->selectWindow->addSamples(this->rundata->getFileList( fileInputFormat->currentText().trimmed() ));
     this->selectWindow->show();
 }

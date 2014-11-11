@@ -134,9 +134,10 @@ bool RunDataStats::readStatFiles() {
         count++;
     }
 
+    /*
     foreach(QString code, this->orderCodes) {
         qDebug() << code << "   " << this->codeToTagLine[code];
-    }
+    }*/
 }
 
 void RunDataStats::clear() {
@@ -240,7 +241,7 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
 
                 QString code = this->getPartialCode(fields[1]);
 
-                qDebug() << code << "  " << fields[1];
+             //   qDebug() << code << "  " << fields[1];
                 if(code.isEmpty()) continue;
 
                 this->partialstatsData[sample][code] = fields[2].trimmed();

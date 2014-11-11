@@ -24,6 +24,11 @@ SelectSamples::SelectSamples(QWidget *parent) :
     scroll = new QScrollArea;
     scroll->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
     scroll->setWidget(this);
+    QSize wSize = this->size();
+    int w = wSize.width() < 600 ? wSize.width() :600;
+    int h = wSize.height() < 300 ? wSize.height() : 300;
+    scroll->resize(w, h);
+    scroll->setMaximumSize(w + 2, h + 2);
     scroll->show();
 
 }
@@ -67,6 +72,40 @@ SelectSamples::~SelectSamples()
 }
 
 
+/**
+ * @brief SelectSamples::addSamplesUnchecked, add the list of samples unchecked
+ * @param samples, the samples to list
+ */
+void SelectSamples::addSamplesUnchecked(QStringList samples) {
+   this->samples = samples;
+
+   for(unsigned int i =0; i < checkboxes.size(); i++) {
+       sampleGrid->removeWidget(checkboxes[i]);
+   }
+
+   QSignalMapper *signalMapper = new QSignalMapper(this);
+   connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(sampleClicked(int)));
+
+   checkboxes.clear();
+   for(unsigned int i=0; i < samples.size(); i++ ) {
+        QCheckBox *checkBox = new QCheckBox(this->samples.at(i));
+        sampleGrid->addWidget(checkBox,(int)i/5, i%5);
+        checkBox->setChecked(false);
+
+        checkboxes.append(checkBox);
+        signalMapper->setMapping(checkboxes[i], i);
+        connect(checkboxes[i], SIGNAL(clicked()), signalMapper, SLOT(map()));
+        checkBox->show();
+   }
+   this->resizeWidget();
+}
+
+
+/**
+ * @brief SelectSamples::addSamples, add the list of sample names with the already
+ * selected samples, checked
+ * @param samples, the list of samples
+ */
 void SelectSamples::addSamples(QStringList samples) {
    this->samples = samples;
 

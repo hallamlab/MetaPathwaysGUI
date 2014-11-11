@@ -29,6 +29,7 @@ public:
     explicit SelectSamples(QWidget *parent = 0);
     ~SelectSamples();
     void addSamples(QStringList samples);
+    void addSamplesUnchecked(QStringList samples);
     void setReceiver(ResultWindow *resultWindow  );
     void setReceiver(RunConfig *runconfigWindow  );
 private:

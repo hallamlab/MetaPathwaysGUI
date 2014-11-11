@@ -164,7 +164,7 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
 void ResultWindow::clickedSelectSample(){
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-    this->selectWindow->addSamples(this->rundata->getOutputFolders());
+    this->selectWindow->addSamplesUnchecked(this->rundata->getOutputFolders());
     this->selectWindow->show();
 }
 
@@ -826,8 +826,6 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->show();
     QApplication::processEvents();
 
-
-    qDebug() << "selected XXX" << this->selectedSamples;
 
     unsigned int _i = 0;
     foreach(int i, selectedSamples) {

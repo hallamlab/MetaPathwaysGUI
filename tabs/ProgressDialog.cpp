@@ -41,6 +41,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
     overwrite = this->findChild<QCheckBox *>("overwrite");
+    sampleNameLineEdit  = this->findChild<QLineEdit *>("sampleNameLineEdit");
 
     summaryTable->setSortingEnabled(false);
     this->setExpectedSteps();
@@ -48,29 +49,30 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     initMapping();
 
     timer = new QTimer(this);
-    timer->start(5000);
+
 
     this->myProcess =0;
+    this->currentBLOCK = 0;
 
     cancelButton->setEnabled(false);
     runButton->setEnabled(true);
 
     overwrite->hide();
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(readStepsLog()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(timerTickResponse()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
-    connect(runButton,SIGNAL(clicked()), this, SLOT(startRun()));
+    connect(runButton, SIGNAL(clicked()), this, SLOT(startRun()));
     connect(sampleSelect, SIGNAL(activated(QString)), this, SLOT(selectedFileChanged(QString)));
-    connect(sampleSelect, SIGNAL( currentIndexChanged(QString)), this, SLOT(readStepsLog() ) );
-    // connect(sampleSelect,SIGNAL(currentIndexChanged(int)) , this, SLOT(readStepsLog()) );
+
+   // connect(sampleSelect, SIGNAL( currentIndexChanged(QString)  ), this, SLOT(readStepsLog() ) );
+
+ // connect(sampleSelect,SIGNAL(currentIndexChanged(int)) , this, SLOT(readStepsLog()) );
+
     connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleListToRun()));
     connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
-    connect(runButton,SIGNAL(clicked()), this, SLOT(readStepsLog()) );
-
-
+    connect(runButton, SIGNAL(clicked()), this, SLOT(readStepsLog()) );
 }
-
 
 
 /**
@@ -93,8 +95,6 @@ void ProgressDialog::showErrors() {
     view->resizeColumnToContents(0);
     view->resizeColumnToContents(1);
     view->resizeColumnToContents(2);
-
-
 }
 
 /**
@@ -196,11 +196,9 @@ void ProgressDialog::initMapping(){
 
 void ProgressDialog::updateStatus(const QString &line) {
 
-
     this->running.clear();
 
-
-    if( line.contains(QRegExp("====") )  ) {
+    if( line.contains(QRegExp("====")) && line.contains(QString("BLOCK0"))  ) {
         foreach(QString stepName, this->status.keys()) {
             if(QString("redo").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ||\
                QString("yes").compare(this->rundata->getPARAMS()[QString("metapaths_steps:") + stepName]) ==0 ) {
@@ -264,12 +262,49 @@ void ProgressDialog::updateStatus(const QString &line) {
 
 }
 
+unsigned int ProgressDialog::waitCounter =0;
+
+
+/**
+ * @brief ProgressDialog::delayReadingStepsLog, this function is called to to read the
+ * steps logs and yet delay it for subsequenct reads that are triggered by the timer
+ */
+void ProgressDialog::delayReadingStepsLog() {
+    ProgressDialog::waitCounter = 0;
+    this->readStepsLog();
+    ProgressDialog::waitCounter=2;
+}
+
+/**
+ * @brief ProgressDialog::timerTickResponse, responds to the tick of the timer
+ */
+void ProgressDialog::timerTickResponse() {
+
+    this->readStepsLog();
+
+    this->updateCurrentRunningProcessStatus();
+
+    if( !this->isProcessRunning() ) {
+        this->timer->stop();
+
+    }
+}
+
+
 /**
  * @brief ProgressDialog::readStepsLog
  *  Function called every time the timer expires. Intended to be what updates
  *  the table based off the log input for the current sample.
  */
 void ProgressDialog::readStepsLog(){
+   // static unsigned int i =0;
+
+
+    if(  ProgressDialog::waitCounter > 0 ) {
+        ProgressDialog::waitCounter--;
+        return;
+    }
+
     if( rundata->getCurrentSample().isEmpty()  ) return;
 
     QString sampleForLog = sampleSelect->currentText().trimmed();
@@ -298,6 +333,7 @@ void ProgressDialog::readStepsLog(){
                 if(process) this->updateStatus(line);
             }
        }
+       logBrowser->update();
        inputFile.close();
     }else{
         logBrowser->append("The log file has not yet been generated. Please wait.");
@@ -313,11 +349,51 @@ void ProgressDialog::readStepsLog(){
         // dump out output from stdout to the other log
         QByteArray read = myProcess->readAll();
         if (!read.isEmpty()) standardOut->append(QString(read));
+        standardOut->update();
     }
 
-    updateCurrentRunningProcessStatus();
+}
+
+
+
+
+void ProgressDialog::updateHighestBlock(QString sampleName) {
+
+    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
+    QString pathToLog = OUTPUTPATH + QDir::separator() + sampleName + QDir::separator() + "metapathways_steps_log.txt";
+
+    if( this->runid.isEmpty() ) return;
+
+    QFile inputFile(pathToLog);
+    QRegExp commentLine("#[^\"\\n\\r]*");
+
+
+    if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine();
+            if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
+                if(line.contains(this->runid) ) {
+
+                    if(line.contains(QString("BLOCK1"))) {
+                        if(this->currentBLOCK == 0) {
+                            this->currentBLOCK= 1;
+                        }
+                    }
+                    if(line.contains(QString("BLOCK2"))) {
+                        this->currentBLOCK = 2;
+                    }
+
+                }
+            }
+       }
+       inputFile.close();
+    }
 
 }
+
 
 /**
  * @brief ProgressDialog::isProcessingSample, checks if the sample has been processed by validating the current
@@ -329,6 +405,9 @@ bool ProgressDialog::isProcessingSample(QString sampleName) {
     QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     QString pathToLog = OUTPUTPATH + QDir::separator() + sampleName + QDir::separator() + "metapathways_steps_log.txt";
 
+
+    if( this->runid.isEmpty() ) return false;
+
     QFile inputFile(pathToLog);
     QRegExp commentLine("#[^\"\\n\\r]*");
 
@@ -339,8 +418,17 @@ bool ProgressDialog::isProcessingSample(QString sampleName) {
        {
             QString line = in.readLine();
             if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
-               // qDebug() << line;
-                if(line.contains(this->runid) ) return true;
+                if(line.contains(this->runid) ) {
+                    if(line.contains(QString("BLOCK0")) && this->currentBLOCK==0) {
+                              return true;
+                    }
+                    else if(line.contains(QString("BLOCK1")) && this->currentBLOCK==1) {
+                            return true;
+                    }
+                    else if(line.contains(QString("BLOCK2")) &&    this->currentBLOCK == 2) {
+                        return true;
+                    }
+                }
             }
        }
        inputFile.close();
@@ -353,21 +441,37 @@ bool ProgressDialog::isProcessingSample(QString sampleName) {
 
 
 /**
- * @brief ProgressDialog::updateCurrentRunningProcessStatus, updates the currnet running process to
- * display the last running process
+ * @brief ProgressDialog::updateCurrentRunningProcessStatus, updates the current running sample to
+ * display the last running sample
  */
 void ProgressDialog::updateCurrentRunningProcessStatus() {
+
+    // compute the most upto date block no
     for(int i = 0; i < sampleSelect->count(); i++) {
         QString sampleName = sampleSelect->itemText(i);
+        this->updateHighestBlock(sampleName);
+    }
+
+    for(int i = 0; i < sampleSelect->count(); i++) {
+        QString sampleName = sampleSelect->itemText(i);
+
         if(!this->rundata->isAlreadyProcessedSample(sampleName) && this->isProcessingSample(sampleName) ) {
             this->rundata->addToProcessedSamples(sampleName);
-            this->sampleSelect->setCurrentIndex(i);
+            if( ProgressDialog::waitCounter ==0)
+               if(this->sampleSelect->currentIndex() != i) {
+                  this->sampleSelect->setCurrentIndex(i);
+                  this->sampleNameLineEdit->setText(sampleName);
+                  this->sampleNameLineEdit->update();
+
+               }
+            this->sampleSelect->update();
+
+      //      qDebug() <<  this->rundata->numberOfProcessedSamples() << "  " << this->sampleSelect->count();
+            if( this->rundata->numberOfProcessedSamples()==this->sampleSelect->count()) this->rundata->clearProcessedSamples();
             return;
         }
     }
 }
-
-
 
 
 /**
@@ -380,16 +484,18 @@ void ProgressDialog::updateProgressBar(){
 
     _stepsCompleted = this->getNumStepsCompleted();
 
+    _totalSteps = this->countTotalNumberOfSteps();
+
     if( this->rundata->getProcess()==0) {
-        progressBar->setValue(0);
+        progressBar->setValue(1);
     }else {
-          progressBar->setValue(_stepsCompleted);
+          progressBar->setValue( _stepsCompleted < _totalSteps ? 2*_stepsCompleted + 1 : 2*_totalSteps   );
     }
     _totalSteps = this->countTotalNumberOfSteps();
 
  //   qDebug() << _stepsCompleted << "/" << _totalSteps;
 
-    progressBar->setMaximum( _totalSteps==0 ? 1 : _totalSteps);
+    progressBar->setMaximum( _totalSteps==0 ? 2 : 2*_totalSteps );
 
 }
 
@@ -489,7 +595,6 @@ short int ProgressDialog::getState(const QString &stepName) {
     STATUS _status = this->status[stepName];
     unsigned int successCount = 0;
 
-   // qDebug() << _status.step << _status.expected << _status.done;
 
     foreach(QString subKey, _status.expected.keys()) {
         if( _status.done.contains(subKey)  && _status.done[subKey]) successCount++;
@@ -497,13 +602,11 @@ short int ProgressDialog::getState(const QString &stepName) {
 
     unsigned int expectedSuccess = 0;
 
-    // qDebug() << stepName << _status.done.keys()  << "   " << _status.expected.keys();
-    // qDebug() << stepName << _status.done.values()  << "   " << _status.expected.values();
-     foreach(QString subKey, _status.expected.keys()) {
+    foreach(QString subKey, _status.expected.keys()) {
          if( _status.expected.contains(subKey)  && _status.expected[subKey])  expectedSuccess++;
-     }
+    }
 
-     if( successCount==expectedSuccess ) return 1;
+    if( successCount==expectedSuccess ) return 1;
 
     if( this->running.contains(QString("RUNNING"))  && this->running["RUNNING"].compare(stepName)==0 && this->myProcess!=0 ) {
         try {
@@ -564,16 +667,12 @@ void ProgressDialog::shadeActiveSteps() {
    // this->summaryTable->clearContents();
     QTableWidgetItem *item;
 
-
     QHash<QString, bool> activeSteps;
-
     foreach(QString stepName, this->getActiveSteps()) {
         activeSteps[stepName] =true;
     }
 
-
     for(unsigned int i =0; i < this->summaryTable->rowCount(); i++){
-     //   qDebug() << this->summaryTable->item(0,0)->text();
         item= this->summaryTable->item(i,0);
 
         if( activeSteps.contains( this->TABLE_MAPPING[i]) && this->isProcessRunning() ) {
@@ -658,9 +757,7 @@ void ProgressDialog::colorRunConfig(){
             else if (this->getState(stepName) == -2)  {
                   this->updateItem(stepName, UNSURE ,progressdisplaydata);
             }
-            else {
-                qDebug() << "undefined state";
-              }
+
         }
     }
 }
@@ -673,7 +770,6 @@ void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
 
-    // qDebug() << rRNArefdbs << annotationDBS;
 
     this->rundata->emitloadSampleList();
     if(rRNArefdbs.isEmpty()){
@@ -689,6 +785,9 @@ void ProgressDialog::startRun(){
         QMessageBox::warning(0,"Input/Output Not Set!","Missing input or output folders!\nPlease set input and output folders in Stages tab.",QMessageBox::Ok );
     }
     else{
+
+       // this->checkBinaries();
+        if( ! rundata->checkBinaries()) return;
         // otherwise start off the process, clear out a bunch of statuses in case there was a previous run
         this->resetRunTab(false, false);
         initProcess();
@@ -706,8 +805,8 @@ void ProgressDialog::resetRunTab(bool status, bool clearlog ) {
     runButton->setEnabled(status);
 
     if( clearlog ) {
-        standardOut->clear();
-        logBrowser->clear();
+     //   standardOut->clear();
+      //  logBrowser->clear();
     }
 
     progressBar->setValue(0);
@@ -715,6 +814,31 @@ void ProgressDialog::resetRunTab(bool status, bool clearlog ) {
  //   timer->start(1000); // refresh rate of 1 sec for the log
     _stepsCompleted = 0;
     _totalSteps = TABLE_MAPPING.size(); // used for progress bar
+}
+
+
+
+void ProgressDialog::checkBinaries() {
+
+    qDebug() << " Checking the binaries";
+    qDebug() << this->rundata->CONFIG;
+
+
+    QString executablesFolder = this->rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +\
+                                QDir::separator() + this->rundata->getValueFromHash("EXECUTABLES_DIR", _CONFIG);
+
+    QFile execfolder;
+
+    //qDebug() << this->rundata->getConfig();
+
+
+    bool success = false;
+    if(!success ) {
+        QMessageBox::warning(this, "Invalid binaries in the executables folder", "Detailed message");
+
+    }
+
+
 }
 
 
@@ -732,6 +856,7 @@ void ProgressDialog::initProcess(){
 
     QString program =  QDir::toNativeSeparators(rundata->getConfig()["PYTHON_EXECUTABLE"]);
     METAPATH = QDir::toNativeSeparators(this->rundata->getConfig()["METAPATHWAYS_PATH"]);
+
 
     QStringList arguments;
 
@@ -766,26 +891,26 @@ void ProgressDialog::initProcess(){
         arguments << "-s" << samplename;
     }
     QTime time;
+
     runid = time.currentTime().toString();
+
+    this->currentBLOCK = 0;
+
     arguments << "--runid" << runid;
 
     // set up paths and environment - essential for the python code to run
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("CURRDIR", QDir::toNativeSeparators(METAPATH));
-    env.insert("METAPATH", QDir::toNativeSeparators(METAPATH));
-    env.insert("METAPATHLIB", QDir::toNativeSeparators(METAPATH + QDir::separator() + "libs"));
-    env.insert("STARCLUSTERLIB", QDir::toNativeSeparators(METAPATH + "libs" + QDir::separator() + "starcluster"));
-    env.insert("PYTHONPATH", QDir::toNativeSeparators(METAPATH + QDir::separator() +  "libs:" + METAPATH + QDir::separator() + "libs" + QDir::separator() + "starcluster"));
+    QProcessEnvironment env = this->rundata->getProcessEnvironment(METAPATH);
 
     // the actual process setup
-
 
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments);
 
-
+    standardOut->clear();
+    this->timer->start(5000);
+    qDebug() << " start timer ";
  //   standardOut->append( arguments.join(" ") );
 
     this->resetRunTab(false);
@@ -793,15 +918,20 @@ void ProgressDialog::initProcess(){
 
     // set up the timer so the logs will be updated
 
+    this->readStepsLog();
     connect(myProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(processFinished(int,QProcess::ExitStatus)));
 }
 
-
-void ProgressDialog::selectedFileChanged(QString file){
-    rundata->setCurrentSample(file);
+/**
+ * @brief ProgressDialog::selectedFileChanged, the user selected a different sample
+ * @param sampleName
+ */
+void ProgressDialog::selectedFileChanged(const QString &sampleName){
+    rundata->setCurrentSample(sampleName);
     //progressLabel->setText("Progress - " + rundata->getCurrentSample());
     logBrowser->clear();
-
+    this->delayReadingStepsLog();
+    this->sampleNameLineEdit->setText(sampleName);
 }
 
 /**
@@ -824,17 +954,6 @@ void ProgressDialog::checkFiles(){
     {
         QString temp = *entry;
         QStringList file = temp.split(".");
-
-        /*
-
-        foreach(QRegExp reg, regList ) {
-           if(temp.indexOf(reg,0) != -1 ) {
-               filesDetected.append( temp.remove(reg).replace('.','_') );
-               break;
-           }
-        } */
-
-
 
         if (fileType == "fasta"){
             foreach(QRegExp reg, regList ) {

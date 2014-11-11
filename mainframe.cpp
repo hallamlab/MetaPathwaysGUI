@@ -47,7 +47,7 @@ MainFrame::MainFrame(QWidget *parent) :
     settings = 0;
     gridProgress = 0;
 
-    this->setWindowTitle("MetaPathways 2.4.5");
+    this->setWindowTitle("MetaPathways 2.5.1");
     welcomeWindow = new Welcome();
     welcomeWindow->show();
     qSleep(2500);

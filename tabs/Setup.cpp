@@ -20,10 +20,12 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     pathologicButton = this->findChild<QPushButton *>("pathologicButton");
 
     pythonExecTxt = this->findChild<QLineEdit *>("pythonExecTxt");
+    executablesCombo = this->findChild<QComboBox *>("executablesCombo");
     pgdbFolderTxt = this->findChild<QLineEdit *>("pgdbFolderTxt");
     dbDirectoryTxt = this->findChild<QLineEdit *>("dbDirectoryTxt");
     pathMetaPathwaysTxt = this->findChild<QLineEdit *>("pathMetaPathwaysTxt");
     pathologicTxt = this->findChild<QLineEdit *>("pathologicTxt");
+
 
     updateValues();
     // sets up values from the hash, if they exist
@@ -35,6 +37,7 @@ Setup::Setup(QWidget *parent) : QWidget(parent), ui(new Ui::Setup)
     connect(pathologicButton,SIGNAL(clicked()), this, SLOT(pathologicBrowse()));
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveSetup()));
     connect(pythonExecTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
+    connect(executablesCombo, SIGNAL( activated(QString)), this, SLOT(canSave()));
     connect(pgdbFolderTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(dbDirectoryTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
     connect(pathMetaPathwaysTxt, SIGNAL( textEdited(QString)), this, SLOT(canSave()));
@@ -49,10 +52,91 @@ void Setup::updateValues(){
     RunData *rundata = RunData::getRunData();
 
     pythonExecTxt->setText(rundata->getValueFromHash("PYTHON_EXECUTABLE",_CONFIG));
+
     pgdbFolderTxt->setText(rundata->getValueFromHash("PGDB_FOLDER",_CONFIG));
     dbDirectoryTxt->setText(rundata->getValueFromHash("REFDBS",_CONFIG));
     pathMetaPathwaysTxt->setText(rundata->getValueFromHash("METAPATHWAYS_PATH",_CONFIG));
     pathologicTxt->setText(rundata->getValueFromHash("PATHOLOGIC_EXECUTABLE",_CONFIG));
+
+
+    QStringList executableDirs = this->getExecutablesPath(pathMetaPathwaysTxt->text());
+
+    //executablesCombo->setText(rundata->getValueFromHash("EXECUTABLES_DIR",_CONFIG));
+    QHash<QString, bool> alreadyAdded;
+
+    this->executablesCombo->clear();
+
+  /*  for(int i=0; i <  executablesCombo->count(); i++)
+       if( executableDirs.contains(executablesCombo->itemText(i)) )
+          alreadyAdded[executablesCombo->itemText(i)] = true;
+*/
+
+
+    foreach(QString folder, executableDirs) {
+        if( alreadyAdded.contains(folder)) continue;
+        executablesCombo->addItem( QString("executables") + QDir::separator() + folder);
+       // if( this->hasValidBinaries(pathMetaPathwaysTxt->text(), folder) ) executablesCombo->setCurrentIndex(alreadyAdded.size());
+        alreadyAdded[folder] = true;
+    }
+
+
+    QString valueFromHash =  rundata->getValueFromHash("EXECUTABLES_DIR",_CONFIG);
+    if( executableDirs.contains(valueFromHash) ) {
+        if(!alreadyAdded.contains(valueFromHash)) {
+            executablesCombo->addItem(valueFromHash);
+        }
+        this->executablesCombo->setCurrentIndex(alreadyAdded.size());
+        alreadyAdded[valueFromHash] = true;
+    }
+}
+
+
+bool Setup::hasValidBinaries(QString metapathways_dir, QString folder) {
+    QString extended_dir = metapathways_dir + QDir::separator() + QString("executables")  ;
+    QDir dir(extended_dir);
+
+
+    return false;
+
+
+
+}
+
+
+/**
+ * @brief Setup::getExecutablesPath, returns the list of folders that contains executables
+ * for various OS
+ * @param metapathways_dir
+ * @return
+ */
+
+QStringList Setup::getExecutablesPath(QString metapathways_dir) {
+
+    QString extended_dir = metapathways_dir + QDir::separator() + QString("executables");
+    QDir dir(extended_dir);
+
+    if( !dir.exists()) return QStringList();
+
+    QStringList filterList;
+    filterList << QString(".") << QString("..");
+
+    QStringList _folders = dir.entryList();
+    QStringList folders;
+
+    foreach(QString _folder, _folders) {
+        if( _folder.compare(QString(".."))==0  || _folder.compare(QString("."))==0 )  continue;
+         dir.setPath(extended_dir + QDir::separator() + _folder);
+         if(!dir.exists()) continue;
+
+         folders << _folder;
+    }
+
+  //  qDebug() << "Check all binaries ";
+
+  //  qDebug() << folders << metapathways_dir;
+
+
+    return folders;
 }
 
 /*
@@ -62,6 +146,7 @@ void Setup::updateValues(){
 void Setup::canSave(){
     if (
           (!pythonExecTxt->text().isEmpty()) \
+       && (!executablesCombo->currentText().isEmpty()) \
        && (!pgdbFolderTxt->text().isEmpty()) \
        && (!pathMetaPathwaysTxt->text().isEmpty()) \
        && (!dbDirectoryTxt->text().isEmpty() \
@@ -71,6 +156,8 @@ void Setup::canSave(){
         saveButton->setEnabled(true);
         if(pythonPath.isEmpty())
            pythonPath = pythonExecTxt->text();
+        if(executablesPath.isEmpty())
+           executablesPath = executablesCombo->currentText();
         if(pgdbFolderPath.isEmpty())
            pgdbFolderPath = pgdbFolderTxt->text();
         if(mpPath.isEmpty())
@@ -195,6 +282,12 @@ void Setup::saveSetup(){
         temp["PYTHON_EXECUTABLE"] = pythonExecTxt->text();
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PYTHON_EXECUTABLE", pythonExecTxt->text(), false, false);
     }
+
+    if (!executablesCombo->currentText().isEmpty()) {
+        temp["EXECUTABLES_DIR"] = executablesCombo->currentText();
+        Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "EXECUTABLES_DIR", executablesCombo->currentText(), false, false);
+    }
+
     if (!pgdbFolderTxt->text().isEmpty()) {
         temp["PGDB_FOLDER"] = pgdbFolderTxt->text();
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PGDB_FOLDER", pgdbFolderTxt->text(), false, false);
@@ -209,6 +302,9 @@ void Setup::saveSetup(){
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", "PATHOLOGIC_EXECUTABLE", pathologicTxt->text(), false, false);
     }
     rundata->setConfig(temp); // update our run config's representation with our (possibly) newly created configs
+
+    if (!pathMetaPathwaysTxt->text().isEmpty() && !executablesCombo->currentText().isEmpty())  rundata->checkBinaries();
+
     emit continueFromSetup(); // sends a signal back to the mainframe to perform checking with validateSetup()
 }
 
@@ -225,6 +321,13 @@ void Setup::loadPathVariables(){
         pythonExecTxt->setText(settings.value("PYTHON_EXECUTABLE").toString());
         rundata->setPythonExecutablePath(settings.value("PYTHON_EXECUTABLE").toString());
     }
+
+    if( settings.allKeys().contains("EXECUTABLES_DIR") ) {
+        //executablesCombo->cu  rrentText()  ->setText(settings.value("EXECUTABLES_DIR").toString());
+
+        rundata->setPythonExecutablePath(settings.value("EXECUTABLES_DIR").toString());
+    }
+
     if( settings.allKeys().contains("PGDB_FOLDER") ) {
         pgdbFolderTxt->setText(settings.value("PGDB_FOLDER").toString());
         rundata->setPgdbFolderPath(settings.value("PGDB_FOLDER").toString());
@@ -256,6 +359,11 @@ void Setup::savePathVariables(){
         settings.setValue("PYTHON_EXECUTABLE", pythonExecTxt->text());
         run->setPythonExecutablePath(pythonExecTxt->text());
     }
+    if( !executablesCombo->currentText().isEmpty()){
+        settings.setValue("EXECUTABLES_DIR", executablesCombo->currentText());
+        run->setPythonExecutablePath( executablesCombo->currentText()  );
+    }
+
     if( !pgdbFolderTxt->text().isEmpty()){
         settings.setValue("PGDB_FOLDER", pgdbFolderTxt->text());
         run->setPgdbFolderPath(pgdbFolderTxt->text());

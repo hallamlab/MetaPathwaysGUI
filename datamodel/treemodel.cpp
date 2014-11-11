@@ -165,8 +165,8 @@
      samplercmgr->setOutPutPath(OUTPUTPATH);
      QList<QVariant> columnData;
 
-     columnData << "GENERAL ERRORS" << " " << " ";
-     qDebug() << "Whatever " << this->sampleNames;
+     qDebug() << "This is the crap you were looking for ?" << OUTPUTPATH;
+
      TreeItem *treeitem = new TreeItem(columnData, parent);
      parent->appendChild(treeitem);
 

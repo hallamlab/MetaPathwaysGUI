@@ -35,6 +35,10 @@ public:
 
     void setParams(QHash<QString,QString> PARAMS);
     void setConfig(QHash<QString,QString> CONFIG);
+
+    bool checkBinaries();
+    QProcessEnvironment getProcessEnvironment(QString METAPATH);
+
     void setConfigMapping(QHash<QString,QString> CONFIG_MAPPING);
     void setProcess(QProcess *process);
     QProcess * getProcess();
@@ -70,6 +74,8 @@ public:
 
     void addToProcessedSamples(QString sampleName);
     bool isAlreadyProcessedSample(QString sampleName);
+    void clearProcessedSamples();
+    int numberOfProcessedSamples() ;
 
     static RunData* getRunData();
 
@@ -124,7 +130,10 @@ private:
 
     QStringList files, currentfiles;
     QHash<QString,QString> PARAMS;
+public:
     QHash<QString,QString> CONFIG;
+private:
+
     QHash<QString,QString> CONFIG_MAPPING;
     QStringList rrnaDBS;
     QStringList annotationDBS;

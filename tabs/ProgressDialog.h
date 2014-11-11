@@ -38,10 +38,12 @@ public:
     void updateProgressBar();
     void updateCurrentRunningProcessStatus();
     void initProcess();
+    void checkBinaries();
     QStringList getActiveSteps() ;
     void shadeActiveSteps();
 
     bool isProcessingSample(QString sampleName);
+    void updateHighestBlock(QString sampleName);
 
     RunData *rundata;
     QString METAPATH;
@@ -74,10 +76,12 @@ private slots:
 
     void terminateRun();
     void checkFiles();
-    void selectedFileChanged(QString file);
+    void selectedFileChanged(const QString &sampleName);
     void loadSampleListToRun();
     void showErrors();
     void readStepsLog();
+    void timerTickResponse();
+    void delayReadingStepsLog();
 
     void startRun();
     void setProcessToZero();
@@ -116,6 +120,7 @@ private:
     QProgressBar *progressBar;
     QProgressBar *globalProgressBar;
     QLabel* progressLabel;
+    QLineEdit *sampleNameLineEdit;
     QProcess *myProcess;
     QTimer *timer;
     QTimer *fileCheckTimer;
@@ -124,6 +129,9 @@ private:
     QCheckBox* runVerbose;
     QCheckBox *overwrite;
     QString runid;
+    int currentBLOCK;
+
+    static unsigned int waitCounter;
 
 };
 

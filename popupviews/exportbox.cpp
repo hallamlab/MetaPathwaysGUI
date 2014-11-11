@@ -40,6 +40,7 @@ void ExportBox::createWidget() {
      int w = wSize.width() < 600 ? wSize.width() :600;
      int h = wSize.height() < 300 ? wSize.height() : 300;
      scroll->resize(w, h);
+     scroll->setMaximumSize(w + 2, h + 2);
      scroll->show();
 
  }

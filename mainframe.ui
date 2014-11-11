@@ -44,6 +44,12 @@
       <property name="contextMenuPolicy">
        <enum>Qt::DefaultContextMenu</enum>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
       <widget class="QWidget" name="page_3"/>
       <widget class="QWidget" name="page_4"/>
      </widget>
