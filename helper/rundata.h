@@ -35,8 +35,17 @@ public:
 
     void setParams(QHash<QString,QString> PARAMS);
     void setConfig(QHash<QString,QString> CONFIG);
+    void setTempConfig(QHash<QString,QString> TEMP_CONFIG);
 
-    bool checkBinaries();
+    bool checkPythonBinary(QString &message, QString path = QString());
+    bool checkMetaPathwaysPath(QString &message, QString metapathwaysDir);
+    bool checkBinaries(QString &message, QString executablesDir);
+    bool checkRefDatabasesPath(QString &message,  QString refdbsDir);
+    bool checkPGDBFolderPath(QString &message, QString pgdbFolderPath);
+    bool checkPathwayToolsExecutable(QString &message, QString executable);
+
+
+
     QProcessEnvironment getProcessEnvironment(QString METAPATH);
 
     void setConfigMapping(QHash<QString,QString> CONFIG_MAPPING);
@@ -54,6 +63,7 @@ public:
 
     QHash<QString,QString> getParams();
     QHash<QString,QString> getConfig();
+    QHash<QString,QString> getTempConfig();
     QHash<QString,QString> getConfigMapping();
 
 
@@ -61,6 +71,7 @@ public:
     void setNumADB(unsigned int n);
 
     void setupDefaultParams();
+    void loadDefaultParams();
     void setupDefaultConfig();
     bool validate(QString &warningMsg);
     bool checkConfig();
@@ -71,6 +82,9 @@ public:
     QString getCurrentInputFormat();
 
     QString getCurrentSample();
+    QString getSampleFolder(QString sampleName);
+
+    QHash<QString, QString> getSampleFolderMap();
 
     void addToProcessedSamples(QString sampleName);
     bool isAlreadyProcessedSample(QString sampleName);
@@ -87,13 +101,15 @@ public:
     void updateCurrentFileList();
     QStringList getCurrentFileList();
 
-    void loadInputFiles(const QString &fileType);
+    void loadInputFiles(const QString &folder);
      //   void loadInputFiles();
     void loadOutputFolders();
     QStringList getOutputFolders();
     bool isOutputFolderValid(const QString &folder);
     QStringList getSubFolders(const QString & folder);
     QString getSystem();
+    void setResultFolders(QStringList folders);
+
 
     unsigned int getNumRRNADB();
     unsigned int getNumADB();
@@ -111,8 +127,11 @@ public:
     void clearsDirtyBit(QString key);
     bool isBitDirty(QString key);
 
+    void triggerParameterFileRead();
+
 signals:
     void loadSampleList();
+    void loadParameters();
 
 public slots:
 
@@ -130,8 +149,10 @@ private:
 
     QStringList files, currentfiles;
     QHash<QString,QString> PARAMS;
+    QHash<QString, QString> PARAMS_DEFAULT;
+
 public:
-    QHash<QString,QString> CONFIG;
+    QHash<QString,QString> CONFIG, TEMP_CONFIG;
 private:
 
     QHash<QString,QString> CONFIG_MAPPING;
@@ -144,9 +165,11 @@ private:
 
     QString system;
     QList<QString> selectSamplesToRun;
-    QStringList outputFolders;
+    QHash<QString, QString> outputFolders;
     QString currentInputFormat;
     QHash<QString, bool> dirtybits;
+
+    QStringList resultFolders;
 };
 
 

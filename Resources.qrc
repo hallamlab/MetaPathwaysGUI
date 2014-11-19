@@ -19,5 +19,6 @@
         <file>images/blue.png</file>
         <file>images/dot.png</file>
         <file>images/mp_depend.png</file>
+        <file>images/requiredstar.png</file>
     </qresource>
 </RCC>

@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QAction>
 #include <QMenu>
+#include <QToolButton>
 
 #include "ProgressDialog.h"
 #include "resultpage.h"
@@ -84,6 +85,9 @@ public slots:
 private slots:
     void clickedSelectSample();
     void _loadResults();
+    void browseFolder();
+    void removeFolder();
+
 
 signals:
     void fileChanged(QString file);
@@ -96,6 +100,8 @@ private:
   //  QString getFilePath(QString sampleName, QString OUTPUTPATH, INPUTFILETYPE type) ;
     TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool useLCAStar = false);
     TableData *_createFunctionalAndTaxTable(const QString &sampleName);
+    QStringList getResultFoldersList();
+
 
 public:
     QHash<HTableData *, bool> htablesAddSignals;
@@ -108,10 +114,13 @@ private:
     QComboBox* sampleSelect;
     QPushButton *selectSamplesButton;
     QPushButton *loadResults;
-    QCheckBox *checkComparativeMode, *reindex;
+    QComboBox *resultViewMode;
     QLabel *currentSampleLabel;
 
     QTabWidget *resultTabs;
+    QToolButton *addResultFolder, *deleteResultFolder;
+    QComboBox *resultFolders;
+
 
     SimpleTabGroups<TableData> simpleTabGroups;
     SimpleTabGroups<GraphData> simpleGraphGroups;
@@ -133,6 +142,7 @@ private:
 
     DataManager *datamanager;
     bool disableSampleChanged;
+
 
 };
 

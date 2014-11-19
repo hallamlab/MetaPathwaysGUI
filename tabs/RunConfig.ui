@@ -97,7 +97,7 @@
     </font>
    </property>
    <property name="text">
-    <string>File Details</string>
+    <string>Input/Output Folders</string>
    </property>
   </widget>
   <widget class="QPushButton" name="fileBrowseButton">
@@ -135,9 +135,9 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>253</y>
+     <y>250</y>
      <width>161</width>
-     <height>451</height>
+     <height>361</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -218,26 +218,10 @@
    </row>
    <row>
     <property name="text">
-     <string>ORF TO AMINO</string>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences and gff files that contains more detailed information such as orf_length, strand, start and end positions, contig_length, etc .The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
      <string>FILTER AMINOS</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa. &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#010501;&quot;&gt;These amino acid sequences can be used in the downstream process of annotating them functionally and taxonomically (using LCA rule)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
-     <string>COMPUTE REFSCORES</string>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The amino acid sequences in the orf_prediction folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio (BSR) for the hits.  The BSR ratio can be defined at the ratio of a the bit-score between a query and a target sequence to the bit-score when both the query and target sequences are the query sequence. Usually, a BSR ratio of 0.4 or more is considered as a good hit for protein sequences. Note that BSR ratio is designed in some sense to have a normalized value for the bit-score  since the score is also influenced by the length of the query. &lt;/p&gt;&lt;p&gt;The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The amino acid sequences in the folder&lt;/span&gt;&lt;span style=&quot; font-size:11pt; color:#18d43e;&quot;&gt; orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; produced by the &lt;/span&gt;&lt;span style=&quot; font-size:11pt; color:#383fca;&quot;&gt;GFF to Amino&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; step are filtered by length. Unless the user changes, the default minimum length is 60 amino acid sequences.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The resulting sequences are put in the folder &lt;/span&gt;&lt;span style=&quot; font-size:11pt; color:#2ad85d;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; in a file names &lt;/span&gt;&lt;span style=&quot; font-size:11pt; color:#36da33;&quot;&gt;&amp;quot;samplename&amp;quot;.qced.faa. &lt;/span&gt;&lt;span style=&quot; font-size:11pt; color:#010501;&quot;&gt;These amino acid sequences can be used in the downstream process of annotating them functionally and taxonomically (using LCA rule)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -245,7 +229,7 @@
      <string>FUNC SEARCH</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered  amino acid sequences &amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;samplename&amp;gt;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; are used to BLAST/LAST against the  reference protein database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each database. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;&amp;lt;samplename&amp;gt;.&amp;lt;dbname&amp;gt;.&amp;lt;algorithm&amp;gt;out&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In the case of large number of amino acid sequences, this step of the computation can be also done using multiple grids (to use batch processing system)&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The filtered amino acid sequences &amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#36da33;&quot;&gt;samplename&amp;gt;.qced.faa, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#2ad85d;&quot;&gt;orf_prediction, &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;are used to BLAST/LAST against the reference protein database sequences, such as, MetaCyc, RefSeq, COG, KEGG, SEED, etc.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The results are put in a tabular form in the folder blast_results, with individual files for each database. The files are named as &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;&amp;quot;&amp;lt;samplename&amp;gt;.&amp;lt;dbname&amp;gt;.&amp;lt;algorithm&amp;gt;out&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In the case of large number of amino acid sequences, this step of the computation can be also done using multiple grids (to use batch processing system)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -253,7 +237,7 @@
      <string>PARSE FUNC SEARCH</string>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The BLAST/LAST search results of the amino acid sequences against the reference protein databases are produced in a tabular format. In the context of MetaPathways these files are available in the in the folder blast_results folder. The results, in a tabular format,  are put in individual files for each of the databases and algorithms. This script parses these results  and uses the hits based on the specified cutoffs for the evalue, bit score ratio, etc the parsed results are put in file named according to the format&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;samplename&amp;gt;&amp;lt;dbname&amp;gt;&amp;lt;algorithm&amp;gt;out.parsed.txt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The BLAST/LAST search results of the amino acid sequences against the reference protein databases are produced in a tabular format. In the context of MetaPathways these files are available in the in the folder blast_results folder. The results, in a tabular format, are put in individual files for each of the databases and algorithms. This script parses these results and uses the hits based on the specified cutoffs for the evalue, bit score ratio, etc the parsed results are put in file named according to the format&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#1ace4a;&quot;&gt;samplename&amp;gt;&amp;lt;dbname&amp;gt;&amp;lt;algorithm&amp;gt;out.parsed.txt&amp;quot; &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Consolas,Liberation Mono,Menlo,Courier,monospace'; font-size:12px; color:#333333; background-color:#ffffff;&quot;&gt;Note that only the hits that meets the minimum BSR value are used stored in the parsed file. The amino acid sequences in the orf_prediction folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio (BSR) for the hits.  The BSR ratio can be defined at the ratio of a the bit-score between a query and a target sequence to the bit-score when both the query and target sequences are the query sequence. Usually, a BSR ratio of 0.4 or more is considered as a good hit for protein sequences. Note that BSR ratio is designed in some sense to have a normalized value for the bit-score  since the score is also influenced by the length of the query. The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt;; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -286,14 +270,6 @@
     </property>
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </row>
-   <row>
-    <property name="text">
-     <string>CREATE GENBANK FILE</string>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create genbank files for each of the samples.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </row>
    <row>
@@ -358,10 +334,10 @@
   <widget class="QGroupBox" name="metapaths_stepsORF_PREDICTION">
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>280</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>281</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -378,8 +354,8 @@
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -391,8 +367,8 @@
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -404,8 +380,8 @@
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -422,138 +398,13 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsORF_TO_AMINO">
-   <property name="geometry">
-    <rect>
-     <x>313</x>
-     <y>310</y>
-     <width>256</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The GFF files produced by the gene prediction algorithm, say prodigal, in the ORF Prediction step are used to translate into the amino acid sequences and gff files that contains more detailed information such as orf_length, strand, start and end positions, contig_length, etc .The resulting file is in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#229339;&quot;&gt;orf_prediction&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder with the extension .faa &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="orf_to_aminoYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="orf_to_aminoSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="orf_to_aminoREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsCOMPUTE_REFSCORES">
-   <property name="geometry">
-    <rect>
-     <x>313</x>
-     <y>370</y>
-     <width>256</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The amino acid sequences in the orf_prediction folder are used to do a self BLAST/LAST, which will be used to compute the bit score ratio (BSR) for the hits.  The BSR ratio can be defined at the ratio of a the bit-score between a query and a target sequence to the bit-score when both the query and target sequences are the query sequence. Usually, a BSR ratio of 0.4 or more is considered as a good hit for protein sequences. Note that BSR ratio is designed in some sense to have a normalized value for the bit-score  since the score is also influenced by the length of the query. &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The results are written to a file  (usually in a folder called blast_results in the MetaPathway pipeline,  into a file named &amp;lt;samplename&amp;gt;.refscore.&amp;lt;algorithm&amp;gt; (where &amp;lt;algorithm&amp;gt; refers to the BLAST or LAST in the context of the pipeline) extension This script can be extended to add other sequence homology search algorithms.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="compute_refscoresYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="compute_refscoresSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="compute_refscoresREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
   <widget class="QGroupBox" name="metapaths_stepsFUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>400</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>340</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -576,8 +427,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -589,8 +440,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -602,8 +453,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -614,10 +465,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPARSE_FUNC_SEARCH">
    <property name="geometry">
     <rect>
-     <x>312</x>
-     <y>430</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>370</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -639,8 +490,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -652,8 +503,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -665,8 +516,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -677,10 +528,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_rRNA">
    <property name="geometry">
     <rect>
-     <x>312</x>
-     <y>460</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>400</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -702,8 +553,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -715,8 +566,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -728,8 +579,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -740,10 +591,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsSCAN_tRNA">
    <property name="geometry">
     <rect>
-     <x>312</x>
-     <y>490</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>430</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -764,8 +615,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -777,8 +628,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -790,70 +641,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
-   <property name="geometry">
-    <rect>
-     <x>312</x>
-     <y>550</y>
-     <width>256</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="pathologic_inputYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="pathologic_inputSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="pathologic_inputREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -864,10 +653,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsANNOTATE_ORFS">
    <property name="geometry">
     <rect>
-     <x>312</x>
-     <y>520</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>460</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -891,8 +680,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -904,8 +693,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -917,71 +706,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsGENBANK_FILE">
-   <property name="geometry">
-    <rect>
-     <x>313</x>
-     <y>580</y>
-     <width>256</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create a genbank file.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In MetaPathways, the outputs are dropped in the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#20d54c;&quot;&gt;genbank&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; folder in files with &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#48d173;&quot;&gt;.gbk&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; extension.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="genbank_fileYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="genbank_fileSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="genbank_fileREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -995,10 +721,10 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>610</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>520</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1015,8 +741,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -1028,8 +754,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1041,8 +767,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1053,9 +779,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsBUILD_PGDB">
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>650</y>
-     <width>256</width>
+     <x>310</x>
+     <y>550</y>
+     <width>251</width>
      <height>21</height>
     </rect>
    </property>
@@ -1072,9 +798,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1085,9 +811,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1098,9 +824,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1111,10 +837,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsPREPROCESS_INPUT">
    <property name="geometry">
     <rect>
-     <x>313</x>
+     <x>310</x>
      <y>250</y>
-     <width>256</width>
-     <height>41</height>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -1137,8 +863,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1150,8 +876,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1163,8 +889,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1195,8 +921,8 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>680</y>
-     <width>256</width>
+     <y>580</y>
+     <width>251</width>
      <height>21</height>
     </rect>
    </property>
@@ -1213,9 +939,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1229,9 +955,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1242,9 +968,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>-10</y>
-      <width>16</width>
-      <height>41</height>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1322,10 +1048,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QGroupBox" name="metapaths_stepsFILTER_AMINOS">
    <property name="geometry">
     <rect>
-     <x>313</x>
-     <y>340</y>
-     <width>256</width>
-     <height>41</height>
+     <x>310</x>
+     <y>310</y>
+     <width>251</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -1347,8 +1073,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1360,8 +1086,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>120</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1373,8 +1099,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>220</x>
       <y>0</y>
-      <width>16</width>
-      <height>41</height>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -1384,7 +1110,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QCheckBox" name="blastWithGrid">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -1488,10 +1214,10 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>260</y>
-     <width>51</width>
-     <height>471</height>
+     <x>60</x>
+     <y>250</y>
+     <width>81</width>
+     <height>361</height>
     </rect>
    </property>
    <property name="maximumSize">
@@ -1513,6 +1239,81 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>490</y>
+     <width>251</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+   <widget class="QRadioButton" name="pathologic_inputYES">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="pathologic_inputSKIP">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="pathologic_inputREDO">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>0</y>
+      <width>20</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>220</y>
+     <width>131</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stage Dependencies</string>
+   </property>
+  </widget>
   <zorder>tableWidget</zorder>
   <zorder>label</zorder>
   <zorder>fileInputFormat</zorder>
@@ -1526,17 +1327,13 @@ p, li { white-space: pre-wrap; }
   <zorder>setupGrids</zorder>
   <zorder>metapaths_stepsBUILD_PGDB</zorder>
   <zorder>runOptionsGroupBox</zorder>
-  <zorder>metapaths_stepsORF_TO_AMINO</zorder>
-  <zorder>metapaths_stepsCOMPUTE_REFSCORES</zorder>
   <zorder>metapaths_stepsFILTER_AMINOS</zorder>
   <zorder>metapaths_stepsCOMPUTE_RPKM</zorder>
   <zorder>metapaths_stepsPREPROCESS_INPUT</zorder>
   <zorder>metapaths_stepsANNOTATE_ORFS</zorder>
   <zorder>metapaths_stepsPARSE_FUNC_SEARCH</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
   <zorder>metapaths_stepsFUNC_SEARCH</zorder>
   <zorder>metapaths_stepsSCAN_tRNA</zorder>
-  <zorder>metapaths_stepsGENBANK_FILE</zorder>
   <zorder>metapaths_stepsSCAN_rRNA</zorder>
   <zorder>metapaths_stepsCREATE_ANNOT_REPORTS</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
@@ -1546,6 +1343,8 @@ p, li { white-space: pre-wrap; }
   <zorder>outputLine</zorder>
   <zorder>selectSamplesButton</zorder>
   <zorder>label_5</zorder>
+  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
+  <zorder>label_6</zorder>
  </widget>
  <tabstops>
   <tabstop>inputLine</tabstop>
@@ -1572,9 +1371,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>pathologic_inputYES</tabstop>
   <tabstop>pathologic_inputSKIP</tabstop>
   <tabstop>pathologic_inputREDO</tabstop>
-  <tabstop>genbank_fileYES</tabstop>
-  <tabstop>genbank_fileSKIP</tabstop>
-  <tabstop>genbank_fileREDO</tabstop>
   <tabstop>build_pgdbYES</tabstop>
   <tabstop>build_pgdbSKIP</tabstop>
   <tabstop>build_pgdbREDO</tabstop>

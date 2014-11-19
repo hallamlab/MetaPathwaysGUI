@@ -16,7 +16,7 @@ class SampleResourceManager
 {
 public:
     static SampleResourceManager *getSampleResourceManager();
-    void setOutPutPath(QString outputDir);
+    void setOutPutFolders(QHash<QString, QString>  outputFolders);
     void setUseResourceFolder(bool flag);
     QString getFilePath(const QString &sampleName,  RESOURCE resource);
     QStringList getFilePaths(const QString &sampleName,  RESOURCE resource);
@@ -30,7 +30,7 @@ private:
     static SampleResourceManager* sampleResourceManager;
     static QString resourceFolderName;
 
-    QString OUTPUTPATH;
+    QHash<QString, QString> OUTPUTPATH;
     bool useResourceFolder;
 
 };

@@ -29,6 +29,9 @@ RunConfig::RunConfig(QWidget *parent) :
     gridSetup = 0;
 
 
+    setupGrids->hide();
+    gridBlastChoice->hide();
+
     rundata = RunData::getRunData();
 
     setStyling();
@@ -56,10 +59,16 @@ RunConfig::RunConfig(QWidget *parent) :
 
 
 void RunConfig::clickedSelectSample(){
+
+    QStringList samples =  this->rundata->getFileList(inputLine->text().trimmed());
+    if( samples.isEmpty() ) {
+        Utilities::showInfo(0, QString("Could not find any sample to process!")) ;
+        return;
+    }
+
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
-
-    this->selectWindow->addSamples(this->rundata->getFileList( fileInputFormat->currentText().trimmed() ));
+    this->selectWindow->addSamples(this->rundata->getFileList(inputLine->text().trimmed()));
     this->selectWindow->show();
 }
 

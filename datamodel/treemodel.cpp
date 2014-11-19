@@ -161,11 +161,11 @@
 
      SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
      RunData *rundata = RunData::getRunData();
-     QString OUTPUTPATH = rundata->getParams()["folderOutput"];
-     samplercmgr->setOutPutPath(OUTPUTPATH);
+
+     samplercmgr->setOutPutFolders(rundata->getSampleFolderMap());
      QList<QVariant> columnData;
 
-     qDebug() << "This is the crap you were looking for ?" << OUTPUTPATH;
+
 
      TreeItem *treeitem = new TreeItem(columnData, parent);
      parent->appendChild(treeitem);

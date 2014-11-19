@@ -25,6 +25,8 @@ class SettingsTab : public QWidget
     
 public:
     explicit SettingsTab(QWidget *parent = 0);
+    //explicit SettingsTab(QWidget *parent = 0);
+
     static QList<QWidget *> *allWidgets;
     void setStyling();
 
@@ -40,16 +42,20 @@ private slots:
     void closeWindow();
     void annotationClicked(QModelIndex index);
     void rrnaClicked(QModelIndex index);
+    void restoreDefaultValues();
+
+public slots:
+    void loadParameters();
 
 private:
     bool writeOutToFile();
     void getAllWidgets();
     QStringList getADBNames();
-    void initWidgetValues();
+    void initWidgetValues(bool defaultValue = false);
     void checkAnnotationDBS();
     void showORFDBS();
     void showRRNADBS();
-    bool findFiles(QString path, QStringList *fileListing);
+    bool findFiles(QString path, QStringList &fileListing);
 
 
     QStringList *annotationFiles;
@@ -66,6 +72,8 @@ private:
 
     QStringList* RRNADBS;
     QStringList* ORFDBS;
+
+    QPushButton *restoreDefaults;
 
     Ui::SettingsTab *ui;
 };

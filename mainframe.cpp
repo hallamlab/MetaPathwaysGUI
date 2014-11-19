@@ -60,13 +60,14 @@ MainFrame::MainFrame(QWidget *parent) :
     // initialize our singleton of rundata, encompasses a virtualization of the modified
     // configuration file and parameter file; also sets up a mapping required later
 
+    rundata->setupDefaultConfig();
+
     setupWidget = new Setup();
 
-    setupWidget->loadPathVariables();
+  //  setupWidget->loadPathVariables();
     // populates the setup form with values previously used, if they exist
-
-    rundata->setupDefaultConfig();
     rundata->setupDefaultParams();
+    rundata->loadDefaultParams();
     // for the config and param file, check to see if pre-existing config or parameter files
     // are defined and exist. see their function heads for clarification.
 
@@ -79,21 +80,34 @@ MainFrame::MainFrame(QWidget *parent) :
     // rundata->setValue("rRNA:refdbs","",_PARAMS);
    // rundata->setValue("annotation:dbs","",_PARAMS);
 
-    QString warningStr;
-    stackedWidget->addWidget(setupWidget);
-    connect(setupWidget, SIGNAL(continueFromSetup()), this, SLOT(validateSetup()));
 
+
+    stackedWidget->addWidget(setupWidget);
+    this->addRemainingTabs();
+    this->greyTabs(true);
+    connect(this, SIGNAL(markConfigInSetup(bool) ), setupWidget, SLOT(validateSetup(bool)));
+
+    connect(rundata, SIGNAL(loadParameters()), settings, SLOT(loadParameters()));
+    setupWidget->validateSetup(false, true);
+
+    /*
     if( !rundata->validate(warningStr) ) {
        // validate(string) will check to see if values exist and return  warning string if not
        this->showSetupError(warningStr);
-    }else{
-        validateSetup();
-    }
+    }else{  */
+  //   validateSetup();
+    stackedWidget->setCurrentWidget(settingsScroll);
+    emit markConfigInSetup(false);
+
+      // connect(rundata, SIGNAL(loadParameters()), settings, SLOT(loadParameters()));
+    ///}
+
+
 }
 
 void MainFrame::showSetupError(QString warningStr) {
     warning->warning(0,"Incomplete Configuration !\n", QString("INCOMPLETE CONFIGURATION MAY DISABLE SOME FEATURES  \n\n") + warningStr + "Please check Setup!.", QMessageBox::Ok);
-    greyTabs(false);
+  //  greyTabs(false);
     this->openSetup();
     setupWidget->updateValues();
 }
@@ -104,17 +118,17 @@ void MainFrame::showSetupError(QString warningStr) {
  * further steps.
  */
 void MainFrame::validateSetup() {
-     RunData *rundata= RunData::getRunData();
+/*
+    RunData *rundata= RunData::getRunData();
      QString warningStr;
-
 
      if( !rundata->validate(warningStr)) {
           showSetupError(warningStr);
      }
-
+*/
     addRemainingTabs();
     stackedWidget->setCurrentWidget(settingsScroll);
-    greyTabs(true);
+    //greyTabs(true);
 
 }
 
@@ -157,20 +171,21 @@ void MainFrame::addRemainingTabs() {
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
+
 }
 
 void MainFrame::displayGridProgress(){
-    this->updateWidgets();
+   // this->updateWidgets();
     stackedWidget->setCurrentWidget(gridProgress);
 }
 
 void MainFrame::displayStages(){
-    this->updateWidgets();
+  //  this->updateWidgets();
     stackedWidget->setCurrentWidget(stageScroll);
 }
 
 void MainFrame::displayParams(){
-    this->updateWidgets();
+  //  this->updateWidgets();
     stackedWidget->setCurrentWidget(settingsScroll);
 }
 
@@ -181,7 +196,7 @@ void MainFrame::displayParams(){
  */
 void MainFrame::updateWidgets(){
     // if(stackedWidget->currentWidget() == settingsScroll)
-
+    this->setupWidget->saveParamFile();
     {
         // the user was looking at the param setup screen
 
@@ -331,7 +346,6 @@ void MainFrame::updateWidgets(){
 
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs",rRNArefdbs, false,false);
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "annotation:dbs",annotationDBS, false,false);
-
 
         executionPrep();
     } //end of else

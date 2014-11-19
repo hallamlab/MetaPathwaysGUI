@@ -27,8 +27,8 @@ SelectSamples::SelectSamples(QWidget *parent) :
     QSize wSize = this->size();
     int w = wSize.width() < 600 ? wSize.width() :600;
     int h = wSize.height() < 300 ? wSize.height() : 300;
-    scroll->resize(w, h);
-    scroll->setMaximumSize(w + 2, h + 2);
+    scroll->resize(w + 5, h + 5);
+    scroll->setMaximumSize(wSize.width() + 10, wSize.height() + 10);
     scroll->show();
 
 }
@@ -58,10 +58,16 @@ void SelectSamples::resizeWidget() {
   this->adjustSize();
   this->show();
 
+
+//  this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+  //scroll = new QScrollArea;
+//  scroll->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+
   QSize wSize = this->size();
   int w = wSize.width() < 600 ? wSize.width() :600;
   int h = wSize.height() < 300 ? wSize.height() : 300;
-  scroll->resize(w, h);
+  scroll->resize(w + 5, h + 5);
+  scroll->setMaximumSize(wSize.width() + 10, wSize.height() + 10);
   scroll->show();
 }
 

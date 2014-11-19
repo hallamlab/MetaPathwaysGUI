@@ -1116,7 +1116,7 @@ bool HTableData::saveMeganExportToFile(QString sampleName, QString fileName,  RE
 
   //  connector->getORFList(htree->getLeafAttributesOf(hnode));
     QHash<QString, bool> orfNames;
-    ProgressView progressbar("Saving sequences for sample : " + sampleName, 0, 0, this);
+    ProgressView progressbar("Export data to MEGAN for sample : " + sampleName, 0, 0, this);
 
     foreach(ORF *orf, orfList) {
          orfNames[orf->name] = true;

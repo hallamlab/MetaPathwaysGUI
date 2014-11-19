@@ -22,11 +22,7 @@ RunData* RunData::runData = 0;
 
 RunData::RunData(){
     QSettings settings("HallamLab", "MetaPathways");
-    this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(),_CONFIG);
-    this->setValue("PYTHON_EXECUTABLE", settings.value("PYTHON_EXECUTABLE").toString(),_CONFIG);
-    this->setValue("PGDB_FOLDER", settings.value("PGDB_FOLDER").toString(),_CONFIG);
-    this->setValue("PATHOLOGIC_EXECUTABLE", settings.value("PATHOLOGIC_EXECUTABLE").toString(),_CONFIG);
-    this->setValue("REFDBS", settings.value("REFDBS").toString(),_CONFIG);
+    this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(), _CONFIG);
 }
 
 
@@ -71,6 +67,10 @@ QString RunData::getValueFromHash(QString key, SETTING_TYPE type){
         return this->CONFIG.contains(key)  ?  this->CONFIG.value(key): QString("");
     if (type==_PARAMS)
         return this->PARAMS.contains(key)  ?  this->PARAMS.value(key): QString("");
+    if (type==_PARAMS_DEFAULT)
+        return this->PARAMS_DEFAULT.contains(key)  ?  this->PARAMS_DEFAULT.value(key): QString("");
+    if (type==_TEMP_CONFIG)
+        return this->TEMP_CONFIG.contains(key)  ?  this->TEMP_CONFIG.value(key): QString("");
 }
 
 void RunData::setValue(QString key, QString value, SETTING_TYPE type){
@@ -89,8 +89,17 @@ void RunData::setParams(QHash<QString,QString> PARAMS){
     this->PARAMS = PARAMS;
 }
 
-void RunData::setConfig(QHash<QString,QString> CONFIG){
-    this->CONFIG = CONFIG;
+void RunData::setConfig(QHash<QString,QString> TEMP_CONFIG){
+    this->CONFIG = TEMP_CONFIG;
+}
+
+void RunData::triggerParameterFileRead() {
+    emit loadParameters();
+}
+
+
+void RunData::setTempConfig(QHash<QString,QString> CONFIG){
+    this->TEMP_CONFIG = CONFIG;
 }
 
 void RunData::setConfigMapping(QHash<QString,QString> CONFIG_MAPPING){
@@ -101,18 +110,156 @@ void RunData::setProcess(QProcess *process){
     this->process = process;
 }
 
+bool RunData::checkPGDBFolderPath(QString &message, QString pgdbFolderPath) {
+    bool error = false;
+
+    QDir dir( pgdbFolderPath);
+
+    if(!dir.exists()) {
+        message = QString("Folder ") + pgdbFolderPath + QString(" does not exist!");
+        return false;
+    }
+
+
+    if( !pgdbFolderPath.contains(QString("user"), Qt::CaseInsensitive) || !pgdbFolderPath.contains(QString("pgdb") ,Qt::CaseInsensitive)) {
+        message = QString("Folder ") + pgdbFolderPath + QString(" does not appear to be a PGDB folder!");
+        return false;
+    }
+
+    message = QString("PGDB folder") + pgdbFolderPath + QString(" found!");
+    return !error;
+
+}
+
+bool RunData::checkPathwayToolsExecutable(QString &message, QString executable) {
+    bool error = false;
+
+    QFileInfo file(executable);
+    if(!file.exists()) {
+        message = QString("Pathway-Tools executable ") + executable + QString(" does not exist!");
+        return false;
+    }
+
+    message = QString("Pathway-Tools executable ") + executable + QString(" found!");
+    return !error;
+
+}
+
+
+
+
+bool RunData::checkRefDatabasesPath(QString &message, QString refdbsDir) {
+
+    bool error = false;
+
+    QDir dir(refdbsDir);
+
+    if(!dir.exists()) {
+        message = QString("Folder ") +refdbsDir + QString(" does not exist!");
+        return false;
+    }
+
+    QStringList expectedSubFolders;
+    expectedSubFolders << "functional" << QString("functional") + QDir::separator() + QString("formatted") <<\
+                          "taxonomic" << QString("taxonomic") + QDir::separator() + QString("formatted") << "ncbi_tree" << "functional_categories";
+
+    message="";
+    foreach(QString subfolder, expectedSubFolders) {
+        dir.setPath( refdbsDir + QDir::separator() + subfolder);
+        if( !dir.exists()) {
+            message += QString("Expected folder : ") + dir.absoluteFilePath(refdbsDir + QDir::separator() + subfolder) + QString( " not found\n");
+            error = true;
+        }
+    }
+
+    message = QString("Referenced database folder ") + refdbsDir + QString(" found!");
+    return !error;
+}
+
+
+bool RunData::checkMetaPathwaysPath(QString &message, QString metapathwaysDir) {
+
+    bool error = false;
+    QDir dir(metapathwaysDir);
+
+    if(!dir.exists()) {
+        message = QString("Folder ") + metapathwaysDir + QString(" does not exist!");
+        return false;
+    }
+
+    QStringList expectedSubFolders;
+    expectedSubFolders << "libs" << "executables" << "utilities" ;
+
+    message="";
+    foreach(QString subfolder, expectedSubFolders) {
+        dir.setPath( metapathwaysDir + QDir::separator() + subfolder);
+        if( !dir.exists()) {
+            message += QString("Expected folder : ") + dir.absoluteFilePath(metapathwaysDir + QDir::separator() + subfolder) + QString( " not found\n");
+            error = true;
+        }
+    }
+
+    if(!error) {
+       message = QString("MetaPathways Python code folder ") + metapathwaysDir + QString(" found!");
+    }
+    return !error;
+}
+
+
+
+/**
+ * @brief RunData::checkPythonBinary, checks if the python executable is working
+ * @param message
+ * @return
+ */
+bool RunData::checkPythonBinary(QString &message, QString executable) {
+    bool error = false;
+
+    QFileInfo file(executable);
+    if(!file.exists()) {
+        message = QString("Python executable ") + executable + QString(" does not exist!");
+        return false;
+    }
+
+    QProcess binaryTester;
+    binaryTester.start(executable + QString(" -h") );
+    binaryTester.waitForStarted();
+    binaryTester.closeWriteChannel();
+    binaryTester.waitForFinished();
+
+    int exitCode=  binaryTester.exitCode();
+
+    if( exitCode!=0) {
+        message=QString("INVALID BINARY");
+        error= true;
+    }
+    else {
+        message = QString("VALID BINARY");
+    }
+
+    return !error;
+
+}
+
 
 /**
  * @brief RunData::checkBinaries, checks the binaries in the executables folder for the OS
  *  reports errors if it finds any missing, unspecified or invalid binaries
  * @param executablesDir
  */
-bool RunData::checkBinaries() {
+bool RunData::checkBinaries(QString &message, QString executablesDir) {
 
-    QString executablesDir = this->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +\
-                                QDir::separator() + this->getValueFromHash("EXECUTABLES_DIR", _CONFIG);
+    bool error = false;
+
+    QDir dir(executablesDir);
+    if(!dir.exists()) {
+        message = QString("Folder ") + executablesDir + QString(" does not exist!");
+        return false;
+    }
+
 
     QHash<QString, QStringList> binaries;
+
 
     binaries["LASTDB_EXECUTABLE"] = (QStringList() << "-h");
     binaries["LAST_EXECUTABLE"] = (QStringList() << "-h");
@@ -130,7 +277,6 @@ bool RunData::checkBinaries() {
 
     QHash<QString, QString> status;
 
-    bool error = false;
     foreach(QString name, binaries.keys() ) {
         QString executable = this->getValueFromHash(name, _CONFIG);
 
@@ -164,11 +310,13 @@ bool RunData::checkBinaries() {
         status[name]=QString("VALID BINARY");
     }
 
-    QString  message( "OS Specific executables check\n\n");
+    message = "";
 
-    message += QString("FOLDER : ") + executablesDir + "\n";
-    message += QString("FIX    : Please correct the location for \"OS Specific Executables\" in the Setup tab\n");
-    message += QString("       : Alternatively,  you can update the EXECUTABLES_DIR key in the config file \"config/template_config.txt\"\n\n" );
+    if( error ) {
+        message += QString("FOLDER : ") + executablesDir + "\n";
+        message += QString("FIX    : Please correct the location for \"OS Specific Executables\" in the Setup tab\n");
+        message += QString("       : Alternatively,  you can update the EXECUTABLES_DIR key in the config file \"config/template_config.txt\"\n\n" );
+    }
 
 
     foreach(QString name, status.keys()) {
@@ -176,9 +324,6 @@ bool RunData::checkBinaries() {
     }
 
 
-    QMessageBox report;
-    report.setText(message);
-    if(error) report.exec();
     return !error;
 
 }
@@ -223,6 +368,10 @@ QHash<QString,QString> RunData::getParams(){
 
 QHash<QString,QString> RunData::getConfig(){
     return this->CONFIG;
+}
+
+QHash<QString,QString> RunData::getTempConfig(){
+    return this->TEMP_CONFIG;
 }
 
 QHash<QString,QString> RunData::getConfigMapping(){
@@ -293,10 +442,17 @@ void RunData::setupDefaultConfig(){
     QHash<QString, QString> parsedResults = Utilities::parseFileConfig(cpath);
     if (configFile.exists()) parsedResults["METAPATHWAYS_PATH"] = metapath;
 
+   // qDebug() << "parsed results " << parsedResults;
     this->setConfig(parsedResults);
+    this->setTempConfig(parsedResults);
 
 }
 
+
+void RunData::loadDefaultParams(){
+    QString path = QString(":/text/")  + this->DEFAULT_TEMPLATE_PARAM;
+    this->PARAMS_DEFAULT = Utilities::parseFile(path,"PARAMS");
+}
 
 /**
  * Setup our default params - if have a path variable already, use it. Otherwise, use the default built in
@@ -315,8 +471,6 @@ void RunData::setupDefaultParams(){
     else {
         path = path + QDir::separator() +"config" + QDir::separator()  + this->TEMPLATE_PARAM;
     }
-
-
 
     QHash<QString,QString> parsed = Utilities::parseFile(path,"PARAMS");
 
@@ -372,6 +526,27 @@ void RunData::setCurrentSample(QString currentSample) {
  */
 QString RunData::getCurrentSample() {
     return this->currentSample;
+}
+
+/**
+ * @brief RunData::getSampleFolder, get the folder that contains the sample
+ * @param sampleName
+ * @return
+ */
+QString RunData::getSampleFolder(QString sampleName) {
+    if(! this->outputFolders.contains(sampleName)) return QString();
+
+    return this->outputFolders[sampleName];
+
+}
+
+/**
+ * @brief RunData::getSampleFolderMap, retuns the sample to the folder map
+ * @return
+ */
+QHash<QString, QString> RunData::getSampleFolderMap() {
+
+    return this->outputFolders;
 }
 
 
@@ -519,14 +694,15 @@ QStringList RunData::getCurrentFileList(){
  * such as fasta, gbk-annotated, gbk-unannotated
  * @param fileType, the file type to pick
  */
-void RunData::loadInputFiles(const QString &fileType){
+void RunData::loadInputFiles(const QString &folder){
     QDir currentDir(this->getParams()["fileInput"]);
 
-    if( !currentDir.exists() ) return;
-
+    if( !currentDir.exists() ) {
+        Utilities::showInfo(0, QString("Input folder ") + folder + QString(" not found!")) ;
+        return;
+    }
     currentDir.setFilter(QDir::Files);
     QStringList entries = currentDir.entryList();
-
 
     QList<QRegExp> regList;
 
@@ -549,20 +725,18 @@ void RunData::loadInputFiles(const QString &fileType){
                    break;
                }
             }
-       // }
-
-        /*
-        else if (  fileType.compare( QString("gbk-annotated")) ==0 || fileType.compare(QString("gbk-unannotated"))==0){
-            if (file.last().compare(QString("gbk"),Qt::CaseInsensitive) ==0){
-                filesDetected.append(file.first());
-            }
-        }*/
     }
 
 
     this->setFileList(filesDetected);
 }
 
+
+void RunData::setResultFolders(QStringList folders) {
+
+    this->resultFolders = folders;
+
+}
 
 /**
  * @brief RunData::getOutputFolders, returns the list of outputfolders
@@ -571,7 +745,7 @@ void RunData::loadInputFiles(const QString &fileType){
 QStringList RunData::getOutputFolders() {
 
    if(this->outputFolders.isEmpty()) this->loadOutputFolders();
-   return this->outputFolders;
+   return this->outputFolders.keys();
 }
 
 
@@ -580,18 +754,22 @@ QStringList RunData::getOutputFolders() {
  * outoutFolder variable.
  */
 void RunData::loadOutputFolders(){
-    QDir currentDir(this->getParams()["folderOutput"]);
-
-    if( !currentDir.exists() ) return;
-
-    QStringList sampleFolders = currentDir.entryList(QDir::AllDirs);
 
     this->outputFolders.clear();
-    foreach(QString sampleFolder, sampleFolders) {
-        if( sampleFolder.compare(QString(".")) ==0  || sampleFolder.compare(QString("..")) ==0 ) continue;
 
-        if( this->isOutputFolderValid(currentDir.absolutePath() + QDir::separator() +  sampleFolder )) {
-            this->outputFolders.append(sampleFolder);
+    foreach(QString folder, this->resultFolders) {
+        QDir currentDir(folder);
+
+        if( !currentDir.exists() ) return;
+
+        QStringList sampleFolders = currentDir.entryList(QDir::AllDirs);
+
+        foreach(QString sampleFolder, sampleFolders) {
+            if( sampleFolder.compare(QString(".")) ==0  || sampleFolder.compare(QString("..")) ==0 ) continue;
+
+            if( this->isOutputFolderValid(currentDir.absolutePath() + QDir::separator() +  sampleFolder )) {
+                this->outputFolders.insert(sampleFolder, folder);
+            }
         }
     }
 

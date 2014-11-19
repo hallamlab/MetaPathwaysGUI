@@ -81,8 +81,10 @@ private slots:
     void showErrors();
     void readStepsLog();
     void timerTickResponse();
+    void finalTimerTickResponse();
     void delayReadingStepsLog();
 
+    bool isReadyToRun();
     void startRun();
     void setProcessToZero();
 
@@ -111,7 +113,8 @@ private:
 
     QPushButton *cancelButton;
     QPushButton *hideButton;
-    QPushButton *runButton, *showErrorsButton;
+    QPushButton *runButton;
+    QTabWidget *showMessages;
 
     QTextBrowser *logBrowser;
     QLabel *logLabel;
@@ -120,9 +123,9 @@ private:
     QProgressBar *progressBar;
     QProgressBar *globalProgressBar;
     QLabel* progressLabel;
-    QLineEdit *sampleNameLineEdit;
+
     QProcess *myProcess;
-    QTimer *timer;
+    QTimer *timer, *timer2;
     QTimer *fileCheckTimer;
     QTextEdit *standardOut;
     QComboBox* sampleSelect;

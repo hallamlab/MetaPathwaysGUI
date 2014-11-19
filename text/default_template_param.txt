@@ -44,18 +44,18 @@ ptools_settings:taxonomic_pruning no
 # e.g. yes, skip, yes
 metapaths_steps:PREPROCESS_INPUT yes
 metapaths_steps:ORF_PREDICTION yes
-metapaths_steps:ORF_TO_AMINO yes
+#metapaths_steps:ORF_TO_AMINO yes
 metapaths_steps:FILTER_AMINOS yes
-metapaths_steps:COMPUTE_REFSCORES yes
+#metapaths_steps:COMPUTE_REFSCORES yes
 metapaths_steps:FUNC_SEARCH yes
 metapaths_steps:PARSE_FUNC_SEARCH yes
 metapaths_steps:SCAN_rRNA yes
 metapaths_steps:SCAN_tRNA yes
 metapaths_steps:ANNOTATE_ORFS yes
 metapaths_steps:PATHOLOGIC_INPUT yes
-metapaths_steps:GENBANK_FILE yes
+#metapaths_steps:GENBANK_FILE yes
 metapaths_steps:CREATE_ANNOT_REPORTS yes
-metapaths_steps:MLTREEMAP_CALCULATION yes
+#metapaths_steps:MLTREEMAP_CALCULATION yes
 metapaths_steps:BUILD_PGDB yes
 metapaths_steps:COMPUTE_RPKM yes
 

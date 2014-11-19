@@ -24,11 +24,21 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
     resultTabs = this->findChild<QTabWidget *>("resultTabs");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
-    checkComparativeMode = this->findChild<QCheckBox *>("checkComparativeMode");
+    resultViewMode = this->findChild<QComboBox *>("resultViewMode");
     selectSamplesButton = this->findChild<QPushButton *>("selectSamplesButton");
     currentSampleLabel = this->findChild<QLabel *>("currentSampleLabel");
+    addResultFolder = this->findChild<QToolButton *>("addResultFolder");
+    deleteResultFolder = this->findChild<QToolButton *>("deleteResultFolder");
+    resultFolders = this->findChild<QComboBox *>("resultFolders");
+    this->setVisible(0);
+    selectSamplesButton->hide();
+
+#ifdef REINDEX
     reindex = this->findChild<QCheckBox *>("reindex");
+    reindex->hide();
+#endif
     loadResults = this->findChild<QPushButton *>("loadResults");
+    loadResults->hide();
 
     selectSamplesButton->setEnabled(false);
 
@@ -39,12 +49,15 @@ ResultWindow::ResultWindow(QWidget *parent) :
     getFileNames = new QTimer();
     getFileNames->start(500);
 
+
     connect(sampleSelect,SIGNAL(activated(QString)),this,SLOT(sampleChanged(QString)));
    // connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
-    connect(checkComparativeMode, SIGNAL(stateChanged(int)), this, SLOT(setVisible(int)) );
+    connect(resultViewMode,  SIGNAL(currentIndexChanged(int)), this, SLOT(setVisible(int)) );
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
     connect(loadResults, SIGNAL(clicked()), this, SLOT(_loadResults()) );
+    connect(addResultFolder, SIGNAL(clicked()), this, SLOT(browseFolder()));
+    connect(deleteResultFolder, SIGNAL(clicked()), this, SLOT(removeFolder()));
 
 //    tables["PATHWAYS"] = new TableData();
 //    tables["REACTIONS"] = new TableData();
@@ -67,23 +80,53 @@ ResultWindow::ResultWindow(QWidget *parent) :
 
 }
 
+void ResultWindow::browseFolder(){
+    QString folderSelect = QFileDialog::getExistingDirectory(this, tr("Select a directory of processed output."));
+
+    QHash<QString, bool> itemTexts;
+    for(int i =0; i < resultFolders->count(); i++ )
+        itemTexts.insert(resultFolders->itemText(i), true);
+
+    if(!folderSelect.isEmpty() && !itemTexts.contains(folderSelect)){
+        this->resultFolders->addItem(folderSelect);
+        this->_loadResults();
+    }
+
+
+  //  this->rundata->setValue("folderOutput", selectedFolder, _PARAMS);
+
+    //send a signal to the parent to enable the continue button
+ /*   if (!selectedFolder.isEmpty()){
+        if(!selectedFiles.isEmpty()) emit fileSet();
+    } */
+
+}
+
+
+
+void ResultWindow::removeFolder(){
+    QString currentFolder = this->resultFolders->currentText();
+    if( currentFolder.isEmpty() ) return;
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Test", QString("Remove result folder ") + currentFolder + QString(" from list?"),
+                                   QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        this->resultFolders->removeItem(this->resultFolders->currentIndex());
+        this->_loadResults();
+    }
+}
+
+
 /**
  * @brief ResultWindow::_loadResults, loads the samplewise results from the output folder
  */
 void ResultWindow::_loadResults() {
-    if(  this->rundata->getParams()["folderOutput"].size()==0) {
-        QMessageBox::warning(this, "Output Folder Missing", "Output folder not set in the <b>Stages</b> tab", QMessageBox::Ok);
+ /*   if( this->resultFolders->count()==0) {
+        QMessageBox::warning(this, "Result folders not specified", "Add folders that has processed output", QMessageBox::Ok);
         return;
     }
-
-
-    QFileInfo output(this->rundata->getParams()["folderOutput"]);
-
-    if( !output.exists()) {
-        QMessageBox::warning(this, "Output Folder does not exist", "Output folder specified in Stages tab does not exist!", QMessageBox::Ok);
-        return;
-    }
-
+*/
     this->disableSampleChanged = true;
 
     DataManager *datamanager = DataManager::getDataManager();
@@ -100,6 +143,7 @@ void ResultWindow::_loadResults() {
     /***/
     datamanager->setDataModelCreated(false);
 
+    this->rundata->setResultFolders(this->getResultFoldersList());
     this->rundata->loadOutputFolders();
     this->updateFileNames();
     this->rundata->updateCurrentFileList();
@@ -157,14 +201,29 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
     progressBar.hide();
 }
 
+
+
+QStringList ResultWindow::getResultFoldersList() {
+    QStringList resultFoldersList;
+
+    for(int i =0; i < this->resultFolders->count(); i++)
+        resultFoldersList.append(this->resultFolders->itemText(i));
+
+    return resultFoldersList;
+}
+
 /**
  * @brief ResultWindow::clickedSelectSample, loads the output results for the
  * comparative mode
  */
 void ResultWindow::clickedSelectSample(){
+
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
+
+    this->rundata->setResultFolders(this->getResultFoldersList());
     this->selectWindow->addSamplesUnchecked(this->rundata->getOutputFolders());
+
     this->selectWindow->show();
 }
 
@@ -174,13 +233,17 @@ void ResultWindow::clickedSelectSample(){
  * @param i
  */
 void ResultWindow::setVisible(int i) {
-    if( i ) {
+    if( i==1 ) {
         this->selectSamplesButton->setEnabled(true);
-        sampleSelect->setEnabled(false);
+        this->selectSamplesButton->show();
+        this->sampleSelect->setEnabled(false);
+        this->sampleSelect->hide();
     }
     else {
         this->selectSamplesButton->setEnabled(false);
-        sampleSelect->setEnabled(true);
+        this->selectSamplesButton->hide();
+        this->sampleSelect->setEnabled(true);
+        this->sampleSelect->show();
     }
 }
 
@@ -190,10 +253,9 @@ void ResultWindow::setVisible(int i) {
 void ResultWindow::updateFileNames(){
 
     files = this->rundata->getOutputFolders();
-
+    sampleSelect->clear();
     if( files.isEmpty()) return;
 
-    sampleSelect->clear();
     QStringList existing;
 
     for (int i=0;i<sampleSelect->count();i++){
@@ -233,18 +295,19 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     this->rundata->setCurrentSample(sampleName);
 
-    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
 
     DataManager *datamanager = DataManager::getDataManager();
     datamanager->createDataModel();
 
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
-    sampleResourceManager->setOutPutPath(OUTPUTPATH);
+    sampleResourceManager->setOutPutFolders(this->rundata->getSampleFolderMap());
 
+#ifdef REINDEX
     if( reindex->isChecked() ) {
         this->indexSamples(true, true);
         reindex->setChecked(false);
     }
+#endif
 
     ProgressView progressbar("Please wait! Loading sample " + sampleName + "...", 0, 0, this);
     QString pgdbname = sampleName.toLower().replace(QRegExp("[.]"), "_");
@@ -673,9 +736,9 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
 void ResultWindow::ProvideContexMenu(QPoint position)
 {
 
-        QMenu menu(this);
+     /*   QMenu menu(this);
         QAction *u = menu.addAction(tr("remove"));
-
+*/
         /*
         QAction *a = menu.exec(tablewidget->viewport()->mapToGlobal(pos));
         if (a == u)
@@ -807,7 +870,6 @@ void ResultWindow::switchToComparativeMode() {
     DataManager *datamanager = DataManager::getDataManager();
 
 
-    QString OUTPUTPATH = this->rundata->getParams()["folderOutput"];
     ProgressView *progressbar = new ProgressView("Loading functional hierarchies ", 0, 0, this);
     progressbar->show();
     QApplication::processEvents();
@@ -815,7 +877,7 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->hide();
     delete progressbar;
 
-    samplercmgr->setOutPutPath(OUTPUTPATH);
+    samplercmgr->setOutPutFolders(this->rundata->getSampleFolderMap());
 
 
     Connector *connect;

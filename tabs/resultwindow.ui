@@ -25,38 +25,61 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QCheckBox" name="checkComparativeMode">
+        <widget class="QComboBox" name="resultViewMode">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;select the mode of viewing results (i) one sample at a time; or (ii) multiple sample at once&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Single-sample</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Multi-sample</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="sampleSelect">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="text">
-          <string>Comparative Mode</string>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the sample to load results&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <widget class="QPushButton" name="selectSamplesButton">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
            <horstretch>1</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
          </property>
          <property name="text">
           <string>Select Samples</string>
@@ -74,32 +97,67 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QComboBox" name="sampleSelect">
+        <widget class="QPushButton" name="loadResults">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;reload the results&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Load/Reload Results</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="resultFolders">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>1</horstretch>
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of folders to look for previously processed samples&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="reindex">
+        <widget class="QToolButton" name="addResultFolder">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;add a new result folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
-          <string>Re-index</string>
+          <string>+</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="loadResults">
+        <widget class="QToolButton" name="deleteResultFolder">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;remove the current (checked) folder from the list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
-          <string>Load/Reload Sample</string>
+          <string>-</string>
          </property>
         </widget>
        </item>
@@ -119,7 +177,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -142,10 +200,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>checkComparativeMode</tabstop>
   <tabstop>selectSamplesButton</tabstop>
-  <tabstop>sampleSelect</tabstop>
-  <tabstop>loadResults</tabstop>
   <tabstop>resultTabs</tabstop>
  </tabstops>
  <resources/>

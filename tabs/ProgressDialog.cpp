@@ -37,11 +37,11 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     progressLabel = this->findChild<QLabel *>("progressLabel");
     standardOut = this->findChild<QTextEdit *>("standardOut");
     runButton = this->findChild<QPushButton *>("runButton");
-    showErrorsButton = this->findChild<QPushButton *>("showErrors");
+    showMessages = this->findChild<QTabWidget *>("showMessages");
     sampleSelect = this->findChild<QComboBox *>("sampleSelect");
     runVerbose = this->findChild<QCheckBox *>("runVerboseCheckBox");
     overwrite = this->findChild<QCheckBox *>("overwrite");
-    sampleNameLineEdit  = this->findChild<QLineEdit *>("sampleNameLineEdit");
+
 
     summaryTable->setSortingEnabled(false);
     this->setExpectedSteps();
@@ -58,6 +58,8 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     runButton->setEnabled(true);
 
     overwrite->hide();
+    this->showErrors();
+
 
     connect(timer, SIGNAL(timeout()), this, SLOT(timerTickResponse()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
@@ -69,7 +71,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
  // connect(sampleSelect,SIGNAL(currentIndexChanged(int)) , this, SLOT(readStepsLog()) );
 
     connect(this->rundata, SIGNAL(loadSampleList()), this, SLOT(loadSampleListToRun()));
-    connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
+  //  connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
     connect(runButton, SIGNAL(clicked()), this, SLOT(readStepsLog()) );
 }
@@ -95,6 +97,8 @@ void ProgressDialog::showErrors() {
     view->resizeColumnToContents(0);
     view->resizeColumnToContents(1);
     view->resizeColumnToContents(2);
+    this->showMessages->addTab(view,"Error Log");
+
 }
 
 /**
@@ -144,18 +148,18 @@ bool ProgressDialog::checkInputOutPutLocations() {
 void ProgressDialog::setExpectedSteps() {
     this->expectedSteps["PREPROCESS_INPUT"] = true;
     this->expectedSteps["ORF_PREDICTION"] = true;
-    this->expectedSteps["ORF_TO_AMINO"] = true;
+ //   this->expectedSteps["ORF_TO_AMINO"] = true;
     this->expectedSteps["FILTER_AMINOS"] = true;
-    this->expectedSteps["COMPUTE_REFSCORES"] = true;
+  //  this->expectedSteps["COMPUTE_REFSCORES"] = true;
     this->expectedSteps["FUNC_SEARCH"] = true;
     this->expectedSteps["PARSE_FUNC_SEARCH"] = true;
     this->expectedSteps["SCAN_rRNA"] = true;
     this->expectedSteps["SCAN_tRNA"] = true;
     this->expectedSteps["ANNOTATE_ORFS"] = true;
     this->expectedSteps["PATHOLOGIC_INPUT"] = true;
-    this->expectedSteps["GENBANK_FILE"] = true;
+//    this->expectedSteps["GENBANK_FILE"] = true;
     this->expectedSteps["CREATE_ANNOT_REPORTS"] = true;
-    this->expectedSteps["MLTREEMAP_CALCULATION"] = true;
+ //  this->expectedSteps["MLTREEMAP_CALCULATION"] = true;
     this->expectedSteps["BUILD_PGDB"] = true;
     this->expectedSteps["COMPUTE_RPKM"] = true;
 }
@@ -171,20 +175,20 @@ void ProgressDialog::initMapping(){
 
     TABLE_MAPPING[0] = "PREPROCESS_INPUT";
     TABLE_MAPPING[1] = "ORF_PREDICTION";
-    TABLE_MAPPING[2] = "ORF_TO_AMINO";
-    TABLE_MAPPING[3] = "FILTER_AMINOS";
-    TABLE_MAPPING[4] = "COMPUTE_REFSCORES";
-    TABLE_MAPPING[5] = "FUNC_SEARCH";
-    TABLE_MAPPING[6] = "PARSE_FUNC_SEARCH";
-    TABLE_MAPPING[7] = "SCAN_rRNA";
-    TABLE_MAPPING[8] = "SCAN_tRNA";
-    TABLE_MAPPING[9] = "ANNOTATE_ORFS";
-    TABLE_MAPPING[10] = "PATHOLOGIC_INPUT";
-    TABLE_MAPPING[11] = "GENBANK_FILE";
-    TABLE_MAPPING[12] = "CREATE_ANNOT_REPORTS";
-    TABLE_MAPPING[13] = "MLTREEMAP_CALCULATION";
-    TABLE_MAPPING[14] = "BUILD_PGDB";
-    TABLE_MAPPING[15] = "COMPUTE_RPKM";
+ //   TABLE_MAPPING[2] = "ORF_TO_AMINO";
+    TABLE_MAPPING[2] = "FILTER_AMINOS";
+ //   TABLE_MAPPING[4] = "COMPUTE_REFSCORES";
+    TABLE_MAPPING[3] = "FUNC_SEARCH";
+    TABLE_MAPPING[4] = "PARSE_FUNC_SEARCH";
+    TABLE_MAPPING[5] = "SCAN_rRNA";
+    TABLE_MAPPING[6] = "SCAN_tRNA";
+    TABLE_MAPPING[7] = "ANNOTATE_ORFS";
+    TABLE_MAPPING[8] = "PATHOLOGIC_INPUT";
+  //  TABLE_MAPPING[11] = "GENBANK_FILE";
+    TABLE_MAPPING[9] = "CREATE_ANNOT_REPORTS";
+  //  TABLE_MAPPING[13] = "MLTREEMAP_CALCULATION";
+    TABLE_MAPPING[10] = "BUILD_PGDB";
+    TABLE_MAPPING[11] = "COMPUTE_RPKM";
 
 }
 
@@ -276,6 +280,19 @@ void ProgressDialog::delayReadingStepsLog() {
 }
 
 /**
+ * @brief ProgressDialog::finalTimerTickResponse, respond to the tick of the second timer
+ */
+void ProgressDialog::finalTimerTickResponse() {
+    this->readStepsLog();
+
+    this->updateCurrentRunningProcessStatus();
+    qDebug() << "responding to the second timer";
+    //timer2->stop();
+
+}
+
+
+/**
  * @brief ProgressDialog::timerTickResponse, responds to the tick of the timer
  */
 void ProgressDialog::timerTickResponse() {
@@ -286,7 +303,10 @@ void ProgressDialog::timerTickResponse() {
 
     if( !this->isProcessRunning() ) {
         this->timer->stop();
-
+       /* timer2 = new QTimer;
+        connect(timer2, SIGNAL(timeout()), this, SLOT(finalTimerTickResponse()));
+        timer2->start(5000);
+        qDebug() << "starting the second timer"; */
     }
 }
 
@@ -460,8 +480,6 @@ void ProgressDialog::updateCurrentRunningProcessStatus() {
             if( ProgressDialog::waitCounter ==0)
                if(this->sampleSelect->currentIndex() != i) {
                   this->sampleSelect->setCurrentIndex(i);
-                  this->sampleNameLineEdit->setText(sampleName);
-                  this->sampleNameLineEdit->update();
 
                }
             this->sampleSelect->update();
@@ -762,6 +780,30 @@ void ProgressDialog::colorRunConfig(){
     }
 }
 
+bool ProgressDialog::isReadyToRun() {
+    // this->checkBinaries();
+     QString message;
+     QString _message;
+     bool valid = true;
+     QString executablesDir = rundata->getValueFromHash("METAPATHWAYS_PATH", _CONFIG) +\
+                              QDir::separator() + rundata->getValueFromHash("EXECUTABLES_DIR", _CONFIG);
+     if( !rundata->checkBinaries(_message, executablesDir)) {
+         message += QString("\n")  + _message;
+         valid = false;
+     }
+     QString pythonExec = rundata->getValueFromHash("PYTHON_EXECUTABLE", _CONFIG);
+     if( !rundata->checkPythonBinary(message, pythonExec)) {
+         message += QString("\n\n")  + _message;
+         valid = false;
+     }
+     if( !valid ) {
+         QMessageBox report;
+         report.setText(message);
+         report.exec();
+     }
+     return valid;
+}
+
 
 /**
  * @brief ProgressDialog::startRun, When the user presses the run button, this function is called
@@ -786,8 +828,11 @@ void ProgressDialog::startRun(){
     }
     else{
 
-       // this->checkBinaries();
-        if( ! rundata->checkBinaries()) return;
+        if( !this->isReadyToRun() ) {
+            Utilities::showInfo(this, "Cannot run from GUI. Incorrect or insufficient settings or input!\n Consider running manually!");
+            return;
+        }
+
         // otherwise start off the process, clear out a bunch of statuses in case there was a previous run
         this->resetRunTab(false, false);
         initProcess();
@@ -906,11 +951,11 @@ void ProgressDialog::initProcess(){
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
-    myProcess->start(program, arguments);
+    myProcess->start(program, arguments); // start the python script
 
     standardOut->clear();
     this->timer->start(5000);
-    qDebug() << " start timer ";
+
  //   standardOut->append( arguments.join(" ") );
 
     this->resetRunTab(false);
@@ -931,7 +976,6 @@ void ProgressDialog::selectedFileChanged(const QString &sampleName){
     //progressLabel->setText("Progress - " + rundata->getCurrentSample());
     logBrowser->clear();
     this->delayReadingStepsLog();
-    this->sampleNameLineEdit->setText(sampleName);
 }
 
 /**

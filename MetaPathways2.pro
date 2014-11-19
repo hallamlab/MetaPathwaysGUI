@@ -83,7 +83,8 @@ SOURCES += main.cpp\
     datamodel/taxons.cpp \
     datamodel/lcastar.cpp \
     datamodel/ncbitree.cpp \
-    helper/labels.cpp
+    helper/labels.cpp \
+    popupviews/setupstatus.cpp
 
 
 
@@ -149,7 +150,8 @@ HEADERS  += \
     datamodel/taxons.h \
     datamodel/lcastar.h \
     datamodel/ncbitree.h \
-    helper/labels.h
+    helper/labels.h \
+    popupviews/setupstatus.h
 
 
 

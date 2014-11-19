@@ -13,27 +13,58 @@ SettingsTab::SettingsTab(QWidget *parent) :
     ui(new Ui::SettingsTab)
 {
     ui->setupUi(this);
+
+
     SettingsTab::allWidgets = new QList<QWidget *>();
 
-    getAllWidgets();
+    this->getAllWidgets();
+  //  annotationDBS = this->findChild<QListWidget *>("annotationDBS");
+  //  rrnaREFDBS = this->findChild<QListWidget *>("rrnaREFDBS");
 
-    annotationDBS = this->findChild<QListWidget *>("annotationDBS");
-    rrnaREFDBS = this->findChild<QListWidget *>("rrnaREFDBS");
+    //showORFDBS();
+    //showRRNADBS();
 
-    showORFDBS();
-    showRRNADBS();
+    //RunData *run = RunData::getRunData();
+    //annotationFiles = new QStringList((run->getValueFromHash("annotation:dbs",_PARAMS)).split(",", QString::SkipEmptyParts));
+    //rrnaFiles = new QStringList((run->getValueFromHash("rRNA:refdbs",_PARAMS)).split(",", QString::SkipEmptyParts));
 
-    RunData *run = RunData::getRunData();
-    annotationFiles = new QStringList((run->getValueFromHash("annotation:dbs",_PARAMS)).split(",", QString::SkipEmptyParts));
-    rrnaFiles = new QStringList((run->getValueFromHash("rRNA:refdbs",_PARAMS)).split(",", QString::SkipEmptyParts));
+    annotationFiles = new QStringList;
+    rrnaFiles = new QStringList;
 
     connect(annotationDBS,SIGNAL(clicked(QModelIndex)), this, SLOT(annotationClicked(QModelIndex)));
     connect(rrnaREFDBS, SIGNAL(clicked(QModelIndex)), this, SLOT(rrnaClicked(QModelIndex)));
 
-    initWidgetValues();
+    this->initWidgetValues();
     setStyling();
+
+    restoreDefaults = this->findChild<QPushButton *>("restoreDefaultsButton");
+    connect(restoreDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaultValues()));
+
+
 }
 
+void SettingsTab::restoreDefaultValues() {
+     this->initWidgetValues(true);
+}
+
+void SettingsTab::loadParameters() {
+    //SettingsTab::allWidgets = new QList<QWidget *>();
+
+    //getAllWidgets();
+
+    this->showORFDBS();
+    this->showRRNADBS();
+
+
+    RunData *run = RunData::getRunData();
+//   qDebug() << run->getPARAMS();
+   // *annotationFiles = QStringList((run->getValueFromHash("annotation:dbs",_PARAMS)).split(",", QString::SkipEmptyParts));
+  //  *rrnaFiles = QStringList((run->getValueFromHash("rRNA:refdbs",_PARAMS)).split(",", QString::SkipEmptyParts));
+
+
+  //  initWidgetValues();
+
+}
 
 void SettingsTab::annotationClicked(QModelIndex index){
     bool oneChecked = false;
@@ -58,7 +89,7 @@ void SettingsTab::rrnaClicked(QModelIndex index){
     }
 }
 
-bool SettingsTab::findFiles(QString path, QStringList *fileListing){
+bool SettingsTab::findFiles(QString path, QStringList &fileListing){
     QDir dir(path);
 
     if (!dir.exists()) return false;
@@ -66,21 +97,24 @@ bool SettingsTab::findFiles(QString path, QStringList *fileListing){
     dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     QFileInfoList files = dir.entryInfoList();
+
     foreach(QFileInfo file, files){
-        fileListing->append(file.fileName());
+        fileListing.append(file.fileName());
     }
     return true;
 }
 
 void SettingsTab::showRRNADBS(){
+
     RunData *run = RunData::getRunData();
-    QString dbPath =  run->getConfig().operator []("REFDBS") + "/taxonomic";
-    QStringList *filesInDir = new QStringList();
+    QString dbPath =  run->getConfig().operator []("REFDBS") + QDir::separator() + "taxonomic";
+    QStringList filesInDir;
 
     QRegExp reg("^[.]");
-    if (this->findFiles(dbPath,filesInDir)){
-        if (filesInDir->length()>0){
-            foreach (QString db, *filesInDir){
+    rrnaREFDBS->clear();
+    if (this->findFiles(dbPath, filesInDir)){
+        if (filesInDir.length()>0){
+            foreach (QString db, filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
@@ -93,21 +127,23 @@ void SettingsTab::showRRNADBS(){
     }
     else{
         QMessageBox msg;
-        msg.warning(0,"Invalid Path!", "Could not find " + dbPath + ", does this folder actually exist? \nPlease check your setup to make sure your databases path is set up correctly.", QMessageBox::Ok);
+        //msg.warning(0,"Invalid Path!", "Could not find " + dbPath + ", does this folder actually exist? \nPlease check your setup to make sure your databases path is set up correctly.", QMessageBox::Ok);
     }
+
 }
 
 void SettingsTab::showORFDBS(){
+
     RunData *run = RunData::getRunData();
-    QString dbPath =  run->getConfig().operator []("REFDBS") + "/functional";
-    QStringList *filesInDir = new QStringList();
+    QString dbPath =  run->getConfig().operator []("REFDBS") + QDir::separator() + QString("functional");
+    QStringList filesInDir;
 
     QRegExp reg("^[.]"); // removes stray file created by the OS
 
-
+    annotationDBS->clear();
     if (this->findFiles(dbPath, filesInDir)){
-        if (filesInDir->length() >0 ){
-            foreach (QString db, *filesInDir){
+        if (filesInDir.length() >0 ){
+            foreach (QString db, filesInDir){
                 if( db.indexOf(reg, 0) >  -1) continue;
                 QListWidgetItem *item = new QListWidgetItem(db);
                 item->setFlags(item->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable );
@@ -118,7 +154,7 @@ void SettingsTab::showORFDBS(){
     }
     else{
         QMessageBox msg;
-        msg.warning(0,"Invalid Path!", "Could not find " + dbPath + ", does this folder actually exist? \nPlease check your setup to make sure your databases path is set up correctly.", QMessageBox::Ok);
+      //  msg.warning(0,"Invalid Path!", "Could not find " + dbPath + ", does this folder actually exist? \nPlease check your setup to make sure your databases path is set up correctly.", QMessageBox::Ok);
     }
 }
 
@@ -138,8 +174,11 @@ void SettingsTab::closeWindow(){
  * where we save values, we are instead initializing them here
  * for each field widget.
  */
-void SettingsTab::initWidgetValues(){
+void SettingsTab::initWidgetValues(bool defaultValue){
     QList<QWidget *>::iterator i;
+    SETTING_TYPE settingType;
+
+    settingType = defaultValue ? _PARAMS_DEFAULT : _PARAMS;
 
     RunData *rundata = RunData::getRunData();
 
@@ -149,7 +188,7 @@ void SettingsTab::initWidgetValues(){
 
         QString configName = rundata->getConfigMapping().key(objectName);
 
-        QString value = rundata->getValueFromHash(configName,_PARAMS);
+        QString value = rundata->getValueFromHash(configName, settingType);
         if (qobject_cast<QComboBox *>(widget)!=NULL){
             QComboBox *temp = qobject_cast<QComboBox *>(widget);
             temp->setCurrentIndex(temp->findText(value));
@@ -184,6 +223,7 @@ void SettingsTab::checkAnnotationDBS() {
     QHash<QString, bool> DBNames;
 
     RunData *rundata = RunData::getRunData();
+
     // deal with the refdbs
     foreach(QString dbname, Utilities::getSplitNames(rundata->getParams() ["rRNA:refdbs"]) ) {
          DBNames[dbname] = true;
@@ -204,7 +244,7 @@ void SettingsTab::checkAnnotationDBS() {
          DBNames[dbname] = true;
     }
 
-    for(unsigned int i =0; i < this->annotationDBS  ->count(); i++) {
+    for(unsigned int i =0; i < this->annotationDBS->count(); i++) {
         if( DBNames.contains( this->annotationDBS->item(i)->text() )) {
            this->annotationDBS->item(i)->setCheckState(Qt::Checked);
         }
@@ -220,20 +260,23 @@ void SettingsTab::checkAnnotationDBS() {
  * @return
  */
 QStringList SettingsTab::getADBNames() {
+
+        QStringList names;
+        /*
     RunData *run = RunData::getRunData();
     QString dbPath =  run->getConfig().operator []("REFDBS") + "/functional";
-    QStringList *filesInDir = new QStringList();
+    QStringList filesInDir;
     QStringList names;
     QRegExp reg("^[.]");
 
     if (this->findFiles(dbPath, filesInDir)){
-        if (filesInDir->length() >0 ){
-            foreach (QString db, *filesInDir){
+        if (filesInDir.length() >0 ){
+            foreach (QString db, filesInDir){
                 if( db.indexOf(reg, 0) != -1) continue;
                 names.append(db);
             }
         }
-    }
+    }*/
     return names;
 }
 
@@ -250,6 +293,11 @@ void SettingsTab::getAllWidgets(){
     annotationWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^annotation*")));
     rrnaWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^rrna*")));
     pathwaysWidgets = new QList<QWidget *>(this->findChildren<QWidget *>(QRegExp("^ptools_settings*")));
+
+
+    annotationDBS = this->findChild<QListWidget *>("annotationDBS");
+    rrnaREFDBS = this->findChild<QListWidget *>("rrnaREFDBS");
+
     QList<QWidget *>::iterator i;
 
 

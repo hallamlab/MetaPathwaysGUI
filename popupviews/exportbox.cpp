@@ -40,7 +40,7 @@ void ExportBox::createWidget() {
      int w = wSize.width() < 600 ? wSize.width() :600;
      int h = wSize.height() < 300 ? wSize.height() : 300;
      scroll->resize(w, h);
-     scroll->setMaximumSize(w + 2, h + 2);
+     scroll->setMaximumSize(wSize.width() + 10, wSize.height() + 10);
      scroll->show();
 
  }
@@ -215,6 +215,8 @@ QStringList ExportBox::getAllHeaders() {
      faa = new QCheckBox(tr("Amino"));
      megan = new QCheckBox(tr("MEGAN"));
 
+     tsvRadio->setToolTip("Exports the table in the tsv format");
+     csvRadio->setToolTip("Exports the table in the csv format");
      fasta->setToolTip("Exports the contigs (nucleotide sequences) where the ORFs originated");
      fna->setToolTip("Exports the ORFs (predicted gene coding regions of the nucleotide sequences)");
      faa->setToolTip("Exports the translated (in to amino acid sequences) ORFs ");

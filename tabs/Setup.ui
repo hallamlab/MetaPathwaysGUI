@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>579</height>
+    <width>760</width>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,8 +19,8 @@
   <widget class="QLineEdit" name="pythonExecTxt">
    <property name="geometry">
     <rect>
-     <x>265</x>
-     <y>142</y>
+     <x>260</x>
+     <y>300</y>
      <width>321</width>
      <height>22</height>
     </rect>
@@ -39,7 +39,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>142</y>
+     <y>300</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -56,7 +56,7 @@
     <string>Python Executable</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
+  <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
      <x>29</x>
@@ -92,7 +92,7 @@
     <rect>
      <x>30</x>
      <y>123</y>
-     <width>651</width>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -103,8 +103,8 @@
   <widget class="QLineEdit" name="dbDirectoryTxt">
    <property name="geometry">
     <rect>
-     <x>265</x>
-     <y>366</y>
+     <x>260</x>
+     <y>190</y>
      <width>321</width>
      <height>22</height>
     </rect>
@@ -150,7 +150,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>366</y>
+     <y>190</y>
      <width>167</width>
      <height>22</height>
     </rect>
@@ -170,8 +170,8 @@
   <widget class="QPushButton" name="pythonBrowseButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
-     <y>140</y>
+     <x>620</x>
+     <y>290</y>
      <width>87</width>
      <height>32</height>
     </rect>
@@ -184,8 +184,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>180</y>
-     <width>651</width>
+     <y>340</y>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -197,7 +197,7 @@
    <property name="geometry">
     <rect>
      <x>265</x>
-     <y>199</y>
+     <y>359</y>
      <width>321</width>
      <height>22</height>
     </rect>
@@ -209,8 +209,8 @@
   <widget class="QPushButton" name="pgdbFolderBrowseButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
-     <y>200</y>
+     <x>620</x>
+     <y>350</y>
      <width>91</width>
      <height>32</height>
     </rect>
@@ -223,8 +223,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>237</y>
-     <width>651</width>
+     <y>167</y>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -236,7 +236,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>256</y>
+     <y>140</y>
      <width>209</width>
      <height>22</height>
     </rect>
@@ -256,8 +256,8 @@
   <widget class="QLineEdit" name="pathMetaPathwaysTxt">
    <property name="geometry">
     <rect>
-     <x>265</x>
-     <y>256</y>
+     <x>260</x>
+     <y>140</y>
      <width>321</width>
      <height>22</height>
     </rect>
@@ -269,9 +269,9 @@
   <widget class="QPushButton" name="metapathwaysBrowseButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
-     <y>250</y>
-     <width>91</width>
+     <x>620</x>
+     <y>135</y>
+     <width>87</width>
      <height>32</height>
     </rect>
    </property>
@@ -283,8 +283,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>294</y>
-     <width>594</width>
+     <y>224</y>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -295,8 +295,8 @@
   <widget class="QPushButton" name="databaseButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
-     <y>360</y>
+     <x>623</x>
+     <y>186</y>
      <width>87</width>
      <height>32</height>
     </rect>
@@ -310,7 +310,7 @@
     <rect>
      <x>30</x>
      <y>461</y>
-     <width>651</width>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -321,7 +321,7 @@
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
+     <x>620</x>
      <y>480</y>
      <width>92</width>
      <height>32</height>
@@ -331,7 +331,7 @@
     <string>Once you are done filling in the paths, please click the proceed button to update the paths</string>
    </property>
    <property name="text">
-    <string>Proceed</string>
+    <string>Validate</string>
    </property>
   </widget>
   <widget class="Line" name="line_5">
@@ -339,7 +339,7 @@
     <rect>
      <x>30</x>
      <y>404</y>
-     <width>651</width>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -350,7 +350,7 @@
   <widget class="QPushButton" name="pathologicButton">
    <property name="geometry">
     <rect>
-     <x>597</x>
+     <x>620</x>
      <y>420</y>
      <width>87</width>
      <height>32</height>
@@ -398,7 +398,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>199</y>
+     <y>359</y>
      <width>151</width>
      <height>22</height>
     </rect>
@@ -419,7 +419,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>311</y>
+     <y>241</y>
      <width>271</width>
      <height>22</height>
     </rect>
@@ -440,8 +440,8 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>347</y>
-     <width>651</width>
+     <y>277</y>
+     <width>671</width>
      <height>16</height>
     </rect>
    </property>
@@ -453,7 +453,7 @@
    <property name="geometry">
     <rect>
      <x>307</x>
-     <y>310</y>
+     <y>240</y>
      <width>281</width>
      <height>26</height>
     </rect>
@@ -462,9 +462,9 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>350</x>
      <y>480</y>
-     <width>261</width>
+     <width>251</width>
      <height>31</height>
     </rect>
    </property>
@@ -474,7 +474,147 @@
     </font>
    </property>
    <property name="text">
-    <string>Validate paths and binaries</string>
+    <string>Validate paths/executables</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check3">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>300</y>
+     <width>16</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check4">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>360</y>
+     <width>16</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check0">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>140</y>
+     <width>16</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check2">
+   <property name="geometry">
+    <rect>
+     <x>589</x>
+     <y>242</y>
+     <width>16</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check1">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>190</y>
+     <width>16</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="check5">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>421</y>
+     <width>16</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/check.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="star1">
+   <property name="geometry">
+    <rect>
+     <x>605</x>
+     <y>137</y>
+     <width>21</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Required field&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/requiredstar.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="star2">
+   <property name="geometry">
+    <rect>
+     <x>604</x>
+     <y>190</y>
+     <width>21</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Required field</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../Resources.qrc">:/images/requiredstar.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
@@ -491,6 +631,8 @@
   <tabstop>pathologicButton</tabstop>
   <tabstop>saveButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

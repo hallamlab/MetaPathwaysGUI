@@ -70,6 +70,9 @@ private slots:
     void displayParams();
     void displayGridProgress();
 
+signals:
+    void markConfigInSetup(bool interactive);
+
 private:
     void showSetupError(QString warningStr);
     void addRemainingTabs();

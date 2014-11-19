@@ -61,8 +61,8 @@ bool RunDataStats::readStatFiles() {
     RunData *rundata = RunData::getRunData();
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
-    QString OUTPUTPATH = rundata->getParams()["folderOutput"];
-    samplercmgr->setOutPutPath(OUTPUTPATH);
+
+    samplercmgr->setOutPutFolders(rundata->getSampleFolderMap());
 
     QString runstatsFile;
     foreach(QString filename, filenames) {

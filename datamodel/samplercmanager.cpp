@@ -16,8 +16,8 @@ SampleResourceManager* SampleResourceManager::getSampleResourceManager() {
     return sampleResourceManager;
 }
 
- void SampleResourceManager::setOutPutPath(QString outputDir) {
-     this->OUTPUTPATH= outputDir;
+ void SampleResourceManager::setOutPutFolders(QHash<QString, QString> outputFolders) {
+     this->OUTPUTPATH= outputFolders;
  }
 
 
@@ -33,43 +33,43 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
 
      switch(type) {
          case NUCSTATS:
-            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".nuc.stats";
+         path = OUTPUTPATH[sampleName] + "/" + sampleName + "/run_statistics/" + sampleName + ".nuc.stats";
             break;
          case AMINOSTATS:
-            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".amino.stats";
+         path = OUTPUTPATH[sampleName] + "/" + sampleName + "/run_statistics/" + sampleName + ".amino.stats";
             break;
          case CONTIGLENGTH:
-            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".contig.lengths.txt";
+         path = OUTPUTPATH[sampleName] + "/" + sampleName + "/run_statistics/" + sampleName + ".contig.lengths.txt";
             break;
          case ORFLENGTH:
-            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".orf.lengths.txt";
+         path = OUTPUTPATH[sampleName] + "/" + sampleName + "/run_statistics/" + sampleName + ".orf.lengths.txt";
             break;
          case NUCFASTA:
-            path = OUTPUTPATH  +  "/" + sampleName + "/preprocessed/" + sampleName + ".fasta";
+         path = OUTPUTPATH[sampleName]  +  "/" + sampleName + "/preprocessed/" + sampleName + ".fasta";
             break;
          case AMINOFAA:
-            path = OUTPUTPATH + "/" + sampleName + "/orf_prediction/" + sampleName + ".faa";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/orf_prediction/" + sampleName + ".faa";
             break;
          case NUCFNA:
-            path = OUTPUTPATH + "/" + sampleName + "/orf_prediction/" + sampleName + ".fna";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/orf_prediction/" + sampleName + ".fna";
             break;
          case FUNCTIONALTABLE:
-            path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "functional_and_taxonomic_table.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/results/annotation_table/" + "functional_and_taxonomic_table.txt";
             break;
          case MEGANTREE:
-            path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "megan_tree.tre";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/results/annotation_table/" + "megan_tree.tre";
             break;
          case FUNCTIONAL_SRC1:
-            path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + sampleName + ".1.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/results/annotation_table/" + sampleName + ".1.txt";
             break;
          case ORFTABLE:
-            path = OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_table.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/results/annotation_table/" + "ORF_annotation_table.txt";
             break;
          case ORFMETACYC:
-            path =OUTPUTPATH + "/" + sampleName + "/results/annotation_table/" + sampleName.toLower() + ".metacyc.orf.annots.txt";
+            path =OUTPUTPATH[sampleName] + "/" + sampleName + "/results/annotation_table/" + sampleName.toLower() + ".metacyc.orf.annots.txt";
             break;
          case ORFRPKM:
-            path =OUTPUTPATH + "/" + sampleName + "/results/rpkm/" + sampleName + ".orf_rpkm.txt";
+            path =OUTPUTPATH[sampleName] + "/" + sampleName + "/results/rpkm/" + sampleName + ".orf_rpkm.txt";
             break;
          case MEGANLASTFILE:
             files = this->getFilePaths(sampleName, MEGANLASTFILE);
@@ -80,22 +80,22 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
             path = (files.size() > 0 ) ?  files[0] : QString();
             break;
          case BLAST_RESULTS_FOLDER:
-            path = OUTPUTPATH  +  "/" + sampleName + "/blast_results/";
+            path = OUTPUTPATH[sampleName]  +  "/" + sampleName + "/blast_results/";
             break;
          case RUNSTATS:
-            path = OUTPUTPATH + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/run_statistics/" + sampleName + ".run.stats.txt";
             break;
          case rRNATABLES:
-            path =OUTPUTPATH + "/" + sampleName + "/results/rRNA/";
+            path =OUTPUTPATH[sampleName] + "/" + sampleName + "/results/rRNA/";
             break;
          case tRNATABLES:
-            path =OUTPUTPATH + "/" + sampleName + "/results/tRNA/";
+            path =OUTPUTPATH[sampleName] + "/" + sampleName + "/results/tRNA/";
             break;
          case ERRORS:
-            path = OUTPUTPATH + "/" + sampleName + "/"+ "errors_warnings_log.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/"+ "errors_warnings_log.txt";
             break;
          case GLOBAL_ERRORS:
-            path = OUTPUTPATH + "/" + sampleName + "/"+ "global_errors_warnings.txt";
+            path = OUTPUTPATH[sampleName] + "/" + sampleName + "/"+ "global_errors_warnings.txt";
             break;
          default:
             path = "";
@@ -189,7 +189,7 @@ bool SampleResourceManager::createFileIndex(QString sampleName, RESOURCE resname
     // this is the indexing of the sequences into the resoure folder ".resource" that resides under each
     // sample output folder
     if( this->useResourceFolder ) {
-        QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
+        QDir resSampleDir( this->OUTPUTPATH[sampleName] + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
         // if the resource folder does not exist then create it
         if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {
             resSampleDir.mkpath(resSampleDir.absolutePath());
@@ -221,7 +221,7 @@ FileIndex * SampleResourceManager::getFileIndex(QString sampleName, RESOURCE res
      // this is the indexing of the sequences into the resoure folder ".resource" that resides under each
      // sample output folder
      if( this->useResourceFolder ) {
-         QDir resSampleDir( this->OUTPUTPATH + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
+         QDir resSampleDir( this->OUTPUTPATH[sampleName] + "/" + sampleName + "/" + SampleResourceManager::resourceFolderName );
 
          // if the resource folder does not exist then create it
          if( !resSampleDir.exists() && SELECT_SAMPLE_TAG.compare(sampleName)!=0 ) {

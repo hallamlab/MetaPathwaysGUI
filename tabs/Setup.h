@@ -25,25 +25,35 @@ public:
     explicit Setup( QWidget *parent = 0);
     ~Setup();
 
-public:
-    void loadPathVariables();
+    void _loadPathVariables();
     void savePathVariables();
     void updateValues();
     bool hasValidBinaries(QString metapathways_dir, QString folder);
+    void showSetupError(QString warningStr);
 
+private:
+    void validatePartialSetup(int i) ;
 public slots:
     void pythonBrowse();
     void pgdbFolderBrowse();
     void metapathwaysBrowse();
     void saveSetup();
+    void saveParamFile();
+    void saveConfigFile();
+
     void cancelSetup();
     void databaseBrowse();
     void pathologicBrowse();
-    void canSave();
+    void canSave(int i);
+    void validateSetup(bool interactive, bool triggerLoad = false);
+private slots:
+    void saveconfig();
+    void updateExecutablesFolderList();
     QStringList getExecutablesPath(QString metapathways_dir);
 
 signals:
-    void continueFromSetup();
+    //void continueFromSetup();
+    void editSlotChanged(int);
 
 
 private:
@@ -70,6 +80,11 @@ private:
     QLineEdit *pathologicTxt;
     QComboBox *executablesCombo;
 
+    QHash<QString, bool> partialvalidation;
+
 };
+
+
+
 
 #endif // Setup_H

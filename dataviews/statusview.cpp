@@ -132,9 +132,8 @@ void StatusView::showTreeView() {
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
      //treeView->show();
-    qDebug() << "Treeview";
-    QString OUTPUTPATH = rundata->getParams()["folderOutput"];
-    samplercmgr->setOutPutPath(OUTPUTPATH);
+
+    samplercmgr->setOutPutFolders(rundata->getSampleFolderMap());
     this->filenames = rundata->getFileList(rundata->getCurrentInputFormat());
     this->createModel();
 }
