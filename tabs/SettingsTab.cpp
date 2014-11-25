@@ -40,7 +40,28 @@ SettingsTab::SettingsTab(QWidget *parent) :
     restoreDefaults = this->findChild<QPushButton *>("restoreDefaultsButton");
     connect(restoreDefaults, SIGNAL(clicked()), this, SLOT(restoreDefaultValues()));
 
+    // setup ...
+    Q_FOREACH( QSpinBox * sp, findChildren<QSpinBox*>() ) {
+            sp->installEventFilter( this );
+            sp->setFocusPolicy( Qt::StrongFocus );
+    }
 
+    Q_FOREACH( QDoubleSpinBox * sp, findChildren<QDoubleSpinBox*>() ) {
+            sp->installEventFilter( this );
+            sp->setFocusPolicy( Qt::StrongFocus );
+    }
+
+
+}
+
+bool SettingsTab::eventFilter( QObject * o, QEvent * e ) {
+   if ( e->type() == QEvent::Wheel &&
+        qobject_cast<QAbstractSpinBox*>( o ) )
+   {
+       e->ignore();
+       return true;
+   }
+   return QWidget::eventFilter( o, e );
 }
 
 void SettingsTab::restoreDefaultValues() {

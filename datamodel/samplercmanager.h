@@ -24,6 +24,7 @@ public:
     bool createFileIndex(QString sampleName, RESOURCE resname);
 
     QString extractDBName(const QString &sampleName, const QString &TableFile, RESOURCE type);
+    void setCurrentOutputFolder(QString currentOutputDir);
 
 private:
     SampleResourceManager();
@@ -31,6 +32,7 @@ private:
     static QString resourceFolderName;
 
     QHash<QString, QString> OUTPUTPATH;
+    QString CURRENTOUTPUT;
     bool useResourceFolder;
 
 };

@@ -46,7 +46,7 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     summaryTable->setSortingEnabled(false);
     this->setExpectedSteps();
 
-    initMapping();
+    this->initMapping();
 
     timer = new QTimer(this);
 
@@ -58,8 +58,6 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     runButton->setEnabled(true);
 
     overwrite->hide();
-    this->showErrors();
-
 
     connect(timer, SIGNAL(timeout()), this, SLOT(timerTickResponse()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(terminateRun()));
@@ -74,6 +72,20 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
   //  connect(this->showErrorsButton, SIGNAL(clicked()), this, SLOT(showErrors()));
     connect(this->overwrite, SIGNAL(clicked()), this, SLOT( updateOverwriteChoice() ) );
     connect(runButton, SIGNAL(clicked()), this, SLOT(readStepsLog()) );
+
+
+    // error log
+    errorMessageModel = new TreeModel;
+    errorReadTimer = new QTimer(this);
+    errorTreeView = new QTreeView;
+
+    //errorReadTimer->start(20000);
+   // connect(this->errorReadTimer, SIGNAL(timeout()), this, SLOT(showErrors()));
+
+    this->showMessages->addTab(errorTreeView,"Error Log");
+    connect(this->showMessages, SIGNAL(currentChanged(int)), this, SLOT(showErrors()));
+
+
 }
 
 
@@ -84,20 +96,17 @@ void ProgressDialog::showErrors() {
   /* OLD WAY StatusView *statusview = StatusView::getStatusView();
    statusview->showTreeView();
    */
+    errorMessageModel = new TreeModel;
+    errorMessageModel->setSampleNames(this->rundata->getSamplesSubsetToRun());
+    errorMessageModel->readFiles();
 
-    TreeModel *model = new TreeModel;
+    errorTreeView->setModel(errorMessageModel);
+    errorTreeView->expandAll();
+    errorTreeView->show();
+    errorTreeView->resizeColumnToContents(0);
+    errorTreeView->resizeColumnToContents(1);
+    errorTreeView->resizeColumnToContents(2);
 
-    model->setSampleNames(this->rundata->getSamplesSubsetToRun());
-    model->readFiles();
-
-    QTreeView *view = new QTreeView;
-    view->setModel(model);
-    view->expandAll();
-    view->show();
-    view->resizeColumnToContents(0);
-    view->resizeColumnToContents(1);
-    view->resizeColumnToContents(2);
-    this->showMessages->addTab(view,"Error Log");
 
 }
 
@@ -123,7 +132,9 @@ void ProgressDialog::loadSampleListToRun() {
 bool ProgressDialog::checkInputOutPutLocations() {
     QFileInfo input(this->rundata->getParams()["fileInput"]);
     QFileInfo output(this->rundata->getParams()["folderOutput"]);
-    QFileInfo logFile(this->rundata->getParams()["folderOutput"]+ "/" + rundata->getCurrentSample() + "/metapathways_steps_log.txt");
+    QString sep = QDir::separator();
+
+    QFileInfo logFile(this->rundata->getParams()["folderOutput"]+ sep + rundata->getCurrentSample() + sep + "metapathways_steps_log.txt");
 
     if( !input.exists() || !output.exists() || !logFile.exists() ) {
         if( !input.exists() )
@@ -511,7 +522,7 @@ void ProgressDialog::updateProgressBar(){
     }
     _totalSteps = this->countTotalNumberOfSteps();
 
- //   qDebug() << _stepsCompleted << "/" << _totalSteps;
+ //   qDebug() << _stepsCompleted << sep << _totalSteps;
 
     progressBar->setMaximum( _totalSteps==0 ? 2 : 2*_totalSteps );
 
@@ -928,7 +939,8 @@ void ProgressDialog::initProcess(){
     arguments << "-p" << QDir::toNativeSeparators(METAPATH + QDir::separator() + "config" + QDir::separator() + "template_param.txt");
     arguments << "-c" << QDir::toNativeSeparators(METAPATH + QDir::separator()  + "config" + QDir::separator() + "template_config.txt");
     this->updateOverwriteChoice();
-    arguments << "-r" << (this->rundata->getParams()["overwrite"]);
+    arguments << "-d" << "8";
+    //arguments << "-r" << (this->rundata->getParams()["overwrite"]);
 
 
     //add the specific samples

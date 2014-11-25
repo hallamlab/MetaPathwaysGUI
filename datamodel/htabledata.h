@@ -118,9 +118,11 @@ public:
     QLabel *depthLabelValue;
     QList<HTABLEIDENTITY> htableIdentities;
 
-   QHash<ATTRTYPE, QString> scrollToFunction;
+    QHash<ATTRTYPE, QString> scrollToFunction;
     HTABLEIDENTITY id;
 
+
+    virtual bool eventFilter( QObject * o, QEvent * e );
 private:
      bool isNonZero(ROWDATA *r);
 

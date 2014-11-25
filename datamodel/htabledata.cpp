@@ -97,7 +97,24 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     connect(lcaDepth, SIGNAL(valueChanged(int)) , this, SLOT( showHierarchyOrZeroRowToggleChanged(int)) );
 #endif
 
+    // setup ...
+    Q_FOREACH( QSpinBox * sp, findChildren<QSpinBox*>() ) {
+            sp->installEventFilter( this );
+            sp->setFocusPolicy( Qt::StrongFocus );
+    }
+
 }
+
+bool HTableData::eventFilter( QObject * o, QEvent * e ) {
+   if ( e->type() == QEvent::Wheel &&
+        qobject_cast<QAbstractSpinBox*>( o ) )
+   {
+       e->ignore();
+       return true;
+   }
+   return QWidget::eventFilter( o, e );
+}
+
 
 HTableData::~HTableData()
 {
@@ -351,7 +368,6 @@ void HTableData::showTableData() {
 
 void HTableData::showHierarchyOrZeroRowToggleChanged(int i) {
 
-  qDebug() << " show the data " << i;
     if( this->tableWidget->selectedItems().size() > 0) {
         this->setScrollToFunction(this->getattrType(), this->tableWidget->selectedItems()[0]->text());
     }
@@ -407,6 +423,7 @@ void HTableData::fillData() {
      if( ( this->htree->getAttrType()!=METACYC && this->htree->getAttrType()!=METACYCBASE)
            &&  (
                  this->getValueType()==BASEPWY_ORF ||
+                 this->getValueType()== BASEPWY_RPKM ||
                  this->getValueType()==BASEPWY_RXNCOV ||
                  this->getValueType()==BASEPWY_RXNTOT
              )
@@ -414,7 +431,7 @@ void HTableData::fillData() {
      {
 
          QWidget *parent = static_cast<QWidget*>(this);
-         Utilities::showInfo(parent, QString("BASEPWY ORF, BASEPWY RXNCOV and BASEPWY RXNTOT are applicable only for  MetaCyc Functional Category"));
+         Utilities::showInfo(parent, QString("BasePwy ORF, BasePwy PRKM, BasePwy RxnCov and BasePwy RxnTot are applicable only for  MetaCyc Functional Category"));
          return;
      }
 
@@ -422,6 +439,7 @@ void HTableData::fillData() {
             DataManager *datamanager = DataManager::getDataManager();
             if (
                  this->getValueType()==BASEPWY_ORF ||
+                 this->getValueType()==BASEPWY_RPKM ||
                  this->getValueType()==BASEPWY_RXNCOV ||
                  this->getValueType()==BASEPWY_RXNTOT
              ){
@@ -449,6 +467,18 @@ void HTableData::fillData() {
      else
 #endif     
      {
+       // hides the zeros either when the box is checked or if the attribute type is CAZY
+       // if the category selector is toggled to CAZY then it is automatically check to hideZeroRows
+       if( this->getattrType()==CAZY) {
+           this->hideZeroRows->setChecked(true);
+           this->hideZeroRows->setEnabled(false);
+           this->hideZeroRows->setToolTip("Disabled for CAZY");
+       }
+       else {
+           this->hideZeroRows->setEnabled(true);
+           this->hideZeroRows->setToolTip("Disabled for CAZY");
+       }
+
        if(hideZeroRows->isChecked() || this->getattrType()==CAZY) {
          foreach(ROWDATA *r, data) {
             r->active =  isNonZero(r) ? true : false;
@@ -483,6 +513,9 @@ VALUETYPE HTableData::getValueType() {
          case BASEPWY_ORF:
                _valueType = BASEPWY_ORF;
                break;
+         case BASEPWY_RPKM:
+              _valueType = BASEPWY_RPKM;
+              break;
          case BASEPWY_RXNCOV:
                _valueType = BASEPWY_RXNCOV;
                break;
@@ -509,9 +542,7 @@ VALUETYPE HTableData::getValueType() {
 unsigned int HTableData::fillSelectedData() {
      QList<ROWDATA *> data;
 
-        qDebug() << " Iterating through trees for selected data";
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType() ) ;
-     qDebug() << " done ";
 
      Labels *labels = Labels::getLabels();
      QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
@@ -528,6 +559,18 @@ unsigned int HTableData::fillSelectedData() {
      else
 #endif
      {
+
+         // hides the zeros either when the box is checked or if the attribute type is CAZY
+         // if the category selector is toggled to CAZY then it is automatically check to hideZeroRows
+       if( this->getattrType()==CAZY) {
+             this->hideZeroRows->setChecked(true);
+             this->hideZeroRows->setEnabled(false);
+             this->hideZeroRows->setToolTip("Disabled for CAZY");
+        }
+        else {
+             this->hideZeroRows->setEnabled(true);
+             this->hideZeroRows->setToolTip("Disabled for CAZY");
+       }
        if(hideZeroRows->isChecked() || this->getattrType()==CAZY) {
          foreach(ROWDATA *r, data) {
             r->active =  isNonZero(r) ? true : false;
@@ -797,7 +840,8 @@ void HTableData::spawnInformativeTable(const QString &sampleName, const  QList<O
 
     htable->depthLabelValue->setText(QString::number(htable->level));
     htable->depthLabelValue->setVisible(true);
-
+    //htable->hideZeroRows->setChecked(hideZeroRows->isChecked());
+   // htable->hideZeroRows->setEnabled(this->hideZeroRows->isEnabled());
 
 
     htable->clearConnectors();
@@ -866,6 +910,8 @@ void HTableData::showInformativeTable(QTableWidgetItem *item) {
     htable->windowtitles = this->windowtitles;
     htable->scrollToFunction = this->scrollToFunction;
     htable->setScrollToFunction(this->getattrType(), this->tableWidget->item(row,0)->text());
+    htable->hideZeroRows->setChecked(this->hideZeroRows->isChecked());
+    htable->hideZeroRows->setEnabled(this->hideZeroRows->isEnabled());
 
     QString title;
     foreach( QString _title, htable->windowtitles) {

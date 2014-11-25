@@ -14,12 +14,13 @@ int main(int argc, char *argv[])
 
     // if purge is given as an argument to MetaPathways2, it'll delete the old settings
     // use this as a failsafe
-    QSettings settings("HallamLab", "MetaPathways");
+   // QSettings settings("HallamLab", "MetaPathways");
     //settings.clear();
 
     if(argc > 1){
         QString purge(argv[1]);
-        if (purge.compare("purge")!=0){
+        if (purge.compare("purge")==0){
+            //QMessageBox::warning(0, "cleafring", "clearing");
             QSettings settings("HallamLab", "MetaPathways");
             settings.clear();
         }

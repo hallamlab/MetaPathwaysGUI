@@ -29,6 +29,7 @@ Labels::Labels()
   valuetypes[ORFCOUNT] = "ORF Count";
   valuetypes[RPKMCOUNT] = "RPKM Count";
   valuetypes[BASEPWY_ORF] = "ORF Count";
+   valuetypes[BASEPWY_RPKM] = "RPKM Count";
   valuetypes[BASEPWY_RXNCOV] = "# Reactions Covered";
   valuetypes[BASEPWY_RXNTOT] = "# Total Reactions";
 

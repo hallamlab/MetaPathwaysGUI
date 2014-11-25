@@ -365,6 +365,7 @@ typedef struct _EXPORT_FILES_INFO {
      // export the sequences now
       QDir dir(fileName);
 
+      QString sep = QDir::separator();
 
 
       foreach( QString sampleName, this->td->getSampleNames() ) {
@@ -376,17 +377,17 @@ typedef struct _EXPORT_FILES_INFO {
 
                      if( i==0 ) { // the trna and rrna tables is treated separately since there only one of them
                           if(this->exportType==tRNATABLEEXP) {
-                              exportFileName = fileName +"/" + sampleName + QString(".tRNA") +  QString(filesInfo.suffixes[i]);
+                              exportFileName = fileName +sep + sampleName + QString(".tRNA") +  QString(filesInfo.suffixes[i]);
                           }
                           else if(this->exportType==rRNATABLEEXP) {
-                              exportFileName = fileName +"/" + sampleName + QString(".rRNA") + QString(".") + QString(this->auxName) +    QString(filesInfo.suffixes[i]);
+                              exportFileName = fileName +sep + sampleName + QString(".rRNA") + QString(".") + QString(this->auxName) +  QString(filesInfo.suffixes[i]);
                           }
                           else {  /* other tables */
-                              exportFileName = fileName +"/" + sampleName +  QString(filesInfo.suffixes[i]);
+                              exportFileName = fileName +sep + sampleName +  QString(filesInfo.suffixes[i]);
                           }
                      }
                      else {
-                        exportFileName = fileName +"/" + sampleName + QString(filesInfo.suffixes[i]);
+                        exportFileName = fileName +sep + sampleName + QString(filesInfo.suffixes[i]);
                      }
 //                     QLabel *waitScreen = Utilities::ShowWaitScreen(QString("Exporting the table to file ") + exportFileName + QString("!"));
 
@@ -399,7 +400,7 @@ typedef struct _EXPORT_FILES_INFO {
              if(this->megan->isChecked() ) {
                  RunData *rundata = RunData::getRunData();
                  if( !dir.exists() && fileName.compare(SELECT_SAMPLE_TAG)!=0) dir.mkpath(fileName);
-                 exportFileName = fileName +"/" + sampleName + QString(".") + rundata->getValueFromHash("annotation:algorithm", _PARAMS) + QString(".MEGAN.txt");
+                 exportFileName = fileName +sep + sampleName + QString(".") + rundata->getValueFromHash("annotation:algorithm", _PARAMS) + QString(".MEGAN.txt");
 
                  if( rundata->getValueFromHash("annotation:algorithm", _PARAMS).compare("LAST")==0)
                      this->td->saveMeganExportToFile(sampleName, exportFileName, MEGANLASTFILE);

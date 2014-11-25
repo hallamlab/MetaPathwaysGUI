@@ -22,9 +22,10 @@ RunData* RunData::runData = 0;
 
 RunData::RunData(){
     QSettings settings("HallamLab", "MetaPathways");
-    this->setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString(), _CONFIG);
-}
 
+   // QMessageBox::warning(0, QString("reading "), settings.value("METAPATHWAYS_PATH").toString());
+    this->setValue(QString("METAPATHWAYS_PATH"), settings.value("METAPATHWAYS_PATH").toString(), _CONFIG);
+}
 
 
 /**
@@ -674,6 +675,11 @@ void RunData::setFileList(QStringList files) {
 
 }
 
+/**
+ * @brief RunData::getFileList, returns the list of sample or input file list
+ * @param fileType
+ * @return
+ */
 QStringList RunData::getFileList(const QString &fileType){
     this->loadInputFiles(fileType);
     return this->files;
@@ -721,7 +727,7 @@ void RunData::loadInputFiles(const QString &folder){
      //   if (fileType.compare(QString("fasta"))== 0){
             foreach(QRegExp reg, regList ) {
                if(suffix.indexOf(reg,0) != -1 ) {
-                   filesDetected.append( temp.remove(reg).replace('.','_') );
+                   filesDetected.append( temp.remove(reg) );
                    break;
                }
             }

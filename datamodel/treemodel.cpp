@@ -166,7 +166,6 @@
      QList<QVariant> columnData;
 
 
-
      TreeItem *treeitem = new TreeItem(columnData, parent);
      parent->appendChild(treeitem);
 
@@ -177,21 +176,19 @@
      foreach(QString message, errorMessages) {
        errcount++;
        columnData.clear();
-       columnData << QString::number(errcount) << message << " ";
-       qDebug() << message;
-       TreeItem *treeitem2 = new TreeItem(columnData, treeitem);
-       treeitem->appendChild(treeitem2);
+       columnData << QString("GLOBAL ERROR") + "\t" + QString::number(errcount) +"\t" +  message << " ";
+       TreeItem *treeitem2 = new TreeItem(columnData, parent);
+       parent->appendChild(treeitem2);
      }
 
+     samplercmgr->setCurrentOutputFolder(rundata->getValueFromHash("folderOutput", _PARAMS));
 
-
-
+     // read the individual files
      foreach(QString filename, this->sampleNames) {
-         qDebug() << "error for file " << filename;
         QHash<QString, QHash<QString, QList<QStringList > > > data;
         QString runstatsFile = samplercmgr->getFilePath(filename, ERRORS);
+
         if( this->readDataFromFile(runstatsFile, filename, data) ) {
-            qDebug() << "Error filename " << filename << " " << runstatsFile;
            this->addWarningsFromSample(filename, data, parent, true);
         }
         else  this->addWarningsFromSample(filename, data, parent, false);
@@ -202,28 +199,29 @@
 void TreeModel::readDataFromGlobalFile(QStringList &errorMessages) {
     RunData *rundata = RunData::getRunData();
     QString OUTPUTPATH = rundata->getParams()["folderOutput"];
-    QString globalErroFile = OUTPUTPATH + "/" + "global_errors_warnings.txt";
+    QString globalErroFile = OUTPUTPATH + QDir::separator() + "global_errors_warnings.txt";
+
     QFile inputFile(globalErroFile);
-    QString outputStr ="";
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
+            QString outputStr ="";
             QString line = in.readLine().trimmed();
             QStringList fields = line.split("\t");
             if( fields.size()> 1) {
                 if( fields[0].indexOf(QString("ERROR"))!=-1 ) {
                     if(outputStr.size()!=0) errorMessages.append(outputStr);
-                    outputStr = fields[1] + "\n";
+                    outputStr = fields[1];
                 }
                 else {
-                    outputStr += line +"\n";
+                    outputStr += line;
                 }
             }
             else {
-                outputStr += line + "\n";
+                outputStr += line;
             }
+            if(outputStr.size()!=0) errorMessages.append(outputStr);
         }
-        if(outputStr.size()!=0) errorMessages.append(outputStr);
     }
 }
  // add the sample errors and warning to it
@@ -231,15 +229,15 @@ void TreeModel::readDataFromGlobalFile(QStringList &errorMessages) {
       QList<QVariant> columnData;
 
       // add the samplename
-      columnData << sampleName;
       if( fileFound )
-         columnData << "" << "";
+         columnData << sampleName;
       else
-         columnData <<" Error status file not found or generated" << "";
+          columnData << sampleName + "\t" + QString("Error status file not found or generated for sample ")  + sampleName;
 
 
       //  qDebug() << columnData;
       TreeItem *treeitem = new TreeItem(columnData, parent);
+
       parent->appendChild(treeitem);
       parent  = treeitem;
       // loop over the steps
@@ -271,9 +269,11 @@ void TreeModel::readDataFromGlobalFile(QStringList &errorMessages) {
             //  qDebug() << data[stepName][errorType];
               int i = 1;
               foreach(QStringList errorList, data[stepName][errorType]) {
+                  if(errorList.isEmpty()) continue;
                   columnData.clear();
-                  columnData <<  QString::number(i++);
+                  columnData <<  QString::number(i++) ;
 
+                  qDebug() << "eeror lost " << errorList;
                   foreach(QString errwarmsg, errorList) {
                       columnData << errwarmsg;
                   }

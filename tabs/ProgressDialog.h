@@ -134,6 +134,10 @@ private:
     QString runid;
     int currentBLOCK;
 
+    TreeModel *errorMessageModel;
+    QTimer *errorReadTimer;
+    QTreeView *errorTreeView;
+
     static unsigned int waitCounter;
 
 };

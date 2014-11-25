@@ -131,6 +131,16 @@ void SelectSamples::addSamples(QStringList samples) {
    checkboxes.clear();
    for(unsigned int i=0; i < samples.size(); i++ ) {
         QCheckBox *checkBox = new QCheckBox(this->samples.at(i));
+
+        if( this->samples.at(i).contains(QRegExp(QString("^[^a-zA-Z]")))  || this->samples.at(i).contains(QString(".")) || this->samples.at(i).length()<=1  ) {
+            QPalette p  = checkBox->palette();
+            p.setColor( QPalette::Active, QPalette::WindowText, QColor(Qt::red) );
+            checkBox->setPalette(p);
+            checkBox->setToolTip(QString("Sample names (before suffixes fasta, fas, gbk, etc) beginning with non-alphabets, containing \".\"s, or consisting of one character are not processed"));
+            checkBox->setCheckable(false);
+        }
+
+
         sampleGrid->addWidget(checkBox,(int)i/5, i%5);
         if(alreadySelectedSamples.contains(this->samples.at(i))) {
             checkBox->setChecked(true);

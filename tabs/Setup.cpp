@@ -253,9 +253,16 @@ void Setup::saveSetup(){
        // qDebug() << configKey << "  " << temp[configKey];
         Utilities::writeSettingToFile(temp["METAPATHWAYS_PATH"] +  QDir::separator() +"config" + QDir::separator() +RunData::TEMPLATE_CONFIG, "CONFIG", configKey, temp[configKey], false, false);
     }
+
+   // QSettings settings("HallamLab", "MetaPathways");
+  //  settings.setValue("METAPATHWAYS_PATH", settings.value("METAPATHWAYS_PATH").toString());
+
     rundata->setConfig(temp); // update our run config's representation with our (possibly) newly created configs
     //emit continueFromSetup(); // sends a signal back to the mainframe to perform checking with validateSetup()
     rundata->triggerParameterFileRead();
+
+
+
 }
 
 
@@ -529,33 +536,12 @@ void Setup::savePathVariables(){
     RunData *run = RunData::getRunData();
     if( !pathMetaPathwaysTxt->text().isEmpty()){
         settings.setValue("METAPATHWAYS_PATH", pathMetaPathwaysTxt->text());
+     //   QMessageBox::warning(0, QString("qsettings "),  pathMetaPathwaysTxt->text() );
         run->setMetaPathwaysPath(pathMetaPathwaysTxt->text());
+        settings.sync();
+
     }
 
-
-    if( !pythonExecTxt->text().isEmpty()){
-        settings.setValue("PYTHON_EXECUTABLE", pythonExecTxt->text());
-        run->setPythonExecutablePath(pythonExecTxt->text());
-    }
-
-    /*
-    if( !executablesCombo->currentText().isEmpty()){
-        settings.setValue("EXECUTABLES_DIR", executablesCombo->currentText());
-        run->setPythonExecutablePath( executablesCombo->currentText()  );
-    }
-
-    if( !pgdbFolderTxt->text().isEmpty()){
-        settings.setValue("PGDB_FOLDER", pgdbFolderTxt->text());
-        run->setPgdbFolderPath(pgdbFolderTxt->text());
-    }
-    if( !dbDirectoryTxt->text().isEmpty()) {
-       settings.setValue("REFDBS",  dbDirectoryTxt->text());
-       run->setDatabasesPath(dbDirectoryTxt->text());
-    }
-    if(!pathologicTxt->text().isEmpty()) {
-        settings.setValue("PATHOLOGIC_EXECUTABLE", pathologicTxt->text());
-        run->setPathologicPath(pathologicTxt->text());
-    }*/
 }
 
 

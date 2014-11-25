@@ -38,6 +38,8 @@ public:
 
     ~SettingsTab();
 
+    virtual bool eventFilter( QObject * o, QEvent * e );
+
 private slots:
     void closeWindow();
     void annotationClicked(QModelIndex index);

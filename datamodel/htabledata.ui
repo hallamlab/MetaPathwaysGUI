@@ -99,6 +99,11 @@
      </item>
      <item>
       <property name="text">
+       <string>BasePwy RPKM</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>BasePwy RxnTot</string>
       </property>
      </item>

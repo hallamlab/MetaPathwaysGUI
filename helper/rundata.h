@@ -77,7 +77,7 @@ public:
     bool checkConfig();
     bool checkParams();
     void setCurrentSample(QString currentSample);
-    int getRunningStepNumber();
+    int  getRunningStepNumber();
 
     QString getCurrentInputFormat();
 

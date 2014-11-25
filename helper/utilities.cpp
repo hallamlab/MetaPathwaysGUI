@@ -210,7 +210,6 @@ bool Utilities::writeSettingToFile(const QString &TEMPLATE_FILE, const QString T
        //set new file with the proper name and close
        return true;
     }else{
-        QMessageBox msg;
        // msg.warning(0,"Error!\n",QString("Could not write the configuration file to " + TEMPLATE_FILE + ", do you have permissions to write there?"), QMessageBox::Ok);
         return false;
     }

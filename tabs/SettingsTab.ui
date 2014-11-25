@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>814</width>
+    <width>822</width>
     <height>839</height>
    </rect>
   </property>
@@ -35,6 +35,9 @@
    </item>
    <item row="13" column="3">
     <widget class="QSpinBox" name="rrnaMIN_BITSCORE">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -64,6 +67,9 @@
        <width>16777215</width>
        <height>20</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="html">
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -113,6 +119,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="7" column="1">
     <widget class="QSpinBox" name="annotationMIN_LENGTH">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="maximum">
       <number>1000</number>
      </property>
@@ -164,6 +173,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="2" column="2">
     <widget class="QComboBox" name="orf_predictionTRANSLATION_TABLE">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="toolTip">
       <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Code translation table&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
@@ -262,6 +274,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="1" column="4">
     <widget class="QComboBox" name="quality_controlDELETE_REPLICATES">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="editable">
       <bool>false</bool>
      </property>
@@ -387,6 +402,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="2" column="4">
     <widget class="QSpinBox" name="orf_predictionMIN_LENGTH">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -400,6 +418,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="7" column="3">
     <widget class="QSpinBox" name="annotationMIN_SCORE">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="minimum">
       <number>1</number>
      </property>
@@ -428,6 +449,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="6" column="3">
     <widget class="QSpinBox" name="annotationMAX_HITS">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="minimum">
       <number>0</number>
      </property>
@@ -441,6 +465,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="1" column="2">
     <widget class="QSpinBox" name="quality_controlMIN_LENGTH">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="maximum">
       <number>99999999</number>
      </property>
@@ -540,6 +567,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="6" column="5">
     <widget class="QDoubleSpinBox" name="annotationMIN_BSR">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="minimum">
       <double>0.000000000000000</double>
      </property>
@@ -604,6 +634,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="13" column="1">
     <widget class="QDoubleSpinBox" name="rrnaMIN_IDENTITY">
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
      <property name="suffix">
       <string>%</string>
      </property>
