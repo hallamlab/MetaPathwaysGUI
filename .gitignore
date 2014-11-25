@@ -8,3 +8,4 @@ ui_*.h
 Makefile
 MetaPathways2.pro.*
 MetaPathways2
+MetaPathways2.xcodeproj
