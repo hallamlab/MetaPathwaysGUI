@@ -85,6 +85,8 @@ SelectSamples::~SelectSamples()
 void SelectSamples::addSamplesUnchecked(QStringList samples) {
    this->samples = samples;
 
+    QStringList tempList = this->samples;
+
    for(unsigned int i =0; i < checkboxes.size(); i++) {
        sampleGrid->removeWidget(checkboxes[i]);
    }
@@ -93,8 +95,8 @@ void SelectSamples::addSamplesUnchecked(QStringList samples) {
    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(sampleClicked(int)));
 
    checkboxes.clear();
-   for(unsigned int i=0; i < samples.size(); i++ ) {
-        QCheckBox *checkBox = new QCheckBox(this->samples.at(i));
+   for(unsigned int i=0; i < tempList.size(); i++ ) {
+        QCheckBox *checkBox = new QCheckBox(tempList.at(i));
         sampleGrid->addWidget(checkBox,(int)i/5, i%5);
         checkBox->setChecked(false);
 

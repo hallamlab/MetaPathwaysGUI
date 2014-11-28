@@ -15,6 +15,7 @@
 #include <QMenu>
 #include <QToolButton>
 
+
 #include "ProgressDialog.h"
 #include "resultpage.h"
 #include "ui_resultwindow.h"

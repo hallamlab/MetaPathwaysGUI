@@ -84,7 +84,8 @@ SOURCES += main.cpp\
     datamodel/lcastar.cpp \
     datamodel/ncbitree.cpp \
     helper/labels.cpp \
-    popupviews/setupstatus.cpp
+    popupviews/setupstatus.cpp \
+    dataviews/statsqgroupbox.cpp
 
 
 
@@ -151,7 +152,8 @@ HEADERS  += \
     datamodel/lcastar.h \
     datamodel/ncbitree.h \
     helper/labels.h \
-    popupviews/setupstatus.h
+    popupviews/setupstatus.h \
+    dataviews/statsqgroupbox.h
 
 
 

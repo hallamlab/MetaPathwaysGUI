@@ -7,5 +7,4 @@ ui_*.h
 *.dmg
 Makefile
 MetaPathways2.pro.*
-MetaPathways2
 MetaPathways2.xcodeproj

@@ -338,6 +338,20 @@ void ResultWindow::sampleChanged(QString sampleName){
     QStringList selectedFileNames;
     selectedFileNames.append(sampleName);
 
+
+    RunDataStats *rundatamodel = CreateWidgets::getRunDataStats();
+    rundatamodel->clear();
+    rundatamodel->setFileNames(selectedFileNames);
+    rundatamodel->readStatFiles();
+
+    StatsQGroupBox *statsTableWidget = CreateWidgets::getStatsTableCompleteView();
+    statsTableWidget->setModel(rundatamodel);
+    resultTabs->addTab(statsTableWidget, "RUN STATS");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
+
+
+
+  /*
     RunDataStats *rundatamodel =  CreateWidgets::getRunDataStats();
     rundatamodel->clear();
     rundatamodel->setFileNames(selectedFileNames);
@@ -347,9 +361,20 @@ void ResultWindow::sampleChanged(QString sampleName){
     statTableView->setModel(rundatamodel);
     statTableView->setAlternatingRowColors(true);
     statTableView->show();
-    resultTabs->addTab(statTableView, "RUN STATS");
-    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
+
+
+    QVBoxLayout *hboxlayout = new QVBoxLayout;
+    hboxlayout->addWidget(statTableView);
+    QPushButton *exportButton = new QPushButton("Export");
+    hboxlayout->addWidget(exportButton);
+
+    //resultTabs->addTab(statTableView, "RUN STATS");
+    QGroupBox *sampleGroupBox = new QGroupBox();
+    sampleGroupBox->setLayout(hboxlayout);
+    resultTabs->addTab(sampleGroupBox, "RUN STATS");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
+*/
 
     QString contigLengthsFile = samplercmgr->getFilePath(sampleName, CONTIGLENGTH);
     QFile file(contigLengthsFile);
@@ -392,14 +417,6 @@ void ResultWindow::sampleChanged(QString sampleName){
     }
 
 
- #ifdef SECTION
-     statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
-     statTableView->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
- #else
-     statTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-     statTableView->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
-     statTableView->verticalHeader()->setResizeMode(QHeaderView::Stretch);
- #endif
 
     //////////////  FUNCTIONAL CATEGORIES KEGG, COG, METACYC, SEED, CAZY //////////////////
     HTableData *htable;
@@ -953,20 +970,10 @@ void ResultWindow::switchToComparativeMode() {
    rundatamodel->setFileNames(selectedFileNames);
    rundatamodel->readStatFiles();
 
-   QTableView *statTableView = CreateWidgets::getStatsTableView();
-   resultTabs->addTab(statTableView, "RUN STATS");
-   statTableView->setModel(rundatamodel);
-   statTableView->setAlternatingRowColors(true);
-   statTableView->show();
-
-#ifdef SECTION
-    statTableView->horizontalHeader()->sectionResizeMode(QHeaderView::Stretch);
-    statTableView->verticalHeader()->sectionResizeMode(QHeaderView::Stretch);
-#else
-    statTableView->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
-    statTableView->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
-    statTableView->verticalHeader()->setResizeMode(QHeaderView::Stretch);
-#endif
+   StatsQGroupBox *statsTableWidget = CreateWidgets::getStatsTableCompleteView();
+   statsTableWidget->setModel(rundatamodel);
+   resultTabs->addTab(statsTableWidget, "RUN STATS");
+   resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
 
     ////////////////////////   KEGG, COG, METACYC, SEED, CAZY //////////////////

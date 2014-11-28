@@ -751,7 +751,10 @@ void RunData::setResultFolders(QStringList folders) {
 QStringList RunData::getOutputFolders() {
 
    if(this->outputFolders.isEmpty()) this->loadOutputFolders();
-   return this->outputFolders.keys();
+
+   QStringList tempList = this->outputFolders.keys();
+   qSort(tempList.begin(), tempList.end());
+   return tempList;
 }
 
 
