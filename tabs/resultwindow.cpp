@@ -351,30 +351,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
 
 
-  /*
-    RunDataStats *rundatamodel =  CreateWidgets::getRunDataStats();
-    rundatamodel->clear();
-    rundatamodel->setFileNames(selectedFileNames);
-    rundatamodel->readStatFiles();
-
-    QTableView *statTableView = CreateWidgets::getStatsTableView();
-    statTableView->setModel(rundatamodel);
-    statTableView->setAlternatingRowColors(true);
-    statTableView->show();
-
-
-
-    QVBoxLayout *hboxlayout = new QVBoxLayout;
-    hboxlayout->addWidget(statTableView);
-    QPushButton *exportButton = new QPushButton("Export");
-    hboxlayout->addWidget(exportButton);
-
-    //resultTabs->addTab(statTableView, "RUN STATS");
-    QGroupBox *sampleGroupBox = new QGroupBox();
-    sampleGroupBox->setLayout(hboxlayout);
-    resultTabs->addTab(sampleGroupBox, "RUN STATS");
-    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
-*/
+    // now the contig and orf length distributions
 
     QString contigLengthsFile = samplercmgr->getFilePath(sampleName, CONTIGLENGTH);
     QFile file(contigLengthsFile);

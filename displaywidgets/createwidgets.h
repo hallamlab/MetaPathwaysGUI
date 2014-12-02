@@ -15,14 +15,13 @@
 class CreateWidgets: public QWidget
 {
     Q_OBJECT
-
     static RunDataStats *rundatastats;
     static QTableView *statTableView;
     static StatsQGroupBox *statTableCompleteView;
 
     static QHash<ATTRTYPE, HTableData *> *htables;
 public:
-    CreateWidgets();
+    CreateWidgets(QWidget *parent=0);
     static RunDataStats *getRunDataStats();
     static QTableView *getStatsTableView() ;
     static HTableData *getHtableData(ATTRTYPE);

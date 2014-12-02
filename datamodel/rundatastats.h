@@ -25,8 +25,10 @@ public:
     void loadData();
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
+    int rowCount();
+    int columnCount();
     QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant headerData(int col, Qt::Orientation orientation, int role) const;
     void setFileNames(const QStringList &filenames);
     void initializeTags();
     bool readStatFiles();

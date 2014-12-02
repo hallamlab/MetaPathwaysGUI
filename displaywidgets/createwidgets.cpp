@@ -6,6 +6,7 @@ StatsQGroupBox *CreateWidgets::statTableCompleteView = 0;
 
 QHash<ATTRTYPE, HTableData *> *CreateWidgets::htables =0;
 
+
 RunDataStats *CreateWidgets::getRunDataStats(){
     if(CreateWidgets::rundatastats == 0)
         CreateWidgets::rundatastats =  new RunDataStats;
@@ -89,7 +90,11 @@ StatsQGroupBox *CreateWidgets::getStatsTableCompleteView() {
 }
 
 
-
+/**
+ * @brief CreateWidgets::getHtableData, retrieves information about the HTables, which is essentially attribute
+ * @param attrtype
+ * @return
+ */
 HTableData *CreateWidgets::getHtableData(ATTRTYPE attrtype) {
     if( htables==0 )
         htables  = new QHash<ATTRTYPE, HTableData *>();
@@ -99,6 +104,7 @@ HTableData *CreateWidgets::getHtableData(ATTRTYPE attrtype) {
     return htables->value(attrtype);
 }
 
-CreateWidgets::CreateWidgets()
+CreateWidgets::CreateWidgets(QWidget *parent)
 {
+
 }

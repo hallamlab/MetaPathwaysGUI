@@ -4,6 +4,8 @@
 #include <QGroupBox>
 #include <QTableView>
 #include <QDebug>
+#include <QFileDialog>
+#include <QTextStream>
 
 #include "datamodel/rundatastats.h"
 

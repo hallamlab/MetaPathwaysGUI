@@ -210,9 +210,6 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
 
             if( codeValue >= 5000 && codeValue <= 8000) {
 
-
-
-
                 if(codeValue >= 5000 && codeValue < 6000 ) {
                     fields[1] = fields[1].replace(QString("Total Protein Annotations"), QString("Number of hits from"), Qt::CaseSensitive);
                     this->insertIntoPartial(fields[1], 5000);
@@ -236,9 +233,6 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
                     }
                 }
 
-
-             //   qDebug() << codeValue << "  " << fields[1];
-
                 QString code = this->getPartialCode(fields[1]);
 
              //   qDebug() << code << "  " << fields[1];
@@ -260,6 +254,23 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
     return true;
 }
 
+/**
+ * @brief RunDataStats::rowCount, gets the number of rows in the data
+ * @return
+ */
+int RunDataStats::rowCount()
+{
+   return dataVectorMap.size();
+}
+
+/**
+ * @brief RunDataStats::columnCount, gets the number of columsn in the data/table
+ * @return
+ */
+int RunDataStats::columnCount()
+{
+   return filenames.count();
+}
 
 
 /**
@@ -318,14 +329,15 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
  * @param role
  * @return
  */
-QVariant RunDataStats::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant RunDataStats::headerData(int col, Qt::Orientation orientation, int role) const
 {
    if (role != Qt::DisplayRole)
        return QVariant();
 
-   if( orientation==Qt::Horizontal) return filenames[section];
+   if( orientation==Qt::Horizontal) return filenames[col];
 
-   QString rowAttribute = this->codeToTagLine[this->orderCodes[section]];
+
+   QString rowAttribute = this->codeToTagLine[this->orderCodes[col]];
 
    return rowAttribute;
 
