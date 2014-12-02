@@ -109,7 +109,8 @@ public:
 public slots:
     void outputRows(int top);
     void headerClicked(int index);
-    void searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type, bool caseSensitive);
+    void searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, \
+                     int column4, QString orfListFile, QString contigListFile, OPTYPE type, bool caseSensitive);
     void createGeneViewData(QTableWidgetItem *item);
 
 

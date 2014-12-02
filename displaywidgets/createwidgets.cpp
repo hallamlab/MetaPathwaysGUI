@@ -84,6 +84,7 @@ StatsQGroupBox *CreateWidgets::getStatsTableCompleteView() {
     CreateWidgets::statTableCompleteView->setLayout(vboxlayout);
     CreateWidgets::statTableCompleteView->setStyleSheet("QGroupBox{border:0px solid gray;border-radius:0px;margin-top: 0ex;}");
 
+    connect(exportButton, SIGNAL(clicked()), CreateWidgets::statTableCompleteView, SLOT(exportTable()));
     return CreateWidgets::statTableCompleteView;
 }
 

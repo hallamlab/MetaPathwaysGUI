@@ -3,6 +3,7 @@
 
 #include <QGroupBox>
 #include <QTableView>
+#include <QDebug>
 
 #include "datamodel/rundatastats.h"
 
@@ -20,6 +21,7 @@ public:
 signals:
     
 public slots:
+   void exportTable();
     
 };
 

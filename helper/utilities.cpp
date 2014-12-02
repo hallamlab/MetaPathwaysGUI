@@ -9,6 +9,32 @@ Utilities::Utilities()
 {
 }
 
+/**
+ * @brief Utilities::readOrfContigList, reads a text file that splits them into words, to extract
+ * orf and contig
+ * @param fileName
+ * @param list
+ */
+void Utilities::readOrfContigList(QString fileName,  QString sampleName, QHash<QString, bool> &list, SEQNAME type) {
+    QFile inputFile(fileName);
+
+    QStringList names;
+
+    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine().trimmed();
+            names = Utilities::getSplitNames(line);
+            foreach(QString name, names) {
+                if(name.isEmpty()) continue;
+                list.insert(name, true);
+            }
+       }
+    }
+}
+
 /*
  * Create a mapping of a CONFIG_KEY -> FORM_WIDGET_NAME. We cannot directly copy
  * the existing CONFIG key values to the form, because it contains invalid characters (like colon)

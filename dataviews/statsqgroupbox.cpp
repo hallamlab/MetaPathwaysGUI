@@ -10,3 +10,10 @@ void StatsQGroupBox::setModel(RunDataStats *model) {
     this->model = model;
     this->statsTableView->setModel(this->model);
 }
+
+
+void StatsQGroupBox::exportTable() {
+
+    qDebug() << "Exporting";
+
+}

@@ -1236,7 +1236,8 @@ void HTableData::addSearchFilter(QString query, int column) {
  * @param caseSensitive,  case sensitivity
  */
 
-void HTableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type,  bool caseSensitive){
+void HTableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4,\
+                             QString orfListFile, QString contigListFile,  OPTYPE type,  bool caseSensitive){
     this->clearSearchFilters();
     if(query1.size() > 0) this->addSearchFilter(query1, column1);
     if(query2.size() > 0) this->addSearchFilter(query2, column2);

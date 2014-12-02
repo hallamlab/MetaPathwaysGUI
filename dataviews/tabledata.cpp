@@ -325,7 +325,8 @@ enum TYPE TableData::getFieldType(unsigned int i) {
  * @param type, AND or OR type
  * @param caseSensitive, case sensitive or case insensitive
  */
-void TableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3, QString query4, int column4, OPTYPE type,  bool caseSensitive){
+void TableData::searchQuery(QString query1, int column1, QString query2, int column2, QString query3, int column3,\
+                            QString query4, int column4, QString orfListFile, QString contigListFile, OPTYPE type,  bool caseSensitive){
 
     this->clearSearchFilters();
     if(query1.size() > 0) this->addSearchFilter(query1, column1);
@@ -333,7 +334,17 @@ void TableData::searchQuery(QString query1, int column1, QString query2, int col
     if(query3.size() > 0) this->addSearchFilter(query3, column3);
     if(query4.size() > 0) this->addSearchFilter(query4, column4);
 
+    QHash<QString, bool> orfListHash;
+    QHash<QString, bool> contigListHash;
+
+    if( !orfListFile.isEmpty()  ) Utilities::readOrfContigList(orfListFile, this->sampleName, orfListHash, ORFNAME);
+    if( !contigListFile.isEmpty() ) Utilities::readOrfContigList(contigListFile, this->sampleName, contigListHash, CONTIGNAME);
+
+    qDebug() << orfListHash.keys();
+    qDebug() << contigListHash.keys();
+
     this->largeTable->markRowsSearch(this->searchFilters, type, caseSensitive);
+
     tableWidget->setRowCount(largeTable->tableData.length());
     int currPos = tableWidget->verticalScrollBar()->value();
     this->updateData(currPos, true);

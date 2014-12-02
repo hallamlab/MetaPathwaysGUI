@@ -30,9 +30,11 @@ public:
 private slots:
     void querySet();
     void toggleANDOR(bool );
+    void browseContigList();
+    void browseOrfList();
 
 signals:
-    void lookUp(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool);
+    void lookUp(QString,int, QString, int, QString, int, QString, int, QString, QString, OPTYPE, bool);
 
 private:
     void createWidget();
@@ -41,8 +43,10 @@ private:
     Ui::SearchWidget *ui;
 
     QLineEdit* keyword_1, *keyword_2, *keyword_3, *keyword_4;
+    QLineEdit *contigList, *orfList;
+    QPushButton *contigListButton, *orfListButton;
     QComboBox* columnSelect_1, *columnSelect_2, *columnSelect_3, *columnSelect_4;
-    QLabel *andORlabel_1, *andORlabel_2, *andORlabel_3, *andORlabel_4;
+    QLabel *andORlabel_1, *andORlabel_2, *andORlabel_3, *andORlabel_4, *andORlabel_5, *andORlabel_6;
 
     QCheckBox *andOR;
     QCheckBox* caseSensitive;

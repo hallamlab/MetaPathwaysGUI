@@ -63,6 +63,7 @@ public:
     static bool compareFreq(const  TaxonFreqQPair &a, const TaxonFreqQPair &b);
     static void showInfo(QWidget *parent, QString info);
     static bool exportMeganCompatibleFile(QString inputFileName, QString outputFileName, QHash<QString, bool> orfNames);
+    static void readOrfContigList(QString fileName, QString sampleName, QHash<QString, bool> &list, SEQNAME type);
 };
 
 

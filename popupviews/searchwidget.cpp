@@ -37,6 +37,14 @@ void SearchWidget::createWidget()
     columnSelect_4 = this->findChild<QComboBox *>("columnSelect_4");
     andORlabel_4 = this->findChild<QLabel *>("andORlabel_4");
 
+    orfList = this->findChild<QLineEdit *>("orfList");
+    orfListButton = this->findChild<QPushButton *>("orfListButton");
+    andORlabel_5 = this->findChild<QLabel *>("andORlabel_5");
+
+    contigList = this->findChild<QLineEdit *>("contigList");
+    contigListButton = this->findChild<QPushButton *>("contigListButton");
+    andORlabel_6 = this->findChild<QLabel *>("andORlabel_6");
+
     andOR = this->findChild<QCheckBox *>("andOR");
 
     okAndCancel = this->findChild<QDialogButtonBox *>("okAndCancel");
@@ -57,15 +65,38 @@ void SearchWidget::createWidget()
     }
 
     connect(andOR, SIGNAL( clicked(bool) ), this, SLOT(toggleANDOR(bool)));
+
+    connect(orfListButton, SIGNAL(clicked()), this, SLOT(browseOrfList()));
+    connect(contigListButton, SIGNAL(clicked()), this, SLOT(browseContigList()));
+
     connect(okAndCancel, SIGNAL(accepted()), this, SLOT(querySet()));
     connect(okAndCancel,SIGNAL(rejected()), this, SLOT(hide()));
 
     if( this->td->getIndex() == 0)
-       connect(this, SIGNAL(lookUp(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool)), this->td->getTableDataPointer(), SLOT(searchQuery(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool)));
+       connect(this, SIGNAL(lookUp(QString,int, QString, int, QString, int, QString, int, QString, QString, OPTYPE, bool)),\
+         this->td->getTableDataPointer(), SLOT(searchQuery(QString,int, QString, int, QString, int, QString, int, QString, QString, OPTYPE, bool)));
 
     if( this->td->getIndex() == 1)
-       connect(this, SIGNAL(lookUp(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool)), this->td->getHTableDataPointer(), SLOT(searchQuery(QString,int, QString, int, QString, int, QString, int, OPTYPE, bool)));
+       connect(this, SIGNAL(lookUp(QString,int, QString, int, QString, int, QString, int, QString, QString, OPTYPE, bool)),\
+         this->td->getHTableDataPointer(), SLOT(searchQuery(QString,int, QString, int, QString, int, QString, int, QString, QString, OPTYPE, bool)));
 }
+
+
+
+void SearchWidget::browseContigList() {
+    QString select = QFileDialog::getOpenFileName(this, tr("Select a Contig list file."));
+    if (!select.isEmpty()) {
+       this->contigList->setText(select);
+    }
+}
+
+void SearchWidget::browseOrfList() {
+    QString select = QFileDialog::getOpenFileName(this, tr("Select a ORF list file."));
+    if (!select.isEmpty()) {
+       this->orfList->setText(select);
+    }
+}
+
 
 void SearchWidget::toggleANDOR(bool checked) {
     if( checked ) {
@@ -73,12 +104,16 @@ void SearchWidget::toggleANDOR(bool checked) {
         this->andORlabel_2->setText("AND");
         this->andORlabel_3->setText("AND");
         this->andORlabel_4->setText("AND");
+        this->andORlabel_5->setText("AND");
+        this->andORlabel_6->setText("AND");
     }
     else {
         this->andORlabel_1->setText("OR");
         this->andORlabel_2->setText("OR");
         this->andORlabel_3->setText("OR");
         this->andORlabel_4->setText("OR");
+        this->andORlabel_5->setText("OR");
+        this->andORlabel_6->setText("OR");
     }
 }
 
@@ -88,6 +123,7 @@ void SearchWidget::querySet(){
                 keyword_2->text(), this->index.at(columnSelect_2->currentIndex()),
                 keyword_3->text(), this->index.at(columnSelect_3->currentIndex()),
                 keyword_4->text(), this->index.at(columnSelect_4->currentIndex()),
+                this->orfList->text(), this->contigList->text(),
                 (this->andOR->isChecked() ? AND : OR),
                 this->caseSensitive->isChecked()
                 );

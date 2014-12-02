@@ -5,14 +5,16 @@
 #include <QGroupBox>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QWidget>
 
 #include "datamodel/rundatastats.h"
 #include "datamodel/htabledata.h"
 #include "datamodel/datamodeltypes.h"
 #include "dataviews/statsqgroupbox.h"
 
-class CreateWidgets
+class CreateWidgets: public QWidget
 {
+    Q_OBJECT
 
     static RunDataStats *rundatastats;
     static QTableView *statTableView;
