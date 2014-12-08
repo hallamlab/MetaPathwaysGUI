@@ -92,14 +92,11 @@ void ResultWindow::browseFolder(){
         this->_loadResults();
     }
 
-
   //  this->rundata->setValue("folderOutput", selectedFolder, _PARAMS);
-
     //send a signal to the parent to enable the continue button
  /*   if (!selectedFolder.isEmpty()){
         if(!selectedFiles.isEmpty()) emit fileSet();
     } */
-
 }
 
 
@@ -127,6 +124,7 @@ void ResultWindow::_loadResults() {
         return;
     }
 */
+
     this->disableSampleChanged = true;
 
     DataManager *datamanager = DataManager::getDataManager();
@@ -295,11 +293,14 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     this->rundata->setCurrentSample(sampleName);
 
-
+    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     DataManager *datamanager = DataManager::getDataManager();
+    sampleResourceManager->setOutPutFolders(this->rundata->getSampleFolderMap());
+    if(this->needsReloading()) this->_loadResults();
+
+
     datamanager->createDataModel();
 
-    SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     sampleResourceManager->setOutPutFolders(this->rundata->getSampleFolderMap());
 
 #ifdef REINDEX
@@ -843,6 +844,55 @@ HTableData *ResultWindow::getHTableData(QString sampleName, ATTRTYPE attr,  QLis
 }
 
 
+bool ResultWindow::needsReloading(QString sampleName) {
+
+   SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
+   QString steps_log_file = samplercmgr->getFilePath(sampleName, STEPS_LOG);
+
+
+   QFile inputFile(steps_log_file);
+   QRegExp commentLine("#[^\"\\n\\r]*");
+   QRegExp runIdPattern("(\\d+:\\d+:\\d+)");
+
+   QString runid = QString("00:00:00");
+
+   if (inputFile.exists() && inputFile.open(QIODevice::ReadOnly))
+   {
+      QTextStream in(&inputFile);
+      while ( !in.atEnd() )
+      {
+         QString line = in.readLine();
+         if (!commentLine.exactMatch(line) && line.length()>0){   //if not a comment line
+            if(line.contains(QString("======")) && line.contains(QString("BLOCK")) ) {
+                int pos  = runIdPattern.indexIn(line);
+                if( pos > -1 ) {
+                    runid = runIdPattern.cap(1);
+                }
+            }
+         }
+      }
+      inputFile.close();
+   }
+
+   if( this->runids.contains(sampleName) &&\
+       runid.compare(this->runids[sampleName]) ==0 ) {
+     return false;
+   }
+
+   this->runids[sampleName] = runid;
+   return true;
+}
+
+bool ResultWindow::needsReloading()  {
+
+   foreach(int i, selectedSamples) {
+       if(this->needsReloading(this->files[i])) return true;
+   }
+
+   return false;
+
+}
+
 void ResultWindow::switchToComparativeMode() {
     resultTabs->clear();
 
@@ -853,15 +903,13 @@ void ResultWindow::switchToComparativeMode() {
     QString orfMetaCycTableName;
     QString orfRPKMFileName;
 
-
     QList<enum TYPE> types;
-
-
     QStringList headers;
-
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
-
     DataManager *datamanager = DataManager::getDataManager();
+
+    samplercmgr->setOutPutFolders(this->rundata->getSampleFolderMap());
+    if(this->needsReloading()) this->_loadResults();
 
 
     ProgressView *progressbar = new ProgressView("Loading functional hierarchies ", 0, 0, this);
@@ -871,42 +919,43 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->hide();
     delete progressbar;
 
-    samplercmgr->setOutPutFolders(this->rundata->getSampleFolderMap());
 
 
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
 
     progressbar = new ProgressView("Creating ORFs for samples ", 0, this->selectedSamples.size(), this);
-   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
     QApplication::processEvents();
 
 
     unsigned int _i = 0;
+
+
+
     foreach(int i, selectedSamples) {
-      //  if( !this->selectedSamples[i])  continue;
 
         orfTableName = samplercmgr->getFilePath(files[i], ORFTABLE);
         datamanager->createORFs(files[i]);
+
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
 
         orfRPKMFileName = samplercmgr->getFilePath(files[i], ORFRPKM);
+
         datamanager->addRPKMToORFs(files[i], orfRPKMFileName);
 
         progressbar->updateprogress(_i+1);
         qApp->processEvents();
         progressbar->update();
         _i++;
-
     }
+
     progressbar->hide();
     delete progressbar;
 
 
     progressbar = new ProgressView("Creating Taxons for samples ", 0, this->selectedSamples.size(), this);
-   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
     _i = 0;
     foreach(unsigned int i,  selectedSamples) {
@@ -923,7 +972,6 @@ void ResultWindow::switchToComparativeMode() {
 
 
     progressbar = new ProgressView("Link  Taxons to ORFs for samples ", 0, this->selectedSamples.size(), this);
-   // QProgressDialog progressdialog("linking ORFs to functional categories", "Cancel", 0, 100, this);
     progressbar->show();
     _i =0;
     foreach(unsigned int i, selectedSamples) {
@@ -952,9 +1000,7 @@ void ResultWindow::switchToComparativeMode() {
    resultTabs->addTab(statsTableWidget, "RUN STATS");
    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
-
-    ////////////////////////   KEGG, COG, METACYC, SEED, CAZY //////////////////
-
+   ////////////////////////   KEGG, COG, METACYC, SEED, CAZY //////////////////
     HTableData *htable;
     QList<ATTRTYPE> functionTables;
     functionTables << KEGG << COG << METACYC << SEED << CAZY;
@@ -984,12 +1030,9 @@ void ResultWindow::switchToComparativeMode() {
         htable->setMaxSpinBoxDepth(datamanager->getHTree(functionAttr)->getTreeDepth());
      //   htable->setShowHierarchy(true);
 
-        // htable->setHeaders(headers);
         htable->setTableIdentity(labels->getTabName(functionAttr), functionAttr);
         htable->setMultiSampleMode(true);
-
         htable->showTableData();
-
 
         if( !this->htablesAddSignals.contains(htable)) {
            htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -1001,160 +1044,6 @@ void ResultWindow::switchToComparativeMode() {
         progressbar->hide();
         delete progressbar;
     } //for each functiona loop
-
-
-
-
-#ifdef _REMOVE_FUNCTION
-    /////////////////  KEGG
-    htable = CreateWidgets::getHtableData(KEGG); //new HTableData;
-    htable->clearConnectors();
-
-    types.clear();
-    types << STRING << STRING;
-    htable->clearConnectors();
-    progressbar = new ProgressView("linking ORFs  to KEGG categories ", 0, 0, this);
-    progressbar->show();
-    htable->clearSampleNames();
-    for( int i=0; i < this->selectedSamples.size(); i++) {
-       if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(KEGG), KEGG, datamanager->getORFList(files[i]));
-       htable->addConnector(connect, KEGG);
-       headers << files[i];
-       htable->addSampleName(files[i]);
-       types << INT;
-    }
-    progressbar->hide();
-    delete progressbar;
-
-    htable->setParameters(datamanager->getHTree(KEGG),  types);
-    htable->setMaxSpinBoxDepth(datamanager->getHTree(KEGG)->getTreeDepth());
-
-    htable->setShowHierarchy(true);
-
-    htable->setTableIdentity("KEGG", KEGG);
-    htable->setMultiSampleMode(true);
-    htable->showTableData();
-
-    if( !this->htablesAddSignals.contains(htable)) {
-       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
-       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
-       this->htablesAddSignals.insert(htable, true);
-    }
-    resultTabs->addTab(htable, "KEGG");
-
-
-    ////////////////// METACYC
-    htable = CreateWidgets::getHtableData(METACYC); //new HTableData;
-    htable->clearConnectors();
-
-    types.clear();
-    types << STRING << STRING;
-    htable->clearSampleNames();
-    for(int i=0; i < this->selectedSamples.size(); i++) {
-       if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(METACYC), METACYC, datamanager->getORFList(files[i]));
-
-       htable->addConnector(connect, METACYC);
-       headers << files[i];
-       htable->addSampleName(files[i]);
-       types << INT;
-    }
-    htable->setParameters(datamanager->getHTree(METACYC),  types);
-    htable->setMaxSpinBoxDepth(datamanager->getHTree(METACYC)->getTreeDepth());
-
-    htable->setShowHierarchy(true);
-    htable->setTableIdentity("METACYC", METACYC);
-    htable->setMultiSampleMode(true);
-    htable->showTableData();
-
-    htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    if( !this->htablesAddSignals.contains(htable)) {
-       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
-       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
-       this->htablesAddSignals.insert(htable, true);
-    }
-    resultTabs->addTab(htable, "METACYC");
-
-
-    ////////////////////// SEED
-    htable = CreateWidgets::getHtableData(SEED);;
-    htable->clearConnectors();
-
-    types.clear();
-    types << STRING << STRING;
-    htable->clearConnectors();
-    progressbar = new ProgressView("linking ORFs  to SEED subsystems", 0, 0, this);
-    progressbar->show();
-    htable->clearSampleNames();
-    for(int i=0; i < this->selectedSamples.size(); i++) {
-       if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(SEED), SEED, datamanager->getORFList(files[i]) );
-       htable->addConnector(connect, SEED);
-       headers << files[i];
-       htable->addSampleName(files[i]);
-       types << INT;
-    }
-    progressbar->hide();
-    delete progressbar;
-    htable->setParameters(datamanager->getHTree(SEED),  types);
-    htable->setMaxSpinBoxDepth(datamanager->getHTree(SEED)->getTreeDepth());
-    htable->setShowHierarchy(true);
-
-    htable->setTableIdentity("SEED", SEED);
-    htable->setMultiSampleMode(true);
-    htable->showTableData();
-
-
-    if( !this->htablesAddSignals.contains(htable)) {
-       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
-       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
-       this->htablesAddSignals.insert(htable, true);
-    }
-    resultTabs->addTab(htable, "SEED");
-
-    ////// CAZY
-
-    htable = CreateWidgets::getHtableData(CAZY);;
-    htable->clearConnectors();
-
-    types.clear();
-    types << STRING << STRING;
-    htable->clearConnectors();
-    progressbar = new ProgressView("linking ORFs  to CAZY family", 0, 0, this);
-    progressbar->show();
-    htable->clearSampleNames();
-    for(int i=0; i < this->selectedSamples.size(); i++) {
-       if( !this->selectedSamples[i])  continue;
-       connect = datamanager->createConnector(files[i], datamanager->getHTree(CAZY), CAZY, datamanager->getORFList(files[i]) );
-       htable->addConnector(connect, CAZY);
-       headers << files[i];
-       htable->addSampleName(files[i]);
-       types << INT;
-    }
-    progressbar->hide();
-    delete progressbar;
-    htable->setParameters(datamanager->getHTree(CAZY),  types);
-    htable->setMaxSpinBoxDepth(datamanager->getHTree(CAZY)->getTreeDepth());
-    htable->setShowHierarchy(true);
-
-    htable->setTableIdentity("CAZY", CAZY);
-    htable->setMultiSampleMode(true);
-    htable->showTableData();
-
-
-    if( !this->htablesAddSignals.contains(htable)) {
-       htable->tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-       QObject::connect(htable->tableWidget, SIGNAL(customContextMenuRequested(QPoint)), htable, SLOT( ProvideContexMenu(QPoint)  ));
-       QObject::connect(htable, SIGNAL( showTable(QString, ATTRTYPE) ), this, SLOT( showTable(QString, ATTRTYPE)  ));
-       this->htablesAddSignals.insert(htable, true);
-    }
-    resultTabs->addTab(htable, "CAZY");
-#endif
-
 
 }
 

@@ -97,10 +97,13 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
             path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "tRNA" + sep;
             break;
          case ERRORS:
-            path = CURRENTOUTPUT + QDir::separator()  + sampleName + sep+ "errors_warnings_log.txt";
+            path = CURRENTOUTPUT + sep  + sampleName + sep+ "errors_warnings_log.txt";
             break;
          case GLOBAL_ERRORS:
             path = OUTPUTPATH[sampleName] + sep + sampleName + sep+ "global_errors_warnings.txt";
+            break;
+         case STEPS_LOG:
+            path = OUTPUTPATH[sampleName] + sep + sampleName + sep+ "metapathways_steps_log.txt";
             break;
          default:
             path = "";

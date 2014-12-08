@@ -925,10 +925,19 @@ void ProgressDialog::initProcess(){
 
     if(this->rundata->getNumADB()==0 && this->rundata->getParams().contains(PIPELINE_STEP_BLAST)\
             && this->rundata->getParams()[PIPELINE_STEP_BLAST].indexOf(QString("skip")) == -1 )  {
-        QMessageBox::warning(0,QString("Error!\n") ,QString("No reference Database selected! \nPlease make sure you selected at least one in the Parameters tab."), QMessageBox::Ok);
+        QMessageBox::warning(0,QString("Error!\n") ,QString("No functional reference Database selected! \nPlease make sure you selected at least one in the Parameters tab."), QMessageBox::Ok);
         this->resetRunTab(true);
         return;
     }
+
+    if(this->rundata->getNumRRNADB()==0 && this->rundata->getParams().contains(PIPELINE_STEP_rRNA_BLAST)\
+            && this->rundata->getParams()[PIPELINE_STEP_rRNA_BLAST].indexOf(QString("skip")) == -1 )  {
+        QMessageBox::warning(0,QString("Error!\n") ,QString("No taxonomic (rRNA) Database selected! \nPlease make sure you selected at least one in the Parameters tab."), QMessageBox::Ok);
+        this->resetRunTab(true);
+        return;
+    }
+
+
 
     // arguments to the python execution process call
     // recall : python code is run as python MetaPathways.py -i input -o output -p paramfile -c configfile -r writemode

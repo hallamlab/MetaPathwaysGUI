@@ -88,6 +88,8 @@ private slots:
     void _loadResults();
     void browseFolder();
     void removeFolder();
+    bool needsReloading();
+    bool needsReloading(QString sampleName);
 
 
 signals:
@@ -143,6 +145,7 @@ private:
 
     DataManager *datamanager;
     bool disableSampleChanged;
+    QHash<QString, QString> runids;
 
 
 };
