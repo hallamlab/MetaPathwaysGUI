@@ -219,7 +219,7 @@ QStringList ExportBox::getAllHeaders() {
      csvRadio->setToolTip("Exports the table in the csv format");
      fasta->setToolTip("Exports the contigs (nucleotide sequences) where the ORFs originated");
      fna->setToolTip("Exports the ORFs (predicted gene coding regions of the nucleotide sequences)");
-     faa->setToolTip("Exports the translated (in to amino acid sequences) ORFs ");
+     faa->setToolTip("Exports the amino acid sequences");
      megan->setToolTip("Exports the ORF-wise homology search results to further analyze using the MEGAN software");
 
      vbox->addWidget(fasta);

@@ -271,8 +271,11 @@ bool RunData::checkBinaries(QString &message, QString executablesDir) {
 
     binaries["PRODIGAL_EXECUTABLE"]= (QStringList() << "-h");
     binaries["SCAN_tRNA_EXECUTABLE"] =QStringList("-h");
-    binaries["RPKM_EXECUTABLE"] = QStringList("-h");
 
+#define RPKM_EXECUTABLE
+#ifndef RPKM_EXECUTABLE
+    binaries["RPKM_EXECUTABLE"] = QStringList("-h");
+#endif
 
     QProcess binaryTester;
 
