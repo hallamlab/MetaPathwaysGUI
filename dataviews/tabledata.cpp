@@ -633,10 +633,10 @@ void TableData::populateTable(int top){
           try{
 
               //table.setItem(k,i,new QTableWidgetItem("aldkfjglkjdsfgjdfsjglkjdsfgjldfkgjjdfglkdfgjldfjgljdsflkjlsdkfjglkjsdflgjlkdsfjgljdfslgjldfgljdsflkgjkdfsjlgkja;sdkfj;alwkj;l435u3209"));
-              if( types[i] == INT) {
+              if( types[i] == MP_INT) {
                  tableWidget->setItem(k,i, new QTableWidgetItem(QString::number(datum->intVar.at(largeTable->index[i]))));
               }
-              if( types[i] == DOUBLE) {
+              if( types[i] == MP_DOUBLE) {
                   tableWidget->setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
               }
               if(types[i] == STRING) {
@@ -776,10 +776,10 @@ bool TableData::saveTableToFile(QString fileName, QChar delim, const QStringList
                          case STRING:
                               out << this->largeTable->tableData[i]->strVar[ this->largeTable->index[j]];
                               break;
-                         case INT:
+                         case MP_INT:
                               out << QString::number(this->largeTable->tableData[i]->intVar[ this->largeTable->index[j]]);
                               break;
-                         case DOUBLE:
+                         case MP_DOUBLE:
                               break;
                          default:
                               break;

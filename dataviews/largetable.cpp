@@ -117,8 +117,8 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
     unsigned int intCounter=0, doubleCounter=0, strCounter=0;
     for(unsigned int i =0; i < numCols; i++ ) {
     //    qDebug() << numCols ;
-        if( types[i] == INT)  {index[i] = intCounter; intCounter++;};
-        if( types[i] == DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
+        if( types[i] == MP_INT)  {index[i] = intCounter; intCounter++;};
+        if( types[i] == MP_DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
         if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
     }
 
@@ -147,7 +147,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             if( qlist.size() == numCols) {
                 for(unsigned int k = 0;k<numCols;k++){
 
-                   if( types[k]== INT) {
+                   if( types[k]== MP_INT) {
                        qlist[k].toInt(&ok);
 
                        if (ok)
@@ -155,7 +155,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
                        else
                            list->intVar.append(-1);
                    }
-                   else if( types[k]==DOUBLE) {
+                   else if( types[k]==MP_DOUBLE) {
                       qlist[k].toDouble(&ok);
 
 
@@ -209,8 +209,8 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
     unsigned int intCounter=0, doubleCounter=0, strCounter=0;
     for(unsigned int i =0; i < numCols; i++ ) {
     //    qDebug() << numCols ;
-        if( types[i] == INT)  {index[i] = intCounter; intCounter++;};
-        if( types[i] == DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
+        if( types[i] == MP_INT)  {index[i] = intCounter; intCounter++;};
+        if( types[i] == MP_DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
         if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
     }
 
@@ -248,7 +248,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
                 for(unsigned int k = 0; k < numCols; k++){
                     unsigned int _k = columns[k];
 
-                   if( types[k]== INT) {
+                   if( types[k]== MP_INT) {
                        qlist[_k].toInt(&ok);
 
                        if (ok)
@@ -256,7 +256,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
                        else
                            list->intVar.append(-1);
                    }
-                   else if( types[k]==DOUBLE) {
+                   else if( types[k]==MP_DOUBLE) {
                       qlist[_k].toDouble(&ok);
 
 
@@ -316,12 +316,12 @@ class CompareDoubleField {
 };
 
 void LargeTable::copyDataToSort(unsigned int k) {
-    if(types[k]==INT) {
+    if(types[k]==MP_INT) {
        foreach(ROW *r, tableData)
            r->intTemp = r->intVar[index[k]];
     }
 
-    if(types[k]==DOUBLE)
+    if(types[k]==MP_DOUBLE)
        foreach(ROW *r, tableData)
            r->doubleTemp = r->doubleVar[index[k]];
 
@@ -376,14 +376,14 @@ void LargeTable::sortByField(unsigned int fieldNum) {
         lastUsedField = fieldNum;
         sortingDirectionForward = true;
     }
-    if( types[fieldNum]== INT) {
+    if( types[fieldNum]== MP_INT) {
         if(sortingDirectionForward)
            qSort(tableData.begin(), tableData.end(), compareInt);
         else
            qSort(tableData.begin(), tableData.end(), compareIntRev);
     }
 
-    if( types[fieldNum]== DOUBLE) {
+    if( types[fieldNum]== MP_DOUBLE) {
         if(sortingDirectionForward)
            qSort(tableData.begin(), tableData.end(), compareDouble);
         else

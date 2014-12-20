@@ -406,7 +406,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     foreach(ATTRTYPE functionAttr, functionTables) {
         types.clear();
-        types << STRING << STRING << INT;
+        types << STRING << STRING << MP_INT;
         headers = labels->getHtableHeader(functionAttr, ORFCOUNT);
         htable = this->getHTableData(sampleName, functionAttr, types, headers, datamanager);
         htable->addSampleName(sampleName, true);
@@ -531,7 +531,7 @@ void ResultWindow::sampleChanged(QString sampleName){
     TableData *t;
     foreach(QString rRNATableFile, rRNATableFiles) {
         types.clear();
-        types << STRING << INT<< INT << STRING << STRING << STRING << STRING;
+        types << STRING << MP_INT<< MP_INT << STRING << STRING << STRING << STRING;
         columns.clear();
         columns << 0 << 1 << 2 << 3 << 4<<  5 << 6;
         QString rRNADatabase = samplercmgr->extractDBName(sampleName, rRNATableFile, rRNA);
@@ -563,7 +563,7 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     foreach(QString tRNATableFile,tRNATableFiles) {
         types.clear();
-        types << STRING << STRING<< STRING << INT << INT << STRING ;
+        types << STRING << STRING<< STRING << MP_INT << MP_INT << STRING ;
         columns.clear();
         columns << 0 << 1 << 2 << 3 << 4<<  5 ;
 
@@ -654,7 +654,7 @@ TableData *ResultWindow::_createFunctionalAndTaxTable(const QString &sampleName)
     p->addFileIndex(fileIndex,0);
     QList<enum TYPE> types;
     types.clear();
-    types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
+    types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << MP_INT << STRING << STRING << STRING << STRING;
 
 
     func_tax_table = new TableData;
@@ -708,7 +708,7 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
 
         QList<enum TYPE> types;
         types.clear();
-        types << STRING << INT << INT << INT<<  STRING << INT << STRING << STRING << STRING << STRING;
+        types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << MP_INT << STRING << STRING << STRING << STRING;
         func_tax_table = new TableData;
         func_tax_table->useLCAStar(useLCAStar);
         func_tax_table->largeTable  = new LargeTable();
@@ -1023,7 +1023,7 @@ void ResultWindow::switchToComparativeMode() {
            htable->addConnector(connect, functionAttr);
            headers << files[i];
            htable->addSampleName(files[i]);
-           types << INT;
+           types << MP_INT;
         }
 
         htable->setParameters(datamanager->getHTree(functionAttr),  types);

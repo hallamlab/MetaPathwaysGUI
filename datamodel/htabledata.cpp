@@ -820,7 +820,7 @@ void HTableData::spawnInformativeTable(const QString &sampleName, const  QList<O
     htable->categorySelector->setCurrentIndex(KEGG);
     htable->subWindow = true;
     htable->level = 1;
-    htable->types << STRING << STRING << INT;
+    htable->types << STRING << STRING << MP_INT;
     htable->id.attrType = KEGG;
     htable->id.sampleName = sampleName;
 
