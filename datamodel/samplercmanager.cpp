@@ -38,19 +38,22 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
 
      switch(type) {
          case NUCSTATS:
-         path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".nuc.stats";
+            path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".nuc.stats";
             break;
          case AMINOSTATS:
-         path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep +  sampleName + ".amino.stats";
+            path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep +  sampleName + ".amino.stats";
             break;
          case CONTIGLENGTH:
-         path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".contig.lengths.txt";
+            path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".contig.lengths.txt";
             break;
          case ORFLENGTH:
-         path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".orf.lengths.txt";
+            path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "run_statistics" + sep + sampleName + ".orf.lengths.txt";
             break;
          case NUCFASTA:
-         path = OUTPUTPATH[sampleName]  + sep + sampleName + sep + "preprocessed" + sep + sampleName + ".fasta";
+            path = OUTPUTPATH[sampleName]  + sep + sampleName + sep + "preprocessed" + sep + sampleName + ".fasta";
+            break;
+         case RENAMEMAP:
+            path = OUTPUTPATH[sampleName]  + sep + sampleName + sep + "preprocessed" + sep + sampleName + ".mapping.txt";
             break;
          case AMINOFAA:
             path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "orf_prediction" + sep + sampleName + ".faa";

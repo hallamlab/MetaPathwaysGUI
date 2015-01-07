@@ -12,7 +12,7 @@ LargeTable::LargeTable(unsigned int i): numCols(i)
 }
 
 
-LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> _types){
+LargeTable::LargeTable(const QString fileName, const QString contig_name_map, const QChar delim,  bool firstRowAsHeaders, QList<TYPE> _types){
     this->types = new enum TYPE[ _types.length()];
 
     this->numCols = _types.size();
@@ -24,7 +24,7 @@ LargeTable::LargeTable(const QString fileName, const QChar delim, bool ignoreCom
         i++;
     }
 
-    int read = readDataFile(fileName, delim, firstRowAsHeaders);
+    this->readDataFile(fileName, contig_name_map, delim, firstRowAsHeaders);
 
    // this->addLineageToTaxons();
 
@@ -44,7 +44,7 @@ void LargeTable::addLineageToTaxons() {
 }
 
 // read select columns
-LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> &_types, QList<unsigned int> &columns, QRegExp filter){
+LargeTable::LargeTable(const QString fileName, const QString contig_name_map, const QChar delim,  bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> &_types, QList<unsigned int> &columns, QRegExp filter){
     this->types = new enum TYPE[ _types.length()];
 
     this->numCols = _types.size();
@@ -56,7 +56,7 @@ LargeTable::LargeTable(const QString fileName, const QChar delim,  bool ignoreCo
         i++;
     }
 
-    int read = this->readDataFile(fileName, delim, columns, filter, firstRowAsHeaders);
+    int read = this->readDataFile(fileName, contig_name_map, delim, columns, filter, firstRowAsHeaders);
 
     pivotPointer = 0.0;
     lastUsedField = 1000000;
@@ -98,6 +98,10 @@ void LargeTable::copyWholeToFilter() {
         this->tableData.append(row);
 }
 
+
+
+
+
 /**
  * @brief LargeTable::readDataFile, reads file of data from a file with the given delim and ignore comments flag
  * and firstRowAsHeads flag
@@ -107,11 +111,15 @@ void LargeTable::copyWholeToFilter() {
  * @param firstRowAsHeaders
  * @return
  */
-int LargeTable::readDataFile(const QString fileName, const QChar delim,  const bool ignoreComments, const bool firstRowAsHeaders ){
+int LargeTable::readDataFile(const QString fileName, const QString contig_name_map_file, const QChar delim,  const bool ignoreComments, const bool firstRowAsHeaders ){
     QFile inputFile(fileName);
 
-    bool ok;
+    QHash<QString, QString> contig_name_maps;
 
+    DataManager *datamanager = DataManager::getDataManager();
+    datamanager->loadNameMapping(contig_name_maps, contig_name_map_file);
+
+    bool ok;
     index = new unsigned int[numCols];
 
     unsigned int intCounter=0, doubleCounter=0, strCounter=0;
@@ -119,10 +127,10 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
     //    qDebug() << numCols ;
         if( types[i] == MP_INT)  {index[i] = intCounter; intCounter++;};
         if( types[i] == MP_DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
-        if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
+        if( types[i] ==STRING )  { index[i] = strCounter; strCounter++ ;}
     }
 
-  //  qDebug() << "Reading in the file at 55 " << fileName;
+
     unsigned int i = -1;
     QRegExp comment("#[^\"\\n\\r]*");
 
@@ -132,7 +140,8 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             QString line = in.readLine().trimmed();
 
             if(i== -1 && firstRowAsHeaders ) {
-                colNames = line.split(QRegExp(delim));                
+                colNames = line.split(QRegExp(delim));
+                colNames.insert(5,QString("Orig Contig Name"));
                 numCols = colNames.length();
                 i++;
                 continue;
@@ -143,6 +152,13 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
             ROW *list = new ROW;
 
             QStringList qlist = line.split(QRegExp(delim));
+
+            // add the contig name alias if you find it
+            if( contig_name_maps.contains(qlist[4]))
+                qlist.insert(5, contig_name_maps[qlist[4]]);
+            else
+               qlist.insert(5, QString(""));
+
 
             if( qlist.size() == numCols) {
                 for(unsigned int k = 0;k<numCols;k++){
@@ -166,7 +182,6 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
 
                    }
                    else if( types[k]==STRING){
-
                        if( qlist[k].isEmpty()) qlist[k]="-";
                        list->strVar.append(QString(qlist[k]));
                    }
@@ -180,6 +195,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
     }else return 0;
 
     inputFile.close();
+
 
     return 0;
 
@@ -197,7 +213,9 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim,  const b
  * @return
  */
 
-int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments, const bool firstRowAsHeaders ){
+int LargeTable::readDataFile(const QString fileName, const QString contig_name_map_file, const QChar delim, QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments, const bool firstRowAsHeaders ){
+
+
     QFile inputFile(fileName);
     QList<QString> fields;
     bool ok;
@@ -206,6 +224,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
     index = new unsigned int[numCols];
     unsigned int lastColumn = columns.last();
 
+
     unsigned int intCounter=0, doubleCounter=0, strCounter=0;
     for(unsigned int i =0; i < numCols; i++ ) {
     //    qDebug() << numCols ;
@@ -213,6 +232,7 @@ int LargeTable::readDataFile(const QString fileName, const QChar delim, QList<un
         if( types[i] == MP_DOUBLE) { index[i] = doubleCounter; doubleCounter++;}
         if( types[i] ==STRING)  { index[i] = strCounter; strCounter++ ;}
     }
+
 
     colNames.clear();
 

@@ -79,7 +79,7 @@ TableData::TableData(  QWidget *parent) :
  * @param CACHE
  * @return
  */
-bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> _types, bool CACHE) {
+bool TableData::setParameters(bool HAS_COMMENT, const QString &file, const QString& rename_map_file, QList<TYPE> _types, bool CACHE) {
 
     top = 0;
     bottom = 0;
@@ -96,7 +96,10 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
     }
 
     this->file = file;
+    this->rename_map_file = rename_map_file;
     this->HAS_COMMENT = HAS_COMMENT;
+
+    return true;
 
 }
 
@@ -132,7 +135,7 @@ void TableData::addLCAStarColumn() {
  * @return
  */
 
-bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter) {
+bool TableData::setParameters(bool HAS_COMMENT, const QString &file, const QString &rename_map_file,  QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter) {
 
     top = 0;
     bottom = 0;
@@ -145,9 +148,11 @@ bool TableData::setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE>
     }
 
     this->file = file;
+    this->rename_map_file = rename_map_file;
     this->HAS_COMMENT = HAS_COMMENT;
 
     this->setupFromFile(file, _columns, filter);
+    return true;
 
 }
 
@@ -477,12 +482,15 @@ void TableData::updateData(double top, bool reload){
  */
 void TableData::setupFromFile(const QString &file){
 
+
+
         TableManager *tableManager = TableManager::getTableManager();
 
         largeTable = tableManager->getTable(file);
 
+        // create a new LargeTable
         if( largeTable ==0 ) {
-           largeTable = new LargeTable(file, '\t', true, true, types);
+           largeTable = new LargeTable(file, this->rename_map_file, '\t', true, types);
 
            if( this->addLCAStar ) {
                this->addLCAStarColumn();
@@ -537,7 +545,7 @@ void TableData::setupFromFile(const QString &file, QList<unsigned int> & columns
         largeTable = tableManager->getTable(file);
 
         if( largeTable ==0 ) {
-           largeTable = new LargeTable(file, '\t', true, true, types, columns, filter);
+           largeTable = new LargeTable(file, this->rename_map_file, '\t', true, true, types, columns, filter);
 
            if (CACHE) tableManager->setTable(file, largeTable);
         }
@@ -608,7 +616,6 @@ void TableData::computeLCAStarValue(QHash<QString, LCASTARINFO> &lcainfoHash) {
  * @param from
  */
 void TableData::populateTable(int top){
-
     QHash<QString, LCASTARINFO> lcainfo;
 //    qDebug() << this->headers;
     QStringList headers = this->headers;
@@ -628,6 +635,7 @@ void TableData::populateTable(int top){
 
     QString string;
 
+
     foreach( ROW *datum,  bigdata) {     
       for( unsigned int i = 0; i < largeTable->numCols; i++) {
           try{
@@ -640,6 +648,7 @@ void TableData::populateTable(int top){
                   tableWidget->setItem(k,i,new QTableWidgetItem(QString::number(datum->doubleVar.at(largeTable->index[i]))));
               }
               if(types[i] == STRING) {
+
                   string = datum->strVar.at(largeTable->index[i]);
                   if(this->addLCAStar && i==8) string=ncbitree->getLineage(string);
                   tableWidget->setItem(k,i,new QTableWidgetItem(string));

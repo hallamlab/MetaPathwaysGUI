@@ -50,7 +50,6 @@ public:
     void addTaxons(const QString &sampleName);
     void addTaxonToORFs(const QString &sampleName, const QString &fileName);
 
-
     ORF* _createAnORF(QStringList &attributes, QString &sampleName);
     void destroyORFs(QString sampleName);
     void destroyAllORFs();
@@ -80,6 +79,7 @@ public:
     void destroyAllTaxons();
 
 
+    bool loadNameMapping(QHash<QString,QString> &nameMaps, const QString fileName) ;
 private:
     DataManager();
     QHash<QString, QList<ORF *> *> *ORFList;

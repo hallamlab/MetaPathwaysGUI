@@ -104,6 +104,7 @@ bool TableManager::setGraphData(QString fileName, GRAPHDATA *graphData) {
         delete data;
         tables.remove(dataToDelete);
     }
+    return true;
 
 }
 

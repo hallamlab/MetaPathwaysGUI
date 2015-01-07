@@ -522,6 +522,8 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->setTabToolTip(resultTabs->count()-1, "FUNCTIONAL & TAXONOMIC TABLE");
     progressbar.hide();
 
+   //  emit fileChanged(sampleName);
+   // return;
 
     ////////////////////////
     //   rRNA  TABLE
@@ -543,9 +545,8 @@ void ResultWindow::sampleChanged(QString sampleName){
         else { // table has to be created a new
             t = new TableData;
             t->useLCAStar(false);
-            t->setParameters(false, rRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
+            t->setParameters(false, rRNATableFile, QString(""), types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, rRNATableFile);
-
         }
         t->setExportType(rRNATABLEEXP);
         t->setType(rRNATABLE);
@@ -573,7 +574,8 @@ void ResultWindow::sampleChanged(QString sampleName){
         else { // table has to be created a new
             t = new TableData;
             t->useLCAStar(false);
-            t->setParameters(false, tRNATableFile, types, columns,  false, QRegExp("^[^\\#]"));
+            // tRNATable does not yet need a name mapping
+            t->setParameters(false, tRNATableFile, QString(""), types, columns,  false, QRegExp("^[^\\#]"));
             this->simpleTabGroups.addTable(t, sampleName, tRNATableFile);
         }
         t->setExportType(tRNATABLEEXP);
@@ -654,7 +656,7 @@ TableData *ResultWindow::_createFunctionalAndTaxTable(const QString &sampleName)
     p->addFileIndex(fileIndex,0);
     QList<enum TYPE> types;
     types.clear();
-    types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << MP_INT << STRING << STRING << STRING << STRING;
+    types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << STRING << MP_INT << STRING << STRING << STRING << STRING;
 
 
     func_tax_table = new TableData;
@@ -663,7 +665,7 @@ TableData *ResultWindow::_createFunctionalAndTaxTable(const QString &sampleName)
     func_tax_table->largeTable->addLCAStar = false;
 
     func_tax_table->setSampleName(sampleName);
-    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE),  samplercmgr->getFilePath(sampleName,RENAMEMAP), types, true);
     this->simpleTabGroups.addTable(func_tax_table, sampleName, "FUNC & TAX");
 
     func_tax_table->setPopupListener(p);
@@ -694,7 +696,7 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
             func_tax_table= this->_createFunctionalAndTaxTable(sampleName);
         }
     }
-    else { // table has to be created a new
+    else { //A NEW table has to be created
 
         DisplayInfo *p = this->displayInfos["FUNC & TAX"];
         p->removeFileIndexes();
@@ -708,14 +710,14 @@ TableData *ResultWindow::getFunctionalAndTaxTable(QString sampleName, bool useCa
 
         QList<enum TYPE> types;
         types.clear();
-        types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << MP_INT << STRING << STRING << STRING << STRING;
+        types << STRING << MP_INT << MP_INT << MP_INT<<  STRING << STRING << MP_INT << STRING << STRING << STRING << STRING;
         func_tax_table = new TableData;
         func_tax_table->useLCAStar(useLCAStar);
         func_tax_table->largeTable  = new LargeTable();
         func_tax_table->largeTable->addLCAStar =useLCAStar;
 
         func_tax_table->setSampleName(sampleName);
-        func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), types, true);
+        func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE), samplercmgr->getFilePath(sampleName, RENAMEMAP), types, true);
 
     // if loaded then it always loads from cache table
         func_tax_table->setPopupListener(p);

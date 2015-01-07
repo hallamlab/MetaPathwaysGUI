@@ -45,9 +45,9 @@ public:
     QStringList getHeaders();
     QString getHeader(unsigned int i);
 
-    bool setParameters(bool HAS_COMMENT, const QString &file, QList<enum TYPE> _types,bool CACHE=false);
+    bool setParameters(bool HAS_COMMENT, const QString &file, const QString &rename_map_file, QList<enum TYPE> _types,bool CACHE=false);
 
-    bool setParameters(bool HAS_COMMENT, const QString &file, QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter);
+    bool setParameters(bool HAS_COMMENT, const QString &file, const QString &rename_map_file,  QList<TYPE> &_types, QList<unsigned int> &_columns, bool CACHE, QRegExp filter);
     void loadData();
 
     void addLCAStarColumn();
@@ -135,7 +135,7 @@ private:
     DisplayInfo *p;
     GenomeView *g;
     QString sampleName;
-    QString file;
+    QString file, rename_map_file;
     ExportBox * exportBox;
     QString auxName;
 

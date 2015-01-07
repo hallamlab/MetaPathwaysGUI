@@ -120,6 +120,7 @@ public:
     void emitloadSampleList();
 
     bool saveContext(const QString &key, QVariant value);
+    bool createContext(const QString &key);
     bool hasContext(const QString &key);
     QVariant getContext(const QString &key);
 

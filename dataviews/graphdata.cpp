@@ -40,6 +40,7 @@ void GraphData::saveImage(){
 
 bool GraphData::setFile(QString fileName) {
     this->file = fileName;
+    return true;
 }
 
 bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
@@ -68,6 +69,7 @@ bool GraphData::prepareInput(const QString &xlab, const QString &ylab) {
 
 
     this->plotSomeGraph(this->graph, gdata);
+    return true;
 }
 
 

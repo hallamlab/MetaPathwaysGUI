@@ -1,4 +1,4 @@
-#include "exportbox.h"
+#include "popupviews/exportbox.h"
 
 ExportBox::ExportBox(TableData* td, QWidget *parent, TABLEEXPORTTYPE type)
     // : QWidget(parent)
@@ -56,6 +56,7 @@ void ExportBox::setExportType(TABLEEXPORTTYPE type) {
 bool ExportBox::cancelWindow() {
     this->scroll->close();
     this->close();
+    return true;
 }
 
 bool compareColumns(const EXPORT_SELECT a, const EXPORT_SELECT b) {

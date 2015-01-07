@@ -73,7 +73,8 @@ private:
     bool isRunningAStep();
     bool isStepActive(QString stepName);
 private slots:
-
+    void showContextMenu(QPoint pt);
+    void clearStdOut() ;
     void terminateRun();
     void checkFiles();
     void selectedFileChanged(const QString &sampleName);

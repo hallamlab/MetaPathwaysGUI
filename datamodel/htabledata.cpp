@@ -267,7 +267,7 @@ bool HTableData::setParameters(HTree *htree,  QList<TYPE> _types) {
     this->types = _types;
     this->htree = htree;
 
-
+    return true;
 }
 
 void HTableData::clearConnectors() {

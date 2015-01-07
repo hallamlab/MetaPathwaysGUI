@@ -675,7 +675,6 @@ void RunData::addFileToList(QString file) {
 
 void RunData::setFileList(QStringList files) {
     this->files  = files;
-
 }
 
 /**
@@ -704,7 +703,9 @@ QStringList RunData::getCurrentFileList(){
  * @param fileType, the file type to pick
  */
 void RunData::loadInputFiles(const QString &folder){
-    QDir currentDir(this->getParams()["fileInput"]);
+//    QDir currentDir(this->getParams()["fileInput"]);
+
+    QDir currentDir(folder);
 
     if( !currentDir.exists() ) {
         Utilities::showInfo(0, QString("Input folder ") + folder + QString(" not found!")) ;
@@ -913,6 +914,12 @@ bool RunData::saveContext(const QString &key, QVariant value) {
 bool RunData::hasContext(const QString &key) {
      QSettings settings("HallamLab", "MetaPathways");
      if( settings.value(key) == QVariant() ) return false;
+     return true;
+}
+
+bool RunData::createContext(const QString &key) {
+     QSettings settings("HallamLab", "MetaPathways");
+     settings.setValue(key, QString(""));
      return true;
 }
 

@@ -86,8 +86,29 @@ ProgressDialog::ProgressDialog(QWidget *parent) : QWidget(parent), ui(new Ui::Pr
     connect(this->showMessages, SIGNAL(currentChanged(int)), this, SLOT(showErrors()));
 
 
+    standardOut->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(standardOut, SIGNAL(customContextMenuRequested(QPoint)) , this, SLOT(showContextMenu(QPoint)));
+
+
 }
 
+
+
+void ProgressDialog::showContextMenu(QPoint pt)
+{
+    QMenu *menu = standardOut->createStandardContextMenu();
+    QAction *clearAct = new QAction("Clear", this);
+
+    connect(clearAct, SIGNAL(triggered()), this, SLOT(clearStdOut()));
+
+    menu->addAction(clearAct);
+    menu->exec(standardOut->mapToGlobal(pt));
+    delete menu;
+}
+
+void ProgressDialog::clearStdOut() {
+    this->standardOut->clear();
+}
 
 /**
  * @brief ProgressDialog::showErrors, shows the error during the run
@@ -969,12 +990,14 @@ void ProgressDialog::initProcess(){
 
     // the actual process setup
 
+   // qDebug() << arguments;
+
     myProcess = new QProcess();
     myProcess->setProcessEnvironment(env);
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments); // start the python script
 
-    standardOut->clear();
+  //  standardOut->clear();
     this->timer->start(5000);
 
  //   standardOut->append( arguments.join(" ") );

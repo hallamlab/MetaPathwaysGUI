@@ -58,14 +58,14 @@ QString DataManager::getORFFaa(QString sampleName) {
 
 QString DataManager::getORFFna(QString sampleName) {
 
-
+    return QString();
 
 }
 
 QString DataManager::getORFFasta(QString sampleName) {
 
 
-
+    return QString();
 }
 
 void DataManager::setIndexFileFaa(QString sampleName, QString fileName) {
@@ -1003,6 +1003,37 @@ Connector *DataManager::_createConnector(QString sampleName, HTree *htree, ATTRT
 
     return connector;
 }
+
+/**
+  * @brief DataManager::loadNameMapping, read the contig name maps
+  * @param nameMaps, the hash map that has the map name->mapped_name
+  * @param filename
+  * @return
+  */
+
+ bool DataManager::loadNameMapping(QHash<QString,QString> &nameMaps, const QString fileName)  {
+     QFile inputFile(fileName);
+     qDebug() << fileName;
+     unsigned int i = -1;
+     QRegExp comment("^#");
+
+     if (inputFile.open(QIODevice::ReadOnly)) {
+         QTextStream in(&inputFile);
+         while ( !in.atEnd() )  {
+             QString line = in.readLine().trimmed();
+
+             if(comment.exactMatch(line)) continue;
+             QStringList qlist = line.split(QRegExp("\t"));
+             if( qlist.size() < 2 ) continue;
+
+             nameMaps[ qlist.at(0).trimmed() ] = qlist.at(1).trimmed();
+         }
+         inputFile.close();
+     } else return false;
+
+     return true;
+
+ }
 
 
 

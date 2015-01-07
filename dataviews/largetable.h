@@ -31,12 +31,12 @@ class LargeTable
 public:
     LargeTable();
     LargeTable(unsigned int i);
-    LargeTable(const QString filename, const QChar delim, bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> types = QList<TYPE>());
-    LargeTable(const QString filename, const QChar delim, bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> &types, QList<unsigned int> &columns, QRegExp filter);
+    LargeTable(const QString filename, const QString contig_name_map, const QChar delim, bool firstRowAsHeaders, QList<TYPE> types = QList<TYPE>());
+    LargeTable(const QString filename, const QString contig_name_map, const QChar delim, bool ignoreComments, bool firstRowAsHeaders, QList<TYPE> &types, QList<unsigned int> &columns, QRegExp filter);
     ~LargeTable();
 
-    int readDataFile(const QString fileName, const QChar delim,  const bool ignoreComments = true, const bool firstRowAsHeaders = true);
-    int readDataFile(const QString fileName, const QChar delim,  QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments = true, const bool firstRowAsHeaders = true);
+    int readDataFile(const QString fileName, const QString contig_name_map_file, const QChar delim,  const bool ignoreComments = true, const bool firstRowAsHeaders = true);
+    int readDataFile(const QString fileName, const QString contig_name_map_file, const QChar delim,  QList<unsigned int> &columns, QRegExp filter, const bool ignoreComments = true, const bool firstRowAsHeaders = true);
     void getData(QList<ROW *> &data,  int pivotPoint = 0, unsigned int deltaW = 100);
     void addLineageToTaxons();
 

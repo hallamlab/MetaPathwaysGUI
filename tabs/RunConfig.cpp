@@ -69,7 +69,12 @@ void RunConfig::clickedSelectSample(){
 
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
+
     this->selectWindow->addSamples(this->rundata->getFileList(inputLine->text().trimmed()));
+
+    this->rundata->setValue("fileInput", inputLine->text().trimmed(), _PARAMS);
+    if( this->rundata->hasContext(INPUT_FOLDER) )  this->rundata->saveContext(INPUT_FOLDER, inputLine->text().trimmed());
+
     this->selectWindow->show();
 }
 
@@ -154,8 +159,12 @@ void RunConfig::browseFile(){
     }
 
     this->rundata->setCurrentSample(QString());
-    this->rundata->loadInputFiles( fileInputFormat->currentText().trimmed() );
+    this->rundata->loadInputFiles( inputLine->text().trimmed() );
     this->rundata->setValue("fileInput", selectedFiles, _PARAMS);
+
+    if( this->rundata->hasContext(INPUT_FOLDER) )
+        this->rundata->saveContext(INPUT_FOLDER, selectedFiles);
+
     //send a signal to the parent to enable the continue button
     if (!selectedFiles.isEmpty()){
         if( !selectedFolder.isEmpty()) emit fileSet();

@@ -22,31 +22,31 @@ bool compareAttributes(QPair<QString, unsigned int> &pair1, QPair<QString, unsig
 
 void RunDataStats::initializeTags() {
     this->replace[FULL_REPL][QString("1000")] = QString("Number of sequences in input file BEFORE QC (nucleotide)");
-    this->replace[FULL_REPL][QString("1001")] = QString("-min length (bps)");
-    this->replace[FULL_REPL][QString("1002")] = QString("-avg length (bps)");
-    this->replace[FULL_REPL][QString("1003")] = QString("-max length (bps)");
-    this->replace[FULL_REPL][QString("1004")] = QString("-total base pairs (bps)");
+    this->replace[FULL_REPL][QString("1001")] = QString(" min length (bps)");
+    this->replace[FULL_REPL][QString("1002")] = QString(" avg length (bps)");
+    this->replace[FULL_REPL][QString("1003")] = QString(" max length (bps)");
+    this->replace[FULL_REPL][QString("1004")] = QString(" total base pairs (bps)");
 
 
     this->replace[FULL_REPL][QString("1005")] = QString("Number of sequences AFTER QC (nucleotide)");
-    this->replace[FULL_REPL][QString("1006")] = QString("-min length (bps)");
-    this->replace[FULL_REPL][QString("1007")] = QString("-avg length (bps)");
-    this->replace[FULL_REPL][QString("1008")] = QString("-max length (bps)");
-    this->replace[FULL_REPL][QString("1009")] = QString("-total base pairs (bps)");
+    this->replace[FULL_REPL][QString("1006")] = QString(" min length (bps)");
+    this->replace[FULL_REPL][QString("1007")] = QString(" avg length (bps)");
+    this->replace[FULL_REPL][QString("1008")] = QString(" max length (bps)");
+    this->replace[FULL_REPL][QString("1009")] = QString(" total base pairs (bps)");
 
 
     this->replace[FULL_REPL][QString("2000")] = QString("Number of translated ORFs BEFORE QC (amino)");
-    this->replace[FULL_REPL][QString("2001")] = QString("-min length (bps)");
-    this->replace[FULL_REPL][QString("2002")] = QString("-avg length (bps)");
-    this->replace[FULL_REPL][QString("2003")] = QString("-max length (bps)");
-    this->replace[FULL_REPL][QString("2004")] = QString("-total base pairs (bps)");
+    this->replace[FULL_REPL][QString("2001")] = QString(" min length (bps)");
+    this->replace[FULL_REPL][QString("2002")] = QString(" avg length (bps)");
+    this->replace[FULL_REPL][QString("2003")] = QString(" max length (bps)");
+    this->replace[FULL_REPL][QString("2004")] = QString(" total base pairs (bps)");
 
 
     this->replace[FULL_REPL][QString("2005")] = QString("Number of translated ORFs AFTER QC (amino)");
-    this->replace[FULL_REPL][QString("2006")] = QString("-min length (bps)");
-    this->replace[FULL_REPL][QString("2007")] = QString("-avg length (bps)");
-    this->replace[FULL_REPL][QString("2008")] = QString("-max length (bps)");
-    this->replace[FULL_REPL][QString("2009")] = QString("-total base pairs (bps)");
+    this->replace[FULL_REPL][QString("2006")] = QString(" min length (bps)");
+    this->replace[FULL_REPL][QString("2007")] = QString(" avg length (bps)");
+    this->replace[FULL_REPL][QString("2008")] = QString(" max length (bps)");
+    this->replace[FULL_REPL][QString("2009")] = QString(" total base pairs (bps)");
 
 
 
@@ -133,7 +133,7 @@ bool RunDataStats::readStatFiles() {
         }
         count++;
     }
-
+    return true;
     /*
     foreach(QString code, this->orderCodes) {
         qDebug() << code << "   " << this->codeToTagLine[code];
