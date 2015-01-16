@@ -29,7 +29,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>rRNA Databases</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;rRNA Databases&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -492,7 +492,7 @@ p, li { white-space: pre-wrap; }
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reference protein databases used to functionally annotate the predicted open reading frames (ORF), e.g., KEGG, COG, Metacyc, SEED, or any user provided fasta file of annotated proteins in the functional folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Reference Protein Databases</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Reference Protein Databases&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Impacts:&lt;/p&gt;&lt;p&gt;FUNC SEARCH, PARSE FUNC SEARCH,&lt;/p&gt;&lt;p&gt;ANNOT ORFS, CREATE ANNOT REPORTS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>

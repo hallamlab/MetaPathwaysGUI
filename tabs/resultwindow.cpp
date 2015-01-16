@@ -53,7 +53,10 @@ ResultWindow::ResultWindow(QWidget *parent) :
     connect(sampleSelect,SIGNAL(activated(QString)),this,SLOT(sampleChanged(QString)));
    // connect(getFileNames, SIGNAL(timeout()),this,SLOT(updateFileNames()));
     //connect(this,SIGNAL(fileChanged(QString)),this->progress,SLOT(selectedFileChanged(QString)));
+    connect(resultViewMode,  SIGNAL(currentIndexChanged(int)), this, SLOT(useCurrentFolderText() ) );
     connect(resultViewMode,  SIGNAL(currentIndexChanged(int)), this, SLOT(setVisible(int)) );
+
+
     connect(selectSamplesButton, SIGNAL(clicked()), this, SLOT(clickedSelectSample()  ) );
     connect(loadResults, SIGNAL(clicked()), this, SLOT(_loadResults()) );
     connect(addResultFolder, SIGNAL(clicked()), this, SLOT(browseFolder()));
@@ -106,7 +109,7 @@ void ResultWindow::removeFolder(){
     if( currentFolder.isEmpty() ) return;
 
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, "Test", QString("Remove result folder ") + currentFolder + QString(" from list?"),
+    reply = QMessageBox::question(this, "Test", QString("Stop loading results from  result folder ") + currentFolder + QString(" ?"),
                                    QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {
         this->resultFolders->removeItem(this->resultFolders->currentIndex());
@@ -210,11 +213,35 @@ QStringList ResultWindow::getResultFoldersList() {
     return resultFoldersList;
 }
 
+
+/**
+ * @brief ResultWindow::useCurrentFolderText, makes sure that the current folder is used
+ *
+ */
+void ResultWindow::useCurrentFolderText() {
+    // pick up any new folder pasted
+    QString currentFolder = this->resultFolders->currentText();
+
+    QHash<QString, bool> itemTexts;
+    for(int i =0; i < resultFolders->count(); i++ )
+        itemTexts.insert(resultFolders->itemText(i), true);
+
+    if(!currentFolder.isEmpty() && !itemTexts.contains(currentFolder)){
+        this->resultFolders->addItem(currentFolder);
+        this->_loadResults();
+    }
+
+}
+
+
+
 /**
  * @brief ResultWindow::clickedSelectSample, loads the output results for the
  * comparative mode
  */
 void ResultWindow::clickedSelectSample(){
+
+    this->useCurrentFolderText();
 
     this->selectWindow = new SelectSamples;
     this->selectWindow->setReceiver(this);
@@ -288,6 +315,9 @@ void ResultWindow::updateFileNames(){
  * @param sampleName
  */
 void ResultWindow::sampleChanged(QString sampleName){
+
+
+
     QRegExp select_sample_regexp = QRegExp("Select sample");
     if( select_sample_regexp.indexIn(sampleName) != -1 ) return;
 

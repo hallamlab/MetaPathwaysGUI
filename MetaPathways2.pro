@@ -16,6 +16,11 @@ equals(QT_MAJOR_VERSION, 5) {
 }
 
 
+win64 {
+     INCLUDEPATH += C:\PROJECTS\Current2\MetaPathwaysGUI-master
+     CONFIG+= static
+}
+
 DEFINES -= LCASTAR
 DEFINES += DEBIAN
 

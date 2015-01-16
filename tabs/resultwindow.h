@@ -90,7 +90,7 @@ private slots:
     void removeFolder();
     bool needsReloading();
     bool needsReloading(QString sampleName);
-
+    void useCurrentFolderText();
 
 signals:
     void fileChanged(QString file);
