@@ -51,6 +51,7 @@ private slots:
     //void run();
 public slots:
     void receiveSelection(QList<QString> &selectedSamples);
+    void updateRunData();
 
 signals:
     void fileSet();

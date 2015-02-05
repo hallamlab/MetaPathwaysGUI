@@ -717,7 +717,7 @@ void RunData::loadInputFiles(const QString &folder){
     QList<QRegExp> regList;
 
     // for fasta type only
-    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$") << QRegExp("[.][gG][bB][kK]$");
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]$") << QRegExp("[.][fF][nN][aA]$") << QRegExp("[.][gG][bB][kK]$");
 
 
     QStringList filesDetected;

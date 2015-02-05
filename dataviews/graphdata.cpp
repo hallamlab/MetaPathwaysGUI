@@ -156,8 +156,6 @@ void GraphData::computeHistoGram(GRAPHDATA *gdata) {
 }
 
 
-
-
 void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
 
 
@@ -167,6 +165,7 @@ void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
 
     double miny = 1e+20, maxy = -1e+20;
     double wtmean =0, wtsum=0, sumy=0, wtsumsq;
+
 
     for(int i =0; i < gdata->x.size(); i++ )  {
         wtsum += gdata->x.at(i)*gdata->y.at(i);
@@ -194,12 +193,14 @@ void GraphData::plotBarGraph(QCustomPlot *customPlot, GRAPHDATA *gdata) {
             y3.append(gdata->y.at(i));
         }
     }
+
+    if( y3.size()==0) return;
+
     y3[0] += countleft;
     y3[y3.size()-1] += countright;
 
     customPlot->yAxis->setRange(miny, maxy);
     customPlot->xAxis->setRange(x3.first() - deltaw , x3.last() + deltaw);
-
 
     QCPBars *bars1 = new QCPBars(customPlot->xAxis, customPlot->yAxis );
     customPlot->addPlottable(bars1);

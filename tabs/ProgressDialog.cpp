@@ -844,7 +844,6 @@ void ProgressDialog::startRun(){
     QString rRNArefdbs = this->rundata->getParams()["rRNA:refdbs"];
     QString annotationDBS = this->rundata->getParams()["annotation:dbs"];
 
-
     this->rundata->emitloadSampleList();
     if(rRNArefdbs.isEmpty()){
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM, "PARAMS", "rRNA:refdbs","",false,false);
@@ -852,6 +851,7 @@ void ProgressDialog::startRun(){
     if(annotationDBS.isEmpty()){
         Utilities::writeSettingToFile(rundata->getConfig()["METAPATHWAYS_PATH"] +  QDir::separator() + "config" + QDir::separator()  + RunData::TEMPLATE_PARAM,"PARAMS", "annotation:dbs","",false,false);
     }
+
 
     if (this->rundata->getParams()["fileInput"].isEmpty()
         || this->rundata->getParams()["folderOutput"].isEmpty()){
@@ -869,6 +869,8 @@ void ProgressDialog::startRun(){
         this->resetRunTab(false, false);
         initProcess();
     }
+
+
 
 }
 
@@ -972,7 +974,6 @@ void ProgressDialog::initProcess(){
     arguments << "-d" << "8";
     //arguments << "-r" << (this->rundata->getParams()["overwrite"]);
 
-
     //add the specific samples
     foreach(QString samplename, this->rundata->getSamplesSubsetToRun()) {
         arguments << "-s" << samplename;
@@ -997,10 +998,12 @@ void ProgressDialog::initProcess(){
     myProcess->setProcessChannelMode(QProcess::MergedChannels);
     myProcess->start(program, arguments); // start the python script
 
+
+
   //  standardOut->clear();
     this->timer->start(5000);
 
- //   standardOut->append( arguments.join(" ") );
+    standardOut->append( arguments.join(" ") );
 
     this->resetRunTab(false);
     rundata->setProcess(myProcess); // let rundata know what's good
@@ -1035,7 +1038,7 @@ void ProgressDialog::checkFiles(){
     QStringList entries = currentDir.entryList();
 
     QList<QRegExp> regList;
-    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]") << QRegExp("[.][fF][nN][aA]$");
+    regList << QRegExp("[.][fF][aA][sS][tT][aA]$") << QRegExp("[.][fF][aA]$") << QRegExp("[.][fF][aA][aA]$") << QRegExp("[.][fF][aA][sS]$") << QRegExp("[.][fF][nN][aA]$");
 
     filesDetected.clear();
     for( QStringList::ConstIterator entry=entries.begin(); entry!=entries.end(); ++entry )

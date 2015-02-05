@@ -133,6 +133,7 @@ public:
 signals:
     void loadSampleList();
     void loadParameters();
+    void emitUpdate();
 
 public slots:
 

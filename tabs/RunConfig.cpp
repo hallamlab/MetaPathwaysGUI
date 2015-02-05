@@ -46,7 +46,9 @@ RunConfig::RunConfig(QWidget *parent) :
     connect(folderBrowseButton, SIGNAL(clicked()), this, SLOT(browseFolder()));
     connect(setupGrids, SIGNAL(clicked()), this, SLOT(specifyGrid()));
 
-    RunData *rundata = RunData::getRunData();
+    this->rundata = RunData::getRunData();
+
+    connect(this->inputLine, SIGNAL(textChanged(QString)),  this, SLOT(updateRunData()));
 
     //connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(saveInput()));
     connect(outputLine, SIGNAL(textChanged(QString)), this, SLOT(saveOutput(QString)));
@@ -56,8 +58,25 @@ RunConfig::RunConfig(QWidget *parent) :
     fileInputFormat->setVisible(false);
 }
 
+/**
+ * @brief RunConfig::updateRunData, updates the run data and also saves the context for next time
+ */
+void RunConfig::updateRunData() {
+   // qDebug() << "Text changed";
+    this->rundata->setValue("fileInput", inputLine->text().trimmed(), _PARAMS);
+    if( this->rundata->hasContext(INPUT_FOLDER) ) {
+        this->rundata->saveContext(INPUT_FOLDER, inputLine->text().trimmed());
+     //   qDebug() << " has context";
+    }
+  //  qDebug() << "current " << this->inputLine->text();
+   // qDebug() << "changed to " << this->rundata->getParams()["fileInput"];
+    this->rundata->setDirtyBit("fileInput");
 
+}
 
+/**
+ * @brief RunConfig::clickedSelectSample, this is for selecting the samples
+ */
 void RunConfig::clickedSelectSample(){
 
     QStringList samples =  this->rundata->getFileList(inputLine->text().trimmed());
@@ -72,8 +91,7 @@ void RunConfig::clickedSelectSample(){
 
     this->selectWindow->addSamples(this->rundata->getFileList(inputLine->text().trimmed()));
 
-    this->rundata->setValue("fileInput", inputLine->text().trimmed(), _PARAMS);
-    if( this->rundata->hasContext(INPUT_FOLDER) )  this->rundata->saveContext(INPUT_FOLDER, inputLine->text().trimmed());
+    this->updateRunData();
 
     this->selectWindow->show();
 }

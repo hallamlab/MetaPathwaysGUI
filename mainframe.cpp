@@ -268,8 +268,7 @@ void MainFrame::updateWidgets(){
                 }
                 // concatenate all the databases together by commas
             }
-            if( !rundata->isBitDirty(value))
-                rundata->setValue(configName, value, _PARAMS);
+            if( !rundata->isBitDirty(value))   rundata->setValue(configName, value, _PARAMS);
             rundata->clearsDirtyBit(value);
             // now write them to the parameter file
           //  qDebug() << " Writing out the file";
@@ -316,7 +315,14 @@ void MainFrame::updateWidgets(){
 
         //save file input and output selected
 
-        rundata->setValue("fileInput", stages->selectedFiles,_PARAMS);
+        if( this->rundata->isBitDirty("fileInput")) {
+           this->rundata->clearsDirtyBit("fileInput");
+            stages->selectedFiles = this->rundata->getValueFromHash("fileInput", _PARAMS);
+        }
+        else {
+           this->rundata->setValue("fileInput", stages->selectedFiles,_PARAMS);
+        }
+
         if( this->rundata->isBitDirty("folderOutput")) {
            this->rundata->clearsDirtyBit("folderOutput");
             stages->selectedFolder = this->rundata->getValueFromHash("folderOutput", _PARAMS);

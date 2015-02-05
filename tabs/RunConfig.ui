@@ -207,6 +207,13 @@
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The preprocess step filters out the contigs based on the minimum length, presence of ambiguous nucleotide positions. Contigs with ambiguous sequences are split into, separate contigs, at the regions where ambiguous sequences appear. The resulting conigs are filtered out if they are below the minimum length threshold. The resulting filtered sequences are made available into the folder &amp;quot;preprocessed&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
+    <property name="background">
+     <color>
+      <red>220</red>
+      <green>220</green>
+      <blue>220</blue>
+     </color>
+    </property>
    </row>
    <row>
     <property name="text">
@@ -262,6 +269,22 @@
     </property>
     <property name="toolTip">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Based on the parsed homology search results against reference protein databases, tRNA scan results and matches against the LSU and SSU rRNA   sequence databases annotations for individual ORFs are created.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional annotation is done by synthesizing  the annotations from the reference databases, after removing redundant texts and also making sure that the annotations from different reference databases are in agreement with each other.&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (lowest common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="background">
+     <color>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </property>
+    <property name="foreground">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </row>
    <row>
@@ -655,8 +678,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>310</x>
      <y>460</y>
-     <width>251</width>
-     <height>21</height>
+     <width>241</width>
+     <height>91</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -669,6 +692,9 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The taxonomic annotation is done by applying the LCA (lowest common ancestor rule) on the hits from the RefSeq NR protein database.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(220, 220, 220);</string>
+   </property>
    <property name="title">
     <string/>
    </property>
@@ -679,7 +705,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>0</y>
+      <y>35</y>
       <width>20</width>
       <height>20</height>
      </rect>
@@ -692,7 +718,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>0</y>
+      <y>35</y>
       <width>20</width>
       <height>20</height>
      </rect>
@@ -705,68 +731,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>0</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QGroupBox" name="metapaths_stepsCREATE_ANNOT_REPORTS">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>520</y>
-     <width>251</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Report tables summarizing and listing the functional and taxonomic annotation for all the ORFs in a sample are computed.The results are dropped in the folder &lt;/span&gt;&lt;span style=&quot; font-size:12pt; color:#31dc46;&quot;&gt;results/annotation_table&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="create_annot_reportsYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>20</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="create_annot_reportsSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="create_annot_reportsREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
+      <y>35</y>
       <width>20</width>
       <height>20</height>
      </rect>
@@ -1239,68 +1204,6 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QGroupBox" name="metapaths_stepsPATHOLOGIC_INPUT">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>490</y>
-     <width>251</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="toolTip">
-    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The functional and taxonomic annotations created for the individual ORFs are used to create the inputs required by Pathway-Tools's Pathologic algorithm  to create the ePGDBs. The input consists of 4 files that contains functional annotations and sequences with relevant information, this information is used by Pathologic to create the ePGDBs.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="title">
-    <string/>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-   <widget class="QRadioButton" name="pathologic_inputYES">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>0</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="pathologic_inputSKIP">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>0</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="pathologic_inputREDO">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>0</y>
-      <width>20</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
@@ -1335,7 +1238,6 @@ p, li { white-space: pre-wrap; }
   <zorder>metapaths_stepsFUNC_SEARCH</zorder>
   <zorder>metapaths_stepsSCAN_tRNA</zorder>
   <zorder>metapaths_stepsSCAN_rRNA</zorder>
-  <zorder>metapaths_stepsCREATE_ANNOT_REPORTS</zorder>
   <zorder>metapaths_stepsORF_PREDICTION</zorder>
   <zorder>outputFolder</zorder>
   <zorder>outputFolderBrowser</zorder>
@@ -1343,7 +1245,6 @@ p, li { white-space: pre-wrap; }
   <zorder>outputLine</zorder>
   <zorder>selectSamplesButton</zorder>
   <zorder>label_5</zorder>
-  <zorder>metapaths_stepsPATHOLOGIC_INPUT</zorder>
   <zorder>label_6</zorder>
  </widget>
  <tabstops>
@@ -1368,9 +1269,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>compute_rpkmYES</tabstop>
   <tabstop>compute_rpkmSKIP</tabstop>
   <tabstop>compute_rpkmREDO</tabstop>
-  <tabstop>pathologic_inputYES</tabstop>
-  <tabstop>pathologic_inputSKIP</tabstop>
-  <tabstop>pathologic_inputREDO</tabstop>
   <tabstop>build_pgdbYES</tabstop>
   <tabstop>build_pgdbSKIP</tabstop>
   <tabstop>build_pgdbREDO</tabstop>
