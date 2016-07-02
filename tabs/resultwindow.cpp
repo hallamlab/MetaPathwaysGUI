@@ -30,6 +30,16 @@ ResultWindow::ResultWindow(QWidget *parent) :
     addResultFolder = this->findChild<QToolButton *>("addResultFolder");
     deleteResultFolder = this->findChild<QToolButton *>("deleteResultFolder");
     resultFolders = this->findChild<QComboBox *>("resultFolders");
+    statusOnlyBox = this->findChild<QCheckBox *>("statusBox");
+
+    functionBoxes[KEGG] = this->findChild<QCheckBox *>("keggBox");
+    functionBoxes[COG] = this->findChild<QCheckBox *>("cogBox");
+    functionBoxes[METACYC] = this->findChild<QCheckBox *>("metacycBox");
+    functionBoxes[CUSTOM] = this->findChild<QCheckBox *>("customBox");
+    functionBoxes[SEED] = this->findChild<QCheckBox *>("seedBox");
+    functionBoxes[CAZY] = this->findChild<QCheckBox *>("cazyBox");
+
+
     this->setVisible(0);
     selectSamplesButton->hide();
 
@@ -81,6 +91,8 @@ ResultWindow::ResultWindow(QWidget *parent) :
     datamanager->createDataModel();
 #endif
 
+    this->loadStatsOnly = true;
+
 }
 
 void ResultWindow::browseFolder(){
@@ -129,20 +141,15 @@ void ResultWindow::_loadResults() {
 */
 
     this->disableSampleChanged = true;
-
     DataManager *datamanager = DataManager::getDataManager();
+    datamanager->destroyDataModel();
+    datamanager->setDataModelCreated(false);
     /***/
-    datamanager->destroyAllORFs();
-    datamanager->destroyAllContigs();
-    datamanager->deleteAllConnectors();
-    datamanager->destroyAllHTrees();
-    datamanager->destroyAllAttributes();
 
     TableManager *tableManager = TableManager::getTableManager();
     tableManager->deleteAllGraphData();
     tableManager->deleteAllTables();
-    /***/
-    datamanager->setDataModelCreated(false);
+
 
     this->rundata->setResultFolders(this->getResultFoldersList());
     this->rundata->loadOutputFolders();
@@ -202,7 +209,10 @@ void ResultWindow::indexSample(QString sampleName, bool userResourceFolder) {
     progressBar.hide();
 }
 
-
+/**
+ * @brief ResultWindow::getResultFoldersList, gets the list of result folders to look into
+ * @return
+ */
 
 QStringList ResultWindow::getResultFoldersList() {
     QStringList resultFoldersList;
@@ -233,14 +243,11 @@ void ResultWindow::useCurrentFolderText() {
 
 }
 
-
-
 /**
- * @brief ResultWindow::clickedSelectSample, loads the output results for the
- * comparative mode
+ * @brief ResultWindow::showFlatSampleSelect, shows the menu to select the flatSample Selection
+ * widget
  */
-void ResultWindow::clickedSelectSample(){
-
+void ResultWindow::showFlatSampleSelect(){
     this->useCurrentFolderText();
 
     this->selectWindow = new SelectSamples;
@@ -252,13 +259,99 @@ void ResultWindow::clickedSelectSample(){
     this->selectWindow->show();
 }
 
+/**
+ * @brief ResultWindow::showHierarchicalSampleSelect, show the hierarchical menu to select samples
+ */
+void ResultWindow::showHierarchicalSampleSelect() {
+    this->rundata->setResultFolders(this->getResultFoldersList());
+
+    QHash<QString, HIERARCHICAL_SAMPLE> activesamples;
+
+    QFileInfo fileInfo;
+
+    // create the structure of the active files
+    foreach( QString folder, this->rundata->getResultFolders()) {
+        foreach(QString sample, this->rundata->getOutputSampleFolderPairs(folder)) {
+            if( !activesamples.contains(sample)) {
+                HIERARCHICAL_SAMPLE name;
+                name.valid = false;
+                name.name = sample;
+                activesamples[sample] = name;
+            }
+            activesamples[sample].folders.append(sample);
+        }
+    }
+
+
+    // report the duplicates
+    QStringList allsamples = activesamples.keys();
+    foreach(QString sample, allsamples) {
+        if( activesamples[sample].folders.size() > 1) activesamples.remove(sample);
+    }
+
+
+    // read the metadata
+    foreach( QString folder, this->rundata->getResultFolders()) {
+        QString metadatafile = folder + QDir::separator() + QString("metadata.txt");
+
+
+        fileInfo.setFile(metadatafile);
+        if( !fileInfo.exists() ) continue;
+        QHash<QString, QStringList> samplesinfo;
+        Utilities::read_metadata_file(metadatafile, samplesinfo);
+
+        foreach(QString sample, samplesinfo.keys()) {
+            // ignore non-existant samples
+            if( !activesamples.contains(sample)) continue;
+
+            // if the sample is validated then do not worry
+            if( activesamples[sample].valid ) continue;
+
+            // validate it if the metadata folder and sample folder matches
+            QDir dir1, dir2;
+            dir1.absoluteFilePath(folder);
+            dir2.absoluteFilePath(activesamples[sample].folders[0]);
+            if( dir1.absolutePath().compare(dir1.absolutePath())==0) {
+                activesamples[sample].valid = true;
+                activesamples[sample].categories = samplesinfo[sample];
+            }
+        }
+    }
+
+
+
+    QHash<QString, QStringList> sampletodisplay ;
+    foreach( QString sample, activesamples.keys()) {
+        sampletodisplay[sample] = activesamples[sample].categories;
+    }
+
+
+
+    HierarchicalView *hierarchicalview = HierarchicalView::getHierarchicalView();
+    hierarchicalview->setReceiver(this);
+    hierarchicalview->showTreeView(sampletodisplay);
+
+}
+
+
+/**
+ * @brief ResultWindow::clickedSelectSample, loads the output results for the
+ * comparative mode
+ */
+void ResultWindow::clickedSelectSample(){
+
+    if(this->resultViewMode->currentIndex() == 1) this->showFlatSampleSelect();
+
+    if(this->resultViewMode->currentIndex() == 2) this->showHierarchicalSampleSelect();
+}
+
 
 /**
  * @brief ResultWindow::setVisible, sets the resulttab to visible
  * @param i
  */
 void ResultWindow::setVisible(int i) {
-    if( i==1 ) {
+    if( i > 0 ) {
         this->selectSamplesButton->setEnabled(true);
         this->selectSamplesButton->show();
         this->sampleSelect->setEnabled(false);
@@ -304,10 +397,28 @@ void ResultWindow::updateFileNames(){
   * @param selection
   */
 
- void ResultWindow::receiveSelection(QList<unsigned int> &selection) {
+ void ResultWindow::receiveSelection(QList<unsigned int> selection, QStringList categories) {
      this->selectedSamples = selection;
+     this->categories = categories;
      this->switchToComparativeMode();
  }
+
+
+ /**
+  * @brief ResultWindow::getActiveCategories, get the set of active categories
+  * @param activeCategories
+  */
+ void ResultWindow::getActiveCategories(QHash<ATTRTYPE, bool> &activeCategories) const {
+
+     QList<ATTRTYPE> functionTables;
+     functionTables << KEGG << COG << METACYC << SEED << CAZY << CUSTOM;
+
+     foreach(ATTRTYPE functionAttr, functionTables) {
+         activeCategories[functionAttr] = this->functionBoxes[functionAttr]->isChecked();
+     }
+
+ }
+
 
  /**
  * @brief ResultWindow::sampleChanged, this function loads a new sample and
@@ -316,7 +427,7 @@ void ResultWindow::updateFileNames(){
  */
 void ResultWindow::sampleChanged(QString sampleName){
 
-
+  //  qDebug() << " load me";
 
     QRegExp select_sample_regexp = QRegExp("Select sample");
     if( select_sample_regexp.indexIn(sampleName) != -1 ) return;
@@ -326,10 +437,12 @@ void ResultWindow::sampleChanged(QString sampleName){
     SampleResourceManager *sampleResourceManager = SampleResourceManager::getSampleResourceManager();
     DataManager *datamanager = DataManager::getDataManager();
     sampleResourceManager->setOutPutFolders(this->rundata->getSampleFolderMap());
-    if(this->needsReloading()) this->_loadResults();
-
-
-    datamanager->createDataModel();
+    if(this->needsReloading() ) this->_loadResults();
+    else qDebug() << "no realoading";
+    QHash<ATTRTYPE, bool> activeCategories;
+    this->getActiveCategories(activeCategories);
+    qDebug() << "active " << activeCategories.keys();
+    datamanager->createDataModel(activeCategories);
 
     sampleResourceManager->setOutPutFolders(this->rundata->getSampleFolderMap());
 
@@ -358,17 +471,31 @@ void ResultWindow::sampleChanged(QString sampleName){
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     datamanager->createORFs(sampleName );
+
+    datamanager->loadEquivalentORFs(samplercmgr->getFilePath(sampleName, ORFREDUCED));
     datamanager->addNewAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFMETACYC));
-    datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFRPKM) );
+    datamanager->addCustomAnnotationToORFs(sampleName, samplercmgr->getFilePath(sampleName, CUSTOMTABLE));
+
+    QFile inforpkm(samplercmgr->getFilePath(sampleName, ORFRPKM));
+
+    if(inforpkm.exists() ) {
+       datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, ORFRPKM) );
+    }
+    else {
+       datamanager->addRPKMToORFs(sampleName, samplercmgr->getFilePath(sampleName, CLUSTERWT) );
+    }
 
     QString functionalTable = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE);
-    datamanager->addTaxons(functionalTable);
-    datamanager->addTaxonToORFs( sampleName, functionalTable);
+    QFileInfo info(functionalTable);
+    if(!info.exists()) functionalTable = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLELONG);
 
+    datamanager->addTaxons(functionalTable);
+
+    // disable the taxons
+    //datamanager->addTaxonToORFs( sampleName, functionalTable);
 
     QStringList selectedFileNames;
     selectedFileNames.append(sampleName);
-
 
     RunDataStats *rundatamodel = CreateWidgets::getRunDataStats();
     rundatamodel->clear();
@@ -381,14 +508,12 @@ void ResultWindow::sampleChanged(QString sampleName){
     resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
 
-
     // now the contig and orf length distributions
 
     QString contigLengthsFile = samplercmgr->getFilePath(sampleName, CONTIGLENGTH);
     QFile file(contigLengthsFile);
 
     GraphData *g;
-
 
     if( file.exists() ) {
         if( this->simpleGraphGroups.tableExists(sampleName, contigLengthsFile)) {
@@ -425,19 +550,25 @@ void ResultWindow::sampleChanged(QString sampleName){
     }
 
 
+    if( this->statusOnlyBox->isChecked()) return;
 
     //////////////  FUNCTIONAL CATEGORIES KEGG, COG, METACYC, SEED, CAZY //////////////////
+
     HTableData *htable;
     Labels *labels = Labels::getLabels();
 
 
     QList<ATTRTYPE> functionTables;
-    functionTables << KEGG << COG << METACYC << SEED << CAZY;
+    functionTables << KEGG << COG << METACYC << SEED << CAZY << CUSTOM;
 
     foreach(ATTRTYPE functionAttr, functionTables) {
+
+        if( !this->functionBoxes[functionAttr]->isChecked() ) continue;
+
         types.clear();
         types << STRING << STRING << MP_INT;
         headers = labels->getHtableHeader(functionAttr, ORFCOUNT);
+
         htable = this->getHTableData(sampleName, functionAttr, types, headers, datamanager);
         htable->addSampleName(sampleName, true);
         htable->setMultiSampleMode(false);
@@ -694,8 +825,17 @@ TableData *ResultWindow::_createFunctionalAndTaxTable(const QString &sampleName)
     func_tax_table->largeTable  = new LargeTable();
     func_tax_table->largeTable->addLCAStar = false;
 
+    QString functionTableName ;
+    QFileInfo fileinfo;
+
+    functionTableName = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE);
+    fileinfo.setFile(functionTableName);
+    if( !fileinfo.exists()) {
+           functionTableName = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLELONG);
+    }
+
     func_tax_table->setSampleName(sampleName);
-    func_tax_table->setParameters(false, samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE),  samplercmgr->getFilePath(sampleName,RENAMEMAP), types, true);
+    func_tax_table->setParameters(false, functionTableName,  samplercmgr->getFilePath(sampleName,RENAMEMAP), types, true);
     this->simpleTabGroups.addTable(func_tax_table, sampleName, "FUNC & TAX");
 
     func_tax_table->setPopupListener(p);
@@ -928,30 +1068,55 @@ bool ResultWindow::needsReloading()  {
 void ResultWindow::switchToComparativeMode() {
     resultTabs->clear();
 
+  //  qDebug() << " Beginning comparative mode";
     //if no sample has been loaded then load the results
+
     if(files.size()==0)  _loadResults();
 
     QString orfTableName;
     QString orfMetaCycTableName;
-    QString orfRPKMFileName;
 
     QList<enum TYPE> types;
-    QStringList headers;
+
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     DataManager *datamanager = DataManager::getDataManager();
 
     samplercmgr->setOutPutFolders(this->rundata->getSampleFolderMap());
     if(this->needsReloading()) this->_loadResults();
 
+    QStringList selectedFileNames;
+    foreach(unsigned int i, selectedSamples) {
+        selectedFileNames.append(files[i]);
+    }
+
+    RunDataStats *rundatamodel = CreateWidgets::getRunDataStats();
+    rundatamodel->clear();
+    rundatamodel->setFileNames(selectedFileNames);
+    rundatamodel->setCategories(this->categories);
+    rundatamodel->readStatFiles();
+
+
+
+    StatsQGroupBox *statsTableWidget = CreateWidgets::getStatsTableCompleteView();
+    statsTableWidget->setModel(rundatamodel);
+
+    resultTabs->addTab(statsTableWidget, "RUN STATS");
+    resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
+
+
+    if( this->statusOnlyBox->isChecked()) return;
 
     ProgressView *progressbar = new ProgressView("Loading functional hierarchies ", 0, 0, this);
     progressbar->show();
     QApplication::processEvents();
-    datamanager->createDataModel();
+
+    QHash<ATTRTYPE, bool> activeCategories;
+    this->getActiveCategories(activeCategories);
+    datamanager->createDataModel(activeCategories);
+
+
     progressbar->hide();
     delete progressbar;
-
-
 
     Connector *connect;
     // create the orfs and add the metacyc annotation to the ORFs
@@ -960,9 +1125,7 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->show();
     QApplication::processEvents();
 
-
     unsigned int _i = 0;
-
 
 
     foreach(int i, selectedSamples) {
@@ -971,11 +1134,18 @@ void ResultWindow::switchToComparativeMode() {
         datamanager->createORFs(files[i]);
 
         orfMetaCycTableName = samplercmgr->getFilePath(files[i], ORFMETACYC);
+        datamanager->loadEquivalentORFs(samplercmgr->getFilePath(files[i], ORFREDUCED));
         datamanager->addNewAnnotationToORFs(files[i], orfMetaCycTableName);
+        datamanager->addCustomAnnotationToORFs(files[i], samplercmgr->getFilePath(files[i], CUSTOMTABLE));
 
-        orfRPKMFileName = samplercmgr->getFilePath(files[i], ORFRPKM);
+        QFile inforpkm(samplercmgr->getFilePath(files[i], ORFRPKM));
+        if(inforpkm.exists() ) {
+            datamanager->addRPKMToORFs(files[i], samplercmgr->getFilePath(files[i], ORFRPKM) );
+        }
+        else {
+            datamanager->addRPKMToORFs(files[i], samplercmgr->getFilePath(files[i], CLUSTERWT) );
+        }
 
-        datamanager->addRPKMToORFs(files[i], orfRPKMFileName);
 
         progressbar->updateprogress(_i+1);
         qApp->processEvents();
@@ -987,12 +1157,16 @@ void ResultWindow::switchToComparativeMode() {
     delete progressbar;
 
 
+#ifdef LOAD_FUNCTIONAL_TABLE
     progressbar = new ProgressView("Creating Taxons for samples ", 0, this->selectedSamples.size(), this);
     progressbar->show();
     _i = 0;
     foreach(unsigned int i,  selectedSamples) {
        //if( !this->selectedSamples[i])  continue;
-        QString functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLE   );
+        QString functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLE);
+        QFileInfo info(functionalTable);
+        if(!info.exists()) functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLELONG);
+
         datamanager->addTaxons(functionalTable);
         progressbar->updateprogress(_i+1);
         qApp->processEvents();
@@ -1001,14 +1175,18 @@ void ResultWindow::switchToComparativeMode() {
     }
     progressbar->hide();
     delete progressbar;
-
+#endif
 
     progressbar = new ProgressView("Link  Taxons to ORFs for samples ", 0, this->selectedSamples.size(), this);
     progressbar->show();
     _i =0;
     foreach(unsigned int i, selectedSamples) {
         QString functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLE);
-        datamanager->addTaxonToORFs( files[i], functionalTable);
+        QFileInfo info(functionalTable);
+        if(!info.exists()) functionalTable = samplercmgr->getFilePath(files[i], FUNCTIONALTABLELONG);
+
+       // do not add taxons
+       // datamanager->addTaxonToORFs( files[i], functionalTable);
         progressbar->updateprogress(i+1);
         qApp->processEvents();
         progressbar->update();
@@ -1017,28 +1195,17 @@ void ResultWindow::switchToComparativeMode() {
     progressbar->hide();
     delete progressbar;
 
-   QStringList selectedFileNames;
-   foreach(unsigned int i, selectedSamples) {
-       selectedFileNames.append(files[i]);
-   }
 
-   RunDataStats *rundatamodel = CreateWidgets::getRunDataStats();
-   rundatamodel->clear();
-   rundatamodel->setFileNames(selectedFileNames);
-   rundatamodel->readStatFiles();
-
-   StatsQGroupBox *statsTableWidget = CreateWidgets::getStatsTableCompleteView();
-   statsTableWidget->setModel(rundatamodel);
-   resultTabs->addTab(statsTableWidget, "RUN STATS");
-   resultTabs->setTabToolTip(resultTabs->count()-1, "RUN STATS");
 
    ////////////////////////   KEGG, COG, METACYC, SEED, CAZY //////////////////
     HTableData *htable;
     QList<ATTRTYPE> functionTables;
-    functionTables << KEGG << COG << METACYC << SEED << CAZY;
+    functionTables << KEGG << COG << METACYC << SEED << CAZY << CUSTOM;
     Labels *labels = Labels::getLabels();
 
     foreach(ATTRTYPE functionAttr, functionTables) {
+        if( !this->functionBoxes[functionAttr]->isChecked() ) continue;
+
         htable= CreateWidgets::getHtableData(functionAttr); //new HTableData;
         htable->clearConnectors();
 
@@ -1053,7 +1220,6 @@ void ResultWindow::switchToComparativeMode() {
         foreach(unsigned int i, this->selectedSamples) {
            connect = datamanager->createConnector(files[i], datamanager->getHTree(functionAttr), functionAttr, datamanager->getORFList(files[i]) );
            htable->addConnector(connect, functionAttr);
-           headers << files[i];
            htable->addSampleName(files[i]);
            types << MP_INT;
         }
@@ -1062,6 +1228,7 @@ void ResultWindow::switchToComparativeMode() {
         htable->setMaxSpinBoxDepth(datamanager->getHTree(functionAttr)->getTreeDepth());
      //   htable->setShowHierarchy(true);
 
+        htable->setHeaderCategories(this->categories);
         htable->setTableIdentity(labels->getTabName(functionAttr), functionAttr);
         htable->setMultiSampleMode(true);
         htable->showTableData();

@@ -10,6 +10,12 @@ void HTree::loadFromFile(QString fileName) {
 
 }
 
+HTree::~HTree() {
+    this->nodes.clear();
+    //delete root;
+}
+
+
 short int HTree::_getTreeDepth(HNODE *hnode, short int currDepth) {
     if( hnode==0 ) return currDepth;
 
@@ -75,14 +81,15 @@ HNODE *HTree::getRootHNODE() {
     return root;
 }
 
-void HTree::printTree(HNODE *hnode, unsigned int d) {
+
+void HTree::printTree(HNODE *hnode, unsigned int &d) {
 
     for(QList<HNODE *>::const_iterator it= hnode->children.begin(); it!=hnode->children.end(); ++it ) {
        // qDebug("%s\n", (*it)->attribute->name);
-        qDebug() <<  (*it)->attribute->name;
-        printTree(*it);
+       // qDebug() <<  (*it)->attribute->name;
+        d++;
+        printTree(*it, d);
     }
-
 }
 
 /**

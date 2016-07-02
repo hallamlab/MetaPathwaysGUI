@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET = MetaPathways2
+TARGET = MetaPathways3.0
 TEMPLATE = app
 
 equals(QT_MAJOR_VERSION, 5) {
@@ -90,7 +90,9 @@ SOURCES += main.cpp\
     datamodel/ncbitree.cpp \
     helper/labels.cpp \
     popupviews/setupstatus.cpp \
-    dataviews/statsqgroupbox.cpp
+    dataviews/statsqgroupbox.cpp \
+    dataviews/hierarchicalview.cpp \
+    dataviews/tableview.cpp
 
 
 
@@ -158,7 +160,9 @@ HEADERS  += \
     datamodel/ncbitree.h \
     helper/labels.h \
     popupviews/setupstatus.h \
-    dataviews/statsqgroupbox.h
+    dataviews/statsqgroupbox.h \
+    dataviews/hierarchicalview.h \
+    dataviews/tableview.h
 
 
 

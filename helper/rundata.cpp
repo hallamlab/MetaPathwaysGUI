@@ -748,6 +748,13 @@ void RunData::setResultFolders(QStringList folders) {
 
 }
 
+
+QStringList RunData::getResultFolders() {
+
+    return this->resultFolders ;
+
+}
+
 /**
  * @brief RunData::getOutputFolders, returns the list of outputfolders
  * @return list of output folders
@@ -758,6 +765,7 @@ QStringList RunData::getOutputFolders() {
 
    QStringList tempList = this->outputFolders.keys();
    qSort(tempList.begin(), tempList.end());
+
    return tempList;
 }
 
@@ -786,6 +794,34 @@ void RunData::loadOutputFolders(){
         }
     }
 
+}
+
+
+/**
+ * @brief RunData::getOutputFolders, loads the list output folders in the
+ * outoutFolder variable.
+ */
+
+QStringList  RunData::getOutputSampleFolderPairs(QString folder) {
+
+    QStringList _outputFolders;
+
+    QDir currentDir(folder);
+
+    if( !currentDir.exists() ) _outputFolders;
+
+    QStringList sampleFolders = currentDir.entryList(QDir::AllDirs);
+
+    foreach(QString sampleFolder, sampleFolders) {
+
+        if( sampleFolder.compare(QString(".")) ==0  || sampleFolder.compare(QString("..")) ==0 ) continue;
+
+        if( this->isOutputFolderValid(currentDir.absolutePath() + QDir::separator() +  sampleFolder )) {
+               _outputFolders.append(sampleFolder);
+         }
+    }
+
+    return _outputFolders;
 }
 
 /**

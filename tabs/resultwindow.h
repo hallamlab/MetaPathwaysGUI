@@ -29,6 +29,7 @@
 #include "dataviews/graphdata.h"
 #include "dataviews/tabledata.h"
 #include "dataviews/meganview.h"
+#include "dataviews/hierarchicalview.h"
 
 #include "displaywidgets/createwidgets.h"
 #include "displaywidgets/mdiareawidget.h"
@@ -77,7 +78,7 @@ public slots:
     void sampleChanged(QString changed);
     void updateFileNames();
     void setVisible(int);
-    void receiveSelection(QList<unsigned int> &selection);
+    void receiveSelection(QList<unsigned int> selection, QStringList categories = QStringList());
 
 
     void ProvideContexMenu(QPoint position);
@@ -91,6 +92,7 @@ private slots:
     bool needsReloading();
     bool needsReloading(QString sampleName);
     void useCurrentFolderText();
+    void getActiveCategories(QHash<ATTRTYPE, bool> &activeCategories) const;
 
 signals:
     void fileChanged(QString file);
@@ -104,6 +106,9 @@ private:
     TableData* getFunctionalAndTaxTable(QString sampleName, bool useCache = true, bool useLCAStar = false);
     TableData *_createFunctionalAndTaxTable(const QString &sampleName);
     QStringList getResultFoldersList();
+
+    void showFlatSampleSelect();
+    void showHierarchicalSampleSelect();
 
 
 public:
@@ -123,7 +128,10 @@ private:
     QTabWidget *resultTabs;
     QToolButton *addResultFolder, *deleteResultFolder;
     QComboBox *resultFolders;
+    QCheckBox *statusOnlyBox;
 
+    QCheckBox *cogBox, *keggBox, *seedBox, *metacycBox, *customBox;
+    QHash<ATTRTYPE, QCheckBox *> functionBoxes;
 
     SimpleTabGroups<TableData> simpleTabGroups;
     SimpleTabGroups<GraphData> simpleGraphGroups;
@@ -142,10 +150,13 @@ private:
 
     HTABLE_PARAMS tableParams;
     QList<unsigned int> selectedSamples;
+    QStringList categories;
 
     DataManager *datamanager;
     bool disableSampleChanged;
     QHash<QString, QString> runids;
+
+    bool loadStatsOnly ;
 
 
 };

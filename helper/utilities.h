@@ -52,6 +52,8 @@ public:
     static QLabel *ShowWaitScreen(QString msg) ;
     static bool checkEmptyFile(QString filepath);
 
+    static void read_metadata_file(QString metadatafile, QHash<QString, QStringList> &samples);
+
 
     static QString insertCharacterAtIntervals(QString string, QChar c, int n);
     static QString getShortORFId(const QString &orfname);

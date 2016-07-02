@@ -104,11 +104,14 @@ public:
     void loadInputFiles(const QString &folder);
      //   void loadInputFiles();
     void loadOutputFolders();
-    QStringList getOutputFolders();
+    QStringList  getOutputFolders();
+    QStringList getOutputSampleFolderPairs(QString folder);
+
     bool isOutputFolderValid(const QString &folder);
     QStringList getSubFolders(const QString & folder);
     QString getSystem();
     void setResultFolders(QStringList folders);
+    QStringList getResultFolders();
 
 
     unsigned int getNumRRNADB();

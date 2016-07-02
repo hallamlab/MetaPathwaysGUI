@@ -30,6 +30,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int col, Qt::Orientation orientation, int role) const;
     void setFileNames(const QStringList &filenames);
+    void setCategories(const QStringList &categories);
     void initializeTags();
     bool readStatFiles();
     bool readDataFromFile(const QString &filename, const QString &sample);
@@ -44,6 +45,7 @@ public slots:
 private:
     QMap<QString, QList<QString> > dataVectorMap;
     QStringList filenames;
+    QStringList categories;
 
     QHash<QString, QHash<QString, QString> > statsData, partialstatsData;
     QHash<QString, unsigned int > partialOrder;

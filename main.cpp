@@ -3,6 +3,7 @@
 #include <QString>
 #include <QSettings>
 #include <QDebug>
+#include <QClipboard>
 
 #include "datamodel/lcastar.h"
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[])
     // use this as a failsafe
    // QSettings settings("HallamLab", "MetaPathways");
     //settings.clear();
+
 
     if(argc > 1){
         QString purge(argv[1]);
@@ -41,7 +43,8 @@ int main(int argc, char *argv[])
 
 
   QApplication a(argc, argv);
-    MainFrame *w = new MainFrame();
+
+  MainFrame *w = new MainFrame();
 
     w->show();
     a.exec();

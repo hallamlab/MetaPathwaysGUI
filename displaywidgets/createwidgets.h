@@ -11,6 +11,7 @@
 #include "datamodel/htabledata.h"
 #include "datamodel/datamodeltypes.h"
 #include "dataviews/statsqgroupbox.h"
+#include "dataviews/tableview.h"
 
 class CreateWidgets: public QWidget
 {

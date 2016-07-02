@@ -19,7 +19,7 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     subCategoryName = this->findChild<QLabel *>("subCategoryName");
     depthLabelValue =this->findChild<QLabel *>("depthLabelValue");
     hideZeroRows = this->findChild<QCheckBox *>("hideZeroRows");
-   // showRPKM = this->findChild<QCheckBox *>("showRPKM");
+    showRPKM = this->findChild<QCheckBox *>("showRPKM");
     valueType = this->findChild<QComboBox *>("valueType");
     alpha  = this->findChild<QComboBox *>("alphaValue");
     lcaDepth  = this->findChild<QSpinBox *>("lcaDepth");
@@ -52,6 +52,8 @@ HTableData::HTableData(QWidget *parent, int spinBoxValue, bool _showHierachy, bo
     a.attrType = SEED; a.sampleName="SEED";
     htableIdentities << a;
     a.attrType = CAZY; a.sampleName="CAZY";
+    htableIdentities << a;
+    a.attrType = CUSTOM; a.sampleName="CUSTOM";
     htableIdentities << a;
 
     foreach(HTABLEIDENTITY identity, htableIdentities) {
@@ -118,6 +120,7 @@ bool HTableData::eventFilter( QObject * o, QEvent * e ) {
 
 HTableData::~HTableData()
 {
+    qDebug() << " Destropying htable";
     delete ui;
 }
 
@@ -291,9 +294,8 @@ QStringList HTableData::getHeaders(){
 
     QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
-    if(multiSampleMode) {
-        _headers = this->multiSampleHeaders();
-    }
+    if(multiSampleMode)  _headers = this->multiSampleHeaders();
+
 
     return _headers;
 }
@@ -304,9 +306,8 @@ QString HTableData::getHeader(unsigned int i){
 
     QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
-    if(multiSampleMode) {
-        _headers = this->multiSampleHeaders();
-    }
+    if(multiSampleMode)  _headers = this->multiSampleHeaders();
+
 
     if(i >= _headers.size()) return QString();
     return _headers.at(i);
@@ -327,6 +328,12 @@ void HTableData::setTableIdentity(QString sampleName, ATTRTYPE attrType) {
    this->id.attrType = attrType;
    this->id.sampleName = sampleName;
 
+}
+
+
+void HTableData::setHeaderCategories(QStringList categories) {
+
+    this->categories  = categories;
 }
 
 /**
@@ -452,9 +459,10 @@ void HTableData::fillData() {
 
      data =  this->htree->getRows(this->showDepth->value(),  this->connectors, this->showHierarchy->isChecked(),  this->getValueType()) ;
 
+
      Labels *labels = Labels::getLabels();
 
-     QStringList _headers = labels->getHtableHeader(this->id.attrType,this->getValueType());
+     QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
      if(multiSampleMode) {
          _headers = this->multiSampleHeaders();
@@ -548,9 +556,8 @@ unsigned int HTableData::fillSelectedData() {
      QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
 
-     if(multiSampleMode) {
-         _headers = this->multiSampleHeaders();
-     }
+     if(multiSampleMode)  _headers = this->multiSampleHeaders();
+
 
 #ifdef LCASTAR
      if( this->getValueType()==LCASTAR ) {
@@ -597,9 +604,13 @@ QStringList HTableData::multiSampleHeaders() {
 
      headers.append(labels->getHtableHeader(this->id.attrType,this->getValueType())[1]);
 
-
-     foreach( QString sampleName, this->sampleNames)
-         headers.append(sampleName);
+     int i =0;
+     foreach( QString sampleName, this->sampleNames) {
+         if( this->categories.size() == this->sampleNames.size())
+              headers.append( this->categories[i++] + QString("\n") + sampleName);
+         else
+              headers.append(sampleName);
+     }
 
      return headers;
 }
@@ -847,7 +858,7 @@ void HTableData::spawnInformativeTable(const QString &sampleName, const  QList<O
     htable->clearConnectors();
 
     QList<ATTRTYPE> attrs;
-    attrs << KEGG << COG <<  METACYC << SEED;
+    attrs << KEGG << COG <<  METACYC << SEED << CUSTOM;
 
     QList<ORF *> *_orfList = new QList<ORF *>;
     foreach(ORF *orf, orfList)
@@ -1039,9 +1050,8 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
     QStringList _headers = labels->getHtableHeader(this->id.attrType, this->getValueType());
 
 
-    if(multiSampleMode) {
-        _headers = this->multiSampleHeaders();
-    }
+    if(multiSampleMode) _headers = this->multiSampleHeaders();
+
 
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
@@ -1058,6 +1068,8 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
 
         int j = 0;
         delimOn = false;
+
+        /*
         foreach(QString header, _headers) {
             if( !includeColumn[header])
                 continue;
@@ -1068,7 +1080,44 @@ bool HTableData::saveTableToFile(QString fileName, QChar delim, const QStringLis
             out << header;
         }
         out << "\n";
+*/
+        QString outStr;
+        for(int hrow=0; hrow <2; hrow ++) {
+            outStr+=QString("#");
+            foreach(QString header, _headers) {
+                if( !includeColumn[header])
+                    continue;
+                else {
+                    if(delimOn)  outStr  +=  QString("\t") ;
+                    delimOn = true;
+                }
+                QStringList fields = header.split('\n');
 
+                if( fields.size() > hrow )
+                    outStr += fields[hrow];
+                else
+                    outStr += QString(" ");
+            }
+            outStr += "\n";
+        }
+        out << outStr;
+
+
+/*
+        QString outStr;
+        for(int hrow=0; hrow <2; hrow ++) {
+            outStr += QString("#");
+            for(int col = 0; col < _headers.size(); col ++) {
+                QStringList fields =  _headers;
+                if( fields.size() > hrow )
+                    outStr  +=  QString("\t") + fields[hrow];
+                else
+                    outStr += QString("\t ");
+            }
+            outStr += QString("\n");
+        }
+        out << outStr;
+  */
 
         for(int i =0; i < this->tableWidget->rowCount(); i++) {
             if( this->tableWidget->isRowHidden(i) ) continue;

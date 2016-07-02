@@ -13,6 +13,11 @@ void RunDataStats::setFileNames(const QStringList &filenames) {
     this->filenames = filenames;
 }
 
+
+void RunDataStats::setCategories(const QStringList &categories) {
+    this->categories = categories;
+}
+
 bool compareAttributes(QPair<QString, unsigned int> &pair1, QPair<QString, unsigned int> &pair2 ) {
     if(pair1.second < pair2.second) return true;
     return false;
@@ -61,10 +66,11 @@ bool RunDataStats::readStatFiles() {
     RunData *rundata = RunData::getRunData();
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
 
-
+    // look into the output folders
     samplercmgr->setOutPutFolders(rundata->getSampleFolderMap());
 
     QString runstatsFile;
+    //access individual files
     foreach(QString filename, filenames) {
        runstatsFile = samplercmgr->getFilePath(filename, RUNSTATS);
        this->readDataFromFile(runstatsFile, filename);
@@ -98,7 +104,7 @@ bool RunDataStats::readStatFiles() {
         pair.second =  ok ?  attribute.toInt(&ok) : 0;
         pairs.append(pair);
 
-     //  qDebug() << "  +++ " << pair.first << "   " << pair.second;
+    //   qDebug() << "  +++ " << pair.first << "   " << pair.second;
     }
 
 
@@ -210,17 +216,32 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
 
             if( codeValue >= 5000 && codeValue <= 8000) {
 
-                if(codeValue >= 5000 && codeValue < 6000 ) {
-                    fields[1] = fields[1].replace(QString("Total Protein Annotations"), QString("Number of hits from"), Qt::CaseSensitive);
+
+                if(codeValue >= 5000 && codeValue < 5500 ) {
+                    fields[1] = fields[1].replace(QString("Total Protein Annotations"), QString("Total number of hits in"), Qt::CaseSensitive);
                     this->insertIntoPartial(fields[1], 5000);
                 }
 
+                else if(codeValue >= 5500 && codeValue < 6000 ) {
+                    QString derived = fields[1];
+
+                    derived.replace(QString("Number of ORFs with hits in"), QString("% of ORFs with hits in"), Qt::CaseSensitive);
+
+                    fields[1].replace(QString("Number of ORFs with hits in"), QString("Number of ORFs with hits in"), Qt::CaseSensitive);
+                    this->insertIntoPartial(fields[1], 5500);
+
+
+                    this->insertIntoPartial(derived, 5800);
+                    QString code = this->getPartialCode(derived);
+                    this->partialstatsData[sample][code] = fields[2].trimmed();
+                    this->codeToTagLine[code] = derived;
+
+                }
 
                 else if(codeValue >= 7000 && codeValue < 8000 ) {
                     fields[1] = fields[1].replace(QString("Taxonomic hits in"), QString("rRNA hits meeting user defined thresholds from"), Qt::CaseSensitive);
                     this->insertIntoPartial(fields[1], 7000);
                 }
-
 
                 else if(codeValue >= 6000 && codeValue < 7000 ) {
 
@@ -241,6 +262,7 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
                 this->partialstatsData[sample][code] = fields[2].trimmed();
                 this->codeToTagLine[code] = fields[1].trimmed();
 
+                //do not process any more
                 continue;
             }
 
@@ -249,6 +271,34 @@ bool RunDataStats::readDataFromFile(const QString &filename, const QString &samp
             this->statsData[sample][fields[0].trimmed()] = fields[2].trimmed();
         }
         inputFile.close();
+
+
+        foreach( QString code, this->partialstatsData[sample].keys()) {
+            unsigned int codeValue;
+            bool ok;
+            code.trimmed().toInt(&ok);
+            codeValue = ok ? code.toInt(&ok) : 0;
+            if(codeValue>= 5800 && codeValue < 5850) {
+
+                QString totORF = this->statsData[sample].contains("2005") ? this->statsData[sample][QString("2005")] : QString("0");
+
+                totORF.trimmed().toInt(&ok);
+                unsigned int totnumORFs = ok ? totORF.toInt(&ok) : 0;
+
+                this->partialstatsData[sample][code].toInt(&ok);
+                unsigned int annotCount = ok ? this->partialstatsData[sample][code].toInt(&ok) : 0;
+
+                if( totnumORFs ==0 )
+                    this->partialstatsData[sample][code] = QString("0");
+                else {
+                    float percent = ((float)annotCount/(float)totnumORFs*100);
+
+                    this->partialstatsData[sample][code] =  QString::number(percent, '%4.2f', 2);
+                }
+            }
+        }
+
+
     }
 
     return true;
@@ -322,6 +372,7 @@ QVariant RunDataStats::data(const QModelIndex &index, int role) const
    return QVariant();
 }
 
+
 /**
  * @brief RunDataStats::headerData, this function creates the header in the tables
  * @param section
@@ -334,7 +385,13 @@ QVariant RunDataStats::headerData(int col, Qt::Orientation orientation, int role
    if (role != Qt::DisplayRole)
        return QVariant();
 
-   if( orientation==Qt::Horizontal) return filenames[col];
+   if( orientation==Qt::Horizontal) {
+       if( !this->categories.isEmpty() ) {
+
+           return QString::number(col) + QString("\n") + categories[col] + QString("\n") + filenames[col];
+       }
+       return QString::number(col) + QString("\n") + QString("") + QString("\n") + filenames[col];
+   }
 
 
    QString rowAttribute = this->codeToTagLine[this->orderCodes[col]];

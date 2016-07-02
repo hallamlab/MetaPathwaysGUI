@@ -64,6 +64,9 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
          case FUNCTIONALTABLE:
             path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep + "functional_and_taxonomic_table.txt";
             break;
+         case FUNCTIONALTABLELONG:
+           path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep +  sampleName + ".functional_and_taxonomic_table.txt";
+           break;
          case MEGANTREE:
             path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep + "megan_tree.tre";
             break;
@@ -72,12 +75,24 @@ QString SampleResourceManager::getFilePath(const QString &sampleName,  RESOURCE 
             break;
          case ORFTABLE:
             path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep +  "ORF_annotation_table.txt";
-            break;
+            break;  
+        case ORFTABLELONG:
+           path = OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep +  sampleName + ".ORF_annotation_table.txt";
+           break;
          case ORFMETACYC:
             path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep + sampleName.toLower() + ".metacyc.orf.annots.txt";
             break;
+         case ORFREDUCED:
+            path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "ptools"  +sep + "reduced.txt";
+            break;
+         case CUSTOMTABLE:
+            path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "annotation_table" + sep + sampleName.toLower() + ".custom.annot.txt";
+            break;
          case ORFRPKM:
             path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "results" + sep + "rpkm" + sep  + sampleName + ".orf_rpkm.txt";
+            break;
+         case CLUSTERWT:
+            path =OUTPUTPATH[sampleName] + sep + sampleName + sep + "orf_prediction" + sep + sampleName +  ".wt.txt";
             break;
          case MEGANLASTFILE:
             files = this->getFilePaths(sampleName, MEGANLASTFILE);

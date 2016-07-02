@@ -20,5 +20,6 @@
         <file>images/dot.png</file>
         <file>images/mp_depend.png</file>
         <file>images/requiredstar.png</file>
+        <file>functional_categories/CUSTOM_categories.txt</file>
     </qresource>
 </RCC>

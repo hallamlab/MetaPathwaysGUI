@@ -126,7 +126,7 @@
       </font>
      </property>
      <property name="text">
-      <string>MetaPathways 2.5</string>
+      <string>MetaPathways 3.0</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

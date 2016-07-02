@@ -28,13 +28,14 @@ class HTree
 {
 public:
     HTree();
+    ~HTree();
     void loadFromFile(QString fileName);
     void hashNodes(HNODE *hnode);
     short getTreeDepth();
     QList<HNODE *> getChildrenOf(QString name);
     QList<ATTRIBUTE *> getLeafAttributesOf(HNODE *hnode);
 
-    void printTree(HNODE *hnode, unsigned int d =0);
+    void printTree(HNODE *hnode, unsigned int &d);
     QVector<unsigned int> countTree(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, bool showRPKM = false);
     QVector<unsigned int> countTreeRxnInfo(HNODE *hnode, unsigned int maxDepth, bool showHierarchy, short int currDepth, QList<ROWDATA *> &data, VALUETYPE valueType) ;
 

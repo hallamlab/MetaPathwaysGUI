@@ -4,9 +4,9 @@
 DataManager *DataManager::datamanager = 0;
 
 DataManager *DataManager::getDataManager() {
-    if( datamanager==0)
+    if( datamanager==0) {
         datamanager = new DataManager;
-
+    }
     return datamanager;
 
 }
@@ -15,10 +15,11 @@ DataManager::DataManager()
 {
     ORFList = new QHash<QString, QList<ORF *>*>();
     this->setDataModelCreated(false);
-            //    dataModelCreated = false;
+
 }
 
 void DataManager::setDataModelCreated(bool flag) {
+
     this->dataModelCreated = flag;
 }
 
@@ -44,8 +45,11 @@ void DataManager::setORFsUptoDate(QString sample, bool flag){
 
 HTree *DataManager::getHTree(ATTRTYPE atrType) {
 
+    this->createOneDataModel(atrType);
+
     if(htrees.contains(atrType) )
         return htrees[atrType];
+
 
     return 0;
 }
@@ -233,52 +237,155 @@ QStringList DataManager::getResourceFiles(const RESOURCETYPE &resType) {
 
 }
 
+
+/**
+ * @brief DataManager::destroyDataModel, destroys the data model and releases the allocated memory
+ */
+void DataManager::destroyDataModel() {
+
+    this->destroyAllORFs();
+    this->destroyAllContigs();
+    this->deleteAllConnectors();
+    this->destroyAllHTrees();
+    this->destroyAllAttributes();
+}
+
+
+
+/**
+ * @brief DataManager::createOneDataModel, creates a functional tree when needed if not created already
+ */
+
+
+void DataManager::createOneDataModel(const ATTRTYPE& attrType) {
+
+    HTree *htree;
+    QString ATTR_categories, ATTR_hierarchy;
+    switch(attrType) {
+            case COG:
+                 if( this->htrees[COG]!=0) break;
+                 ATTR_categories = QString(":/functional_categories/") + "COG_categories.txt";
+                 htree = createHTree(ATTR_categories, COG);
+                 htree->hashNodes(htree->root);
+                 this->htrees[COG] = htree;
+                 break;
+
+            case KEGG:
+                 if( this->htrees[KEGG]!=0) break;
+                 ATTR_categories =  QString(":/functional_categories/") + "KO_classification.txt";
+                 htree = createHTree(ATTR_categories, KEGG);
+                 htree->hashNodes(htree->root);
+                 this->htrees[KEGG] = htree;
+                 break;
+
+
+            case METACYC:
+                 if( this->htrees[METACYC]!=0) break;
+                 ATTR_hierarchy = QString(":/functional_categories/") + "metacyc_hierarchy.txt";
+                 htree = createHTree(ATTR_hierarchy, METACYC);
+                 htree->hashNodes(htree->root);
+                 this->htrees[METACYC] = htree;
+
+                 htree = this->createBaseTree(this->htrees[METACYC]);
+                 htree->hashNodes(htree->root);
+                 htree->setAttrType(METACYCBASE);
+                 this->htrees[METACYCBASE] = htree;
+
+            case SEED:
+                 if( this->htrees[SEED]!=0) break;
+                 ATTR_categories =  QString(":/functional_categories/") + "SEED_subsystems.txt";;
+                 htree = createHTree(ATTR_categories, SEED);
+                 htree->hashNodes(htree->root);
+                 this->htrees[SEED] = htree;
+                 break;
+
+            case CAZY:
+                 if( this->htrees[CAZY]!=0) break;
+                 ATTR_categories =  QString(":/functional_categories/") + "CAZY_hierarchy.txt";
+                 htree = createHTree(ATTR_categories, CAZY);
+                 htree->hashNodes(htree->root);
+                 this->htrees[CAZY] = htree;
+                 break;
+            case CUSTOM:
+                 if( this->htrees[CUSTOM]!=0) break;
+                 ATTR_categories =  QString(":/functional_categories/") + "CUSTOM_categories.txt";
+                 htree = createHTree(ATTR_categories, CUSTOM);
+                 htree->hashNodes(htree->root);
+                 this->htrees[CUSTOM] = htree;
+                 break;
+
+            default:
+                 break;
+
+    }
+
+}
+
+
+
+
+
+
 /**
  * @brief DataManager::createDataModel, creates the different functional trees
  */
-void DataManager::createDataModel() {
+void DataManager::createDataModel(QHash<ATTRTYPE, bool> &activeCategories) {
 
-    if( dataModelCreated ) return;
+    if( this->getDataModelCreated() ) return;
 
   //  QString refDBFolder = rundata->getValueFromHash("REFDBS", _CONFIG);
     //QString COG_categories = refDBFolder + "/functional_categories/" + "COG_categories.txt";
-    QString COG_categories = QString(":/functional_categories/") + "COG_categories.txt";
-    HTree *htree = createHTree(COG_categories, COG);
 
-    htree->hashNodes(htree->root);
-    this->htrees[COG] = htree;
-  //  htree->printTree(htree->getRootHNODE());
-
+    HTree *htree;
+    if( activeCategories[COG]) {
+        QString COG_categories = QString(":/functional_categories/") + "COG_categories.txt";
+        htree = createHTree(COG_categories, COG);
+        htree->hashNodes(htree->root);
+        this->htrees[COG] = htree;
+    }
 
     //QString KEGG_categories = refDBFolder + "/functional_categories/" + "KO_classification.txt";
-    QString KEGG_categories =  QString(":/functional_categories/") + "KO_classification.txt";
-    htree = createHTree(KEGG_categories, KEGG);
-    htree->hashNodes(htree->root);
-    this->htrees[KEGG] = htree;
+    if( activeCategories[KEGG]) {
+        QString KEGG_categories =  QString(":/functional_categories/") + "KO_classification.txt";
+        htree = createHTree(KEGG_categories, KEGG);
+        htree->hashNodes(htree->root);
+        this->htrees[KEGG] = htree;
+    }
 
     //QString MetaCyc_hierarchy = refDBFolder + "/functional_categories/" + "metacyc_hierarchy.txt";
-    QString MetaCyc_hierarchy = QString(":/functional_categories/") + "metacyc_hierarchy.txt";
-    htree = createHTree(MetaCyc_hierarchy, METACYC);
-    htree->hashNodes(htree->root);
-    this->htrees[METACYC] = htree;
+    if( activeCategories[METACYC]) {
+        QString MetaCyc_hierarchy = QString(":/functional_categories/") + "metacyc_hierarchy.txt";
+        htree = createHTree(MetaCyc_hierarchy, METACYC);
+        htree->hashNodes(htree->root);
+        this->htrees[METACYC] = htree;
 
-    htree = this->createBaseTree(this->htrees[METACYC]);
-    htree->hashNodes(htree->root);
-    htree->setAttrType(METACYCBASE);
-    this->htrees[METACYCBASE] = htree;
+        htree = this->createBaseTree(this->htrees[METACYC]);
+        htree->hashNodes(htree->root);
+        htree->setAttrType(METACYCBASE);
+        this->htrees[METACYCBASE] = htree;
+    }
 
-
+    if( activeCategories[SEED]) {
     //QString Seed_subsystems = refDBFolder + "/functional_categories/" + "SEED_subsystems.txt";
-    QString Seed_subsystems =  QString(":/functional_categories/") + "SEED_subsystems.txt";
-    htree = createHTree(Seed_subsystems, SEED);
-    htree->hashNodes(htree->root);
-    this->htrees[SEED] = htree;
+        QString Seed_subsystems =  QString(":/functional_categories/") + "SEED_subsystems.txt";
+        htree = createHTree(Seed_subsystems, SEED);
+        htree->hashNodes(htree->root);
+        this->htrees[SEED] = htree;
+    }
 
-    QString CAZY_hierarchy =  QString(":/functional_categories/") + "CAZY_hierarchy.txt";
-    htree = createHTree(CAZY_hierarchy, CAZY);
-    htree->hashNodes(htree->root);
-    this->htrees[CAZY] = htree;
+    if( activeCategories[CAZY]) {
+        QString CAZY_hierarchy =  QString(":/functional_categories/") + "CAZY_hierarchy.txt";
+        htree = createHTree(CAZY_hierarchy, CAZY);
+        htree->hashNodes(htree->root);
+        this->htrees[CAZY] = htree;
+    }
 
+    if( activeCategories[CUSTOM]) {
+        QString CUSTOM_categories =  QString(":/functional_categories/") + "CUSTOM_categories.txt";
+        htree = createHTree(CUSTOM_categories, CUSTOM);
+        htree->hashNodes(htree->root);
+        this->htrees[CUSTOM] = htree;
+    }
     this->setDataModelCreated(true);
 
 }
@@ -290,6 +397,8 @@ void DataManager::createDataModel() {
  * @return
  */
 HTree *DataManager::createHTree(QString refDBFileName, ATTRTYPE type) {
+
+
     HTree *htree = new HTree();
 
     htree->setAttrType(type);
@@ -307,6 +416,8 @@ HTree *DataManager::createHTree(QString refDBFileName, ATTRTYPE type) {
     created["root"] = hnode->attribute;
     S.push(hnode);
 
+
+    int count =0;
     QFile inputFile(refDBFileName);
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
@@ -316,6 +427,7 @@ HTree *DataManager::createHTree(QString refDBFileName, ATTRTYPE type) {
                 S.pop();
 
             hnode = new HNODE;
+            count++;
             if(!created.contains(cnode.name)) {
                 hnode->attribute = new ATTRIBUTE;
                 hnode->attribute->name = cnode.name;
@@ -332,6 +444,8 @@ HTree *DataManager::createHTree(QString refDBFileName, ATTRTYPE type) {
         }
         inputFile.close();
     }
+
+
     return htree;
 }
 
@@ -384,6 +498,7 @@ bool DataManager::_createBaseTree(HNODE *hnode, HNODE *newnode, QHash<QString, b
  * @brief DataManager::destroyAllHTrees, deallocates all the functional trees
  */
 void DataManager::destroyAllHTrees() {
+
     foreach(ATTRTYPE attr, this->htrees.keys()) {
         destroyHTree(attr);
     }
@@ -395,21 +510,33 @@ void DataManager::destroyAllHTrees() {
  * rooted at hnode
  * @param hnode
  */
-void DataManager::_destroyHTree(HNODE *hnode) {
+int DataManager::_destroyHTree(HNODE *hnode, QHash<QString, ATTRIBUTE *> & attributes) {
+    int count =0;
+    if( !attributes.contains(hnode->attribute->name)) {
+        attributes[hnode->attribute->name] = hnode->attribute;
+    }
+
+    if( hnode->children.isEmpty() ) {
+        delete hnode;
+        return 1;
+    }
+
 
     foreach( HNODE *child, hnode->children) {
 
         try {
             // qDebug() << QString("Error while destropying HTree for treetype ") + hnode->attribute->name;
-            _destroyHTree(child);
+            count += _destroyHTree(child, attributes);
         }
         catch(...) {
-         //   qDebug() << QString("Error while destropying HTree for treetype ") + hnode->attribute->name;
+            qDebug() << QString("Error while destropying HTree for treetype ") + hnode->attribute->name;
             Utilities::showInfo(0, QString("Error while destropying HTree for treetype ") + hnode->attribute->name );
-            return;
+            return 0;
         }
     }
+
     delete hnode;
+    return count +1;
 }
 
 
@@ -445,22 +572,36 @@ void DataManager::destroyAllTaxons() {
  */
 void DataManager::destroyHTree(ATTRTYPE treeType ) {
 
+     int count = 0;
      HTree *htree = this->getHTree(treeType);
 
-     if( htree->getAttrType() == METACYCBASE)  { this->htrees.remove(treeType); return; }
+     QHash<QString, ATTRIBUTE *> attributes;
+
+     if( htree->getAttrType() == METACYCBASE)  { if(this->htrees[treeType]!=0) delete this->htrees[treeType];   this->htrees.remove(treeType);   return; }
 
      HNODE *hnode = htree->getRootHNODE();
-     try {
+    // try {
       //   qDebug() << "value of htree " << hnode;
         //  qDebug() << QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType()) ;
-         _destroyHTree(hnode);
-     }
-     catch(...) {
+         count += _destroyHTree(hnode, attributes);
+    // }
+
+     /*catch(...) {
          qDebug() << QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType()) ;
          Utilities::showInfo(0, QString("Error while destropying HTree for treetype ") + QString::number(htree->getAttrType() ));
-     }
+     }*/
+
      hnode = 0;
      this->htrees.remove(treeType);
+
+     // now delete the attributes;
+     foreach(QString attrname, attributes.keys() ) {
+         delete attributes[attrname];
+     }
+
+
+     delete htree;
+
 }
 
 
@@ -483,7 +624,6 @@ void  DataManager::addTaxons(const QString &sampleName) {
 ORF *DataManager::_createAnORF(QStringList &attributes, QString &sampleName) {
 
     ORF *orf = new ORF;
-
 
     orf->name =  Utilities::getShortORFId(attributes[0]);
 
@@ -565,18 +705,24 @@ void DataManager::createORFs(QString sampleName) {
 
     SampleResourceManager *samplercmgr = SampleResourceManager::getSampleResourceManager();
     QString orfTableName = samplercmgr->getFilePath(sampleName, ORFTABLE);
+    QFileInfo info(orfTableName);
+
+    if(! info.exists()) orfTableName = samplercmgr->getFilePath(sampleName, ORFTABLELONG);
 
     this->ORFList->insert(sampleName, new QList<ORF *>);
 
     QHash<QString, bool>  _orfList;
 
+    qDebug()<< " reading from " << orfTableName;
     QFile inputFile(orfTableName);
     unsigned int count = 0;
     if (inputFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&inputFile);
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(("[\\n]")).split(QRegExp("[\\t]"));
+
             if(line.size() < 5) { continue; }
+
             ORF *orf = this->_createAnORF(line, sampleName);
             (this->ORFList->value(sampleName))->append(orf);
             _orfList[orf->name] = true;
@@ -584,9 +730,11 @@ void DataManager::createORFs(QString sampleName) {
         }
         inputFile.close();
     }
-
-
+    qDebug() << "Number of ORFs created " << count;
+#ifdef LOAD_FUNCTIONAL_TABLE
     QString functionalTableName = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLE);
+    info.setFile(functionalTableName);
+    if(!info.exists()) functionalTableName = samplercmgr->getFilePath(sampleName, FUNCTIONALTABLELONG);
 
     QString skip= "ORF_ID";
     inputFile.setFileName(functionalTableName);
@@ -607,12 +755,16 @@ void DataManager::createORFs(QString sampleName) {
             count++;
         }
         inputFile.close();
-    }
+    } 
+#endif
+
 
     this->attributes[COG].clear();
     this->attributes[KEGG].clear();
     this->attributes[SEED].clear();
     this->attributes[CAZY].clear();
+
+
 
  //   this->ORFsUptoDateList[sampleName] = true;
 }
@@ -734,7 +886,90 @@ void DataManager::addTaxonToORFs(const QString &sampleName, const QString &fileN
 
 
 
+/**
+ * @brief DataManager::addCustomAnnotationToORFs, adds the METACYC annotations to the
+ * orfs that are already added and creates new one if they are not already added
+ * @param sampleName
+ * @param fileName
+ */
+void DataManager::addCustomAnnotationToORFs(QString sampleName, QString fileName) {
 
+    QFile inputFile(fileName);
+    ORF *temporf;
+    QString _orfName, name;
+
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QHash<QString, ORF *> orfHash;
+        foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
+            orfHash[orf->name] = orf;
+        }
+
+        QTextStream in(&inputFile);
+        QString orfName;
+        while ( !in.atEnd() )  {
+            QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
+
+            if(line.size() < 2) continue;
+            _orfName = line[0];
+            name = line[1];
+
+            orfName = Utilities::getShortORFId(_orfName);
+
+            if( orfHash.contains(orfName)) {
+                temporf = orfHash[orfName];
+            }
+            else {
+                temporf = new ORF;
+                this->ORFList->value(sampleName)->append(temporf);
+            }
+
+            temporf->name = orfName;
+            if( this->attributes[CUSTOM].contains(name)) {
+                   temporf->attributes[CUSTOM] = this->attributes[CUSTOM][name];
+            }
+            else {
+                   temporf->attributes[CUSTOM]= new ATTRIBUTE;
+                   temporf->attributes[CUSTOM]->name = name;
+                   temporf->attributes[CUSTOM]->alias = name;
+                   this->attributes[CUSTOM][name] = temporf->attributes[CUSTOM];
+            }
+
+        }
+        inputFile.close();
+    }
+
+    this->attributes[CUSTOM].clear();
+}
+
+/**
+ * @brief DataManager::loadEquivalentORFs loads the list of ORFs that are considered as
+ * equivalent while buidling pgdb, and stored in the file ptools/reduced.txt and each column
+ * stores as orf_nae\t equivclassorf_name
+ * @param sampleName
+ * @param fileName
+ */
+void DataManager::loadEquivalentORFs( QString fileName) {
+
+    QFile inputFile(fileName);
+
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        this->equivalent_orfs.clear();
+
+        QTextStream in(&inputFile);
+        QString name, equiv;
+        while ( !in.atEnd() )  {
+            QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
+
+            if(line.size() < 2) continue;
+            name = Utilities::getShortORFId(line[0]);
+            equiv = Utilities::getShortORFId(line[1]);
+            this->equivalent_orfs[equiv].insert(name, true);
+        }
+        inputFile.close();
+    }
+   // qDebug() << QString("num of quiv orfs ") << this->equivalent_orfs.size();
+
+}
 
 /**
  * @brief DataManager::addNewAnnotationToORFs, adds the METACYC annotations to the
@@ -749,7 +984,6 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
     ORF *temporf;
     QString name, alias;
 
-
     if (inputFile.open(QIODevice::ReadOnly)) {
         QHash<QString, ORF *> orfHash;
         foreach(ORF *orf, *(this->ORFList->value(sampleName)) ) {
@@ -757,7 +991,7 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
         }
 
         QTextStream in(&inputFile);
-        QString orfName;
+
         while ( !in.atEnd() )  {
             QStringList line = in.readLine().remove(QRegExp("[\\n]")).split(QRegExp("[\\t]"));
 
@@ -767,40 +1001,52 @@ void DataManager::addNewAnnotationToORFs(QString sampleName, QString fileName) {
 
             line.removeFirst();
             line.removeFirst();
-            foreach(QString _orfName, line) {
+            foreach(QString _equivORFName, line) {
+               QStringList orfNames;
+               QString shortEquivORFName = Utilities::getShortORFId(_equivORFName);
 
-               orfName = Utilities::getShortORFId(_orfName);
+               orfNames.append(Utilities::getShortORFId(shortEquivORFName));
 
-               if( orfHash.contains(orfName)) {
-                   temporf = orfHash[orfName];
+               // if there are orfs equivalent to it then append them
+
+               if( this->equivalent_orfs.contains(shortEquivORFName)) {
+                   orfNames.append(this->equivalent_orfs[shortEquivORFName].keys());
+                  // qDebug() << Utilities::getShortORFId(shortEquivORFName) << this->equivalent_orfs[shortEquivORFName].size();
                }
-               else {
-                  temporf = new ORF;
-                  this->ORFList->value(sampleName)->append(temporf);
-               }
 
-               temporf->name = orfName;
+               foreach(QString orfName, orfNames) {
+                   if( orfHash.contains(orfName)) {
+                       temporf = orfHash[orfName];
+                   }
+                   else {
+                      temporf = new ORF;
+                      this->ORFList->value(sampleName)->append(temporf);
+                   }
+                //   qDebug() << name << alias;
+                   temporf->name = orfName;
 
-               if( this->attributes[METACYC].contains(name)) {
-                   temporf->attributes[METACYC] = this->attributes[METACYC][name];
-               }
-               else {
-                   temporf->attributes[METACYC]= new ATTRIBUTE;
-                   temporf->attributes[METACYC]->name = name;
-                   temporf->attributes[METACYC]->alias = alias;
-                   this->attributes[METACYC][name] = temporf->attributes[METACYC];
+                   if( this->attributes[METACYC].contains(name)) {
+                       temporf->attributes[METACYC] = this->attributes[METACYC][name];
+                   }
+                   else {
+                       temporf->attributes[METACYC]= new ATTRIBUTE;
+                       temporf->attributes[METACYC]->name = name;
+                       temporf->attributes[METACYC]->alias = alias;
+                       this->attributes[METACYC][name] = temporf->attributes[METACYC];
+                   }
                }
             }
         }
         inputFile.close();
     }
+    this->equivalent_orfs.clear();
     this->attributes[METACYC].clear();
 }
 
 
 
 
-/** This function added the RPKM values to the orfs in the sample
+/** This function added the RPKM/WEIGHT values to the orfs in the sample
  *\param sampleName, name of the sample
  *\param fileName, name of the file name for the RPKM values
  *
@@ -827,9 +1073,10 @@ void DataManager::addRPKMToORFs(QString sampleName, QString fileName) {
 
             if( !orfHash.contains(orfName))  continue;
             temporf = orfHash[orfName];
-
+          //  qDebug() << line[1];
             line[1].toFloat(&ok);
             if (ok) temporf->rpkm = line[1].toFloat();
+
         }
         inputFile.close();
     }
@@ -1013,7 +1260,7 @@ Connector *DataManager::_createConnector(QString sampleName, HTree *htree, ATTRT
 
  bool DataManager::loadNameMapping(QHash<QString,QString> &nameMaps, const QString fileName)  {
      QFile inputFile(fileName);
-     qDebug() << fileName;
+
      unsigned int i = -1;
      QRegExp comment("^#");
 

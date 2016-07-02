@@ -64,7 +64,8 @@ float Connector::getRPKMForAttribute(ATTRIBUTE *attribute) {
     float rpkm = 0;
     if(this->connected.contains(attribute)) {
         foreach(ORF *orf, this->connected[attribute])
-           rpkm += orf->rpkm;
+           rpkm += orf-> rpkm;
+
     }
     /*
     if(rpkm > 4000) {
@@ -72,6 +73,7 @@ float Connector::getRPKMForAttribute(ATTRIBUTE *attribute) {
         qDebug() << " large value";
     }*/
     return rpkm;
+
 }
 
 

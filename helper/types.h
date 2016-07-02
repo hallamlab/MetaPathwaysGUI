@@ -19,10 +19,10 @@ enum SEQNAME {ORFNAME, CONTIGNAME};
 enum SOURCETYPE {FASTA, TABTABLE};
 
 typedef enum _INPUTFILETYPE{ NUCFASTA, AMINOFAA, NUCFNA,RENAMEMAP, CONTIGLENGTH, ORFLENGTH, \
-                             NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE,\
-                             FUNCTIONAL_SRC1, ORFTABLE, ORFMETACYC, ORFRPKM, MEGANLASTFILE,\
+                             NUCSTATS, AMINOSTATS, MEGANTREE, FUNCTIONALTABLE, FUNCTIONALTABLELONG,\
+                             FUNCTIONAL_SRC1, ORFTABLE, ORFTABLELONG, CUSTOMTABLE, ORFMETACYC, ORFREDUCED, ORFRPKM, MEGANLASTFILE,\
                              MEGANBLASTFILE, RUNSTATS, ERRORS, GLOBAL_ERRORS , STEPS_LOG, rRNATABLES,\
-                             tRNATABLES, rRNA, tRNA, BLAST_RESULTS_FOLDER} RESOURCE;
+                             tRNATABLES, rRNA, tRNA, BLAST_RESULTS_FOLDER, CLUSTERWT} RESOURCE;
 
 typedef enum _RESOURCETYPE{ NCBITREEFILE, NCBINAMEMAPFILE} RESOURCETYPE;
 
@@ -72,6 +72,7 @@ typedef struct _SEQUENCEDATA {
 
 typedef QPair<QString, unsigned int > TaxonFreqQPair;
 
+typedef QPair<QString, QString > QStringPair;
 
 template <class T, class U, class V>
 struct _Triplet {
@@ -138,6 +139,13 @@ typedef struct _SEARCH {
 
 } SEARCH;
 
+typedef struct _HIERARCHICAL_SAMPLE {
+    QString name;
+    QStringList folders;
+    QStringList categories;
+    bool valid;
+
+} HIERARCHICAL_SAMPLE;
 
 const QString PIPELINE_STEP_BLAST = "metapaths_steps:FUNC_SEARCH";
 const QString PIPELINE_STEP_rRNA_BLAST = "metapaths_steps:SCAN_rRNA";

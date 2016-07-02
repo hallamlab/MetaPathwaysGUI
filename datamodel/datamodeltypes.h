@@ -30,9 +30,13 @@ typedef struct _HNODE {
     HNODE *parent;
     QList<HNODE *> children;
     short int depth;
+    ~_HNODE() {
+
+    }
+
 } HNODE;
 
-typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, CAZY, TAXON, RPKM, METACYCBASE}  ATTRTYPE;
+typedef enum _ATTRTYPE{ KEGG, COG, METACYC, SEED, CAZY, TAXON, RPKM, METACYCBASE, CUSTOM}  ATTRTYPE;
 
 
 
@@ -49,13 +53,16 @@ typedef struct _CONTIG {
     QList<ORF *> orfList;
     QString name;
     unsigned int length;
+    ~_CONTIG(){
+
+    }
 } CONTIG;
 
 
 typedef struct _ORF {
     QHash<ATTRTYPE, ATTRIBUTE*> attributes;
     CONTIG *contig;
-    unsigned int start, end, length;
+    unsigned short int start, end, length;
     QString name;
     bool strand;
     float rpkm;
@@ -70,7 +77,7 @@ typedef struct _ORF {
            delete this->contig;
            this->contig = 0;
          }*/
-    }
+     }
 
 } ORF;
 

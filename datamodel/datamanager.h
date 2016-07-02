@@ -46,6 +46,9 @@ public:
     void createORFs(QString sampleName);
 
     void addNewAnnotationToORFs(QString sampleName, QString fileName);
+    void loadEquivalentORFs(QString fileName);
+    void addCustomAnnotationToORFs(QString sampleName, QString fileName);
+
     void addRPKMToORFs(QString sampleName, QString fileName);
     void addTaxons(const QString &sampleName);
     void addTaxonToORFs(const QString &sampleName, const QString &fileName);
@@ -64,7 +67,10 @@ public:
     void setORFsUptoDate(QString, bool);
     void setORFsUptoDateAll( bool);
 
-    void createDataModel();
+    void createDataModel(QHash<ATTRTYPE, bool> &activeCategories);
+    void createOneDataModel(const ATTRTYPE &attrType);
+
+    void destroyDataModel() ;
     CATEGORYNODE createCategoryNode(QString line);
     QStringList getResourceFiles(const RESOURCETYPE &resType) ;
 
@@ -73,7 +79,7 @@ public:
     bool  _createBaseTree(HNODE *snode, HNODE *hnode, QHash<QString, bool> &created);
     void destroyAllHTrees();
     void destroyHTree(ATTRTYPE treeType );
-    void _destroyHTree(HNODE *hnode );
+    int _destroyHTree(HNODE *hnode , QHash<QString, ATTRIBUTE *> &attributes);
 
     void destroyAllAttributes();
     void destroyAllTaxons();
@@ -91,6 +97,8 @@ private:
     QHash<QString, QHash<QString, CONTIG *> > contigHash;
 
     QHash<ATTRTYPE, QHash<QString, ATTRIBUTE *> > attributes;
+
+    QHash<QString, QHash<QString, bool> > equivalent_orfs;
 
     bool dataModelCreated;
 

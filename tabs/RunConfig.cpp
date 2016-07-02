@@ -81,6 +81,7 @@ void RunConfig::clickedSelectSample(){
 
     QStringList samples =  this->rundata->getFileList(inputLine->text().trimmed());
 
+
     if( samples.isEmpty() ) {
         Utilities::showInfo(0, QString("Could not find any sample to process!")) ;
         return;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
-    <height>718</height>
+    <width>984</width>
+    <height>722</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -42,6 +42,11 @@
          <item>
           <property name="text">
            <string>Multi-sample</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Hierarchical</string>
           </property>
          </item>
         </widget>
@@ -89,6 +94,16 @@
          </property>
          <property name="flat">
           <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="statusBox">
+         <property name="text">
+          <string>Status</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -177,7 +192,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
       <bool>true</bool>
@@ -197,10 +212,55 @@
      </widget>
     </widget>
    </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QCheckBox" name="cogBox">
+       <property name="text">
+        <string>COG</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="keggBox">
+       <property name="text">
+        <string>KEGG</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="metacycBox">
+       <property name="text">
+        <string>MetaCyc</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="seedBox">
+       <property name="text">
+        <string>SEED</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cazyBox">
+       <property name="text">
+        <string>CAZY</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="customBox">
+       <property name="text">
+        <string>CUSTOM</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>selectSamplesButton</tabstop>
   <tabstop>resultTabs</tabstop>
  </tabstops>
  <resources/>

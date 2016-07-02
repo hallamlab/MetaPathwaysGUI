@@ -10,6 +10,50 @@ Utilities::Utilities()
 }
 
 /**
+ * @brief Utilities::read_metadata_file, reads the metadata file
+ * @param metadatafile
+ * @param samples
+ */
+void Utilities::read_metadata_file(QString fileName, QHash<QString, QStringList> &samples ) {
+    QFile inputFile(fileName);
+
+    QStringList names;
+    QRegExp comment("^#");
+    QRegExp typePatt("EnvironmentType");
+    int numTypes = 0;
+
+    if (inputFile.open(QIODevice::ReadOnly) && inputFile.exists())
+    {
+       QTextStream in(&inputFile);
+       while ( !in.atEnd() )
+       {
+            QString line = in.readLine().trimmed();
+
+
+            if( line.trimmed().isEmpty() ) continue;
+            names = line.split("\t");
+            if( names.size() ==0 ) continue;
+
+            if( line.indexOf(comment) > -1 && numTypes ==0 ) {
+                foreach(QString name, names) {
+                    if( name.indexOf(typePatt) > -1 ) numTypes++;
+                }
+             }
+             else {
+                QString sampleName = names[0];
+                samples[sampleName] = QStringList();
+                names.pop_front();
+                for(int i=0; i < names.size() && i < numTypes; i++) {
+                    samples[sampleName].append(names[i]);
+                    if( names[i].trimmed().isEmpty() or names[i].trimmed().compare(QString("-"))==0) break;
+                }
+             }
+       }
+    }
+
+}
+
+/**
  * @brief Utilities::readOrfContigList, reads a text file that splits them into words, to extract
  * orf and contig
  * @param fileName
@@ -492,15 +536,18 @@ QString Utilities::insertCharacterAtIntervals(QString string, QChar insertC, int
 }
 
 QString Utilities::getShortORFId(const QString &orfname) {
-    QRegExp orfNameRegEx("_(\\d+_\\d+)$");
+    //QRegExp orfNameRegEx("_(\\d+_\\d+)$");
+    QRegExp orfNameRegEx("(\\d+_\\d+)$");
 
     QString _orfname = orfname;
     _orfname = _orfname.replace(QString("\""), QString());
+
 
     QString shortORFname;
     int pos  = orfNameRegEx.indexIn(_orfname);
     if( pos > -1 ) {
         shortORFname = orfNameRegEx.cap(1);
+        //qDebug() <<  shortORFname << "" <<  _orfname;
     }
     else {
         return "";
@@ -510,7 +557,8 @@ QString Utilities::getShortORFId(const QString &orfname) {
 
 
 QString Utilities::getShortContigId(const QString &contigname) {
-    QRegExp contigNameRegEx("_(\\d+)$");
+    //QRegExp contigNameRegEx("_(\\d+)$");
+    QRegExp contigNameRegEx("(\\d+)$");
 
     QString _contigname = contigname;
     _contigname = _contigname.replace(QString("\""), QString());

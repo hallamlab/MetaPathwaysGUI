@@ -80,6 +80,7 @@ public:
     void showTableData();
     unsigned int  showSelectedTableData();
     void setTableIdentity(QString sampleName, ATTRTYPE attrType);
+    void setHeaderCategories(QStringList categories) ;
     unsigned int fillSelectedData();
     QStringList multiSampleHeaders() ;
 
@@ -185,6 +186,7 @@ private:
     bool multiSampleMode;
  //   QStringList headers;
     QStringList sampleNames;
+    QStringList categories;
     unsigned int maxSpinBoxDepth;
 
     QList<SEARCH> searchFilters;

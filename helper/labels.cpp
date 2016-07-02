@@ -24,12 +24,15 @@ Labels::Labels()
   function1[CAZY] = "CAZY Family";
   function2[CAZY] = "CAZY Family (Alias)";
 
+  function1[CUSTOM] = "CUSTOM Family";
+  function2[CUSTOM] = "CUSTOM Family (Alias)";
+
 
   QHash<VALUETYPE, QString> valuetypes;
   valuetypes[ORFCOUNT] = "ORF Count";
   valuetypes[RPKMCOUNT] = "RPKM Count";
   valuetypes[BASEPWY_ORF] = "ORF Count";
-   valuetypes[BASEPWY_RPKM] = "RPKM Count";
+  valuetypes[BASEPWY_RPKM] = "RPKM Count";
   valuetypes[BASEPWY_RXNCOV] = "# Reactions Covered";
   valuetypes[BASEPWY_RXNTOT] = "# Total Reactions";
 
@@ -48,6 +51,7 @@ Labels::Labels()
   tabNames->insert(METACYC, "MetaCyc");
   tabNames->insert(SEED, "SEED");
   tabNames->insert(CAZY, "CAZY");
+  tabNames->insert(CUSTOM, "CUSTOM");
 
 }
 

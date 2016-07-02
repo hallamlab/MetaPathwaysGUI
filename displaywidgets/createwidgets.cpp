@@ -23,7 +23,8 @@ QTableView *CreateWidgets::getStatsTableView() {
     }
 
     if(CreateWidgets::statTableView == 0) {
-        CreateWidgets::statTableView =  new QTableView;
+        //we changed it from QTableView to  TableView
+        CreateWidgets::statTableView =  new TableView;
 
         CreateWidgets::statTableView->horizontalHeader()->setStretchLastSection(true);
         CreateWidgets::statTableView->setAlternatingRowColors(true);
