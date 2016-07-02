@@ -24,10 +24,20 @@ void StatsQGroupBox::exportTable() {
     if (outFile.open(QIODevice::WriteOnly |  QIODevice::Text)) {
         QTextStream out(&outFile);
         QString outStr;
-        for(int col = 0; col < numCol; col ++) {
-            outStr  +=  QString("\t") + this->model->headerData(col, Qt::Horizontal, Qt::DisplayRole).toString();
+
+        for(int hrow=0; hrow <3; hrow ++) {
+            outStr += QString("#");
+            for(int col = 0; col < numCol; col ++) {
+                QStringList fields =  this->model->headerData(col, Qt::Horizontal, Qt::DisplayRole).toString().split("\n");
+                if( fields.size() > hrow )
+                    outStr  +=  QString("\t") + fields[hrow];
+                else
+                    outStr += QString("\t ");
+            }
+            outStr += QString("\n");
         }
-        outStr += QString("\n");
+
+
         out << outStr;
 
         for(int row = 0; row < numRows; row++ ) {

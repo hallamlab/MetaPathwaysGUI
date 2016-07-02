@@ -1,7 +1,6 @@
 #ifndef STATUSVIEW_H
 #define STATUSVIEW_H
-#include <QTreeView>
-#include <QStringList>
+
 #include <QTreeView>
 #include <QStringList>
 #include <QStandardItemModel>

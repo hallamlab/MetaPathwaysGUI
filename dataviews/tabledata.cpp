@@ -482,8 +482,6 @@ void TableData::updateData(double top, bool reload){
  */
 void TableData::setupFromFile(const QString &file){
 
-
-
         TableManager *tableManager = TableManager::getTableManager();
 
         largeTable = tableManager->getTable(file);
@@ -506,7 +504,9 @@ void TableData::setupFromFile(const QString &file){
         largeTable->setLCAStarAlpha(this->alpha->currentText().toDouble()/100);
      //   largeTable->setLCAStarDepth(this->);
 
+
         largeTable->getData(bigdata, 0,dw);
+
         tableWidget->setRowCount(largeTable->tableData.length());
         tableWidget->setColumnCount(largeTable->colNames.length());
         headers = largeTable->colNames;

@@ -301,6 +301,7 @@ int LargeTable::readDataFile(const QString fileName, const QString contig_name_m
         }
     }else return 0;
 
+
     inputFile.close();
 
     return 0;
