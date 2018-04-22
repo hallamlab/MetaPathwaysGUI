@@ -115,6 +115,9 @@
    <property name="text">
     <string>Setup</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionRun">
    <property name="enabled">
@@ -122,6 +125,9 @@
    </property>
    <property name="text">
     <string>Run</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionResults">
@@ -165,6 +171,9 @@
    <property name="text">
     <string>Parameters</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionStages">
    <property name="enabled">
@@ -172,6 +181,9 @@
    </property>
    <property name="text">
     <string>Stages</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

@@ -136,16 +136,20 @@ void MainFrame::validateSetup() {
  * Enables/Disables actions in the menu.
  */
 void MainFrame::greyTabs(bool enabled){
+
+
     actionProgress->setEnabled(enabled);
-    actionResults->setEnabled(enabled);
     actionRunParams->setEnabled(enabled);
     actionRunStages->setEnabled(enabled);
+    actionResults->setEnabled(enabled);
 }
 
 /*
  * Instantiates the rest of the objects associated with each tab and sets up connections.
  */
 void MainFrame::addRemainingTabs() {
+
+#ifdef   VERSION_2.0
     stages = new RunConfig();
     settings = new SettingsTab();
     resultWindow = ResultWindow::getResultWindow();
@@ -162,16 +166,28 @@ void MainFrame::addRemainingTabs() {
     stackedWidget->addWidget(stageScroll);
     stackedWidget->addWidget(settingsScroll);
     stackedWidget->addWidget(progressScroll);
+    stackedWidget->addWidget(resultWindow);
 
+    resultWindow = ResultWindow::getResultWindow();
     stackedWidget->addWidget(resultWindow);
 
 
     connect(actionSetup, SIGNAL(triggered()), this, SLOT(openSetup()));
     connect(actionProgress, SIGNAL(triggered()), this, SLOT(displayProgress()));
+
+
     connect(actionResults, SIGNAL(triggered()), this, SLOT(displayResults()));
+
+
     connect(actionRunStages, SIGNAL(triggered()), this, SLOT(displayStages()));
     connect(actionRunParams, SIGNAL(triggered()), this, SLOT(displayParams()));
 
+
+#else
+    resultWindow = ResultWindow::getResultWindow();
+    stackedWidget->addWidget(resultWindow);
+    this->displayResults();
+#endif
 }
 
 void MainFrame::displayGridProgress(){
