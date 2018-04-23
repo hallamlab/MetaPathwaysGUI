@@ -35,6 +35,7 @@ typedef struct _ENVVARIABLES {
 class Setup;
 class ResultWindow;
 class ProgressDialog;
+class DashBoard;
 
 class MainFrame : public QMainWindow
 {
@@ -90,6 +91,7 @@ private:
     RunConfig* stages;
     SettingsTab* settings;
     GridProgress* gridProgress;
+    DashBoard *dashboard;
 
     QScrollArea* stageScroll;
     QScrollArea* settingsScroll;
@@ -103,6 +105,7 @@ private:
     QAction* actionProgress;
     QAction* actionGridProgress;
     QAction* actionResults;
+    QAction* actionDashboard;
     QAction* actionSetupMenu;
     QAction* actionAbout;
     QAction* actionRunParams;

@@ -8,8 +8,6 @@ ResultWindow *ResultWindow::getResultWindow() {
     }
 
     return ResultWindow::resultWindow;
-
-
 }
 
 ResultWindow::ResultWindow(QWidget *parent) :

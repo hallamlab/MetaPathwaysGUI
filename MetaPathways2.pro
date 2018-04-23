@@ -33,6 +33,7 @@ SOURCES += main.cpp\
         tabs/SettingsTab.cpp \
         tabs/RunConfig.cpp \
         tabs/ProgressDialog.cpp \
+        tabs/dashboard.cpp\
     helper/utilities.cpp \
     helper/rundata.cpp \
     helper/qcustomplot.cpp \
@@ -101,7 +102,7 @@ HEADERS  += \
             tabs/SettingsTab.h \
             tabs/RunConfig.h \
             tabs/ProgressDialog.h \
-    helper/utilities.h \
+            tabs/dashboard.h\
     helper/rundata.h \
     helper/qcustomplot.h \
     tabs/resultwindow.h \
@@ -173,6 +174,7 @@ FORMS    += \
             tabs/RunConfig.ui \
             tabs/ProgressDialog.ui \
     tabs/resultwindow.ui \
+    tabs/DashBoard.ui\
     dataviews/tabledata.ui \
     tabs/welcome.ui \
     grid/gridchoice.ui \
@@ -187,7 +189,8 @@ FORMS    += \
     graphicsrepresentation.ui \
     dataviews/meganbrowser.ui \
     datamodel/htabledata.ui \
-    mainframe.ui
+    mainframe.ui \
+    tabs/DashBoard.ui
 
 
 RESOURCES +=  Resources.qrc

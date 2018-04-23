@@ -60,8 +60,6 @@ class ResultWindow;
 }
 
 
-
-
 class ResultWindow : public QWidget
 {
     Q_OBJECT
@@ -115,9 +113,10 @@ public:
     QHash<HTableData *, bool> htablesAddSignals;
 private:
     static ResultWindow *resultWindow;
-
     Ui::ResultWindow *ui;
     QWidget* parent;
+
+
     RunData *rundata;
     QComboBox* sampleSelect;
     QPushButton *selectSamplesButton;

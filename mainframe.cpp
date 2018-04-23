@@ -34,8 +34,10 @@ MainFrame::MainFrame(QWidget *parent) :
     actionRunSettings = this->findChild<QAction *>("actionRunSettings");
     actionProgress = this->findChild<QAction *>("actionRun");
     actionResults = this->findChild<QAction *>("actionResults");
+    actionDashboard = this->findChild<QAction *>("actionDashboard");
     actionRunParams = this->findChild<QAction *>("actionRunParams");
     actionRunStages = this->findChild<QAction *>("actionStages");
+
 
     toolBar = this->findChild<QToolBar *>("toolBar");
     stackedWidget = this->findChild<QStackedWidget *>("stackedWidget");
@@ -149,7 +151,7 @@ void MainFrame::greyTabs(bool enabled){
  */
 void MainFrame::addRemainingTabs() {
 
-#ifdef   VERSION_2.0
+#ifdef   VERSION_20
     stages = new RunConfig();
     settings = new SettingsTab();
     resultWindow = ResultWindow::getResultWindow();
@@ -185,6 +187,8 @@ void MainFrame::addRemainingTabs() {
 
 #else
     resultWindow = ResultWindow::getResultWindow();
+
+    //stackedWidget->addWidget(dashboard);
     stackedWidget->addWidget(resultWindow);
     this->displayResults();
 #endif
