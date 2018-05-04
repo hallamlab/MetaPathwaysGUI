@@ -1,4 +1,13 @@
 #include "dashboard.h"
+#include "ui_DashBoard.h"
+
+/*
+DashBoard::DashBoard(QWidget *parent) : QWidget(parent)
+{
+
+}*/
+
+
 
 DashBoard *DashBoard::dashboard=0;
 
@@ -11,17 +20,14 @@ DashBoard *DashBoard::getDashBoard() {
 }
 
 
-DashBoard::DashBoard(QWidget *parent)
-  // QWidget(parent),  ui(new Ui::DashBoard)
+DashBoard::DashBoard(QWidget *parent):
+    QWidget(parent)//, ui(new Ui::DashBoard)
 {
-
-  //  this->setupUi(ui);
-
+  //this->setupUi(ui);
 }
 
 
 DashBoard::~DashBoard() {
-
-
     delete ui;
 }
+

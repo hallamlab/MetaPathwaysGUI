@@ -12,6 +12,7 @@
 #include "tabs/Setup.h"
 #include "tabs/resultwindow.h"
 #include "tabs/RunConfig.h"
+#include "tabs/dashboard.h"
 #include "tabs/SettingsTab.h"
 #include "helper/utilities.h"
 #include "tabs/ProgressDialog.h"

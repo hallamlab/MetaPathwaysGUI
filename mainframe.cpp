@@ -188,7 +188,7 @@ void MainFrame::addRemainingTabs() {
 #else
     resultWindow = ResultWindow::getResultWindow();
 
-    //stackedWidget->addWidget(dashboard);
+   // stackedWidget->addWidget(dashboard);
     stackedWidget->addWidget(resultWindow);
     this->displayResults();
 #endif
