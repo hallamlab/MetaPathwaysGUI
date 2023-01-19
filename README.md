@@ -10,5 +10,8 @@ Please see the [MetaPathways v2.0 repository](https://github.com/hallamlab/metap
 
 If you choose to compile your own version of the GUI, simply replace the GUI executable in the python repository with your own compiled binary and change your MetaPathways2 setup paths, if necessary.
 
+![image](https://user-images.githubusercontent.com/587722/213566229-1589ef5f-934b-4377-9d09-03bfc593faf5.png)
+
+
 ## Dependencies
 - Qt 5.2.1 clang 64bit
